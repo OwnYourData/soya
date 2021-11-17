@@ -1,0 +1,11 @@
+FROM node:16 as builder
+
+WORKDIR /app
+ENV NODE_ENV=development
+COPY *.json .
+COPY ./res ./res
+COPY ./src ./src
+RUN npm install
+RUN npm run build
+
+CMD ["bash"]

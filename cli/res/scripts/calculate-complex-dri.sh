@@ -1,0 +1,1 @@
+cat res/files/complex-person.json | soya -vvv calculate-dri

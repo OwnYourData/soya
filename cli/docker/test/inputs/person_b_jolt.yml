@@ -1,0 +1,23 @@
+meta:
+  name: PersonBjolt
+
+content:
+  overlays: 
+    - type: OverlayTransformation
+      name: PersonB_jolt_transformationOverlay
+      base: PersonA
+      engine: jolt
+      value:
+        - operation: shift
+          spec: 
+            "\\@context":
+              "\\@version": "\\@context.\\@version"
+              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+            "\\@graph": 
+              "*": 
+                "#PersonB": "\\@graph[#2].\\@type"
+                "\\@id": "\\@graph[#2].\\@id"
+                "basePerson:firstname": "\\@graph[#2].first_name"
+                "basePerson:lastname": "\\@graph[#2].surname"
+                "basePerson:dateOfBirth": "\\@graph[#2].birthdate"
+                "basePerson:sex": "\\@graph[#2].gender"

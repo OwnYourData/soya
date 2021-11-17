@@ -1,0 +1,9 @@
+
+Welcome to SOyA 🌱 (Semantic Overlay Architecture)
+
+Installed components:
+* soya-cli - version: 0.11.1
+* jq - version: jq-master-v20200917-3811-g2b0a3891bf
+* jolt - version: 0.1.5
+
+More information: https://www.ownyourdata.eu/soya/

@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "baseCompany": "https://soya.data-container.net/zQmP45svxQxBRPUauVG83REXo3EYycsRbydts6Z97ejj99K#"
+  },
+  "@id": "https://playground.data-container.net/ld/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ#",
+  "@type": "baseCompany:Company",
+  "baseCompany:Address": "Michael Scherz-Straße 14",
+  "baseCompany:City": "Bad Vöslau",
+  "baseCompany:Country": "Austria",
+  "baseCompany:LegalName": "OwnYourData",
+  "baseCompany:ZipCode": "2540"
+}
