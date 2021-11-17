@@ -1,0 +1,49 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonOverlay_Test/"
+  },
+  "@graph": [
+    {
+      "@id": "Person_TestShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "Person_Test",
+      "sh:property": [
+        {
+          "sh:path": "name",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:maxLength": 19,
+          "sh:pattern": "^[a-z ,.'-]+$"
+        },
+        {
+          "sh:path": "dateOfBirth",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:minRange": {
+            "@type": "xsd:date",
+            "@value": "1900-01-01"
+          }
+        },
+        {
+          "sh:path": "age",
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "sex",
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "employer"
+        }
+      ]
+    },
+    {
+      "@id": "OverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "https://soya.data-container.net/Person_Test/",
+      "name": "PersonValidationOverlay_Test"
+    }
+  ]
+}

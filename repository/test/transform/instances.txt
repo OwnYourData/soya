@@ -1,0 +1,37 @@
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/PersonA/"
+  },
+  "@graph":[{
+    "@id": "PersonAinstance",
+    "@type":"basePerson:PersonA",
+    "basePerson:firstname": "Gabriel",
+    "basePerson:lastname": "Unterholzer",
+    "basePerson:dateOfBirth": "1995-11-18",
+    "sex":"male"
+  }]
+},
+  "dri": "PersonAinstance"
+}]' | curl -k -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/PersonB/"
+  },
+  "@graph":[{
+    "@id": "PersonBinstance",
+    "@type":"basePerson:PersonB",
+    "basePerson:first_name": "Gabriel",
+    "basePerson:"surname": "Unterholzer",
+    "basePerson:birthdate": "1995-11-18",
+    "gender":"male"
+  }]
+},
+  "dri": "PersonBinstance"
+}]' | curl -k -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data

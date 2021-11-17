@@ -1,0 +1,8 @@
+[
+    { "@id": "OverlayLabel", "@type": "OverlayLabel", "onBase": "https://soca.data-container.net/zQmXNXuVa7yQkHhA89xPLA8bnkpQA77d9sURBJWkQgTJmyn/Person" },
+    { "@id": "FirstName", "label": { "en": "First Name", "de": "Vorname" } },
+    { "@id": "LastName", "label": { "en": "Last Name", "de": "Nachname" } },
+    { "@id": "Gender", "label": { "en": "Gender", "de": "Geschlecht" } },
+    { "@id": "DateOfBirth", "label": { "en": "Date Of Birth", "de": "Geburtsdatum" } },
+    { "@id": "Employer", "label": { "en": "Employer", "de": "Arbeitgeber" } }
+  ]

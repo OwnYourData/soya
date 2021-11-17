@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmNf2HyajGst9DRd2JbLo6C8EQRrAfTSkfwz2GkAD8b6Uq",
+    "company": "https://soya.data-container.net/zQmP45svxQxBRPUauVG83REXo3EYycsRbydts6Z97ejj99K#"
+  },
+  "@graph": [
+    { "@id": "OverlayLabel", "@type": "OverlayLabel", "onBase": "company:Company" },
+    { "@id": "company:LegalName", "label": { "en": "Legal Name", "de": "Gesetzlicher Name" } },
+    { "@id": "company:Address", "label": { "en": "Address", "de": "Adresse" } },
+    { "@id": "company:ZipCode", "label": { "en": "Zip Code", "de": "Postleitzahl" } },
+    { "@id": "company:City", "label": { "en": "City", "de": "Stadt" } },
+    { "@id": "company:Country", "label": { "en": "Country", "de": "Land" } }
+  ]
+}

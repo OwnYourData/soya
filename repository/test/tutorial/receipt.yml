@@ -1,0 +1,15 @@
+meta:
+  name: Receipt
+
+content:
+  base: 
+    - name: Receipt
+      attributes:
+        read: String
+        write: String
+        update: String
+        delete: String
+        share: String
+        consent: String
+        provenance: String
+        format: String

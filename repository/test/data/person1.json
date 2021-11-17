@@ -1,0 +1,20 @@
+{
+    "content": {
+        "FirstName": "Fajar",
+        "LastName": "Ekaputra",
+        "Gender": "Male",
+        "DateOfBirth": "1985-06-28",
+        "Employer": [
+            "https://playground.data-container.net/api/data/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ?p=dri",
+            {
+                "LegalName": "TU Wien",
+                "Address": "Karlsplatz 13",
+                "ZipCode": "1040",
+                "City": "Vienna",
+                "Country": "Austria"
+            }]
+    },
+    "dri": "zQmNkoBsQb4fr2YZDHxd7hLeVNMEHLsyPfazyEFhDPE4g4M",
+    "base_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY",
+    "stack_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}

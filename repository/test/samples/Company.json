@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "@version": 1.1,    
+    "@import": "https://ns.ownyourdata.eu/ns/soca-context.json",
+    "@base": "https://soya.data-container.net/zQmXcwH3JsmqTyFjfGgWHYWipo2MWbC2vYMRBfrL3F93rzL/",
+    "Company": "base:Company",
+    "LegalName": "base:LegalName",
+    "Address": "base:Address",
+    "ZipCode": "base:ZipCode",
+    "City": "base:City",
+    "Country": "base:Country"
+  },
+  "@graph": [
+    {
+      "@type": "Company",
+      "LegalName": "OwnYourData",
+      "Address": "Michael Scherz-Straße 14",
+      "ZipCode": "2540",
+      "City": "Bad Vöslau",
+      "Country": "Austria"
+    }
+  ]
+}

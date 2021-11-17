@@ -1,0 +1,1 @@
+echo '{"content":[], "dri":"Person_v1"}' | curl -H "Content-Type: application/json" -d @- -X POST https://soya.data-container.net/api/data

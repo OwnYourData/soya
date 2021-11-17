@@ -1,0 +1,29 @@
+{
+  "content": {
+    "@context": {
+      "@version": 1.1,
+      "basePerson":"https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/",
+      "baseCompany":"https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/"
+    },
+    "@graph":[{
+      "@id": "https://playground.data-container.net/ld/zQmXdkfT5rFJvg7XgHrojGjXkLV6NQpaxDFnRTFCtKbyJmm",
+      "@type":"basePerson:Person",
+      "basePerson:FirstName": "Fajar",
+      "basePerson:LastName": "Ekaputra",
+      "basePerson:Gender": "Male",
+      "basePerson:DateOfBirth": "1985-06-28",
+      "basePerson:Employer": [{
+        "@id": "https://playground.data-container.net/ld/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ"
+      },{
+        "@type": "baseCompany:Company",
+        "baseCompany:LegalName": "TU Wien",
+        "baseCompany:Address": "Karlsplatz 13",
+        "baseCompany:ZipCode": "1040",
+        "baseCompany:City": "Vienna",
+        "baseCompany:Country": "Austria"
+      }]
+    }]
+  },
+  "dri": "zQmXdkfT5rFJvg7XgHrojGjXkLV6NQpaxDFnRTFCtKbyJmm",
+  "schema_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}

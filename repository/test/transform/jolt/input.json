@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "basePerson": "https://soya.data-container.net/PersonA/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonAinstance",
+      "@type": "basePerson:PersonA",
+      "basePerson:firstname": "Gabriel",
+      "basePerson:lastname": "Unterholzer",
+      "basePerson:dateOfBirth": "1995-11-18",
+      "basePerson:sex": "male"
+    }
+  ]
+}

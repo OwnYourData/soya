@@ -1,0 +1,8 @@
+[
+    { "@id": "OverlayLabel", "@type": "OverlayLabel", "onBase": "company:Company" },
+    { "@id": "company:LegalName", "label": { "en": "Legal Name", "de": "Gesetzlicher Name" } },
+    { "@id": "company:Address", "label": { "en": "Address", "de": "Adresse" } },
+    { "@id": "company:ZipCode", "label": { "en": "Zip Code", "de": "Postleitzahl" } },
+    { "@id": "company:City", "label": { "en": "City", "de": "Stadt" } },
+    { "@id": "company:Country", "label": { "en": "Country", "de": "Land" } }
+]

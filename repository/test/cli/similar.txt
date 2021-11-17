@@ -1,0 +1,1 @@
+echo '[]' | curl -H "Content-Type: application/json" -d @- -X POST https://soya.data-container.net/api/soya/similar

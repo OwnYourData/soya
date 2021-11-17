@@ -1,0 +1,58 @@
+{
+  "@context": {          
+    "Person": "https://soca.data-container.net/zQmXNXuVa7yQkHhA89xPLA8bnkpQA77d9sURBJWkQgTJmyn/Person",    
+    "FirstName": "Person:FirstName",
+    "LastName": "Person:LastName",
+    "Gender": "Person:Gender",
+    "DateOfBirth": "Person:DateOfBirth",
+    "Employer": "Person:Employer",
+
+    "Company": "https://soca.data-container.net/zQmTJCXJo54739GMGtgVjteppudStrheLvNKDUSterAYk29/Company",
+    "LegalName": "Company:LegalName",
+    "Address": "Company:Address",
+    "ZipCode": "Company:ZipCode",
+    "City": "Company:City",
+    "Country": "Company:Country"
+  },
+  "@graph": [
+    {
+      "@type": "Person",
+      "FirstName": "Fajar",
+      "LastName": "Ekaputra",
+      "Gender": "Male",
+      "DateOfBirth": "1985-06-28",
+      "Employer": [
+        {
+          "@type": "Company",
+          "LegalName": "TU Wien",
+          "Address": "Karlsplatz 13",
+          "ZipCode": "1040",
+          "City": "Vienna",
+          "Country": "Austria"
+        },{
+          "@type": "Company",
+          "LegalName": "OwnYourData",
+          "Address": "Michael Scherz-Straße 14",
+          "ZipCode": "2540",
+          "City": "Bad Vöslau",
+          "Country": "Austria"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "FirstName": "Christoph",
+      "LastName": "Fabianek",
+      "Gender": "Male",
+      "DateOfBirth": "1977-07-21",
+      "Employer":  {
+        "@type": "Company",
+        "LegalName": "OwnYourData",
+        "Address": "Michael Scherz-Straße 14",
+        "ZipCode": "2540",
+        "City": "Bad Vöslau",
+        "Country": "Austria"
+      }
+    }
+  ]
+}

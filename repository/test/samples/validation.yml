@@ -1,0 +1,26 @@
+meta:
+  name: Person Validation Overlay
+
+content:
+  overlays: 
+    - type: OverlayValidation
+      base: Person
+      class: 
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "/^[a-z ,.'-]+$/i"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        age: 
+          cardinality: "0..1"
+          valueRange: "[0..*]"
+        sex:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+        employer:
+          cardinality: "0..*"

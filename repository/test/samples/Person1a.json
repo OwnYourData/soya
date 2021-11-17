@@ -1,0 +1,29 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "baseCompany": "zQmP45svxQxBRPUauVG83REXo3EYycsRbydts6Z97ejj99K",
+    "basePerson": "zQmPN8kNDfbSuwJFS4ietZhV6s6AYY2jfdJ2KAXA3eWXr4K"
+  },
+  "@graph": [
+    {
+      "@type": "basePerson:Person",
+      "basePerson:DateOfBirth": "1985-06-28",
+      "basePerson:Employer": [
+        {
+          "@id": "zQmdUzxDdJDWWRUPJDKjEYWBSbXdp515zQygHWyVq2frJvH"
+        },
+        {
+          "@type": "baseCompany:Company",
+          "baseCompany:Address": "Karlsplatz 13",
+          "baseCompany:City": "Vienna",
+          "baseCompany:Country": "Austria",
+          "baseCompany:LegalName": "TU Wien",
+          "baseCompany:ZipCode": "1040"
+        }
+      ],
+      "basePerson:FirstName": "Fajar",
+      "basePerson:Gender": "Male",
+      "basePerson:LastName": "Ekaputra"
+    }
+  ]
+}

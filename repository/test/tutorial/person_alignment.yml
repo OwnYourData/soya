@@ -1,0 +1,11 @@
+meta:
+  name: Person_alignment
+
+content:
+  overlays: 
+    - type: OverlayAlignment
+      base: Person
+      attributes:
+        name: 
+          - foaf:name
+          - dc:title

@@ -1,0 +1,17 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmdHuFMdKncDfHAERuXnLWuVR3tNrv9v1VAkFFd6EpGKgz"
+  },
+  "@id": "",
+  "label": { "en": "Person Record" },
+  "description": { "en": "A basic schema to describe a person" },
+  "import": [
+    "https://soya.data-container.net/zQmPN8kNDfbSuwJFS4ietZhV6s6AYY2jfdJ2KAXA3eWXr4K/Person",
+    "https://soya.data-container.net/zQmNf2HyajGst9DRd2JbLo6C8EQRrAfTSkfwz2GkAD8b6Uq/Company/Annotation",
+    "https://soya.data-container.net/zQmVW5BzD7GeG3y1DNApudXrGzBiGMgnFt6M6mDDhMPxREo/Person/Annotation",
+    "https://soya.data-container.net/zQmV4vfSQTrteJzmuZJZpddUj5UxUcPonLGR8w3zFhEWtBR/Person/Transformation_JSON2RDF",
+    "https://soya.data-container.net/zQmd2kX8DH2TV2o8TWnypde1aAk755DrCWv4Qno1wHjysW4/Person/Transformation_RDF2JSON"
+  ]
+}

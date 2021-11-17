@@ -1,0 +1,18 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonA_jq_transformationOverlay/"
+  },
+  "@graph": [
+    {
+      "@id": "OverlayTransformation",
+      "@type": "OverlayTransformation",
+      "onBase": "https://soya.data-container.net/PersonA/",
+      "name": "PersonA_jq_transformationOverlay"
+    },{
+      "@id": "jq_command",
+      "command": ".[\"@graph\"] | { \"@context\": {\"@version\":1.1, \"@vocab\":\"https://soya.data-container.net/PersonB/\"}, \"@graph\": map( {\"@id\":.[\"@id\"], \"@type\":\"PersonB\", \"first_name\":.[\"basePerson:firstname\"], \"surname\":.[\"basePerson:lastname\"], \"birthdate\":.[\"basePerson:dateOfBirth\"], \"gender\":.[\"basePerson:sex\"]})}"
+    }
+  }
+}

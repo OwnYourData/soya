@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@base":"https://soya.data-container.net/zQmP45svxQxBRPUauVG83REXo3EYycsRbydts6Z97ejj99K"
+  },
+  "@graph":[{
+    "@id": "https://playground.data-container.net/ld/zQmX56cwrNhuXxCtRo77fNabBsCuhpgqhs1DCjc1cikiKzx",
+    "@type":"Company",
+    "LegalName":"TU Wien",
+    "Address":"Karlsplatz 13",
+    "ZipCode":"1040",
+    "City":"Vienna",
+    "Country":"Austria"
+  }]
+}

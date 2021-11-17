@@ -1,0 +1,8 @@
+[
+    { "@id": "Company", "subClassOf": "soca:Base" },
+    { "@id": "LegalName", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "Address", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "ZipCode", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "City", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "Country", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" }
+]

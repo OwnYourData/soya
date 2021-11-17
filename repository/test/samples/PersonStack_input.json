@@ -1,0 +1,11 @@
+{
+
+  "@id": "",
+  "label": { "en": "Person Record" },
+  "description": { "en": "A basic schema to describe a person" },
+  "import": [
+    "https://soca.data-container.net/zQmXNXuVa7yQkHhA89xPLA8bnkpQA77d9sURBJWkQgTJmyn/Person", 
+    "https://soca.data-container.net/zQmWsC1QviyDAAfm99JZn74hRwKxoR3L56g4jCykDTPTyaG/", 
+    "https://soca.data-container.net/zQmRe6ZmxUETY2rm8Dg9CNBcdBh8kqe9aqeoXnfigAUKtuP/"
+  ]
+}

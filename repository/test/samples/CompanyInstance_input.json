@@ -1,0 +1,21 @@
+{
+  "@base": "https://soca.data-container.net/zQmTJCXJo54739GMGtgVjteppudStrheLvNKDUSterAYk29/",
+  "@graph": [
+    {
+      "@type": "Company",
+      "LegalName": "OwnYourData",
+      "Address": "Michael Scherz-Straße 14",
+      "ZipCode": "2540",
+      "City": "Bad Vöslau",
+      "Country": "Austria"
+    },
+    {
+      "@type": "Company",
+      "LegalName": "TU Wien",
+      "Address": "Karlsplatz 13",
+      "ZipCode": "1040",
+      "City": "Vienna",
+      "Country": "Austria"
+    }
+  ]
+}

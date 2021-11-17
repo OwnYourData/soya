@@ -1,0 +1,34 @@
+meta:
+  name: Person_Test
+
+content:
+  base:
+    - name: Person_Test
+      attributes:
+        name: String
+        dateOfBirth: Date
+        age: Integer
+        sex: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: Person_Test
+      class: 
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[a-zA-Z ,.'-]+$"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        age: 
+          cardinality: "0..1"
+          valueRange: "[0..*]"
+        sex:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+        employer:
+          cardinality: "0..*"

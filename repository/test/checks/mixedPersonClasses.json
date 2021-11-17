@@ -1,0 +1,10 @@
+{
+  "isValid": false,
+  "results": [],
+  "classChecks": [
+    {
+      "message": "Missing class",
+      "name": "https://soya.data-container.net/Person_Test/Person_Test"
+    }
+  ]
+}

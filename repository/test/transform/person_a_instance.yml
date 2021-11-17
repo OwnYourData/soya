@@ -1,0 +1,6 @@
+instance:
+  base: PersonA
+  firstname: Gabriel
+  lastname: Unterholzer
+  dateOfBirth: 1995-11-18
+  sex: male

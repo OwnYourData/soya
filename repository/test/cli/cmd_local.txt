@@ -1,0 +1,81 @@
+docker run -d --name soya -e RAILS_ENV=production -e RAILS_LOG_TO_STDOUT=true -e SECRET_KEY_BASE=17cce413365562c5c0ab09ffaa9d4cf669e94b1338dd2bea5243f24f729e8f9a27f761bc47fa575f2ad1690b45b3439c9ddb3d7a143596b0a65e97d1b0881c01 -p 4004:3000 semcon/sc-soya
+
+soya template base | soya init --repo http://192.168.178.21:4004 | soya push --repo http://192.168.178.21:4004
+
+cat val.yml | soya init --repo http://192.168.178.21:4004 | soya push --repo http://192.168.178.21:4004
+
+
+soya template base | soya init | soya push
+
+cat val.yml | soya init | soya push
+
+
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson": "https://soya.data-container.net/PersonA/"
+  },
+  "@graph": [
+    {
+      "@id": "Person1",
+      "@type": "basePerson:PersonA",
+      "basePerson:firstname": "Fajar",
+      "basePerson:lastname": "Ekaputra",
+      "basePerson:dateOfBirth": "1985-06-28",
+      "basePerson:sex": "male"
+    },
+    {
+      "@id": "Person2",
+      "@type": "basePerson:PersonA",
+      "basePerson:firstname": "Gabriel",
+      "basePerson:lastname": "Unterholzer",
+      "basePerson:dateOfBirth": "1995-11-18",
+      "basePerson:sex": "male"
+    }
+  ]
+},
+  "dri": "PersonAinstances"
+}]' | curl -k -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+
+
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/PersonA/"
+  },
+  "@graph":[{
+      "@id": "PersonAinstance",
+      "@type": "basePerson:PersonA",
+      "basePerson:firstname": "Gabriel",
+      "basePerson:lastname": "Unterholzer",
+      "basePerson:dateOfBirth": "1995-11-18",
+      "basePerson:sex": "male"
+    }]
+},
+  "dri": "PersonAinstance"
+}]' | curl -k -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+
+
+
+{
+  "@context": {
+    "@version": 1.1,
+    "basePerson": "https://soya.data-container.net/PersonA/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonAinstance",
+      "@type": "basePerson:PersonA",
+      "basePerson:firstname": "Gabriel",
+      "basePerson:lastname": "Unterholzer",
+      "basePerson:dateOfBirth": "1995-11-18",
+      "basePerson:sex": "male"
+    }
+  ]
+}

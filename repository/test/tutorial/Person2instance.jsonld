@@ -1,0 +1,13 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/Person2/"
+  },
+  "@graph":[{
+    "@id": "Person2instance",
+    "@type":"basePerson:Person2",
+    "basePerson:FirstName": "Fajar",
+    "basePerson:LastName": "Ekaputra",
+    "basePerson:Gender": "Male"
+  }]
+}

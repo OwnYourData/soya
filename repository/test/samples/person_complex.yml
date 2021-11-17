@@ -1,0 +1,127 @@
+meta:
+  name: VC
+  context: https://ns.ownyourdata.eu/ns/soya-context.json 
+  namespace:
+    - foaf: "http://xmlns.com/foaf/0.1/"
+    - dc: "http://purl.org/dc/elements/1.1/"
+
+content:
+  base: 
+    - name: VaccinationCertificate
+      attributes:
+        header: Person
+        vaccinationEvent: VaccinationEvent
+        hcid: ID
+        certificateIssuer: String
+        certificateValidFrom: Date
+        certificateValidUntil: Date
+        certificateSchemaVersion: String
+    
+    - name: ID
+      attributes:
+        id: String
+        idSystem: String
+    
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        uniqueIdentifier: ID
+        sex: String
+
+    - name: VaccinationEvent
+      attributes: 
+        vaccineOrProphylaxis: String
+        vaccineBrand: String
+        vaccineManufacture: String
+        vaccineMarketAuthorization: String
+        vaccineBatchNumber: String
+        dateOfVaccination: Date
+        doseNumber: Integer
+        validFrom: Date
+        totalDoses: Integer
+        countryOfVaccination: String
+        administeringCentre: String
+        healthWorkerSignature: base64binary
+        healthWorkerIdentifier: ID
+        diseaseTarget: String
+        nextDoseDue: Date
+        
+
+  overlays: 
+    - type: OverlayAnnotation
+      base: Person
+      class: 
+        label: 
+          en: Person
+          de: 
+            - die Person
+            - der Mensch
+      attributes:
+        name: 
+          label: 
+            en: Name
+            de: Name
+        dateOfBirth: 
+          label: 
+            en: Date of Birth 
+            de: Geburtsdatum
+          comment: 
+            en: Birthdate of Person
+        sex: 
+          label: 
+            en: Gender
+            de: Geschlecht
+          comment: 
+            en: Gender (male or female)
+            de: Geschlecht (mÃ¤nnlich oder weiblich)
+
+    - type: OverlayClassification
+      base: Person
+      attributes:
+        name: pii
+        dateOfBirth: pii
+        sex: 
+          - pii
+          - gdpr_sensitive
+
+    - type: OverlayEncoding
+      base: Person    
+      attributes:
+        name: UTF-8
+        dateOfBirth: UTF-8
+        age: UTF-8
+        sex: UTF-8
+
+    - type: OverlayFormat
+      base: Person
+      attributes:
+        dateOfBirth: DD/MM/YYYY
+
+    - type: OverlayAlignment
+      base: Person
+      attributes:
+        name: 
+          - foaf:name
+          - dc:title
+        sex: foaf:gender
+
+    - type: OverlayValidation
+      base: Person
+      class: 
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20]"
+          pattern: "^[a-zA-Z ,.'-]+$"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        age: 
+          cardinality: "0..1"
+          valueRange: "[0..*]"
+        sex:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female

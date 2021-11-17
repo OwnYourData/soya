@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmVW5BzD7GeG3y1DNApudXrGzBiGMgnFt6M6mDDhMPxREo",
+    "person": "https://soya.data-container.net/zQmPN8kNDfbSuwJFS4ietZhV6s6AYY2jfdJ2KAXA3eWXr4K"
+  },
+  "@graph": [
+    { "@id": "OverlayTransformation", "@type": "OverlayTransformation", "onBase": "person:Person" },
+    { "@id": "FirstName", "label": { "en": "First Name", "de": "Vorname" } },
+    { "@id": "LastName", "label": { "en": "Last Name", "de": "Nachname" } },
+    { "@id": "Gender", "label": { "en": "Gender", "de": "Geschlecht" } },
+    { "@id": "DateOfBirth", "label": { "en": "Date Of Birth", "de": "Geburtsdatum" } },
+    { "@id": "Employer", "label": { "en": "Employer", "de": "Arbeitgeber" } }
+  ]
+}

@@ -1,0 +1,255 @@
+cat CompanyBase_input.json | ./dri.rb
+
+docker run -d --name soya -p 4000:3000 semcon/sc-soya
+
+# Company Base
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,    
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/",
+    "Company": "base:Company",
+    "LegalName": "base:LegalName",
+    "Address": "base:Address",
+    "ZipCode": "base:ZipCode",
+    "City": "base:City",
+    "Country": "base:Country"
+  },
+  "@graph": [
+    { "@id": "Company", "subClassOf": "soya:Base" },
+    { "@id": "LegalName", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "Address", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "ZipCode", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "City", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" },
+    { "@id": "Country", "@type": "owl:DatatypeProperty", "domain": "Company", "range": "xsd:string" }
+  ]
+},
+  "schema_dri": "zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://soya.data-container.net/api/data
+
+# Company Overlay
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmRe6ZmxUETY2rm8Dg9CNBcdBh8kqe9aqeoXnfigAUKtuP/",
+    "company": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/"
+  },
+  "@graph": [
+    { "@id": "OverlayLabel", "@type": "OverlayLabel", "onBase": "company:Company" },
+    { "@id": "company:LegalName", "label": { "en": "Legal Name", "de": "Gesetzlicher Name" } },
+    { "@id": "company:Address", "label": { "en": "Address", "de": "Adresse" } },
+    { "@id": "company:ZipCode", "label": { "en": "Zip Code", "de": "Postleitzahl" } },
+    { "@id": "company:City", "label": { "en": "City", "de": "Stadt" } },
+    { "@id": "company:Country", "label": { "en": "Country", "de": "Land" } }
+  ]
+},
+  "schema_dri": "zQmRe6ZmxUETY2rm8Dg9CNBcdBh8kqe9aqeoXnfigAUKtuP"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://soya.data-container.net/api/data
+
+# Person Base
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,    
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/",
+    "Person": "base:Person",
+    "FirstName": "base:FirstName",
+    "LastName": "base:LastName",
+    "Gender": "base:Gender",
+    "DateOfBirth": "base:DateOfBirth",
+    "Employer": "base:Employer"
+  },
+  "@graph": [
+    { "@id": "", "import": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/" },
+    { "@id": "Person", "subClassOf": "Base" },
+    { "@id": "FirstName", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "LastName", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "Gender", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "DateOfBirth", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "Employer", "@type": "owl:ObjectProperty", "domain": "Person", 
+             "range": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/Company" }
+  ]
+},
+  "schema_dri": "zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://soya.data-container.net/api/data
+
+# Person Overlay
+echo '[{
+  "content": {  
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmPHwXrAcnwHxh5kaYsN6CYQW3Xrd3AQW8cW9fQxRedimy/",
+    "person": "https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/"
+  },
+  "@graph": [
+    { "@id": "OverlayLabel", "@type": "OverlayLabel", "onBase": "person:Person" },
+    { "@id": "FirstName", "label": { "en": "First Name", "de": "Vorname" } },
+    { "@id": "LastName", "label": { "en": "Last Name", "de": "Nachname" } },
+    { "@id": "Gender", "label": { "en": "Gender", "de": "Geschlecht" } },
+    { "@id": "DateOfBirth", "label": { "en": "Date Of Birth", "de": "Geburtsdatum" } },
+    { "@id": "Employer", "label": { "en": "Employer", "de": "Arbeitgeber" } }
+  ]
+},
+  "schema_dri": "zQmPHwXrAcnwHxh5kaYsN6CYQW3Xrd3AQW8cW9fQxRedimy"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://soya.data-container.net/api/data
+
+# Person Stack
+echo '[{
+  "content": {  
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY/"
+  },
+  "@id": "",
+  "label": { "en": "Person Record" },
+  "description": { "en": "A basic schema to describe a person" },
+  "import": [
+    "https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/Person", 
+    "https://soya.data-container.net/zQmRe6ZmxUETY2rm8Dg9CNBcdBh8kqe9aqeoXnfigAUKtuP/Company/Overlay", 
+    "https://soya.data-container.net/zQmPHwXrAcnwHxh5kaYsN6CYQW3Xrd3AQW8cW9fQxRedimy/Person/Overlay"
+  ]
+},
+  "schema_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://soya.data-container.net/api/data
+
+# =================== PLAYGROUND ===================
+
+# Company #1 Instance
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "baseCompany": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/"
+  },
+  "@graph": [{
+    "@id": "https://playground.data-container.net/ld/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ",
+    "@type":"baseCompany:Company",
+    "baseCompany:LegalName":"OwnYourData",
+    "baseCompany:Address":"Michael Scherz-Straße 14",
+    "baseCompany:ZipCode":"2540",
+    "baseCompany:City":"Bad Vöslau",
+    "baseCompany:Country":"Austria"
+  }]
+},
+  "dri": "zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ",
+  "schema_dri": "zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+# read company #1 instance
+curl https://playground.data-container.net/ld/zQmV8T1ZF8uQaBAiKcEAbBeyWfzSMKuiRzZ8ziv9ADz3gbR
+
+
+# Company #2 Instance
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/",
+    "Company": "base:Company",
+    "LegalName": "base:LegalName",
+    "Address": "base:Address",
+    "ZipCode": "base:ZipCode",
+    "City": "base:City",
+    "Country": "base:Country"
+  },
+  "@graph": [
+    {
+      "@type": "Company",
+      "LegalName": "TU Wien",
+      "Address": "Karlsplatz 13",
+      "ZipCode": "1040",
+      "City": "Vienna",
+      "Country": "Austria"
+    }
+  ]
+},
+  "dri": "zQmU3oGkXngwaKiWkwVX7APZ9Wr2i7RrFgT1zpqXga5np7H",
+  "schema_dri": "zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+# read company #2 instance
+curl https://playground.data-container.net/ld/zQmU3oGkXngwaKiWkwVX7APZ9Wr2i7RrFgT1zpqXga5np7H
+
+
+# Person #1 Instance
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/",
+    "baseCompany":"https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/"
+  },
+  "@graph":[{
+    "@id": "https://playground.data-container.net/ld/zQmXdkfT5rFJvg7XgHrojGjXkLV6NQpaxDFnRTFCtKbyJmm",
+    "@type":"basePerson:Person",
+    "basePerson:FirstName": "Fajar",
+    "basePerson:LastName": "Ekaputra",
+    "basePerson:Gender": "Male",
+    "basePerson:DateOfBirth": "1985-06-28",
+    "basePerson:Employer": [{
+      "@id": "https://playground.data-container.net/ld/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ"
+    },{
+      "@type": "baseCompany:Company",
+      "baseCompany:LegalName": "TU Wien",
+      "baseCompany:Address": "Karlsplatz 13",
+      "baseCompany:ZipCode": "1040",
+      "baseCompany:City": "Vienna",
+      "baseCompany:Country": "Austria"
+    }]
+  }]
+},
+  "dri": "zQmXdkfT5rFJvg7XgHrojGjXkLV6NQpaxDFnRTFCtKbyJmm",
+  "schema_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+# read person #1 instance
+curl https://playground.data-container.net/ld/zQmXdkfT5rFJvg7XgHrojGjXkLV6NQpaxDFnRTFCtKbyJmm
+
+# Person #2 Instance
+echo '[{
+  "content": {
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/",
+    "baseCompany":"https://soya.data-container.net/zQmZ3ydc1U7dfMKHCA47dGuTk6z2ckiC5PxFRynXUdMjbWq/"
+  },
+  "@graph":[{
+    "@id": "https://playground.data-container.net/ld/zQmQjn2vhRa8QAH1VTyEAhG8GzCzAKgdegq36jV6GgCPFyU",
+    "@type":"basePerson:Person",
+    "basePerson:FirstName": "Christoph",
+    "basePerson:LastName": "Fabianek",
+    "basePerson:Gender": "Male",
+    "basePerson:DateOfBirth": "1977-07-21",
+    "basePerson:Employer": [{
+      "@type": "baseCompany:Company",
+      "baseCompany:LegalName": "OwnYourData",
+      "baseCompany:Address": "Michael Scherz-Straße 14",
+      "baseCompany:ZipCode": "2540",
+      "baseCompany:City": "Bad Vöslau",
+      "baseCompany:Country": "Austria"
+    }]
+  }]
+},
+  "dri": "zQmQjn2vhRa8QAH1VTyEAhG8GzCzAKgdegq36jV6GgCPFyU",
+  "schema_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}]' | curl -H "Content-Type: application/json" -d @- \
+    -X POST https://playground.data-container.net/api/data
+
+# read person #2 instance
+curl https://playground.data-container.net/ld/zQmQjn2vhRa8QAH1VTyEAhG8GzCzAKgdegq36jV6GgCPFyU
+

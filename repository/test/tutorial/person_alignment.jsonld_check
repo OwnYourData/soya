@@ -1,0 +1,16 @@
+{
+  "@context": {
+     "@version": 1.1,
+     "@base": "http://example.org/person_alignment/",
+     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+     "Person_v1": "https://soya.data-container.net/Person_v1#",
+     "dc": "http://purl.org/dc/elements/1.1/",
+     "foaf": "http://xmlns.com/foaf/0.1/",
+     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  },
+  "@graph": [
+     { "@id": "person_alignment", "subClassOf": "OverlayAlignment" },
+     { "@id": "Person_v1:name", "rdfs:subPropertyOf": "foaf:name" },
+     { "@id": "Person_v1:name", "rdfs:subPropertyOf": "dc:title" }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "basePerson":"https://soya.data-container.net/zQmV7bGfWDq1tGve9gvUMiaFFhvvD8toBkEHPmBJiBtx26A/",
+  },
+  "@graph":[{
+    "@id": "https://playground.data-container.net/ld/zQmY8kqmnpsiznfncYmdphiVvf9beRzC9A4paU5iM3cwyCZ",
+    "@type":"basePerson:Person",
+    "basePerson:FirstName": "Fajar",
+    "basePerson:LastName": "Ekaputra",
+    "basePerson:Gender": "Male",
+    "basePerson:DateOfBirth": "1985-06-28"
+  }]
+}
+
+
+{
+  "content": {
+    "FirstName": "Fajar",
+    "LastName": "Ekaputra",
+    "Gender": "Male",
+    "DateOfBirth": "1985-06-28"
+  },
+  "stack_dri": "zQmbx8H9Bgci3uYXa1cHLk2uqScsV251j7k5BQRgjdM4zYY"
+}

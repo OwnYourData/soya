@@ -1,0 +1,25 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "\\@context": {
+        "\\@version": "\\@context.\\@version",
+        "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+      },
+      "\\@graph": {
+        "*": {
+          // constant
+          "#PersonB": "\\@graph[#2].\\@type",
+          // mapping with escape '\\'
+          "\\@id": "\\@graph[#2].\\@id",
+          // normal mappings
+          "basePerson:firstname": "\\@graph[#2].first_name",
+          "basePerson:lastname": "\\@graph[#2].surname",
+          "basePerson:dateOfBirth": "\\@graph[#2].birthdate",
+          "basePerson:sex": "\\@graph[#2].gender"
+        }
+      }
+    }
+  }
+]
+

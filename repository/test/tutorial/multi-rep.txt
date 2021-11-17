@@ -1,0 +1,111 @@
+YML
+
+meta:
+  name: Person
+content:
+  base: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        age: Integer
+        sex: String
+        employer: String
+
+---
+
+JSON-LD
+
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Person"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "age",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "sex",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "employer",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}
+
+---
+
+DRI - JSON-LD
+
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/zQmVVWAnLxXMtUKgLnzSFdSePXzR3JAuR4J8hyGGfgpazLM/"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "age",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "sex",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "employer",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+    { "@id": "", "import": "https://soca.data-container.net/zQmTJCXJo54739GMGtgVjteppudStrheLvNKDUSterAYk29/" },
+    { "@id": "Person", "subClassOf": "Base" },
+    { "@id": "FirstName", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "LastName", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "Gender", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "DateOfBirth", "@type": "owl:DatatypeProperty", "domain": "Person", "range": "xsd:string" },
+    { "@id": "Employer", "@type": "owl:ObjectProperty", "domain": "Person", 
+             "range": "https://soca.data-container.net/zQmTJCXJo54739GMGtgVjteppudStrheLvNKDUSterAYk29/Company" }
+  ]
