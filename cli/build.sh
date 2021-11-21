@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER="soya"
+CONTAINER="soya-cli"
 REPOSITORY="oydeu"
 
 # read commandline options

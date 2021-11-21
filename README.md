@@ -3,7 +3,7 @@
 [SOyA](https://www.ownyourdata.eu/en/soya/) provides a framework to manage layers of semantic description for a dataset enabling well-defined annotation, validation, transformation, and human-readable display & data capture.
 
 ## Resources
-* Read about the concept and examples: [OYDIDintro.pdf](https://github.com/OwnYourData/soya/raw/main/docs/SOyA_WhitePaper_Nov21.pdf)    
+* Read about the concept and examples: [White-Paper.pdf](https://github.com/OwnYourData/soya/raw/main/docs/SOyA_WhitePaper_Nov21.pdf)    
 * `soya` commandline tool:    
     * Sources: https://github.com/OwnYourData/soya/tree/main/cli    
     * run in a Docker image: https://hub.docker.com/r/oydeu/soya-cli     

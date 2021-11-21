@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CONTAINER="sc-soya"
-REPOSITORY="semcon"
+CONTAINER="soya-base"
+REPOSITORY="oydeu"
 
 # read commandline options
 BUILD_CLEAN=false
