@@ -10,7 +10,9 @@ RUN mkdir -p $RAILS_ROOT/tmp/pids && \
 		build-essential && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 COPY Gemfile $WORKDIR
-RUN bundle install && \
+RUN bundle config git.allow_insecure true && \
+	gem install bundler && \
+	bundle install && \
 	bundle update
 
 COPY . .

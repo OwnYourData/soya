@@ -1,0 +1,190 @@
+openapi: 3.0.1
+info:
+  title: SOyA Repository API
+  description: >-
+    SOyA is a data model authoring and publishing platform and also provides 
+    functionalities for validation and transformation.
+     
+     Further information:
+     - learn more about Semantic Overlay Architecture at https://www.ownyourdata.eu/soya
+     - view other [OwnYourData Service API's](https://api-docs.ownyourdata.eu)
+  contact:
+    email: office@ownyourdata.eu
+  license:
+    name: MIT License
+    url: 'https://opensource.org/licenses/MIT'
+  version: v1
+servers:
+  - url: /
+security:
+  - BearerAuth: []
+paths:
+  /oauth/token:
+    post:
+      summary: request token
+      tags:
+        - Authorization
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTokenBody'
+      responses:
+        '200':
+          description: Return token object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestBody'
+        '401':
+          description: invalid
+  /oauth/token/info:
+    get:
+      summary: show token information
+      tags:
+        - Authorization
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenInfoResponse'
+        '401':
+          description: Not authorized
+  /oauth/revoke:
+    post:
+      summary: revoke token
+      tags:
+        - Authorization
+      requestBody:
+        $ref: '#/components/requestBodies/Input'
+      responses:
+        '200':
+          description: success
+        '404':
+          description: not found
+  /api/active:
+    get:
+      tags:
+        - Container information
+      security: []
+      summary: check if container is active
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                  auth:
+                    type: boolean
+                    default: false
+                  repos:
+                    type: boolean
+                    default: false
+                  watermark:
+                    type: boolean
+                    default: false
+                  billing:
+                    type: boolean
+                    default: false
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                    default:
+                      - admin
+                      - write
+                      - read
+components:
+  schemas:
+    BadRequestBody:
+      properties:
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad request
+      required:
+        - status
+        - error
+    RequestTokenBody:
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        grant_type:
+          type: string
+          enum:
+            - client_credentials
+            - password
+      required:
+        - client_id
+        - client_secret
+        - grant_type
+    TokenResponse:
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        created_at:
+          type: integer
+        username:
+          type: string
+    TokenInfoResponse:
+      properties:
+        resource_owner_id:
+          type: string
+        scope:
+          type: array
+          items:
+            type: string
+        expires_in:
+          type: integer
+        application:
+          type: object
+          properties:
+            uid:
+              type: string
+        created_at:
+          type: integer
+    DataBody:
+      properties:
+        content:
+          description: Key value json file representing data from schema base
+          type: object
+        dri:
+          type: string
+        schema_dri:
+          type: string
+        mime_type:
+          type: string
+          example: application/json
+        table_name:
+          type: string
+          description: tag to group records (mimics repo functionality of Data Vault)
+  requestBodies:
+    Input:
+      content:
+        application/json:
+          schema: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
