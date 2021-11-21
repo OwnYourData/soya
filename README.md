@@ -1,4 +1,4 @@
-# Semantic Overlay Architecture :sämling: (SOyA)
+# Semantic Overlay Architecture 🌱 (SOyA)
 
 [SOyA](https://www.ownyourdata.eu/en/soya/) provides a framework to manage layers of semantic description for a dataset enabling well-defined annotation, validation, transformation, and human-readable display & data capture.
 
