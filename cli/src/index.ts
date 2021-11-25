@@ -153,6 +153,14 @@ const overlayPlugins: CommandObject = {
   if (isSupported)
     return;
 
+  if (!command)
+    return exitWithError('No command specified!');
+
+  const plugin = overlayPlugins[command];
+
+  if (!plugin)
+    return exitWithError(`No plugin available for command "${command}"!`);
+
   if (!param1)
     return exitWithError('No DRI specified!');
 
@@ -162,14 +170,6 @@ const overlayPlugins: CommandObject = {
     return exitWithError('No input data specified!');
 
   const layer = await SoyaService.getInstance().pull(param1);
-
-  if (!command)
-    return exitWithError('No command specified!');
-
-  const plugin = overlayPlugins[command];
-
-  if (!plugin)
-    return exitWithError(`No plugin available for command "${command}"!`);
 
   let parsedInput: any;
   try {
