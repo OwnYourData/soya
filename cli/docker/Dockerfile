@@ -12,10 +12,12 @@ RUN npm install && \
 
 FROM maven:3-openjdk-8 as java_builder
 
-WORKDIR /app
-RUN git clone https://github.com/bazaarvoice/jolt.git && \
+RUN mkdir -p /app && \
+    cd /app && \
+    git clone https://github.com/bazaarvoice/jolt.git && \
     cd jolt && \
     mvn clean package
+WORKDIR /app
 
 #########################################
 
@@ -27,7 +29,7 @@ RUN addgroup -S user && \
     apk add --no-cache libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
     gem install securerandom httparty ed25519 multibases multihashes optparse rbnacl dag uri && \
     apk del make gcc musl-dev && \
-    wget https://raw.githubusercontent.com/OwnYourData/did-cmd/main/oydid.rb -O /usr/local/bin/oydid && \
+    wget https://raw.githubusercontent.com/OwnYourData/oydid/main/cli/oydid.rb -O /usr/local/bin/oydid && \
     chmod 755 /usr/local/bin/oydid && \
     mkdir -p /usr/src/app/jolt
 

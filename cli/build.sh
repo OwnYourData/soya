@@ -27,6 +27,9 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+# docker build -f ./docker/Dockerfile.node -t oydeu/soya-cli:node .
+# docker build -f ./docker/Dockerfile.java -t oydeu/soya-cli:java .
+
 if $BUILD_CLEAN; then
     docker build --no-cache -f ./docker/Dockerfile -t $REPOSITORY/$CONTAINER .
 else
