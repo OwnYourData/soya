@@ -153,13 +153,13 @@ const overlayPlugins: CommandObject = {
   if (isSupported)
     return;
 
+  if (!param1)
+    return exitWithError('No DRI specified!');
+
   let input: string | undefined = await Std.in();
 
   if (!input)
     return exitWithError('No input data specified!');
-
-  if (!param1)
-    return exitWithError('No DRI specified!');
 
   const layer = await SoyaService.getInstance().pull(param1);
 
