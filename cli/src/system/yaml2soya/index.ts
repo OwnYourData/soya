@@ -87,7 +87,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     }
   if (Array.isArray(content.overlays))
     for (const overlay of content.overlays) {
-      handleOverlay(doc, overlay, baseUrl);
+      handleOverlay(doc, overlay);
     }
 
   // this is where the rename of "graph" to "@graph" happens

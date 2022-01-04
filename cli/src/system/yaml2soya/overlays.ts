@@ -16,7 +16,7 @@ const arrayifyIfLeaf = (obj: any) => {
     return [obj];
 }
 
-export const handleOverlay = (doc: SoyaDocument, overlay: any, baseUrl: string) => {
+export const handleOverlay = (doc: SoyaDocument, overlay: any) => {
   switch (overlay.type) {
     case 'OverlayAnnotation': handleAnnotation(doc, overlay); break;
     case 'OverlayAlignment': handleAlignment(doc, overlay); break;
@@ -34,7 +34,7 @@ export const handleOverlay = (doc: SoyaDocument, overlay: any, baseUrl: string) 
   doc.graph.push({
     '@id': overlay.type,
     '@type': overlay.type,
-    'onBase': `${baseUrl}/${overlay.base}/`,
+    'onBase': overlay.base,
     name: overlay.name,
   })
 };
