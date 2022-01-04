@@ -38,6 +38,26 @@ Introduction {#intro}
 
 SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.
 
+<p align="center">
+  <img src="docs/res/overview.png" width="350"><br>
+  <em>Figure 1: Building blocks in SOyA</em>
+</p>
+</div>
+
+
+## Terminology ## {#terminology}
+
+This document uses the following terms as defined in external specifications and defines terms specific to SOyA.
+
+: Attribute
+:: in a base a single field with a name and associated type
+		in RDF: a single data type or object property
+
+
+## Design Goals and Rationale ## {#goals}
+
+SOyA satisfies the following design goals:
+
 
 Reference Implementation {#implementation}
 ========================
