@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="3f58871c8d95a830eecf01ace69bb9d88af4567a" name="document-revision">
+  <meta content="92a31652f19fa6c8a90460ead755c54521172fc4" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -438,7 +438,12 @@ dfn > a.self-link::before      { content: "#"; }
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
    <ol class="toc" role="directory">
-    <li><a href="#intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
+    <li>
+     <a href="#intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
+     <ol class="toc">
+      <li><a href="#terminology"><span class="secno">1.1</span> <span class="content">Terminology</span></a>
+      <li><a href="#goals"><span class="secno">1.2</span> <span class="content">Design Goals and Rationale</span></a>
+     </ol>
     <li><a href="#implementation"><span class="secno">2</span> <span class="content">Reference Implementation</span></a>
     <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
@@ -464,6 +469,17 @@ dfn > a.self-link::before      { content: "#"; }
    </ul>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
    <p>SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.</p>
+   <p align="center"> <img src="docs/res/overview.png" width="350"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
+   <h3 class="heading settled" data-level="1.1" id="terminology"><span class="secno">1.1. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h3>
+   <p>This document uses the following terms as defined in external specifications and defines terms specific to SOyA.</p>
+   <dl>
+    <dt data-md>Attribute
+    <dd data-md>
+     <p>in a base a single field with a name and associated type
+	in RDF: a single data type or object property</p>
+   </dl>
+   <h3 class="heading settled" data-level="1.2" id="goals"><span class="secno">1.2. </span><span class="content">Design Goals and Rationale</span><a class="self-link" href="#goals"></a></h3>
+   <p>SOyA satisfies the following design goals:</p>
    <h2 class="heading settled" data-level="2" id="implementation"><span class="secno">2. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
    <p>Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – <a href="https://projekte.ffg.at/projekt/4125456">FFG Projekt 887052</a>.</p>
   </main>
