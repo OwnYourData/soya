@@ -50,13 +50,18 @@ SOyA is a data model authoring and publishing platform and also provides functio
 This document uses the following terms as defined in external specifications and defines terms specific to SOyA.
 
 <div dfn-for=terms export>
-	: <dfn>Attribute</dfn>
-	:: in a [=terms/Base=] a single field with a name and associated type<br>
-			*in RDF:* a single data type or object property
+    : <dfn>Attribute</dfn>
+    :: in a [=terms/Base=] a single field with a name and associated type<br>
+            *in RDF:* a single data type or object property
 
-	: <dfn>Base</dfn>
-	:: has a name and a list of [=terms/Attribute=]s with associated type<br>
-			*in RDF:* an RDF Class with one or more properties
+    : <dfn>Base</dfn>
+    :: has a name and a list of [=terms/Attribute=]s with associated type<br>
+            *in RDF:* an RDF Class with one or more properties
+
+    : <dfn>Overlay</dfn>
+    :: additional information about a [=terms/Base=]<br>
+        *in RDF:* annotation properties attached to an RDF Class or Property
+
 </div>
 
 ## Design Goals and Rationale ## {#goals}
