@@ -18,10 +18,10 @@ class DrisController < ApplicationController
     end
 
     def info
-        soya_dri = Store.find_by_soya_name(params[:dri].to_s).soya_dri rescue ""
-        if soya_dri == ""
-            soya_dri = Store.find_by_dri(params[:dri].to_s).soya_dri rescue ""
-        end
+        soya_dri = Store.find_by_dri(params[:dri].to_s).soya_dri rescue ""
+        # if soya_dri == ""
+        #     soya_dri = Store.find_by_soya_name(params[:dri].to_s).soya_dri rescue ""
+        # end
 
         history = []
         @store = Store.where(soya_name: params[:dri].to_s)
@@ -31,12 +31,27 @@ class DrisController < ApplicationController
             @store.pluck(:dri, :updated_at).each{|i| history << {"schema": i[0], "date": i[1].strftime("%FT%RZ")} }
         end
 
-        overlay = []
+        bases = []
+        overlays = []
         @store.each do |item|
             graph = JSON.parse(item.item)["@graph"] rescue []
             graph.each do |el|
-                if el["@type"] == "OverlayValidation"
-                    overlay << {"type": "Validation", "name": item.dri, "base": el["onBase"]}
+                if el["@type"] == "owl:Class"
+                    bases << el["@id"]
+                elsif el["@type"] == "OverlayValidation"
+                    overlays << {"type": "Validation", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayAlignment"
+                    overlays << {"type": "Alignment", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayAnnotation"
+                    overlays << {"type": "Annotation", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayClassification"
+                    overlays << {"type": "Classification", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayEncoding"
+                    overlays << {"type": "Encoding", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayFormat"
+                    overlays << {"type": "Format", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayTransformation"
+                    overlays << {"type": "Transformation", "name": item.dri, "base": el["onBase"]}
                 end
             end unless graph == []
         end
@@ -44,24 +59,26 @@ class DrisController < ApplicationController
         @store.each do |item|
             graph = JSON.parse(item.item)["@graph"] rescue []
             graph.each do |el|
-                if el["@type"] == "OverlayValidation"
-                    overlay << {"type": "Validation", "name": item.dri, "base": el["onBase"]}
+                if el["@type"] == "owl:Class"
+                    bases << el["@id"]
+                elsif el["@type"] == "OverlayValidation"
+                    overlays << {"type": "Validation", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayAlignment"
-                    overlay << {"type": "Alignment", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Alignment", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayAnnotation"
-                    overlay << {"type": "Annotation", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Annotation", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayClassification"
-                    overlay << {"type": "Classification", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Classification", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayEncoding"
-                    overlay << {"type": "Encoding", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Encoding", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayFormat"
-                    overlay << {"type": "Format", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Format", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayTransformation"
-                    overlay << {"type": "Transformation", "name": item.dri, "base": el["onBase"]}
+                    overlays << {"type": "Transformation", "name": item.dri, "base": el["onBase"]}
                 end
             end unless graph == []
         end
-        render json: {"dri": soya_dri, "history": history, "overlays": overlay.uniq},
+        render json: {"dri": soya_dri, "history": history, "bases": bases.uniq, "overlays": overlays.uniq},
                status: 200
     end
 end

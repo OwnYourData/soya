@@ -1,0 +1,45 @@
+<pre class='metadata'>
+Title: Semantic Overlay Architecture
+Shortname: soya-spec
+Level: 1
+Status: w3c/CG-DRAFT
+Group: w3c-ccg
+URL: https://ownyourdata.github.io/soya/
+
+Editor: Christoph Fabianek, OwnYourData https://OwnYourData.eu, christoph@ownyourdata.eu, https://www.linkedin.com/in/fabianek/
+Editor: Fajar J. Ekaputra, OwnYourData https://OwnYourData.eu, fajar.ekaputra@tuwien.ac.at
+Editor: Gabriel Unterholzer, OwnYourData https://OwnYourData.eu, gabriel.unterholzer@dec112.at
+
+Abstract: Draft recommendations for data model authoring and publishing platform
+Markup Shorthands: markdown yes
+</pre>
+
+<pre class="biblio">
+{
+    "JSON-LD": {
+        "authors": [ "Gregg Kellogg", "Pierre-Antoine Champin", "Dave Longley" ],
+        "href": "https://www.w3.org/TR/json-ld/",
+        "title": "JSON-LD 1.1",
+        "status": "W3C Recommendation",
+        "publisher": "W3C"
+    }
+}
+</pre>
+
+This specification is not a W3C Standard nor is it on the W3C Standards Track. Learn more about [W3C Community and Business Groups](https://www.w3.org/community/). [GitHub Issues](https://github.com/OwnYourData/soya/issues) are preferred for discussion of this specification.
+
+## History ## {#history}
+
+* Version 0.1: 19 October 2021 (initial draft, [link](https://github.com/OwnYourData/soya/blob/main/docs/https://github.com/OwnYourData/soya/blob/main/docs/SOyA_WhitePaper_Nov21.pdf))
+* Version 0.2: 28 January 2022 (current version)
+
+Introduction {#intro}
+============
+
+SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.
+
+
+Reference Implementation {#implementation}
+========================
+
+Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – [FFG Projekt 887052](https://projekte.ffg.at/projekt/4125456). 

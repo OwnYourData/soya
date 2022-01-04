@@ -1,4 +1,4 @@
-docker run -d --name soya -e RAILS_ENV=production -e RAILS_LOG_TO_STDOUT=true -e SECRET_KEY_BASE=17cce413365562c5c0ab09ffaa9d4cf669e94b1338dd2bea5243f24f729e8f9a27f761bc47fa575f2ad1690b45b3439c9ddb3d7a143596b0a65e97d1b0881c01 -p 4004:3000 semcon/sc-soya
+docker run -d --name soya -e RAILS_ENV=production -e RAILS_LOG_TO_STDOUT=true -e SECRET_KEY_BASE=17cce413365562c5c0ab09ffaa9d4cf669e94b1338dd2bea5243f24f729e8f9a27f761bc47fa575f2ad1690b45b3439c9ddb3d7a143596b0a65e97d1b0881c01 -p 4004:3000 oydeu/soya-base:amd64
 
 soya template base | soya init --repo http://192.168.178.21:4004 | soya push --repo http://192.168.178.21:4004
 
