@@ -1,0 +1,1 @@
+docker run --rm -v $(pwd):/data jplimce/bikeshed:3.2.0 bikeshed spec /data/docs/index.bs
