@@ -42,7 +42,7 @@
     {
       "@id": "OverlayValidation",
       "@type": "OverlayValidation",
-      "onBase": "https://soya.data-container.net/Person_Test/",
+      "onBase": "Person_Test",
       "name": "PersonValidationOverlay_Test"
     }
   ]
