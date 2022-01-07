@@ -41,6 +41,7 @@ export class SoyaTransform implements CommandPlugin {
           data = JSON.parse(stdout);
         } catch (e) {
           logger.error('Could not apply jolt transformation')
+          logger.error('Is jolt installed on your system?')
           reject(e);
         }
 

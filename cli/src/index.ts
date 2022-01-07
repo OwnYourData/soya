@@ -80,7 +80,10 @@ const overlayPlugins: CommandObject = {
           const item = await SoyaService.getInstance().push(contentDocument);
           logger.debug('Pushed item', item);
           console.log(item.dri);
-        } catch {
+        } catch (e: any) {
+          if (typeof e.message === 'string')
+            logger.error(e.message);
+
           return exitWithError('Could not push SOyA document');
         }
         break;
