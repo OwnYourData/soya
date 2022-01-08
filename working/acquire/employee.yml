@@ -1,0 +1,55 @@
+meta:
+  name: Employee
+
+content:
+  base:
+    - name: Employee
+      attributes:
+        name: String
+        dateOfBirth: Date
+        gender: String
+        employer: Company
+    - name: Company
+      attributes:
+        company: string
+        country: string
+
+  overlays:
+    - type: OverlayAnnotation
+      base: Company
+      name: CompanyAnnotationOverlay
+      class: 
+        label: 
+          en: Company
+          de: Firma
+      attributes:
+        company: 
+          label: 
+            en: Company name
+            de: Firmenname
+    - type: OverlayValidation
+      base: Employee
+      name: EmployeeValidationOverlay
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..30)"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        gender:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+        employer: 
+          cardinality: "0..1"
+    - type: OverlayValidation
+      base: Company
+      name: CompanyValidationOverlay
+      attributes:
+        company: 
+          cardinality: "1..1"
+          length: "[0..20)"
+        country: 
+          cardinality: "1..1"

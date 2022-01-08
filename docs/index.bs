@@ -33,13 +33,14 @@ This specification is not a W3C Standard nor is it on the W3C Standards Track. L
 * Version 0.1: 19 October 2021 (initial draft, [link](https://github.com/OwnYourData/soya/blob/main/docs/https://github.com/OwnYourData/soya/blob/main/docs/SOyA_WhitePaper_Nov21.pdf))
 * Version 0.2: 28 January 2022 (current version)
 
+
 Introduction {#intro}
 ============
 
 SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.
 
 <p align="center">
-  <img src="docs/res/overview.png" width="350"><br>
+  <img src="res/overview.png" width="550"><br>
   <em>Figure 1: Building blocks in SOyA</em>
 </p>
 </div>
@@ -58,15 +59,94 @@ This document uses the following terms as defined in external specifications and
     :: has a name and a list of [=terms/Attribute=]s with associated type<br>
             *in RDF:* an RDF Class with one or more properties
 
+    : <dfn>Instance</dfn>
+    :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
+            *in RDF:* instance of an RDF Class
+
     : <dfn>Overlay</dfn>
     :: additional information about a [=terms/Base=]<br>
         *in RDF:* annotation properties attached to an RDF Class or Property
 
+    : <dfn>Repository</dfn>
+    :: online storage for [=terms/Structure=]s with versioning capabilities
+
+    : <dfn>Structure</dfn>
+    :: a combination of [=terms/Base=]s and [=terms/Overlay=]s<br>
+        *in RDF:* an ontology
 </div>
 
 ## Design Goals and Rationale ## {#goals}
 
 SOyA satisfies the following design goals:
+
+
+Composition {#composition}
+===========
+
+text
+
+Structure {#structure_element}
+---------
+
+text
+
+
+Base {#base_element}
+----
+
+Holds the following information:
+* name
+* list of attribute names and associated type
+
+When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base.
+
+Multiple bases can be combined in a structure for related concepts.
+
+
+Overlay {#overlay_element}
+-------
+
+text
+
+
+Instance {#instance_element}
+--------
+
+text
+
+
+Processing {#processing}
+==========
+
+Authoring {#authoring}
+---------
+
+text
+
+
+Publishing {#publishing}
+----------
+
+
+Tools {#tools}
+=====
+
+Command Line Tool {#cli}
+-----------------
+
+text
+
+
+Repository {#repository}
+----------
+
+text
+
+
+Form Rendering {#forms}
+--------------
+
+text
 
 
 Reference Implementation {#implementation}
