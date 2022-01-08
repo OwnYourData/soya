@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="17fef7ef166ba13c01954846dd72da2656ba7670" name="document-revision">
+  <meta content="9348fac21c562fdaf0883b2165726dd10c5854d6" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -447,7 +447,7 @@ dfn > a.self-link::before      { content: "#"; }
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-07">7 January 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-08">8 January 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -485,7 +485,28 @@ dfn > a.self-link::before      { content: "#"; }
       <li><a href="#terminology"><span class="secno">1.1</span> <span class="content">Terminology</span></a>
       <li><a href="#goals"><span class="secno">1.2</span> <span class="content">Design Goals and Rationale</span></a>
      </ol>
-    <li><a href="#implementation"><span class="secno">2</span> <span class="content">Reference Implementation</span></a>
+    <li>
+     <a href="#composition"><span class="secno">2</span> <span class="content">Composition</span></a>
+     <ol class="toc">
+      <li><a href="#structure_element"><span class="secno">2.1</span> <span class="content">Structure</span></a>
+      <li><a href="#base_element"><span class="secno">2.2</span> <span class="content">Base</span></a>
+      <li><a href="#overlay_element"><span class="secno">2.3</span> <span class="content">Overlay</span></a>
+      <li><a href="#instance_element"><span class="secno">2.4</span> <span class="content">Instance</span></a>
+     </ol>
+    <li>
+     <a href="#processing"><span class="secno">3</span> <span class="content">Processing</span></a>
+     <ol class="toc">
+      <li><a href="#authoring"><span class="secno">3.1</span> <span class="content">Authoring</span></a>
+      <li><a href="#publishing"><span class="secno">3.2</span> <span class="content">Publishing</span></a>
+     </ol>
+    <li>
+     <a href="#tools"><span class="secno">4</span> <span class="content">Tools</span></a>
+     <ol class="toc">
+      <li><a href="#cli"><span class="secno">4.1</span> <span class="content">Command Line Tool</span></a>
+      <li><a href="#repository"><span class="secno">4.2</span> <span class="content">Repository</span></a>
+      <li><a href="#forms"><span class="secno">4.3</span> <span class="content">Form Rendering</span></a>
+     </ol>
+    <li><a href="#implementation"><span class="secno">5</span> <span class="content">Reference Implementation</span></a>
     <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
      <ol class="toc">
@@ -515,7 +536,7 @@ dfn > a.self-link::before      { content: "#"; }
    </ul>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
    <p>SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.</p>
-   <p align="center"> <img src="docs/res/overview.png" width="350"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
+   <p align="center"> <img src="res/overview.png" width="550"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
    <h3 class="heading settled" data-level="1.1" id="terminology"><span class="secno">1.1. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h3>
    <p>This document uses the following terms as defined in external specifications and defines terms specific to SOyA.</p>
    <div>
@@ -526,14 +547,52 @@ dfn > a.self-link::before      { content: "#"; }
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-base">Base</dfn>
      <dd data-md>
       <p>has a name and a list of <a data-link-type="dfn" href="#terms-attribute" id="ref-for-terms-attribute">Attribute</a>s with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
-     <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-overlay">Overlay<a class="self-link" href="#terms-overlay"></a></dfn>
+     <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
-      <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
+      <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structure" id="ref-for-terms-structure">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-overlay">Overlay</dfn>
+     <dd data-md>
+      <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base②">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
+     <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-repository">Repository<a class="self-link" href="#terms-repository"></a></dfn>
+     <dd data-md>
+      <p>online storage for <a data-link-type="dfn" href="#terms-structure" id="ref-for-terms-structure①">Structure</a>s with versioning capabilities</p>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-structure">Structure</dfn>
+     <dd data-md>
+      <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Base</a>s and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay">Overlay</a>s<br> <em>in RDF:</em> an ontology</p>
     </dl>
    </div>
    <h3 class="heading settled" data-level="1.2" id="goals"><span class="secno">1.2. </span><span class="content">Design Goals and Rationale</span><a class="self-link" href="#goals"></a></h3>
    <p>SOyA satisfies the following design goals:</p>
-   <h2 class="heading settled" data-level="2" id="implementation"><span class="secno">2. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
+   <h2 class="heading settled" data-level="2" id="composition"><span class="secno">2. </span><span class="content">Composition</span><a class="self-link" href="#composition"></a></h2>
+   <p>text</p>
+   <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structure</span><a class="self-link" href="#structure_element"></a></h3>
+   <p>text</p>
+   <h3 class="heading settled" data-level="2.2" id="base_element"><span class="secno">2.2. </span><span class="content">Base</span><a class="self-link" href="#base_element"></a></h3>
+   <p>Holds the following information:</p>
+   <ul>
+    <li data-md>
+     <p>name</p>
+    <li data-md>
+     <p>list of attribute names and associated type</p>
+   </ul>
+   <p>When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base.</p>
+   <p>Multiple bases can be combined in a structure for related concepts.</p>
+   <h3 class="heading settled" data-level="2.3" id="overlay_element"><span class="secno">2.3. </span><span class="content">Overlay</span><a class="self-link" href="#overlay_element"></a></h3>
+   <p>text</p>
+   <h3 class="heading settled" data-level="2.4" id="instance_element"><span class="secno">2.4. </span><span class="content">Instance</span><a class="self-link" href="#instance_element"></a></h3>
+   <p>text</p>
+   <h2 class="heading settled" data-level="3" id="processing"><span class="secno">3. </span><span class="content">Processing</span><a class="self-link" href="#processing"></a></h2>
+   <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
+   <p>text</p>
+   <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
+   <h2 class="heading settled" data-level="4" id="tools"><span class="secno">4. </span><span class="content">Tools</span><a class="self-link" href="#tools"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="cli"><span class="secno">4.1. </span><span class="content">Command Line Tool</span><a class="self-link" href="#cli"></a></h3>
+   <p>text</p>
+   <h3 class="heading settled" data-level="4.2" id="repository"><span class="secno">4.2. </span><span class="content">Repository</span><a class="self-link" href="#repository"></a></h3>
+   <p>text</p>
+   <h3 class="heading settled" data-level="4.3" id="forms"><span class="secno">4.3. </span><span class="content">Form Rendering</span><a class="self-link" href="#forms"></a></h3>
+   <p>text</p>
+   <h2 class="heading settled" data-level="5" id="implementation"><span class="secno">5. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
    <p>Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – <a href="https://projekte.ffg.at/projekt/4125456">FFG Projekt 887052</a>.</p>
   </main>
   <div data-fill-with="conformance">
@@ -583,7 +642,10 @@ dfn > a.self-link::before      { content: "#"; }
   <ul class="index">
    <li><a href="#terms-attribute">Attribute</a><span>, in § 1.1</span>
    <li><a href="#terms-base">Base</a><span>, in § 1.1</span>
+   <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
    <li><a href="#terms-overlay">Overlay</a><span>, in § 1.1</span>
+   <li><a href="#terms-repository">Repository</a><span>, in § 1.1</span>
+   <li><a href="#terms-structure">Structure</a><span>, in § 1.1</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -600,7 +662,19 @@ dfn > a.self-link::before      { content: "#"; }
   <aside class="dfn-panel" data-for="terms-base">
    <b><a href="#terms-base">#terms-base</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a>
+    <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="terms-overlay">
+   <b><a href="#terms-overlay">#terms-overlay</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="terms-structure">
+   <b><a href="#terms-structure">#terms-structure</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-terms-structure">1.1. Terminology</a> <a href="#ref-for-terms-structure①">(2)</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
