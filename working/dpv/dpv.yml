@@ -1,0 +1,24 @@
+meta:
+  name: Dpv
+  namespace:
+  - dpv-gdpr: "http://www.w3.org/ns/dpv-gdpr#"
+  - spl: "http://www.specialprivacy.eu/langs/usage-policy#"
+  - svd: "http://www.specialprivacy.eu/vocabs/data#"
+  - svdu: "http://www.specialprivacy.eu/vocabs/duration#"
+  - svl: "http://www.specialprivacy.eu/vocabs/locations#"
+  - svpu: "http://www.specialprivacy.eu/vocabs/purposes#"
+  - svpr: "http://www.specialprivacy.eu/vocabs/processing#"
+  - svr: "http://www.specialprivacy.eu/vocabs/recipients"
+
+content:
+  base:
+    - name: PersonalDataHandling
+      attributes:
+        hasPersonalDataCategory: PersonalDataCategory
+        hasProcessing: Processing
+    - name: PersonalDataCategory
+      attributes:
+        accent: String
+    - name: Processing
+      attributes:
+        acquire: String
