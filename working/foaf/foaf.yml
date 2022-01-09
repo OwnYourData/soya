@@ -1,0 +1,70 @@
+meta:
+  name: Foaf
+  namespace:
+  - foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  base: 
+    - name: Agent
+      attributes:
+        gender: String
+        birthday: Date
+        made: String
+        mbox: String
+        topic: String
+        interest: String
+        age: Integer
+        status: String
+    - name: Person
+      attributes:
+        firstName: String
+        lastName: String
+        agent: Agent
+  overlays: 
+    - type: OverlayAnnotation
+      base: Agent
+      name: AgentAnnotationOverlay
+      attributes:
+        gender: 
+          comment: 
+            en: The gender of this Agent (typically but not necessarily 'male' or 'female').
+        birthday:
+          comment:
+            en: The birthday of this Agent.
+        made:
+          comment:
+            en: Something that was made by this agent.
+        age:
+          comment:
+            en: The age in years of some agent.
+    - type: OverlayAnnotation
+      base: Person
+      name: PersonAnnotationOverlay
+      attributes:
+        firstName: 
+          comment: 
+            en: The first name of a person.
+        lastName:
+          comment:
+            en: The last name of a person.
+    - type: OverlayAlignment
+      base: Person
+      name: PersonAlignmentOverlay
+      attributes:
+        firstName: 
+          - foaf:givenName
+        lastName:
+          - foaf:familyName
+          - foaf:surname
+    - type: OverlayValidation
+      base: Person
+      name: PersonValidationOverlay
+      attributes:
+        firstName: 
+          cardinality: "0..1"
+          length: "(0..30]"
+        lastName:
+          cardinality: "1..1"
+          length: "(0..40]"
+        agent:
+          cardinality: "1..1"

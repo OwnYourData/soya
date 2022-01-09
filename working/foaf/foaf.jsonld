@@ -1,0 +1,202 @@
+{
+  "@context": {
+    "0": {
+      "foaf": "http://xmlns.com/foaf/0.1/"
+    },
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Foaf/"
+  },
+  "@graph": [
+    {
+      "@id": "Agent",
+      "@type": "owl:Class",
+      "subClassOf": "Base"
+    },
+    {
+      "@id": "gender",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "birthday",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "made",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "mbox",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "topic",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "interest",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "age",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "status",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Agent",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "Base"
+    },
+    {
+      "@id": "firstName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "lastName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "agent",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "Agent"
+    },
+    {
+      "@id": "Agent"
+    },
+    {
+      "@id": "gender",
+      "comment": {
+        "en": [
+          "The gender of this Agent (typically but not necessarily 'male' or 'female')."
+        ]
+      }
+    },
+    {
+      "@id": "birthday",
+      "comment": {
+        "en": [
+          "The birthday of this Agent."
+        ]
+      }
+    },
+    {
+      "@id": "made",
+      "comment": {
+        "en": [
+          "Something that was made by this agent."
+        ]
+      }
+    },
+    {
+      "@id": "age",
+      "comment": {
+        "en": [
+          "The age in years of some agent."
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "https://soya.data-container.net/Agent/",
+      "name": "AgentAnnotationOverlay"
+    },
+    {
+      "@id": "Person"
+    },
+    {
+      "@id": "firstName",
+      "comment": {
+        "en": [
+          "The first name of a person."
+        ]
+      }
+    },
+    {
+      "@id": "lastName",
+      "comment": {
+        "en": [
+          "The last name of a person."
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "https://soya.data-container.net/Person/",
+      "name": "PersonAnnotationOverlay"
+    },
+    {
+      "@id": "firstName",
+      "rdfs:subPropertyOf": [
+        "foaf:givenName"
+      ]
+    },
+    {
+      "@id": "lastName",
+      "rdfs:subPropertyOf": [
+        "foaf:familyName",
+        "foaf:surname"
+      ]
+    },
+    {
+      "@id": "OverlayAlignment",
+      "@type": "OverlayAlignment",
+      "onBase": "https://soya.data-container.net/Person/",
+      "name": "PersonAlignmentOverlay"
+    },
+    {
+      "@id": "PersonShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "Person",
+      "sh:property": [
+        {
+          "sh:path": "firstName",
+          "sh:maxCount": 1,
+          "sh:maxLength": 30
+        },
+        {
+          "sh:path": "lastName",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:maxLength": 40
+        },
+        {
+          "sh:path": "agent",
+          "sh:minCount": 1,
+          "sh:maxCount": 1
+        }
+      ]
+    },
+    {
+      "@id": "OverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "https://soya.data-container.net/Person/",
+      "name": "PersonValidationOverlay"
+    }
+  ]
+}
