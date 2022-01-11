@@ -1,11 +1,9 @@
 {
   "@context": {
-    "0": {
-      "foaf": "http://xmlns.com/foaf/0.1/"
-    },
     "@version": 1.1,
     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.data-container.net/Foaf/"
+    "@base": "https://soya.data-container.net/Foaf/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
   },
   "@graph": [
     {
@@ -122,7 +120,7 @@
     {
       "@id": "OverlayAnnotation",
       "@type": "OverlayAnnotation",
-      "onBase": "https://soya.data-container.net/Agent/",
+      "onBase": "Agent",
       "name": "AgentAnnotationOverlay"
     },
     {
@@ -147,7 +145,7 @@
     {
       "@id": "OverlayAnnotation",
       "@type": "OverlayAnnotation",
-      "onBase": "https://soya.data-container.net/Person/",
+      "onBase": "Person",
       "name": "PersonAnnotationOverlay"
     },
     {
@@ -166,7 +164,7 @@
     {
       "@id": "OverlayAlignment",
       "@type": "OverlayAlignment",
-      "onBase": "https://soya.data-container.net/Person/",
+      "onBase": "Person",
       "name": "PersonAlignmentOverlay"
     },
     {
@@ -195,7 +193,7 @@
     {
       "@id": "OverlayValidation",
       "@type": "OverlayValidation",
-      "onBase": "https://soya.data-container.net/Person/",
+      "onBase": "Person",
       "name": "PersonValidationOverlay"
     }
   ]

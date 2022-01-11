@@ -1,7 +1,7 @@
 meta:
   name: Foaf
   namespace:
-  - foaf: "http://xmlns.com/foaf/0.1/"
+    foaf: "http://xmlns.com/foaf/0.1/"
 
 content:
   base: 
