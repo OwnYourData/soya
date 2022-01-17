@@ -6,9 +6,9 @@
   <meta content="w3c/CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
+  <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="a014daabaa43938a35f058bfd0d39a866217fa50" name="document-revision">
+  <meta content="c1a4c0dbae7cf58fb37a93643a94e944c6c3a159" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -322,6 +322,65 @@ a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
 dfn > a.self-link::before      { content: "#"; }
 </style>
+<style>/* style-syntax-highlighting */
+
+code.highlight { padding: .1em; border-radius: .3em; }
+pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
+c-[a] { color: #990055 } /* Keyword.Declaration */
+c-[b] { color: #990055 } /* Keyword.Type */
+c-[c] { color: #708090 } /* Comment */
+c-[d] { color: #708090 } /* Comment.Multiline */
+c-[e] { color: #0077aa } /* Name.Attribute */
+c-[f] { color: #669900 } /* Name.Tag */
+c-[g] { color: #222222 } /* Name.Variable */
+c-[k] { color: #990055 } /* Keyword */
+c-[l] { color: #000000 } /* Literal */
+c-[m] { color: #000000 } /* Literal.Number */
+c-[n] { color: #0077aa } /* Name */
+c-[o] { color: #999999 } /* Operator */
+c-[p] { color: #999999 } /* Punctuation */
+c-[s] { color: #a67f59 } /* Literal.String */
+c-[t] { color: #a67f59 } /* Literal.String.Single */
+c-[u] { color: #a67f59 } /* Literal.String.Double */
+c-[cp] { color: #708090 } /* Comment.Preproc */
+c-[c1] { color: #708090 } /* Comment.Single */
+c-[cs] { color: #708090 } /* Comment.Special */
+c-[kc] { color: #990055 } /* Keyword.Constant */
+c-[kn] { color: #990055 } /* Keyword.Namespace */
+c-[kp] { color: #990055 } /* Keyword.Pseudo */
+c-[kr] { color: #990055 } /* Keyword.Reserved */
+c-[ld] { color: #000000 } /* Literal.Date */
+c-[nc] { color: #0077aa } /* Name.Class */
+c-[no] { color: #0077aa } /* Name.Constant */
+c-[nd] { color: #0077aa } /* Name.Decorator */
+c-[ni] { color: #0077aa } /* Name.Entity */
+c-[ne] { color: #0077aa } /* Name.Exception */
+c-[nf] { color: #0077aa } /* Name.Function */
+c-[nl] { color: #0077aa } /* Name.Label */
+c-[nn] { color: #0077aa } /* Name.Namespace */
+c-[py] { color: #0077aa } /* Name.Property */
+c-[ow] { color: #999999 } /* Operator.Word */
+c-[mb] { color: #000000 } /* Literal.Number.Bin */
+c-[mf] { color: #000000 } /* Literal.Number.Float */
+c-[mh] { color: #000000 } /* Literal.Number.Hex */
+c-[mi] { color: #000000 } /* Literal.Number.Integer */
+c-[mo] { color: #000000 } /* Literal.Number.Oct */
+c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
+c-[sc] { color: #a67f59 } /* Literal.String.Char */
+c-[sd] { color: #a67f59 } /* Literal.String.Doc */
+c-[se] { color: #a67f59 } /* Literal.String.Escape */
+c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
+c-[si] { color: #a67f59 } /* Literal.String.Interpol */
+c-[sx] { color: #a67f59 } /* Literal.String.Other */
+c-[sr] { color: #a67f59 } /* Literal.String.Regex */
+c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
+c-[vc] { color: #0077aa } /* Name.Variable.Class */
+c-[vg] { color: #0077aa } /* Name.Variable.Global */
+c-[vi] { color: #0077aa } /* Name.Variable.Instance */
+c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
+</style>
 <style>/* style-darkmode */
 
 @media (prefers-color-scheme: dark) {
@@ -442,12 +501,75 @@ dfn > a.self-link::before      { content: "#"; }
         --selflink-hover-text: white;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
 </style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-11">11 January 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-17">17 January 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -541,24 +663,24 @@ dfn > a.self-link::before      { content: "#"; }
    <p>This document uses the following terms as defined in external specifications and defines terms specific to SOyA.</p>
    <div>
     <dl>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-attribute">Attribute</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Attributes" id="terms-attributes">Attribute</dfn>
      <dd data-md>
       <p>in a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base">Base</a> a single field with a name and associated type<br> <em>in RDF:</em> a single data type or object property</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-base">Base</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="base|Bases" id="terms-base">Base</dfn>
      <dd data-md>
-      <p>has a name and a list of <a data-link-type="dfn" href="#terms-attribute" id="ref-for-terms-attribute">Attribute</a>s with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
+      <p>has a name and a list of <a data-link-type="dfn" href="#terms-attributes" id="ref-for-terms-attributes">Attributes</a> with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
-      <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structure" id="ref-for-terms-structure">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-overlay">Overlay</dfn>
+      <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Overlays" id="terms-overlays">Overlay</dfn>
      <dd data-md>
       <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base②">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-repository">Repository<a class="self-link" href="#terms-repository"></a></dfn>
      <dd data-md>
-      <p>online storage for <a data-link-type="dfn" href="#terms-structure" id="ref-for-terms-structure①">Structure</a>s with versioning capabilities</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-structure">Structure</dfn>
+      <p>online storage for <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures①">Structures</a> with versioning capabilities</p>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Structures" id="terms-structures">Structure</dfn>
      <dd data-md>
-      <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Base</a>s and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay">Overlay</a>s<br> <em>in RDF:</em> an ontology</p>
+      <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Bases</a> and <a data-link-type="dfn" href="#terms-overlays" id="ref-for-terms-overlays">Overlays</a><br> <em>in RDF:</em> an ontology</p>
     </dl>
    </div>
    <h3 class="heading settled" data-level="1.2" id="goals"><span class="secno">1.2. </span><span class="content">Design Goals and Rationale</span><a class="self-link" href="#goals"></a></h3>
@@ -568,15 +690,34 @@ dfn > a.self-link::before      { content: "#"; }
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structure</span><a class="self-link" href="#structure_element"></a></h3>
    <p>text</p>
    <h3 class="heading settled" data-level="2.2" id="base_element"><span class="secno">2.2. </span><span class="content">Base</span><a class="self-link" href="#base_element"></a></h3>
-   <p>Holds the following information:</p>
+   <p>A <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">base</a> declares a dataset and holds the following information:</p>
    <ul>
     <li data-md>
      <p>name</p>
     <li data-md>
      <p>list of attribute names and associated type</p>
    </ul>
-   <p>When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base.</p>
-   <p>Multiple bases can be combined in a structure for related concepts.</p>
+   <p>When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. Multiple bases can be combined in a structure for related concepts.</p>
+   <details>
+    <summary>Example YML</summary>
+    <p>use <code>soya template base</code> to show this example on the command line</p>
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> Person
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>base</c-><c- p>:</c-> 
+    - <c- f>name</c-><c- p>:</c-> Person
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>name</c-><c- p>:</c-> String
+        <c- f>dateOfBirth</c-><c- p>:</c-> Date
+        <c- f>age</c-><c- p>:</c-> Integer
+        <c- f>sex</c-><c- p>:</c-> String
+</pre>
+   </details>
+   <details>
+    <summary>Visualization</summary>
+    <p align="center"> <img src="res/base_graph.png" width="750"><br> </p>
+   </details>
    <h3 class="heading settled" data-level="2.3" id="overlay_element"><span class="secno">2.3. </span><span class="content">Overlay</span><a class="self-link" href="#overlay_element"></a></h3>
    <p>text</p>
    <h3 class="heading settled" data-level="2.4" id="instance_element"><span class="secno">2.4. </span><span class="content">Instance</span><a class="self-link" href="#instance_element"></a></h3>
@@ -594,6 +735,23 @@ dfn > a.self-link::before      { content: "#"; }
    <p>text</p>
    <h2 class="heading settled" data-level="5" id="implementation"><span class="secno">5. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
    <p>Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – <a href="https://projekte.ffg.at/projekt/4125456">FFG Projekt 887052</a>.</p>
+   <p>The following implementation artefacts are available (published under the open source MIT License):</p>
+   <ul>
+    <li data-md>
+     <p>Command line tool <code>soya</code>: <a href="https://github.com/OwnYourData/soya/tree/main/cli">https://github.com/OwnYourData/soya/tree/main/cli</a></p>
+     <ul>
+      <li data-md>
+       <p>also available as Docker Image: <a href="https://hub.docker.com/r/oydeu/soya-cli">https://hub.docker.com/r/oydeu/soya-cli</a></p>
+      <li data-md>
+       <p>find example usage scenarios in this Tutorial: <a href="https://github.com/OwnYourData/soya/tree/main/tutorial">https://github.com/OwnYourData/soya/tree/main/tutorial</a></p>
+     </ul>
+    <li data-md>
+     <p>Repository for hosting: <a href="https://github.com/OwnYourData/soya/tree/main/repository">https://github.com/OwnYourData/soya/tree/main/repository</a></p>
+     <ul>
+      <li data-md>
+       <p>API documentation in Swagger: <a href="https://api-docs.ownyourdata.eu/soya/">https://api-docs.ownyourdata.eu/soya/</a></p>
+     </ul>
+   </ul>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
@@ -640,12 +798,13 @@ dfn > a.self-link::before      { content: "#"; }
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#terms-attribute">Attribute</a><span>, in § 1.1</span>
-   <li><a href="#terms-base">Base</a><span>, in § 1.1</span>
+   <li><a href="#terms-attributes">Attributes</a><span>, in § 1.1</span>
+   <li><a href="#terms-base">base</a><span>, in § 1.1</span>
+   <li><a href="#terms-base">Bases</a><span>, in § 1.1</span>
    <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
-   <li><a href="#terms-overlay">Overlay</a><span>, in § 1.1</span>
+   <li><a href="#terms-overlays">Overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-repository">Repository</a><span>, in § 1.1</span>
-   <li><a href="#terms-structure">Structure</a><span>, in § 1.1</span>
+   <li><a href="#terms-structures">Structures</a><span>, in § 1.1</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -653,28 +812,29 @@ dfn > a.self-link::before      { content: "#"; }
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
   </dl>
-  <aside class="dfn-panel" data-for="terms-attribute">
-   <b><a href="#terms-attribute">#terms-attribute</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="terms-attributes">
+   <b><a href="#terms-attributes">#terms-attributes</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-attribute">1.1. Terminology</a>
+    <li><a href="#ref-for-terms-attributes">1.1. Terminology</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-base">
    <b><a href="#terms-base">#terms-base</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
+    <li><a href="#ref-for-terms-base④">2.2. Base</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="terms-overlay">
-   <b><a href="#terms-overlay">#terms-overlay</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="terms-overlays">
+   <b><a href="#terms-overlays">#terms-overlays</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
+    <li><a href="#ref-for-terms-overlays">1.1. Terminology</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="terms-structure">
-   <b><a href="#terms-structure">#terms-structure</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="terms-structures">
+   <b><a href="#terms-structures">#terms-structures</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-structure">1.1. Terminology</a> <a href="#ref-for-terms-structure①">(2)</a>
+    <li><a href="#ref-for-terms-structures">1.1. Terminology</a> <a href="#ref-for-terms-structures①">(2)</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
