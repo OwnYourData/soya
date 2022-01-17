@@ -51,27 +51,27 @@ SOyA is a data model authoring and publishing platform and also provides functio
 This document uses the following terms as defined in external specifications and defines terms specific to SOyA.
 
 <div dfn-for=terms export>
-    : <dfn>Attribute</dfn>
+    : <dfn lt=Attributes>Attribute</dfn>
     :: in a [=terms/Base=] a single field with a name and associated type<br>
             *in RDF:* a single data type or object property
 
-    : <dfn>Base</dfn>
-    :: has a name and a list of [=terms/Attribute=]s with associated type<br>
+    : <dfn lt=base|Bases>Base</dfn>
+    :: has a name and a list of [=terms/Attributes=] with associated type<br>
             *in RDF:* an RDF Class with one or more properties
 
     : <dfn>Instance</dfn>
     :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
             *in RDF:* instance of an RDF Class
 
-    : <dfn>Overlay</dfn>
+    : <dfn lt=Overlays>Overlay</dfn>
     :: additional information about a [=terms/Base=]<br>
         *in RDF:* annotation properties attached to an RDF Class or Property
 
     : <dfn>Repository</dfn>
-    :: online storage for [=terms/Structure=]s with versioning capabilities
+    :: online storage for [=terms/Structures=] with versioning capabilities
 
-    : <dfn>Structure</dfn>
-    :: a combination of [=terms/Base=]s and [=terms/Overlay=]s<br>
+    : <dfn lt=Structures>Structure</dfn>
+    :: a combination of [=terms/Bases=] and [=terms/Overlays=]<br>
         *in RDF:* an ontology
 </div>
 
@@ -94,13 +94,40 @@ text
 Base {#base_element}
 ----
 
-Holds the following information:
+A [=terms/base=] declares a dataset and holds the following information:
 * name
 * list of attribute names and associated type
 
-When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base.
+When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. Multiple bases can be combined in a structure for related concepts.
 
-Multiple bases can be combined in a structure for related concepts.
+<details><summary>Example YML</summary>
+
+use `soya template base` to show this example on the command line
+
+```yaml
+meta:
+  name: Person
+
+content:
+  base: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        age: Integer
+        sex: String
+```
+
+</details>
+
+<details><summary>Visualization</summary>
+
+<p align="center">
+  <img src="res/base_graph.png" width="750"><br>
+</p>
+</div>
+
+</details>
 
 
 Overlay {#overlay_element}
@@ -153,3 +180,11 @@ Reference Implementation {#implementation}
 ========================
 
 Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – [FFG Projekt 887052](https://projekte.ffg.at/projekt/4125456). 
+
+The following implementation artefacts are available (published under the open source MIT License):
+* Command line tool `soya`: [https://github.com/OwnYourData/soya/tree/main/cli](https://github.com/OwnYourData/soya/tree/main/cli) 
+    * also available as Docker Image: [https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli)
+    * find example usage scenarios in this Tutorial: [https://github.com/OwnYourData/soya/tree/main/tutorial](https://github.com/OwnYourData/soya/tree/main/tutorial)
+* Repository for hosting: [https://github.com/OwnYourData/soya/tree/main/repository](https://github.com/OwnYourData/soya/tree/main/repository)
+    * API documentation in Swagger: [https://api-docs.ownyourdata.eu/soya/](https://api-docs.ownyourdata.eu/soya/)
+

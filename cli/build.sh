@@ -31,9 +31,9 @@ done
 # docker build -f ./docker/Dockerfile.java -t oydeu/soya-cli:java .
 
 if $BUILD_CLEAN; then
-    docker build --no-cache -f ./docker/Dockerfile -t $REPOSITORY/$CONTAINER .
+    docker build --platform linux/amd64 --no-cache -f ./docker/Dockerfile -t $REPOSITORY/$CONTAINER .
 else
-    docker build -f ./docker/Dockerfile -t $REPOSITORY/$CONTAINER .
+    docker build --platform linux/amd64 -f ./docker/Dockerfile -t $REPOSITORY/$CONTAINER .
 fi
 
 if $DOCKER_UPDATE; then
