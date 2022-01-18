@@ -14,6 +14,8 @@ import DatasetExt from "rdf-ext/lib/Dataset";
 import { exitWithError } from "./utils/core";
 import { tryPrintTemplate } from "./system/template";
 import { yaml2soya } from "./system/yaml2soya";
+import { flat2ld } from "./system/flat2ld";
+import { SoyaDocument } from "./interfaces";
 
 interface CommandObject {
   [key: string]: CommandPlugin,
@@ -41,6 +43,36 @@ const overlayPlugins: CommandObject = {
 
   const handleSystemCommands = async (): Promise<boolean> => {
     switch (command) {
+      case 'acquire':
+        if (!param1)
+          return exitWithError('No soya structure specified!');
+
+        const flatJsonContent = await Std.in();
+
+        if (!flatJsonContent)
+          return exitWithError('No JSON content provided via stdin!');
+
+        let soyaStructure: SoyaDocument;
+        try {
+          soyaStructure = await SoyaService.getInstance().pull(param1);
+        } catch (e: any) {
+
+          if (typeof e.response.status === 'number') {
+            logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
+          }
+
+          return exitWithError('Could not fetch soya structure from repo!');
+        }
+
+        try {
+          const transformedJson = await flat2ld(JSON.parse(flatJsonContent), soyaStructure);
+          console.log(JSON.stringify(transformedJson, undefined, 2));
+        } catch (e: any) {
+          logger.error(`Error: ${e.toString()}`);
+          return exitWithError('Could not transform flat JSON to JSON-LD!');
+        }
+
+        break;
       case 'template':
         if (!param1)
           return exitWithError('No template name specified!');

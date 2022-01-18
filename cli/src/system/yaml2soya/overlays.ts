@@ -1,4 +1,4 @@
-import { SoyaDocument } from ".";
+import { SoyaDocument } from "../../interfaces";
 import { DateRange, NumberRange, parseRange } from "../../utils/range";
 
 const arrayifyIfLeaf = (obj: any) => {
