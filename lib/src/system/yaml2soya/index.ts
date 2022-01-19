@@ -1,5 +1,5 @@
 import jsyaml from 'js-yaml';
-import { PrintableSoyaDocument, SoyaDocument } from '../../interfaces';
+import { SoyaDocument, IntSoyaDocument } from '../../interfaces';
 import { logger } from '../../services/logger';
 import { handleOverlay } from './overlays';
 
@@ -13,7 +13,7 @@ const xsTypes = [
   'time',
 ];
 
-const handleBase = (doc: SoyaDocument, base: any) => {
+const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
 
   graph.push({
@@ -39,7 +39,7 @@ const handleBase = (doc: SoyaDocument, base: any) => {
   }
 }
 
-export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string): Promise<PrintableSoyaDocument | undefined> => {
+export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string): Promise<SoyaDocument | undefined> => {
   const yaml: any = jsyaml.load(yamlContent);
 
   if (!yaml || typeof yaml !== 'object') {
@@ -49,7 +49,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
 
   const { meta, content } = yaml;
 
-  const doc: SoyaDocument = {
+  const doc: IntSoyaDocument = {
     "@context": {
       "@version": 1.1,
       "@import": contextUrl,
@@ -74,7 +74,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     }
 
   // this is where the rename of "graph" to "@graph" happens
-  const printable: PrintableSoyaDocument = {
+  const printable: SoyaDocument = {
     '@context': doc['@context'],
     '@graph': doc.graph,
   };

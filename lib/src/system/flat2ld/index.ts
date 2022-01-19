@@ -1,18 +1,18 @@
-import { SoyaDocument } from "../../interfaces";
+import { IntSoyaDocument, SoyaDocument } from "../../interfaces";
 import { parseJsonLd } from "../../utils/rdf";
 import rdf from "rdf-ext";
 import DatasetExt from "rdf-ext/lib/Dataset";
 
 const namedNode = rdf.namedNode;
 
-type SoyaInstance = {
+type IntSoyaInstance = {
   "@context": {
     "@version": number,
     "@vocab": string,
   },
-} & Pick<SoyaDocument, 'graph'>;
+} & Pick<IntSoyaDocument, 'graph'>;
 
-type PrintableSoyaInstance = Omit<SoyaInstance, 'graph'> & { '@graph': any[] };
+export type SoyaInstance = Omit<IntSoyaInstance, 'graph'> & { '@graph': any[] };
 
 const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: string) => {
   for (const prop in flatJson) {
@@ -39,9 +39,9 @@ const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: s
   }
 }
 
-export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promise<PrintableSoyaInstance | undefined> => {
+export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promise<SoyaInstance> => {
   const base = soyaStructure["@context"]["@base"];
-  const returnValue: PrintableSoyaInstance = {
+  const returnValue: SoyaInstance = {
     "@context": {
       "@version": 1.1,
       "@vocab": base,

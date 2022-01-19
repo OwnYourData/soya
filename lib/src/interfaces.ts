@@ -1,14 +1,4 @@
-import { Overlay } from "./overlays/interface";
-
-export interface Stack {
-  '@context': {
-    [key: string]: string,
-  },
-  import: string[],
-  overlays: Overlay[],
-}
-
-export interface SoyaDocument {
+export interface IntSoyaDocument {
   ['@context']: {
     ['@version']: number,
     ['@base']: string,
@@ -24,4 +14,4 @@ export interface SoyaDocument {
   graph: any[],
 }
 
-export type PrintableSoyaDocument = Omit<SoyaDocument, 'graph'> & { '@graph': any[] };
+export type SoyaDocument = Omit<IntSoyaDocument, 'graph'> & { '@graph': any[] };

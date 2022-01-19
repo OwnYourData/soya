@@ -1,20 +1,21 @@
-import { Overlay, CommandPlugin, OverlayResult } from "./interface";
+import { OverlayPlugin, OverlayResult } from "./interface";
 import SHACLValidator from "rdf-validate-shacl";
 import { parseJsonLd } from "../utils/rdf";
 import { logger } from "../services/logger";
 import rdf from "rdf-ext";
+import { SoyaDocument } from "../interfaces";
 
 const namedNode = rdf.namedNode;
 
-export class SoyaValidate implements CommandPlugin {
+export class SoyaValidate implements OverlayPlugin {
 
-  run = async (overlay: Overlay, data: any): Promise<OverlayResult> => {
+  run = async (soyaDoc: SoyaDocument, data: any): Promise<OverlayResult> => {
     const dataSet = await parseJsonLd(data);
 
     if (dataSet.length === 0)
       throw new Error('Input data is not valid JSON-LD!');
 
-    const layerSet = await parseJsonLd(overlay);
+    const layerSet = await parseJsonLd(soyaDoc);
     const validator = new SHACLValidator(layerSet);
     const res = await validator.validate(dataSet);
 

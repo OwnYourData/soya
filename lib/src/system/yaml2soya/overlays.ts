@@ -1,4 +1,4 @@
-import { SoyaDocument } from "../../interfaces";
+import { IntSoyaDocument } from "../../interfaces";
 import { DateRange, NumberRange, parseRange } from "../../utils/range";
 
 const arrayifyIfLeaf = (obj: any) => {
@@ -16,7 +16,7 @@ const arrayifyIfLeaf = (obj: any) => {
     return [obj];
 }
 
-export const handleOverlay = (doc: SoyaDocument, overlay: any) => {
+export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
   switch (overlay.type) {
     case 'OverlayAnnotation': handleAnnotation(doc, overlay); break;
     case 'OverlayAlignment': handleAlignment(doc, overlay); break;
@@ -39,7 +39,7 @@ export const handleOverlay = (doc: SoyaDocument, overlay: any) => {
   })
 };
 
-const handleTransformation = (doc: SoyaDocument, overlay: any) => {
+const handleTransformation = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   const item = {
@@ -50,7 +50,7 @@ const handleTransformation = (doc: SoyaDocument, overlay: any) => {
   graph.push(item);
 }
 
-const handleValidation = (doc: SoyaDocument, overlay: any) => {
+const handleValidation = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   const shacl = {
@@ -119,7 +119,7 @@ const handleValidation = (doc: SoyaDocument, overlay: any) => {
   }
 }
 
-const handleFormat = (doc: SoyaDocument, overlay: any) => {
+const handleFormat = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -132,7 +132,7 @@ const handleFormat = (doc: SoyaDocument, overlay: any) => {
   }
 }
 
-const handleEncoding = (doc: SoyaDocument, overlay: any) => {
+const handleEncoding = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -145,7 +145,7 @@ const handleEncoding = (doc: SoyaDocument, overlay: any) => {
   }
 }
 
-const handleClassification = (doc: SoyaDocument, overlay: any) => {
+const handleClassification = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -161,7 +161,7 @@ const handleClassification = (doc: SoyaDocument, overlay: any) => {
   }
 }
 
-const handleAnnotation = (doc: SoyaDocument, overlay: any) => {
+const handleAnnotation = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   const handleAttribute = (annotation: any, attrName: string, base?: string) => {
@@ -183,7 +183,7 @@ const handleAnnotation = (doc: SoyaDocument, overlay: any) => {
   }
 }
 
-const handleAlignment = (doc: SoyaDocument, overlay: any) => {
+const handleAlignment = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
