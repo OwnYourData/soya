@@ -64,8 +64,9 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     }
   }
 
-  if (Array.isArray(content.base))
-    for (const base of content.base) {
+  // TODO: rename base to bases
+  if (Array.isArray(content.bases))
+    for (const base of content.bases) {
       handleBase(doc, base);
     }
   if (Array.isArray(content.overlays))
