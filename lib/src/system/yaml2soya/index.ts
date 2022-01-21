@@ -19,7 +19,7 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
   graph.push({
     '@id': base.name,
     '@type': "owl:Class",
-    'subClassOf': 'Base',
+    'subClassOf': base.subClassOf || 'Base',
   });
 
   for (const attrName in base.attributes) {

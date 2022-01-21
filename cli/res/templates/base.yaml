@@ -1,9 +1,12 @@
 meta:
   name: Person
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
 
 content:
   bases: 
     - name: Person
+      subClassOf: foaf:Person
       attributes:
         name: String
         dateOfBirth: Date
