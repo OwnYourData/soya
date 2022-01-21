@@ -1,5 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
+import { systemCommands } from '../commands';
 import { getAvailableTemplates } from '../system/template';
 import { packageJson } from './package';
 
@@ -46,17 +47,13 @@ const globalDefinition: cmdInterface[] = [
   }
 ];
 
-const commands: string[] = [
-  'calculate-dri',
-  'validate',
-  'transform',
-  'template',
-  'init',
-  'similar',
-  'info',
-  'push',
-];
-
+const getCommands = (): string[] => {
+  return [
+    ...Object.keys(systemCommands),
+    'validate',
+    'transform',
+  ]
+}
 
 const getGeneralOptions = (): commandLineUsage.Section => {
   return {
@@ -85,7 +82,7 @@ const printGeneralHelp = () => {
     },
     {
       header: 'Commands',
-      content: commands,
+      content: getCommands(),
     },
     getGeneralOptions(),
   ]));
@@ -229,6 +226,21 @@ const printTransformHelp = () => {
     getGeneralOptions(),
   ]))
 }
+const printPlaygroundHelp = () => {
+  console.log(commandLineUsage([
+    {
+      header: 'Description',
+      content: 'Opens JSON-LD playground to inspect generated JSON-LD in browsers',
+    },
+    {
+      header: 'Usage',
+      content: [
+        '$ soya template base | soya init | soya playground',
+      ]
+    },
+    getGeneralOptions(),
+  ]))
+}
 
 export const printCliHelp = async (command?: string): Promise<never> => {
   if (!command)
@@ -256,8 +268,11 @@ export const printCliHelp = async (command?: string): Promise<never> => {
       case 'transform':
         printTransformHelp();
         break;
+      case 'playground':
+        printPlaygroundHelp();
+        break;
       default:
-        if (commands.indexOf(command) !== -1)
+        if (getCommands().indexOf(command) !== -1)
           printSimpleCommandHelp(command);
         else
           printGeneralHelp();

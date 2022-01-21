@@ -4,6 +4,7 @@ import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
+import open from "open";
 
 const acquire = async (soya: Soya, param1: any): Promise<void> => {
   if (!param1)
@@ -105,6 +106,22 @@ const info = async (soya: Soya, param1: any): Promise<void> => {
     return exitWithError('Could not fetch SOyA info');
   }
 }
+const playground = async (_: Soya): Promise<void> => {
+  let queryParam: string;
+
+  try {
+    const input = await Std.in();
+
+    if (!input)
+      return exitWithError('No input JSON-LD specified!');
+
+    queryParam = encodeURIComponent(input);
+  } catch {
+    return exitWithError('Could not URI encode JSON-LD!');
+  }
+
+  open(`https://json-ld.org/playground/#json-ld=${queryParam}`);
+}
 
 export const systemCommands: {
   [key: string]: (soya: Soya, ...params: any[]) => Promise<void>,
@@ -116,5 +133,6 @@ export const systemCommands: {
   push,
   similar,
   info,
+  playground,
   'calculate-dri': calculateDri,
-}
+};

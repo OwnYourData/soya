@@ -29,6 +29,7 @@
     "command-line-usage": "^6.1.1",
     "find-root": "^1.1.0",
     "node-jq": "^2.0.0",
+    "open": "^8.4.0",
     "soya": "../lib",
     "winston": "^3.3.3"
   }
