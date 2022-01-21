@@ -5,7 +5,7 @@ import path from "path";
 
 export const exitWithError = (message: string): never => {
   logger.error(message);
-  return process.exit(0);
+  return process.exit(-1);
 }
 
 export const makeTempDir = async (): Promise<[
