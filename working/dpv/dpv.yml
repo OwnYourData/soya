@@ -12,13 +12,20 @@ meta:
 
 content:
   base:
-    - name: PersonalDataHandling
+    - name: "dpv:PersonalDataHandling"
       attributes:
         hasPersonalDataCategory: PersonalDataCategory
         hasProcessing: Processing
     - name: PersonalDataCategory
-      attributes:
-        accent: String
     - name: Processing
+  overlays: 
+    - type: OverlayValidation
+      base: hasPersonalDataCategory
+      name: hasPersonalDataCategoryValidationOverlay
       attributes:
-        acquire: String
+        PersonalDataCategory: 
+          cardinality: "1..*"
+          default: "dpv:PersonalDataCategory"
+          valueOption:
+            - "dpv:Accent"
+            - "dpv:Age"

@@ -2,7 +2,7 @@ FROM node:16 as node_builder
 
 WORKDIR /app
 ENV NODE_ENV=development
-COPY *.json .
+COPY *.json ./
 COPY ./res ./res
 COPY ./src ./src
 RUN npm install && \
@@ -36,7 +36,7 @@ RUN addgroup -S user && \
 
 COPY --chown=user:user --from=node_builder /app/dist /usr/src/app/dist
 COPY --chown=user:user --from=node_builder /app/res /usr/src/app/res
-COPY --chown=user:user --from=node_builder /app/*.json /usr/src/app
+COPY --chown=user:user --from=node_builder /app/*.json /usr/src/app/
 COPY --chown=user:user --from=java_builder /app/jolt/cli/target/jolt-cli-0.1.6-SNAPSHOT.jar /usr/src/app/jolt
 WORKDIR /usr/src/app
 COPY --chown=user:user ./docker ./docker
