@@ -1,14 +1,15 @@
 import proc from 'child_process';
 import fs from 'fs/promises';
 import * as jq from 'node-jq';
-import { Overlay, CommandPlugin, OverlayResult } from './interface';
+import { Overlays  } from 'soya';
 import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
 import { cmdArgs } from '../utils/cmd';
+import { SoyaDocument } from 'soya/dist/interfaces';
 
-export class SoyaTransform implements CommandPlugin {
-  private runJolt = async (spec: any[], data: any): Promise<OverlayResult> => {
+export class SoyaTransform implements Overlays.OverlayPlugin {
+  private runJolt = async (spec: any[], data: any): Promise<Overlays.OverlayResult> => {
     const specFile = 'jolt-spec.json';
     const dataFile = 'jolt-data.json';
 
@@ -23,7 +24,7 @@ export class SoyaTransform implements CommandPlugin {
     logger.debug(`Writing jolt data ${dataFilePath}`);
     await fs.writeFile(dataFilePath, JSON.stringify(data));
 
-    return new Promise<OverlayResult>((resolve, reject) => {
+    return new Promise<Overlays.OverlayResult>((resolve, reject) => {
       const command = cmdArgs.executable ?? 'jolt';
       const commandParams = [
         'transform',
@@ -52,7 +53,7 @@ export class SoyaTransform implements CommandPlugin {
     });
   }
 
-  private runJq = async (filter: string, data: any): Promise<OverlayResult> => {
+  private runJq = async (filter: string, data: any): Promise<Overlays.OverlayResult> => {
     logger.debug('Executing jq');
     const jqOut = await jq.run(filter, data, {
       input: 'json',
@@ -63,8 +64,8 @@ export class SoyaTransform implements CommandPlugin {
     }
   }
 
-  run = (overlay: Overlay, data: any): Promise<OverlayResult> => {
-    for (const item of overlay['@graph']) {
+  run = (soyaDoc: SoyaDocument, data: any): Promise<Overlays.OverlayResult> => {
+    for (const item of soyaDoc['@graph']) {
       // not a valid transformation overlay
       if (!(item.engine && item.value))
         continue;

@@ -1,4 +1,5 @@
 import jsyaml from 'js-yaml';
+import { SoyaDocument, IntSoyaDocument } from '../../interfaces';
 import { logger } from '../../services/logger';
 import { handleOverlay } from './overlays';
 
@@ -12,25 +13,7 @@ const xsTypes = [
   'time',
 ];
 
-export interface SoyaDocument {
-  ['@context']: {
-    ['@version']: number,
-    ['@base']: string,
-    ['@import']: string,
-    [key: string]: string | number,
-  },
-
-  // graph is named incorrectly
-  // it should be @graph
-  // however dealng with special characters is not so easy in node
-  // therefore we work with plain "graph" until the end
-  // shortly before plotting the document, we'll rename it to "@graph"
-  graph: any[],
-}
-
-export type PrintableSoyaDocument = Omit<SoyaDocument, 'graph'> & { '@graph': any[] };
-
-const handleBase = (doc: SoyaDocument, base: any) => {
+const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
 
   graph.push({
@@ -56,7 +39,7 @@ const handleBase = (doc: SoyaDocument, base: any) => {
   }
 }
 
-export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string): Promise<PrintableSoyaDocument | undefined> => {
+export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string): Promise<SoyaDocument | undefined> => {
   const yaml: any = jsyaml.load(yamlContent);
 
   if (!yaml || typeof yaml !== 'object') {
@@ -66,7 +49,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
 
   const { meta, content } = yaml;
 
-  const doc: SoyaDocument = {
+  const doc: IntSoyaDocument = {
     "@context": {
       "@version": 1.1,
       "@import": contextUrl,
@@ -91,7 +74,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     }
 
   // this is where the rename of "graph" to "@graph" happens
-  const printable: PrintableSoyaDocument = {
+  const printable: SoyaDocument = {
     '@context': doc['@context'],
     '@graph': doc.graph,
   };

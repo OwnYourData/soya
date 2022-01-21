@@ -3,7 +3,7 @@ import { IJsonLdSerializerOptions, JsonLdSerializer } from 'jsonld-streaming-ser
 import factory from "rdf-ext";
 import * as jsonld from 'jsonld';
 import { ContextDefinition } from 'jsonld';
-import { DEFAULT_REPO } from '../services/soya';
+import { DEFAULT_REPO } from '../services/repo';
 
 export const parseJsonLd = (input: any) => {
   const parser = new JsonLdParser({

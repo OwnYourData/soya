@@ -1,28 +1,23 @@
 #!/usr/bin/env node
-
-import { DEFAULT_SOYA_NAMESPACE, SoyaService } from "./services/soya";
+import { systemCommands } from "./commands";
+import { logger } from "./services/logger";
 import { cmdArgs, printCliHelp } from "./utils/cmd";
+import { packageJson } from "./utils/package";
+import { RepoService, Soya, Overlays } from "soya";
+import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import { SoyaTransform } from "./overlays/transform";
-import { CommandPlugin, OverlayResult } from "./overlays/interface";
-import { logger } from "./services/logger";
-import { SoyaValidate } from "./overlays/validate";
-import { packageJson } from "./utils/package";
-import { parseJsonLd } from "./utils/rdf";
-import { calculateBaseUri } from "./utils/dri";
-import DatasetExt from "rdf-ext/lib/Dataset";
-import { exitWithError } from "./utils/core";
-import { tryPrintTemplate } from "./system/template";
-import { yaml2soya } from "./system/yaml2soya";
 
 interface CommandObject {
-  [key: string]: CommandPlugin,
+  [key: string]: Overlays.OverlayPlugin,
 }
 
 const overlayPlugins: CommandObject = {
   'transform': new SoyaTransform(),
-  'validate': new SoyaValidate(),
+  'validate': new Overlays.SoyaValidate(),
 };
+
+export const logNiceJson = (json: any) => console.log(JSON.stringify(json, undefined, 2));
 
 (async () => {
   if (cmdArgs.version)
@@ -39,122 +34,26 @@ const overlayPlugins: CommandObject = {
   if (command && cmdArgs.help)
     return printCliHelp(command);
 
-  const handleSystemCommands = async (): Promise<boolean> => {
-    switch (command) {
-      case 'template':
-        if (!param1)
-          return exitWithError('No template name specified!');
-
-        tryPrintTemplate(param1);
-        break;
-      case 'init':
-        const yamlContent = await Std.in();
-
-        if (!yamlContent)
-          return exitWithError('No YAML content provided via stdin!');
-
-        const doc = await yaml2soya(yamlContent, DEFAULT_SOYA_NAMESPACE, SoyaService.getInstance().repo);
-        console.log(JSON.stringify(doc, undefined, 2));
-        break;
-      case 'pull':
-        if (!param1)
-          return exitWithError('No path specified!');
-
-        try {
-          const pulledData = await SoyaService.getInstance().pull(param1);
-          console.log(JSON.stringify(pulledData, undefined, 2));
-        } catch (e: any) {
-          logger.error('Could not fetch resource from repo!');
-
-          if (typeof e.response.status === 'number') {
-            logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
-          }
-        }
-        break;
-      case 'push':
-        const contentDocument = await Std.in();
-        if (!contentDocument)
-          return exitWithError('No content provided via stdin!');
-
-        try {
-          const item = await SoyaService.getInstance().push(contentDocument);
-          logger.debug('Pushed item', item);
-          console.log(item.dri);
-        } catch (e: any) {
-          if (typeof e.message === 'string')
-            logger.error(e.message);
-
-          return exitWithError('Could not push SOyA document');
-        }
-        break;
-      case 'calculate-dri':
-        const content = await Std.in();
-
-        if (!content)
-          return exitWithError('No content provided via stdin!');
-
-        let json: any;
-        let quads: DatasetExt;
-
-        logger.debug('Raw input:');
-        logger.debug(content);
-
-        try {
-          json = JSON.parse(content);
-          quads = await parseJsonLd(json);
-        }
-        catch {
-          return exitWithError('Could not parse JSON!');
-        }
-
-        try {
-          const result = await calculateBaseUri({
-            json,
-            quads,
-          });
-
-          console.log(result.dri);
-        }
-        catch {
-          return exitWithError('Could not calculate DRI!');
-        }
-
-        break;
-      case 'similar':
-        try {
-          const res = await SoyaService.getInstance().similar(await Std.in());
-          console.log(JSON.stringify(res, undefined, 2));
-        } catch (e) {
-          console.error(e)
-          return exitWithError('Could not process provided document');
-        }
-        break;
-      case 'info':
-        if (!param1)
-          return exitWithError('No path specified!');
-
-        try {
-          const res = await SoyaService.getInstance().info(param1);
-          console.log(JSON.stringify(res, undefined, 2));
-        } catch {
-          return exitWithError('Could not fetch SOyA info');
-        }
-        break;
-      default:
-        return false;
-    }
-
-    return true;
-  }
-
   logger.info(`${packageJson.name} (${packageJson.version})\n`);
 
+  let repoService: RepoService | undefined = undefined
   if (repo)
-    SoyaService.initialize(new SoyaService(repo));
+    repoService = new RepoService(repo);
 
-  const isSupported = await handleSystemCommands();
-  if (isSupported)
-    return;
+  const soya = new Soya({
+    service: repoService,
+    logger,
+  });
+
+  // system commands
+  if (command) {
+    const func = systemCommands[command];
+
+    if (func) {
+      func(soya, param1);
+      return;
+    }
+  }
 
   if (!command)
     return exitWithError('No command specified!');
@@ -172,7 +71,7 @@ const overlayPlugins: CommandObject = {
   if (!input)
     return exitWithError('No input data specified!');
 
-  const layer = await SoyaService.getInstance().pull(param1);
+  const layer = await soya.pull(param1);
 
   let parsedInput: any;
   try {
@@ -185,7 +84,7 @@ const overlayPlugins: CommandObject = {
   logger.debug('Overlay:', layer);
   logger.debug('Data In:', parsedInput);
 
-  let res: OverlayResult;
+  let res: Overlays.OverlayResult;
 
   try {
     res = await plugin.run(layer, parsedInput);
@@ -198,10 +97,10 @@ const overlayPlugins: CommandObject = {
 
   let output: any = res.data;
   try {
-    output = JSON.stringify(output, undefined, 2);
-  } catch { }
-
-  console.log(output);
+    logNiceJson(output);
+  } catch {
+    console.log(output);
+  }
 
   return;
 })();

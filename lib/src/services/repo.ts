@@ -5,15 +5,15 @@ import { logger } from './logger';
 export const DEFAULT_REPO = 'https://soya.data-container.net';
 export const DEFAULT_SOYA_NAMESPACE = 'https://ns.ownyourdata.eu/ns/soya-context.json';
 
-export class SoyaService {
+export class RepoService {
   constructor(
     public repo: string = DEFAULT_REPO,
   ) { }
 
-  private static INSTANCE = new SoyaService();
+  private static INSTANCE = new RepoService();
 
-  static getInstance = () => SoyaService.INSTANCE;
-  static initialize = (instance: SoyaService) => SoyaService.INSTANCE = instance;
+  static getInstance = () => RepoService.INSTANCE;
+  static initialize = (instance: RepoService) => RepoService.INSTANCE = instance;
 
   // TODO: implement caching
 
