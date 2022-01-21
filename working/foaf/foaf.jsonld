@@ -62,7 +62,7 @@
     {
       "@id": "Person",
       "@type": "owl:Class",
-      "subClassOf": "Base"
+      "subClassOf": "Agent"
     },
     {
       "@id": "firstName",

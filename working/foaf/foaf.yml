@@ -4,8 +4,8 @@ meta:
     foaf: "http://xmlns.com/foaf/0.1/"
 
 content:
-  base: 
-    - name: Agent
+  bases:
+    - name: foaf:agent
       attributes:
         gender: String
         birthday: Date
@@ -16,10 +16,15 @@ content:
         age: Integer
         status: String
     - name: Person
+      subClassOf: 
+        - Agent
       attributes:
         firstName: String
         lastName: String
-        agent: Agent
+    - name: Agent
+      subClassOf: foaf:agent
+      attributes:
+        hasGender: Boolean
   overlays: 
     - type: OverlayAnnotation
       base: Agent
@@ -68,3 +73,8 @@ content:
           length: "(0..40]"
         agent:
           cardinality: "1..1"
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: foaf:agent
+      engine: jq
+
