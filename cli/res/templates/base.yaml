@@ -2,7 +2,7 @@ meta:
   name: Person
 
 content:
-  base: 
+  bases: 
     - name: Person
       attributes:
         name: String
