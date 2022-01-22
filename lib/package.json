@@ -1,12 +1,16 @@
 {
-  "name": "soya",
-  "version": "0.1.0",
+  "name": "soya-js",
+  "version": "0.1.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc && chmod +x dist/index.js"
+    "build": "tsc && chmod +x dist/index.js",
+    "prepublishOnly": "npm run build"
   },
   "author": "Gabriel Unterholzer",
   "license": "MIT",
