@@ -1,4 +1,4 @@
-import { Soya, Errors } from "soya";
+import { Soya, Errors } from "soya-js";
 import { logNiceJson } from ".";
 import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";

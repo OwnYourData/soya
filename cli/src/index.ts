@@ -3,7 +3,7 @@ import { systemCommands } from "./commands";
 import { logger } from "./services/logger";
 import { cmdArgs, printCliHelp } from "./utils/cmd";
 import { packageJson } from "./utils/package";
-import { RepoService, Soya, Overlays } from "soya";
+import { RepoService, Soya, Overlays } from "soya-js";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import { SoyaTransform } from "./overlays/transform";

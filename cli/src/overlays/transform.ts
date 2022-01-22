@@ -1,12 +1,11 @@
 import proc from 'child_process';
 import fs from 'fs/promises';
 import * as jq from 'node-jq';
-import { Overlays  } from 'soya';
+import { Overlays, SoyaDocument } from 'soya-js';
 import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
 import { cmdArgs } from '../utils/cmd';
-import { SoyaDocument } from 'soya/dist/interfaces';
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
   private runJolt = async (spec: any[], data: any): Promise<Overlays.OverlayResult> => {
