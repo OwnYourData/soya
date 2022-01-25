@@ -55,7 +55,7 @@ This document uses the following terms as defined in external specifications and
     :: in a [=terms/Base=] a single field with a name and associated type<br>
             *in RDF:* a single data type or object property
 
-    : <dfn lt=base|Bases>Base</dfn>
+    : <dfn lt=base|bases|Bases>Base</dfn>
     :: has a name and a list of [=terms/Attributes=] with associated type<br>
             *in RDF:* an RDF Class with one or more properties
 
@@ -63,7 +63,7 @@ This document uses the following terms as defined in external specifications and
     :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
             *in RDF:* instance of an RDF Class
 
-    : <dfn lt=Overlays>Overlay</dfn>
+    : <dfn lt=overlays|Overlays>Overlay</dfn>
     :: additional information about a [=terms/Base=]<br>
         *in RDF:* annotation properties attached to an RDF Class or Property
 
@@ -88,17 +88,100 @@ text
 Structure {#structure_element}
 ---------
 
-text
+All artefacts ([=terms/bases=] and [=terms/overlays=]) in SOyA are declared is a [=terms/structure=] and it holds the following information:
+* meta    
+    * name    
+    * namespace    
+* content    
+    * bases    
+    * overlays    
 
+The `meta` node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). `content` is the payload defining `bases` and `overlays` described in detail in the following sections.
+
+<details><summary>Example YML</summary>
+
+```yaml
+meta:
+  name: Foaf
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  bases:
+    - name: Agent
+      subClassOf: foaf:agent
+    - name: Person
+      subClassOf: 
+        - Agent
+      attributes:
+        firstName: String
+        lastName: String
+        did: string
+  overlays: 
+    - type: OverlayAnnotation
+      base: Agent
+      name: AgentAnnotationOverlay
+      attributes:
+        gender: 
+          comment: 
+            en: The gender of this Agent (typically but not necessarily 'male' or 'female').
+        birthday:
+          comment:
+            en: The birthday of this Agent.
+        made:
+          comment:
+            en: Something that was made by this agent.
+        age:
+          comment:
+            en: The age in years of some agent.
+    - type: OverlayAnnotation
+      base: Person
+      name: PersonAnnotationOverlay
+      attributes:
+        firstName: 
+          comment: 
+            en: The first name of a person.
+        lastName:
+          comment:
+            en: The last name of a person.
+        did:
+          comment:
+            en: Identifier with keys and service endpoints
+    - type: OverlayAlignment
+      base: Person
+      name: PersonAlignmentOverlay
+      attributes:
+        firstName: 
+          - foaf:givenName
+        lastName:
+          - foaf:familyName
+          - foaf:surname
+    - type: OverlayValidation
+      base: Person
+      name: PersonValidationOverlay
+      attributes:
+        firstName: 
+          cardinality: "0..1"
+          length: "(0..30]"
+        lastName:
+          cardinality: "1..1"
+          length: "(0..40]"
+```
+
+</details>
+
+<details><summary>Visualization</summary>
+</details>
 
 Base {#base_element}
 ----
 
 A [=terms/base=] declares a dataset and holds the following information:
 * name
+* subClassOf
 * list of attribute names and associated type
 
-When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. Multiple bases can be combined in a structure for related concepts.
+When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. `subClassOf` optionally allows to inherit properties/attributes from other existing classes.  Multiple bases can be combined in a structure for related concepts.
 
 <details><summary>Example YML</summary>
 

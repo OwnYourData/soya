@@ -5,26 +5,15 @@ meta:
 
 content:
   bases:
-    - name: foaf:agent
-      attributes:
-        gender: String
-        birthday: Date
-        made: String
-        mbox: String
-        topic: String
-        interest: String
-        age: Integer
-        status: String
+    - name: Agent
+      subClassOf: foaf:agent
     - name: Person
       subClassOf: 
         - Agent
       attributes:
         firstName: String
         lastName: String
-    - name: Agent
-      subClassOf: foaf:agent
-      attributes:
-        hasGender: Boolean
+        did: string
   overlays: 
     - type: OverlayAnnotation
       base: Agent
@@ -52,6 +41,9 @@ content:
         lastName:
           comment:
             en: The last name of a person.
+        did:
+          comment:
+            en: Identifier with keys and service endpoints
     - type: OverlayAlignment
       base: Person
       name: PersonAlignmentOverlay
@@ -71,10 +63,4 @@ content:
         lastName:
           cardinality: "1..1"
           length: "(0..40]"
-        agent:
-          cardinality: "1..1"
-    - type: OverlayTransformation
-      name: TransformationOverlay
-      base: foaf:agent
-      engine: jq
 
