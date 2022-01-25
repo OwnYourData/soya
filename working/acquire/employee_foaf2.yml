@@ -1,0 +1,61 @@
+meta:
+  name: Employee
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  base:
+    - name: "foaf:Person"
+      attributes:
+        "foaf:firstName": String
+        "foaf:lastName": String
+        "foaf:gender": String
+        "foaf:birthday": Date
+    - name: Employee
+      subClassOf: "foaf:Person"
+      attributes:
+        employer: Company
+    - name: Company
+      attributes:
+        company: string
+        country: string
+
+  overlays:
+    - type: OverlayAnnotation
+      base: Company
+      name: CompanyAnnotationOverlay
+      class: 
+        label: 
+          en: Company
+          de: Firma
+      attributes:
+        company: 
+          label: 
+            en: Company name
+            de: Firmenname
+    - type: OverlayValidation
+      base: Employee
+      name: EmployeeValidationOverlay
+      attributes:
+        foaf:lastNname: 
+          cardinality: "1..1"
+          length: "[0..30)"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        gender:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+        employer: 
+          cardinality: "0..1"
+    - type: OverlayValidation
+      base: Company
+      name: CompanyValidationOverlay
+      attributes:
+        company: 
+          cardinality: "1..1"
+          length: "[0..20)"
+        country: 
+          cardinality: "1..1"
