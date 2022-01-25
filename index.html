@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="ad9761d8dcfe461a91566da1457f9ae8c8366316" name="document-revision">
+  <meta content="6e88afd7f3532696d259e32542b8bad56ae62dd8" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -710,6 +710,72 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>The <code>meta</code> node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). <code>content</code> is the payload defining <code>bases</code> and <code>overlays</code> described in detail in the following sections.</p>
    <details>
     <summary>Example YML</summary>
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> Foaf
+  <c- f>namespace</c-><c- p>:</c->
+    <c- f>foaf</c-><c- p>:</c-> <c- s>"http://xmlns.com/foaf/0.1/"</c->
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>bases</c-><c- p>:</c->
+    - <c- f>name</c-><c- p>:</c-> Agent
+      <c- f>subClassOf</c-><c- p>:</c-> foaf:agent
+    - <c- f>name</c-><c- p>:</c-> Person
+      <c- f>subClassOf</c-><c- p>:</c-> 
+        - Agent
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>firstName</c-><c- p>:</c-> String
+        <c- f>lastName</c-><c- p>:</c-> String
+        <c- f>did</c-><c- p>:</c-> string
+  <c- f>overlays</c-><c- p>:</c-> 
+    - <c- f>type</c-><c- p>:</c-> OverlayAnnotation
+      <c- f>base</c-><c- p>:</c-> Agent
+      <c- f>name</c-><c- p>:</c-> AgentAnnotationOverlay
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>gender</c-><c- p>:</c-> 
+          <c- f>comment</c-><c- p>:</c-> 
+            <c- f>en</c-><c- p>:</c-> The gender of this Agent (typically but not necessarily 'male' or 'female').
+        <c- f>birthday</c-><c- p>:</c->
+          <c- f>comment</c-><c- p>:</c->
+            <c- f>en</c-><c- p>:</c-> The birthday of this Agent.
+        <c- f>made</c-><c- p>:</c->
+          <c- f>comment</c-><c- p>:</c->
+            <c- f>en</c-><c- p>:</c-> Something that was made by this agent.
+        <c- f>age</c-><c- p>:</c->
+          <c- f>comment</c-><c- p>:</c->
+            <c- f>en</c-><c- p>:</c-> The age in years of some agent.
+    - <c- f>type</c-><c- p>:</c-> OverlayAnnotation
+      <c- f>base</c-><c- p>:</c-> Person
+      <c- f>name</c-><c- p>:</c-> PersonAnnotationOverlay
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>firstName</c-><c- p>:</c-> 
+          <c- f>comment</c-><c- p>:</c-> 
+            <c- f>en</c-><c- p>:</c-> The first name of a person.
+        <c- f>lastName</c-><c- p>:</c->
+          <c- f>comment</c-><c- p>:</c->
+            <c- f>en</c-><c- p>:</c-> The last name of a person.
+        <c- f>did</c-><c- p>:</c->
+          <c- f>comment</c-><c- p>:</c->
+            <c- f>en</c-><c- p>:</c-> Identifier with keys and service endpoints
+    - <c- f>type</c-><c- p>:</c-> OverlayAlignment
+      <c- f>base</c-><c- p>:</c-> Person
+      <c- f>name</c-><c- p>:</c-> PersonAlignmentOverlay
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>firstName</c-><c- p>:</c-> 
+          - foaf:givenName
+        <c- f>lastName</c-><c- p>:</c->
+          - foaf:familyName
+          - foaf:surname
+    - <c- f>type</c-><c- p>:</c-> OverlayValidation
+      <c- f>base</c-><c- p>:</c-> Person
+      <c- f>name</c-><c- p>:</c-> PersonValidationOverlay
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>firstName</c-><c- p>:</c-> 
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"0..1"</c->
+          <c- f>length</c-><c- p>:</c-> <c- s>"(0..30]"</c->
+        <c- f>lastName</c-><c- p>:</c->
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"1..1"</c->
+          <c- f>length</c-><c- p>:</c-> <c- s>"(0..40]"</c->
+</pre>
    </details>
    <details>
     <summary>Visualization</summary>
