@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="fbfbf384d7d4ca6909ddc336b8862351f75a77cb" name="document-revision">
+  <meta content="ad9761d8dcfe461a91566da1457f9ae8c8366316" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -569,7 +569,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-22">22 January 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-25">25 January 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -666,13 +666,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Attributes" id="terms-attributes">Attribute</dfn>
      <dd data-md>
       <p>in a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base">Base</a> a single field with a name and associated type<br> <em>in RDF:</em> a single data type or object property</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="base|Bases" id="terms-base">Base</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="base|bases|Bases" id="terms-base">Base</dfn>
      <dd data-md>
       <p>has a name and a list of <a data-link-type="dfn" href="#terms-attributes" id="ref-for-terms-attributes">Attributes</a> with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
       <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Overlays" id="terms-overlays">Overlay</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="overlays|Overlays" id="terms-overlays">Overlay</dfn>
      <dd data-md>
       <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base②">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-repository">Repository<a class="self-link" href="#terms-repository"></a></dfn>
@@ -688,16 +688,43 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="2" id="composition"><span class="secno">2. </span><span class="content">Composition</span><a class="self-link" href="#composition"></a></h2>
    <p>text</p>
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structure</span><a class="self-link" href="#structure_element"></a></h3>
-   <p>text</p>
+   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlays" id="ref-for-terms-overlays①">overlays</a>) in SOyA are declared is a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
+   <ul>
+    <li data-md>
+     <p>meta</p>
+     <ul>
+      <li data-md>
+       <p>name</p>
+      <li data-md>
+       <p>namespace</p>
+     </ul>
+    <li data-md>
+     <p>content</p>
+     <ul>
+      <li data-md>
+       <p>bases</p>
+      <li data-md>
+       <p>overlays</p>
+     </ul>
+   </ul>
+   <p>The <code>meta</code> node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). <code>content</code> is the payload defining <code>bases</code> and <code>overlays</code> described in detail in the following sections.</p>
+   <details>
+    <summary>Example YML</summary>
+   </details>
+   <details>
+    <summary>Visualization</summary>
+   </details>
    <h3 class="heading settled" data-level="2.2" id="base_element"><span class="secno">2.2. </span><span class="content">Base</span><a class="self-link" href="#base_element"></a></h3>
-   <p>A <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">base</a> declares a dataset and holds the following information:</p>
+   <p>A <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑤">base</a> declares a dataset and holds the following information:</p>
    <ul>
     <li data-md>
      <p>name</p>
     <li data-md>
+     <p>subClassOf</p>
+    <li data-md>
      <p>list of attribute names and associated type</p>
    </ul>
-   <p>When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. Multiple bases can be combined in a structure for related concepts.</p>
+   <p>When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. <code>subClassOf</code> optionally allows to inherit properties/attributes from other existing classes.  Multiple bases can be combined in a structure for related concepts.</p>
    <details>
     <summary>Example YML</summary>
     <p>use <code>soya template base</code> to show this example on the command line</p>
@@ -801,8 +828,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#terms-attributes">Attributes</a><span>, in § 1.1</span>
    <li><a href="#terms-base">base</a><span>, in § 1.1</span>
    <li><a href="#terms-base">Bases</a><span>, in § 1.1</span>
+   <li><a href="#terms-base">bases</a><span>, in § 1.1</span>
    <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
    <li><a href="#terms-overlays">Overlays</a><span>, in § 1.1</span>
+   <li><a href="#terms-overlays">overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-repository">Repository</a><span>, in § 1.1</span>
    <li><a href="#terms-structures">Structures</a><span>, in § 1.1</span>
   </ul>
@@ -822,19 +851,22 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <b><a href="#terms-base">#terms-base</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
-    <li><a href="#ref-for-terms-base④">2.2. Base</a>
+    <li><a href="#ref-for-terms-base④">2.1. Structure</a>
+    <li><a href="#ref-for-terms-base⑤">2.2. Base</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-overlays">
    <b><a href="#terms-overlays">#terms-overlays</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-overlays">1.1. Terminology</a>
+    <li><a href="#ref-for-terms-overlays①">2.1. Structure</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-structures">
    <b><a href="#terms-structures">#terms-structures</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-structures">1.1. Terminology</a> <a href="#ref-for-terms-structures①">(2)</a>
+    <li><a href="#ref-for-terms-structures②">2.1. Structure</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
