@@ -6,6 +6,7 @@ import { SoyaDocument } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
 import { DEFAULT_SOYA_NAMESPACE, RepoService } from "./services/repo";
 import { flat2ld, SoyaInstance } from "./system/flat2ld";
+import { getSoyaForm, SoyaForm } from "./system/form";
 import { yaml2soya } from "./system/yaml2soya";
 import { calculateBaseUri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
@@ -78,5 +79,10 @@ export class Soya {
   acquire = async (path: string, flatJson: any): Promise<SoyaInstance> => {
     let soyaStructure: SoyaDocument = await this.service.pull(path);
     return flat2ld(flatJson, soyaStructure);
+  }
+
+  getForm = async (path: string): Promise<SoyaForm> => {
+    const soyaStruc = await this.pull(path);
+    return getSoyaForm(soyaStruc);
   }
 }

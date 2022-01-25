@@ -110,7 +110,19 @@ const info = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not fetch SOyA info');
   }
 }
-const playground = async (_: Soya): Promise<void> => {
+const form = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
+
+  if (!param1)
+    return exitWithError('No path specified!');
+
+  try {
+    logNiceJson(await soya.getForm(param1));
+  } catch {
+    return exitWithError('Could not generate SOyA form!');
+  }
+}
+const playground = async (): Promise<void> => {
   let queryParam: string;
 
   try {
@@ -137,6 +149,7 @@ export const systemCommands: {
   push,
   similar,
   info,
+  form,
   playground,
   'calculate-dri': calculateDri,
 };
