@@ -50,7 +50,7 @@ export const logNiceJson = (json: any) => console.log(JSON.stringify(json, undef
     const func = systemCommands[command];
 
     if (func) {
-      func(soya, param1);
+      func([param1], soya);
       return;
     }
   }
