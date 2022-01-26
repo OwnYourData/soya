@@ -1,6 +1,7 @@
 meta:
-  name: Dpv
+  name: UsagePolicy
   namespace:
+    dpv: "http://www.w3.org/ns/dpv#"
     dpv-gdpr: "http://www.w3.org/ns/dpv-gdpr#"
     spl: "http://www.specialprivacy.eu/langs/usage-policy#"
     svd: "http://www.specialprivacy.eu/vocabs/data#"
@@ -12,10 +13,11 @@ meta:
 
 content:
   base:
-    - name: "dpv:PersonalDataHandling"
+    - name: PersonalDataHandling
+      subClassOf: "dpv:PersonalDataHandling"
       attributes:
-        hasPersonalDataCategory: PersonalDataCategory
-        hasProcessing: Processing
+        "dpv:hasPersonalDataCategory": PersonalDataCategory
+        "dpv:hasProcessing": Processing
     - name: PersonalDataCategory
     - name: Processing
   overlays: 

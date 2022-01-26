@@ -1,3 +1,47 @@
+<style>
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
+
+<pre class="metadata">
+Boilerplate: idl-index no, property-index no
+</pre>
+
 <pre class='metadata'>
 Title: Semantic Overlay Architecture
 Shortname: soya-spec
@@ -98,80 +142,12 @@ All artefacts ([=terms/bases=] and [=terms/overlays=]) in SOyA are declared is a
 
 The `meta` node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). `content` is the payload defining `bases` and `overlays` described in detail in the following sections.
 
-<details><summary>Example YML</summary>
-
-```yaml
-meta:
-  name: Foaf
-  namespace:
-    foaf: "http://xmlns.com/foaf/0.1/"
-
-content:
-  bases:
-    - name: Agent
-      subClassOf: foaf:agent
-    - name: Person
-      subClassOf: 
-        - Agent
-      attributes:
-        firstName: String
-        lastName: String
-        did: string
-  overlays: 
-    - type: OverlayAnnotation
-      base: Agent
-      name: AgentAnnotationOverlay
-      attributes:
-        gender: 
-          comment: 
-            en: The gender of this Agent (typically but not necessarily 'male' or 'female').
-        birthday:
-          comment:
-            en: The birthday of this Agent.
-        made:
-          comment:
-            en: Something that was made by this agent.
-        age:
-          comment:
-            en: The age in years of some agent.
-    - type: OverlayAnnotation
-      base: Person
-      name: PersonAnnotationOverlay
-      attributes:
-        firstName: 
-          comment: 
-            en: The first name of a person.
-        lastName:
-          comment:
-            en: The last name of a person.
-        did:
-          comment:
-            en: Identifier with keys and service endpoints
-    - type: OverlayAlignment
-      base: Person
-      name: PersonAlignmentOverlay
-      attributes:
-        firstName: 
-          - foaf:givenName
-        lastName:
-          - foaf:familyName
-          - foaf:surname
-    - type: OverlayValidation
-      base: Person
-      name: PersonValidationOverlay
-      attributes:
-        firstName: 
-          cardinality: "0..1"
-          length: "(0..30]"
-        lastName:
-          cardinality: "1..1"
-          length: "(0..40]"
-```
-
-</details>
-
-<details><summary>Visualization</summary>
-</details>
+<div class=example id=structure_example>
+An example structure.
+<pre class=include>
+path: structure.html
+</pre>
+</div>
 
 Base {#base_element}
 ----
@@ -237,9 +213,36 @@ text
 Publishing {#publishing}
 ----------
 
+text
+
+
+Acquisition {#acquisition}
+----------
+
+text
+
+
+Validation {#validation}
+----------
+
+text
+
+
+Transformation {#transformation}
+----------
+
+text
+
+
 
 Tools {#tools}
 =====
+
+`soya-js` Library {#library}
+-----------------
+
+text
+
 
 Command Line Tool {#cli}
 -----------------
@@ -253,8 +256,8 @@ Repository {#repository}
 text
 
 
-Form Rendering {#forms}
---------------
+Semantic Container {#semcon}
+------------------
 
 text
 
@@ -271,3 +274,18 @@ The following implementation artefacts are available (published under the open s
 * Repository for hosting: [https://github.com/OwnYourData/soya/tree/main/repository](https://github.com/OwnYourData/soya/tree/main/repository)
     * API documentation in Swagger: [https://api-docs.ownyourdata.eu/soya/](https://api-docs.ownyourdata.eu/soya/)
 
+<script>
+function openTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
