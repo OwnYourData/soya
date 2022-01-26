@@ -15,9 +15,10 @@ const xsTypes = [
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
+  const baseName = base.name;
 
   graph.push({
-    '@id': base.name,
+    '@id': baseName,
     '@type': "owl:Class",
     'subClassOf': base.subClassOf || 'Base',
   });
@@ -36,6 +37,14 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
       'domain': base.name,
       'range': dataType,
     })
+  }
+
+  if (Array.isArray(base.subClasses)) {
+    for (const subBase of base.subClasses) {
+      // set subClassOf implicitly
+      subBase.subClassOf = baseName;
+      handleBase(doc, subBase);
+    }
   }
 }
 
@@ -64,7 +73,6 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     }
   }
 
-  // TODO: rename base to bases
   if (Array.isArray(content.bases))
     for (const base of content.bases) {
       handleBase(doc, base);

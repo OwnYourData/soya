@@ -12,3 +12,9 @@ content:
         dateOfBirth: Date
         age: Integer
         sex: String
+      # bases support nesting
+      # all subClasses will implicitly receive subClassOf property
+      subClasses:
+        - name: MyPerson
+          attributes:
+            height: Integer
