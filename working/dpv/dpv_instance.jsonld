@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.data-container.net/UsagePolicy/",
+    "dpv": "http://www.w3.org/ns/dpv#"
+  },
+  "@graph": [
+    {
+      "@type": "UsagePolicy",
+        "dpv:hasPersonalDataCategory": ["dpv:Accent", "dpv:Age"],
+        "dpv:hasProcessing": ["dpv:Copy", "dpv:Transform", "dpv:Use"],
+        "dpv:hasPurpose": "dpv:Purpose",
+        "dpv:hasExpiryTime": "2022-01-27T14:00:00Z"
+    }
+  ]
+}
