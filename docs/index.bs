@@ -149,6 +149,7 @@ path: structure.html
 </pre>
 </div>
 
+
 Base {#base_element}
 ----
 
@@ -159,34 +160,12 @@ A [=terms/base=] declares a dataset and holds the following information:
 
 When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. `subClassOf` optionally allows to inherit properties/attributes from other existing classes.  Multiple bases can be combined in a structure for related concepts.
 
-<details><summary>Example YML</summary>
-
-use `soya template base` to show this example on the command line
-
-```yaml
-meta:
-  name: Person
-
-content:
-  base: 
-    - name: Person
-      attributes:
-        name: String
-        dateOfBirth: Date
-        age: Integer
-        sex: String
-```
-
-</details>
-
-<details><summary>Visualization</summary>
-
-<p align="center">
-  <img src="res/base_graph.png" width="750"><br>
-</p>
+<div class=example id=base_example>
+An example base.
+<pre class=include>
+path: base.html
+</pre>
 </div>
-
-</details>
 
 
 Overlay {#overlay_element}
