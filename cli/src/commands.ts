@@ -6,7 +6,8 @@ import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import open from "open";
 
-const acquire = async (soya: Soya, param1: any): Promise<void> => {
+const acquire = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
   if (!param1)
     return exitWithError('No soya structure specified!');
 
@@ -28,13 +29,14 @@ const acquire = async (soya: Soya, param1: any): Promise<void> => {
     }
   }
 }
-const template = async (_: Soya, param1: any): Promise<void> => {
+const template = async (params: any[]): Promise<void> => {
+  const [param1] = params;
   if (!param1)
     return exitWithError('No template name specified!');
 
   tryPrintTemplate(param1);
 }
-const init = async (soya: Soya): Promise<void> => {
+const init = async (_: any[], soya: Soya): Promise<void> => {
   const yamlContent = await Std.in();
 
   if (!yamlContent)
@@ -42,7 +44,8 @@ const init = async (soya: Soya): Promise<void> => {
 
   logNiceJson(await soya.init(yamlContent));
 }
-const pull = async (soya: Soya, param1: any): Promise<void> => {
+const pull = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
   if (!param1)
     return exitWithError('No path specified!');
 
@@ -56,7 +59,7 @@ const pull = async (soya: Soya, param1: any): Promise<void> => {
     }
   }
 }
-const push = async (soya: Soya): Promise<void> => {
+const push = async (_: any[], soya: Soya): Promise<void> => {
   const contentDocument = await Std.in();
   if (!contentDocument)
     return exitWithError('No content provided via stdin!');
@@ -72,7 +75,7 @@ const push = async (soya: Soya): Promise<void> => {
     return exitWithError('Could not push SOyA document');
   }
 }
-const calculateDri = async (soya: Soya): Promise<void> => {
+const calculateDri = async (_: any[], soya: Soya): Promise<void> => {
   const content = await Std.in();
 
   if (!content)
@@ -88,7 +91,7 @@ const calculateDri = async (soya: Soya): Promise<void> => {
     return exitWithError('Could not calculate DRI!');
   }
 }
-const similar = async (soya: Soya): Promise<void> => {
+const similar = async (_: any[], soya: Soya): Promise<void> => {
   try {
     logNiceJson(await soya.similar(await Std.in()));
   } catch (e) {
@@ -96,7 +99,8 @@ const similar = async (soya: Soya): Promise<void> => {
     return exitWithError('Could not process provided document');
   }
 }
-const info = async (soya: Soya, param1: any): Promise<void> => {
+const info = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
   if (!param1)
     return exitWithError('No path specified!');
 
@@ -106,7 +110,19 @@ const info = async (soya: Soya, param1: any): Promise<void> => {
     return exitWithError('Could not fetch SOyA info');
   }
 }
-const playground = async (_: Soya): Promise<void> => {
+const form = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
+
+  if (!param1)
+    return exitWithError('No path specified!');
+
+  try {
+    logNiceJson(await soya.getForm(param1));
+  } catch {
+    return exitWithError('Could not generate SOyA form!');
+  }
+}
+const playground = async (): Promise<void> => {
   let queryParam: string;
 
   try {
@@ -124,7 +140,7 @@ const playground = async (_: Soya): Promise<void> => {
 }
 
 export const systemCommands: {
-  [key: string]: (soya: Soya, ...params: any[]) => Promise<void>,
+  [key: string]: (params: Array<any>, soya: Soya) => Promise<void>,
 } = {
   acquire,
   template,
@@ -133,6 +149,7 @@ export const systemCommands: {
   push,
   similar,
   info,
+  form,
   playground,
   'calculate-dri': calculateDri,
 };
