@@ -66,6 +66,14 @@ Markup Shorthands: markdown yes
         "title": "JSON-LD 1.1",
         "status": "W3C Recommendation",
         "publisher": "W3C"
+    },
+    "MULTIBASE": {
+        "href": "https://tools.ietf.org/html/draft-multiformats-multibase",
+        "title": "IETF Multibase Data Format specification"
+    },
+    "MULTIHASH": {
+        "href": "https://github.com/multiformats/multihash",
+        "title": "Multihash - protocol for differentiating outputs from various well-established cryptographic hash functions"
     }
 }
 </pre>
@@ -84,7 +92,7 @@ Introduction {#intro}
 SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.
 
 <p align="center">
-  <img src="res/overview.png" width="550"><br>
+  <img src="res/overview.png" width="800"><br>
   <em>Figure 1: Building blocks in SOyA</em>
 </p>
 </div>
@@ -103,6 +111,9 @@ This document uses the following terms as defined in external specifications and
     :: has a name and a list of [=terms/Attributes=] with associated type<br>
             *in RDF:* an RDF Class with one or more properties
 
+    : <dfn>DRI</dfn>
+    :: A **D**ecentralized **R**esource **I**dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash [[MULTIHASH]] (default: `sha2-256`) is used for hashing a JSON object and Multibase [[MULTIBASE]] (default: `base58-btc`) for encoding the hash value.
+
     : <dfn>Instance</dfn>
     :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
             *in RDF:* instance of an RDF Class
@@ -114,7 +125,7 @@ This document uses the following terms as defined in external specifications and
     : <dfn>Repository</dfn>
     :: online storage for [=terms/Structures=] with versioning capabilities
 
-    : <dfn lt=Structures>Structure</dfn>
+    : <dfn lt=Structures|structure>Structure</dfn>
     :: a combination of [=terms/Bases=] and [=terms/Overlays=]<br>
         *in RDF:* an ontology
 </div>
@@ -238,7 +249,7 @@ The Command Line Tool provides a set of utilities for handling SOyA structures a
 
 [soya-cli](https://github.com/OwnYourData/soya/blob/main/cli/README.md) is built on top of [soya-js](https://github.com/OwnYourData/soya/tree/main/lib) and exposes most of its [features](https://github.com/OwnYourData/soya/blob/main/lib/README.md) as commands on the command line. In addition there are features like:
 
-* DRI calculation for SOyA structures
+* [=terms/DRI=] calculation for SOyA structures
 * Data transformation using     
 
     * [jq](https://stedolan.github.io/jq/)    

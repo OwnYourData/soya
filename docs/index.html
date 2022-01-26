@@ -680,6 +680,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
      </ol>
    </ol>
   </nav>
@@ -694,7 +695,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </ul>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
    <p>SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.</p>
-   <p align="center"> <img src="res/overview.png" width="550"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
+   <p align="center"> <img src="res/overview.png" width="800"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
    <h3 class="heading settled" data-level="1.1" id="terminology"><span class="secno">1.1. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h3>
    <p>This document uses the following terms as defined in external specifications and defines terms specific to SOyA.</p>
    <div>
@@ -705,6 +706,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="base|bases|Bases" id="terms-base">Base</dfn>
      <dd data-md>
       <p>has a name and a list of <a data-link-type="dfn" href="#terms-attributes" id="ref-for-terms-attributes">Attributes</a> with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-dri">DRI</dfn>
+     <dd data-md>
+      <p>A <strong>D</strong>ecentralized <strong>R</strong>esource <strong>I</strong>dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash <a data-link-type="biblio" href="#biblio-multihash">[MULTIHASH]</a> (default: <code>sha2-256</code>) is used for hashing a JSON object and Multibase <a data-link-type="biblio" href="#biblio-multibase">[MULTIBASE]</a> (default: <code>base58-btc</code>) for encoding the hash value.</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
       <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
@@ -714,7 +718,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-repository">Repository<a class="self-link" href="#terms-repository"></a></dfn>
      <dd data-md>
       <p>online storage for <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures①">Structures</a> with versioning capabilities</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Structures" id="terms-structures">Structure</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Structures|structure" id="terms-structures">Structure</dfn>
      <dd data-md>
       <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Bases</a> and <a data-link-type="dfn" href="#terms-overlays" id="ref-for-terms-overlays">Overlays</a><br> <em>in RDF:</em> an ontology</p>
     </dl>
@@ -1070,26 +1074,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <a href="#base_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
     </div>
    </div>
-   <details>
-    <summary>Example YML</summary>
-    <p>use <code>soya template base</code> to show this example on the command line</p>
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
-  <c- f>name</c-><c- p>:</c-> Person
-
-<c- f>content</c-><c- p>:</c->
-  <c- f>base</c-><c- p>:</c-> 
-    - <c- f>name</c-><c- p>:</c-> Person
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>name</c-><c- p>:</c-> String
-        <c- f>dateOfBirth</c-><c- p>:</c-> Date
-        <c- f>age</c-><c- p>:</c-> Integer
-        <c- f>sex</c-><c- p>:</c-> String
-</pre>
-   </details>
-   <details>
-    <summary>Visualization</summary>
-    <p align="center"> <img src="res/base_graph.png" width="750"><br> </p>
-   </details>
    <h3 class="heading settled" data-level="2.3" id="overlay_element"><span class="secno">2.3. </span><span class="content">Overlay</span><a class="self-link" href="#overlay_element"></a></h3>
    <p>text</p>
    <h3 class="heading settled" data-level="2.4" id="instance_element"><span class="secno">2.4. </span><span class="content">Instance</span><a class="self-link" href="#instance_element"></a></h3>
@@ -1129,7 +1113,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p><a href="https://github.com/OwnYourData/soya/blob/main/cli/README.md">soya-cli</a> is built on top of <a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> and exposes most of its <a href="https://github.com/OwnYourData/soya/blob/main/lib/README.md">features</a> as commands on the command line. In addition there are features like:</p>
    <ul>
     <li data-md>
-     <p>DRI calculation for SOyA structures</p>
+     <p><a data-link-type="dfn" href="#terms-dri" id="ref-for-terms-dri">DRI</a> calculation for SOyA structures</p>
     <li data-md>
      <p>Data transformation using</p>
      <ul>
@@ -1229,10 +1213,12 @@ function openTab(evt, cityName) {
    <li><a href="#terms-base">base</a><span>, in § 1.1</span>
    <li><a href="#terms-base">Bases</a><span>, in § 1.1</span>
    <li><a href="#terms-base">bases</a><span>, in § 1.1</span>
+   <li><a href="#terms-dri">DRI</a><span>, in § 1.1</span>
    <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
    <li><a href="#terms-overlays">Overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-overlays">overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-repository">Repository</a><span>, in § 1.1</span>
+   <li><a href="#terms-structures">structure</a><span>, in § 1.1</span>
    <li><a href="#terms-structures">Structures</a><span>, in § 1.1</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -1240,6 +1226,13 @@ function openTab(evt, cityName) {
   <dl>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
+  </dl>
+  <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <dl>
+   <dt id="biblio-multibase">[MULTIBASE]
+   <dd><a href="https://tools.ietf.org/html/draft-multiformats-multibase"><cite>IETF Multibase Data Format specification</cite></a>. URL: <a href="https://tools.ietf.org/html/draft-multiformats-multibase">https://tools.ietf.org/html/draft-multiformats-multibase</a>
+   <dt id="biblio-multihash">[MULTIHASH]
+   <dd><a href="https://github.com/multiformats/multihash"><cite>Multihash - protocol for differentiating outputs from various well-established cryptographic hash functions</cite></a>. URL: <a href="https://github.com/multiformats/multihash">https://github.com/multiformats/multihash</a>
   </dl>
   <aside class="dfn-panel" data-for="terms-attributes">
    <b><a href="#terms-attributes">#terms-attributes</a></b><b>Referenced in:</b>
@@ -1253,6 +1246,12 @@ function openTab(evt, cityName) {
     <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
     <li><a href="#ref-for-terms-base④">2.1. Structure</a>
     <li><a href="#ref-for-terms-base⑤">2.2. Base</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="terms-dri">
+   <b><a href="#terms-dri">#terms-dri</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-terms-dri">4.2. Command Line Tool</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-overlays">
