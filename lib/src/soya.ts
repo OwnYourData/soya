@@ -4,6 +4,7 @@ import winston from "winston";
 import { JsonParseError } from "./errors";
 import { SoyaDocument } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
+import { SoyaQuery, SoyaQueryResult } from "./services/repo";
 import { DEFAULT_SOYA_NAMESPACE, RepoService } from "./services/repo";
 import { flat2ld, SoyaInstance } from "./system/flat2ld";
 import { getSoyaForm, SoyaForm } from "./system/form";
@@ -47,6 +48,10 @@ export class Soya {
 
   similar = async (input: unknown): Promise<any> => {
     return this.service.similar(asStringInput(input));
+  }
+
+  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {
+    return this.service.query(query);
   }
 
   info = async (path: string): Promise<any> => {

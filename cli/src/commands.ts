@@ -138,6 +138,20 @@ const playground = async (): Promise<void> => {
 
   open(`https://json-ld.org/playground/#json-ld=${queryParam}`);
 }
+const query = async (params: any[], soya: Soya): Promise<void> => {
+  const [param1] = params;
+
+  if (!param1)
+    return exitWithError('No path specified!');
+
+  try {
+    logNiceJson(await soya.query({
+      name: param1,
+    }));
+  } catch {
+    return exitWithError('Could not query repo!');
+  }
+}
 
 export const systemCommands: {
   [key: string]: (params: Array<any>, soya: Soya) => Promise<void>,
@@ -152,4 +166,5 @@ export const systemCommands: {
   form,
   playground,
   'calculate-dri': calculateDri,
+  query,
 };
