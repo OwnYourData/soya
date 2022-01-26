@@ -81,4 +81,18 @@ class DrisController < ApplicationController
         render json: {"dri": soya_dri, "history": history, "bases": bases.uniq, "overlays": overlays.uniq},
                status: 200
     end
+
+    def query
+        retVal = []
+        name_query = params[:name].to_s
+        if name_query != ""
+            items = Store.where('soya_name LIKE ?', "%" + name_query + "%").all.pluck(:soya_name).uniq
+            items.each do |item|
+                retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
+            end
+        end
+
+        render json: retVal,
+               status: 200
+    end
 end

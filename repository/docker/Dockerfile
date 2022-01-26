@@ -11,7 +11,8 @@ RUN mkdir -p $RAILS_ROOT/tmp/pids && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 COPY Gemfile $WORKDIR
 RUN bundle config git.allow_insecure true && \
-	gem install bundler && \
+	gem install bundler:1.17.3 && \
+	gem update --system 3.2.3 && \
 	bundle install && \
 	bundle update
 

@@ -12,22 +12,34 @@ meta:
     svr: "http://www.specialprivacy.eu/vocabs/recipients"
 
 content:
-  base:
-    - name: PersonalDataHandling
+  bases:
+    - name: UsagePolicy
       subClassOf: "dpv:PersonalDataHandling"
       attributes:
-        "dpv:hasPersonalDataCategory": PersonalDataCategory
-        "dpv:hasProcessing": Processing
-    - name: PersonalDataCategory
-    - name: Processing
+        "dpv:hasPersonalDataCategory": "dpv:PersonalDataCategory"
+        "dpv:hasProcessing": "dpv:Processing"
+        "dpv:hasPurpose": "dpv:Purpose"
+        "dpv:hasLegalBasis": "dpv:LegalBasis"
+        "dpv:StorageLocation": "dpv:StorageLocation"
+        "dpv:hasRecipient": "dpv:Recipient"
+        "dpv:hasRisk": "dpv:Risk"
+        "dpv:hasExpiryTime": xsd:dateTime
   overlays: 
     - type: OverlayValidation
-      base: hasPersonalDataCategory
-      name: hasPersonalDataCategoryValidationOverlay
+      base: UsagePolicy
+      name: UsagePolicyValidationOverlay
       attributes:
-        PersonalDataCategory: 
+        "dpv:hasPersonalDataCategory": 
           cardinality: "1..*"
           default: "dpv:PersonalDataCategory"
           valueOption:
+            - "dpv:PersonalDataCategory"
             - "dpv:Accent"
             - "dpv:Age"
+        "dpv:hasProcessing": 
+          cardinality: "1..*"
+          default: "dpv:Processing"
+          valueOption:
+            - "dpv:Processing"
+            - "dpv:Copy"
+            - "dpv:Transform"

@@ -706,7 +706,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="base|bases|Bases" id="terms-base">Base</dfn>
      <dd data-md>
       <p>has a name and a list of <a data-link-type="dfn" href="#terms-attributes" id="ref-for-terms-attributes">Attributes</a> with associated type<br> <em>in RDF:</em> an RDF Class with one or more properties</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-dri">DRI</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="DRIs" id="terms-dris">DRI</dfn>
      <dd data-md>
       <p>A <strong>D</strong>ecentralized <strong>R</strong>esource <strong>I</strong>dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash <a data-link-type="biblio" href="#biblio-multihash">[MULTIHASH]</a> (default: <code>sha2-256</code>) is used for hashing a JSON object and Multibase <a data-link-type="biblio" href="#biblio-multibase">[MULTIBASE]</a> (default: <code>base58-btc</code>) for encoding the hash value.</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
@@ -725,6 +725,20 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </div>
    <h3 class="heading settled" data-level="1.2" id="goals"><span class="secno">1.2. </span><span class="content">Design Goals and Rationale</span><a class="self-link" href="#goals"></a></h3>
    <p>SOyA satisfies the following design goals:</p>
+   <ul>
+    <li data-md>
+     <p><strong>Open:</strong> all components are open source, free to use (incl. commercially), and publicly accessible (Github, public Repository)</p>
+    <li data-md>
+     <p><strong>Extensible:</strong> design is inherently supposed to be extended through own definitions, extensions, concepts</p>
+    <li data-md>
+     <p><strong>Compatible:</strong> allow seamlessly switching between data formats to use the best technology for the given use case</p>
+    <li data-md>
+     <p><strong>Ease of use:</strong> make it as simple as possible (but not simpler!) through documentation (e.g., tutorials, examples), authoring tools (e.g., YAML for initial description), UI components (web form), and integration (e.g., Semantic Containers)</p>
+    <li data-md>
+     <p><strong>Focus on Semantic Web:</strong> build on top of and make use of the Semantic Web Stack</p>
+    <li data-md>
+     <p><strong>Decentralised:</strong> avoid any centralized components or addressing (i.e., use decentralized resource identifiers - <a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris">DRIs</a> - where possible)</p>
+   </ul>
    <h2 class="heading settled" data-level="2" id="composition"><span class="secno">2. </span><span class="content">Composition</span><a class="self-link" href="#composition"></a></h2>
    <p>text</p>
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structure</span><a class="self-link" href="#structure_element"></a></h3>
@@ -1113,7 +1127,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p><a href="https://github.com/OwnYourData/soya/blob/main/cli/README.md">soya-cli</a> is built on top of <a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> and exposes most of its <a href="https://github.com/OwnYourData/soya/blob/main/lib/README.md">features</a> as commands on the command line. In addition there are features like:</p>
    <ul>
     <li data-md>
-     <p><a data-link-type="dfn" href="#terms-dri" id="ref-for-terms-dri">DRI</a> calculation for SOyA structures</p>
+     <p><a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a> calculation for SOyA structures</p>
     <li data-md>
      <p>Data transformation using</p>
      <ul>
@@ -1213,7 +1227,7 @@ function openTab(evt, cityName) {
    <li><a href="#terms-base">base</a><span>, in § 1.1</span>
    <li><a href="#terms-base">Bases</a><span>, in § 1.1</span>
    <li><a href="#terms-base">bases</a><span>, in § 1.1</span>
-   <li><a href="#terms-dri">DRI</a><span>, in § 1.1</span>
+   <li><a href="#terms-dris">DRIs</a><span>, in § 1.1</span>
    <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
    <li><a href="#terms-overlays">Overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-overlays">overlays</a><span>, in § 1.1</span>
@@ -1248,10 +1262,11 @@ function openTab(evt, cityName) {
     <li><a href="#ref-for-terms-base⑤">2.2. Base</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="terms-dri">
-   <b><a href="#terms-dri">#terms-dri</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="terms-dris">
+   <b><a href="#terms-dris">#terms-dris</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-dri">4.2. Command Line Tool</a>
+    <li><a href="#ref-for-terms-dris">1.2. Design Goals and Rationale</a>
+    <li><a href="#ref-for-terms-dris①">4.2. Command Line Tool</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-overlays">

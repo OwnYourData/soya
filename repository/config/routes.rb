@@ -64,10 +64,6 @@ Rails.application.routes.draw do
 			match 'relation', to: 'relations#index', via: 'get'
 			match 'relation', to: 'relations#create', via: 'post'
 
-			# OYDID handling
-			match 'oydid/init',        to: 'oydids#init',         via: 'post'
-			match 'oydid/token',       to: 'oydids#token',        via: 'post'
-
 			# SOyA specific
 			match 'soya/similar',      to: 'soyas#similar',       via: 'post'
 		end
@@ -77,23 +73,20 @@ Rails.application.routes.draw do
 	match '/oauth/applications'     => 'application#create_application',  via: 'post'
 	match '/oauth/applications/:id' => 'application#destroy_application', via: 'delete'
 
-	# OYDID handling
-    match 'doc/:did', to: 'dids#show',   via: 'get', constraints: {did: /.*/}
-    match 'did/:did', to: 'dids#show',   via: 'get', constraints: {did: /.*/}
-    match 'did',      to: 'dids#create', via: 'post'
-    match 'doc',      to: 'dids#create', via: 'post'
-    match 'log/:id',  to: 'logs#show',   via: 'get', constraints: {id: /.*/}
-    match 'log/:did', to: 'logs#create', via: 'post', constraints: {did: /.*/}
-    match 'doc/:did', to: 'dids#delete', via: 'delete', constraints: {did: /.*/}
+    # SOyA Repository functions
+    match '/query',          to: 'dris#query', via: 'get'
 
+	# SOyA Instances
     match 'ld/:dri/:name/:sub', to: 'lds#read',  via: 'get', constraints: {dri: /.*/}
 	match 'ld/:dri/:name',      to: 'lds#read',  via: 'get', constraints: {dri: /.*/}
 	match 'ld/:dri',            to: 'lds#read',  via: 'get', constraints: {dri: /.*/}
 
+	# SOyA Structures
     match ':dri/info',       to: 'dris#info', via: 'get', constraints: {dri: /.*/}
     match ':dri/:name/:sub', to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri/:name',      to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri',            to: 'dris#read', via: 'get', constraints: {dri: /.*/}
+
 
 	match ':not_found' => 'application#missing', :constraints => { :not_found => /.*/ }, via: [:get, :post]
 end
