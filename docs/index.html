@@ -744,78 +744,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      </ul>
    </ul>
    <p>The <code>meta</code> node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). <code>content</code> is the payload defining <code>bases</code> and <code>overlays</code> described in detail in the following sections.</p>
-   <details>
-    <summary>Example YML</summary>
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
-  <c- f>name</c-><c- p>:</c-> Foaf
-  <c- f>namespace</c-><c- p>:</c->
-    <c- f>foaf</c-><c- p>:</c-> <c- s>"http://xmlns.com/foaf/0.1/"</c->
-
-<c- f>content</c-><c- p>:</c->
-  <c- f>bases</c-><c- p>:</c->
-    - <c- f>name</c-><c- p>:</c-> Agent
-      <c- f>subClassOf</c-><c- p>:</c-> foaf:agent
-    - <c- f>name</c-><c- p>:</c-> Person
-      <c- f>subClassOf</c-><c- p>:</c-> 
-        - Agent
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>firstName</c-><c- p>:</c-> String
-        <c- f>lastName</c-><c- p>:</c-> String
-        <c- f>did</c-><c- p>:</c-> string
-  <c- f>overlays</c-><c- p>:</c-> 
-    - <c- f>type</c-><c- p>:</c-> OverlayAnnotation
-      <c- f>base</c-><c- p>:</c-> Agent
-      <c- f>name</c-><c- p>:</c-> AgentAnnotationOverlay
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>gender</c-><c- p>:</c-> 
-          <c- f>comment</c-><c- p>:</c-> 
-            <c- f>en</c-><c- p>:</c-> The gender of this Agent (typically but not necessarily 'male' or 'female').
-        <c- f>birthday</c-><c- p>:</c->
-          <c- f>comment</c-><c- p>:</c->
-            <c- f>en</c-><c- p>:</c-> The birthday of this Agent.
-        <c- f>made</c-><c- p>:</c->
-          <c- f>comment</c-><c- p>:</c->
-            <c- f>en</c-><c- p>:</c-> Something that was made by this agent.
-        <c- f>age</c-><c- p>:</c->
-          <c- f>comment</c-><c- p>:</c->
-            <c- f>en</c-><c- p>:</c-> The age in years of some agent.
-    - <c- f>type</c-><c- p>:</c-> OverlayAnnotation
-      <c- f>base</c-><c- p>:</c-> Person
-      <c- f>name</c-><c- p>:</c-> PersonAnnotationOverlay
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>firstName</c-><c- p>:</c-> 
-          <c- f>comment</c-><c- p>:</c-> 
-            <c- f>en</c-><c- p>:</c-> The first name of a person.
-        <c- f>lastName</c-><c- p>:</c->
-          <c- f>comment</c-><c- p>:</c->
-            <c- f>en</c-><c- p>:</c-> The last name of a person.
-        <c- f>did</c-><c- p>:</c->
-          <c- f>comment</c-><c- p>:</c->
-            <c- f>en</c-><c- p>:</c-> Identifier with keys and service endpoints
-    - <c- f>type</c-><c- p>:</c-> OverlayAlignment
-      <c- f>base</c-><c- p>:</c-> Person
-      <c- f>name</c-><c- p>:</c-> PersonAlignmentOverlay
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>firstName</c-><c- p>:</c-> 
-          - foaf:givenName
-        <c- f>lastName</c-><c- p>:</c->
-          - foaf:familyName
-          - foaf:surname
-    - <c- f>type</c-><c- p>:</c-> OverlayValidation
-      <c- f>base</c-><c- p>:</c-> Person
-      <c- f>name</c-><c- p>:</c-> PersonValidationOverlay
-      <c- f>attributes</c-><c- p>:</c->
-        <c- f>firstName</c-><c- p>:</c-> 
-          <c- f>cardinality</c-><c- p>:</c-> <c- s>"0..1"</c->
-          <c- f>length</c-><c- p>:</c-> <c- s>"(0..30]"</c->
-        <c- f>lastName</c-><c- p>:</c->
-          <c- f>cardinality</c-><c- p>:</c-> <c- s>"1..1"</c->
-          <c- f>length</c-><c- p>:</c-> <c- s>"(0..40]"</c->
-</pre>
-   </details>
-   <details>
-    <summary>Visualization</summary>
-   </details>
    <div class="example" id="structure_example">
     <a class="self-link" href="#structure_example"></a> An example structure. 
     <div class="tab">
@@ -1110,9 +1038,40 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>text</p>
    <h2 class="heading settled" data-level="4" id="tools"><span class="secno">4. </span><span class="content">Tools</span><a class="self-link" href="#tools"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="library"><span class="secno">4.1. </span><span class="content"><code>soya-js</code> Library</span><a class="self-link" href="#library"></a></h3>
-   <p>text</p>
+   <p><a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> provides easy-to-use interfaces for handling SOyA structures and interacting with SOyA respositories.</p>
+   <ul>
+    <li data-md>
+     <p>Creation of SOyA JSON-LD structures using simple YAML files</p>
+    <li data-md>
+     <p>Finding similarly shaped SOyA structures</p>
+    <li data-md>
+     <p>Communication with <a href="https://github.com/OwnYourData/soya/tree/main/repository">SOyA repositories</a> (e.g. for pushing and pulling SOyA structures and data)</p>
+    <li data-md>
+     <p>Data validation through <a href="https://www.w3.org/TR/shacl/">\SHACL</a></p>
+    <li data-md>
+     <p>Data acquisition (transforming flat JSON data into rich JSON-LD data)</p>
+    <li data-md>
+     <p>Data transformation using popular <a href="https://stedolan.github.io/jq/">jq</a> processor</p>
+    <li data-md>
+     <p>Forms generation based on SOyA structures using <a href="https://jsonforms.io/">JSONForms</a> (React, Angular, Vue)</p>
+   </ul>
    <h3 class="heading settled" data-level="4.2" id="cli"><span class="secno">4.2. </span><span class="content">Command Line Tool</span><a class="self-link" href="#cli"></a></h3>
-   <p>text</p>
+   <p>The Command Line Tool provides easy-to-use interfaces for handling SOyA structures and interacting with SOyA respositories.</p>
+   <p><a href="https://github.com/OwnYourData/soya/blob/main/cli/README.md">soya-cli</a> is built on top of <a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> and exposes most of its <a href="https://github.com/OwnYourData/soya/blob/main/lib/README.md">features</a> as commands on the command line. In addition there are features like:</p>
+   <ul>
+    <li data-md>
+     <p>DRI calculation for SOyA structures</p>
+    <li data-md>
+     <p>Data transformation using</p>
+     <ul>
+      <li data-md>
+       <p><a href="https://stedolan.github.io/jq/">jq</a></p>
+      <li data-md>
+       <p><a href="https://github.com/bazaarvoice/jolt">jolt</a></p>
+     </ul>
+    <li data-md>
+     <p>Fast prototyping with quick links to <a href="https://json-ld.org/playground/">JSON-LD Playground</a></p>
+   </ul>
    <h3 class="heading settled" data-level="4.3" id="repository"><span class="secno">4.3. </span><span class="content">Repository</span><a class="self-link" href="#repository"></a></h3>
    <p>text</p>
    <h3 class="heading settled" data-level="4.4" id="semcon"><span class="secno">4.4. </span><span class="content">Semantic Container</span><a class="self-link" href="#semcon"></a></h3>
