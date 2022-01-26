@@ -5,6 +5,15 @@ import { logger } from './logger';
 export const DEFAULT_REPO = 'https://soya.data-container.net';
 export const DEFAULT_SOYA_NAMESPACE = 'https://ns.ownyourdata.eu/ns/soya-context.json';
 
+export interface SoyaQueryResult {
+  name: string,
+  dri: string,
+}
+
+export interface SoyaQuery {
+  name?: string,
+}
+
 export class RepoService {
   constructor(
     public repo: string = DEFAULT_REPO,
@@ -55,6 +64,11 @@ export class RepoService {
 
   similar = async (data: any): Promise<any> => {
     return this.post(`/api/soya/similar`, false, data);
+  }
+
+  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {    
+    // @ts-expect-error TypeScript is not happy with this, i know...
+    return this.get(`/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
   }
 
   info = async (path: string): Promise<any> => {
