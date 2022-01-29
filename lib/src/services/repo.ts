@@ -68,7 +68,7 @@ export class RepoService {
 
   query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {    
     // @ts-expect-error TypeScript is not happy with this, i know...
-    return this.get(`/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
+    return this.get(`/api/soya/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
   }
 
   info = async (path: string): Promise<any> => {
