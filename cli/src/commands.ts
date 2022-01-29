@@ -5,6 +5,7 @@ import { tryPrintTemplate } from "./system/template";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import open from "open";
+import { JsonParseError } from "soya-js/dist/errors";
 
 const acquire = async (params: any[], soya: Soya): Promise<void> => {
   const [param1] = params;
@@ -16,8 +17,15 @@ const acquire = async (params: any[], soya: Soya): Promise<void> => {
   if (!flatJsonContent)
     return exitWithError('No JSON content provided via stdin!');
 
+  let flatJson: any;
   try {
-    logNiceJson(await soya.acquire(param1, flatJsonContent));
+    flatJson = JSON.parse(flatJsonContent);
+  } catch {
+    throw new JsonParseError('Could not parse input as JSON!');
+  }
+
+  try {
+    logNiceJson(await soya.acquire(param1, flatJson));
   } catch (e: any) {
     if (typeof e.response.status === 'number') {
       logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
