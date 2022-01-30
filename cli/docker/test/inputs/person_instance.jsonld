@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "basePerson": "https://soya.data-container.net/Person_Test/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonValid",
+      "@type": "basePerson:Person",
+      "basePerson:name": "Christoph Fabianek",
+      "basePerson:LastName": "Fabianek",
+      "basePerson:dateOfBirth": "1977-07-21",
+      "basePerson:Gender": "Male"
+    }
+  ]
+}

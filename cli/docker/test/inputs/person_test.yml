@@ -2,8 +2,8 @@ meta:
   name: Person_Test
 
 content:
-  base:
-    - name: Person_Test
+  bases:
+    - name: Person
       attributes:
         name: String
         dateOfBirth: Date
@@ -12,7 +12,7 @@ content:
 
   overlays: 
     - type: OverlayValidation
-      base: Person_Test
+      base: Person
       class: 
       attributes:
         name: 

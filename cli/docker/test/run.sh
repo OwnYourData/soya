@@ -85,3 +85,14 @@ else
 	echo "passed: transformation layer checks"
 fi
 rm tmp.doc
+
+# test acquistion
+curl -k -s https://playground.data-container.net/cfa | soya acquire Employee > tmp.doc
+if ! cmp -s tmp.doc checks/acquire.jsonld ; then
+	echo "error: acquire failed"
+	rm tmp.doc
+	exit 1
+else
+	echo "passed: acuqistion checks"
+fi
+rm tmp.doc

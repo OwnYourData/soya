@@ -107,6 +107,83 @@ paths:
                       - admin
                       - write
                       - read
+  /{identifier}:
+    get:
+      tags:
+        - SOyA structures
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      security: []
+      summary: retrieve a structure by name or DRI
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+  /{identifier}/info:
+    get:
+      tags:
+        - SOyA structures
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      security: []
+      summary: retrieve metainformation (history, DRI version, list of bases and overlays) for a structure
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/soya/query:
+    get:
+      tags: 
+        - SOyA structures
+      summary: query for structures by name in repository
+      security: []
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: part of structure name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/soya/similar:
+    post:
+      tags: 
+        - SOyA structures
+      summary: find similar structures
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+
 components:
   schemas:
     BadRequestBody:

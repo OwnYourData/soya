@@ -1,0 +1,5 @@
+[
+    {"name":"Christoph Fabianek","dateOfBirth":"1977-07-21","gender":"male","employer":{"Company":"OwnYourdata","country":"Austria"}},
+    {"name":"Gabriel Unterholzer","dateOfBirth":"1995-11-19","gender":"male","employer":{"Company":"DEC112","country":"Austria"}},
+    {"name":"Christoph Fabianek","dateOfBirth":"1984-06-28","gender":"male","employer":{"Company":"TU Wien","country":"Austria"}}
+]

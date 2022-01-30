@@ -50,16 +50,20 @@ puts "------------"
     end
 
     def getDriFromUrl(url)
+        begin
 puts "url: " + url
-        response = HTTParty.get(url + "info", timeout: 5)
+            response = HTTParty.get(url + "info", timeout: 5)
 puts "response: " + response.to_json
-        # dri = Store.find_by_dri(url.split('/')[-1]).soya_dri rescue nil
-        dri = response.parsed_response["dri"]
+            # dri = Store.find_by_dri(url.split('/')[-1]).soya_dri rescue nil
+            dri = response.parsed_response["dri"]
 puts "dri: " + dri.to_s
-        if dri.nil? || dri.to_s == ""
+            if dri.nil? || dri.to_s == ""
+                return url
+            else
+                return url.split('/')[0..-2].join("/") + "/" + dri + "/"
+            end
+        rescue
             return url
-        else
-            return url.split('/')[0..-2].join("/") + "/" + dri + "/"
         end
     end
 

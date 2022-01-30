@@ -66,15 +66,13 @@ Rails.application.routes.draw do
 
 			# SOyA specific
 			match 'soya/similar',      to: 'soyas#similar',       via: 'post'
+			match 'soya/query',        to: 'dris#query', 		  via: 'get'
 		end
 	end
 
 	# OAuth application handling
 	match '/oauth/applications'     => 'application#create_application',  via: 'post'
 	match '/oauth/applications/:id' => 'application#destroy_application', via: 'delete'
-
-    # SOyA Repository functions
-    match '/query',          to: 'dris#query', via: 'get'
 
 	# SOyA Instances
     match 'ld/:dri/:name/:sub', to: 'lds#read',  via: 'get', constraints: {dri: /.*/}

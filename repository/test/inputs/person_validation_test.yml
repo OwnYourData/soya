@@ -4,7 +4,7 @@ meta:
 content:
   overlays: 
     - type: OverlayValidation
-      base: Person_Test
+      base: https://soya.data-container.net/Person_Test/Person
       name: PersonValidationOverlay_Test
       class: 
       attributes:

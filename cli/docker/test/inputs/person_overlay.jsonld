@@ -6,9 +6,9 @@
   },
   "@graph": [
     {
-      "@id": "Person_TestShape",
+      "@id": "https://soya.data-container.net/Person_Test/PersonShape",
       "@type": "sh:NodeShape",
-      "sh:targetClass": "Person_Test",
+      "sh:targetClass": "https://soya.data-container.net/Person_Test/Person",
       "sh:property": [
         {
           "sh:path": "name",
@@ -42,7 +42,7 @@
     {
       "@id": "OverlayValidation",
       "@type": "OverlayValidation",
-      "onBase": "Person_Test",
+      "onBase": "https://soya.data-container.net/Person_Test/Person",
       "name": "PersonValidationOverlay_Test"
     }
   ]
