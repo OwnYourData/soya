@@ -9,11 +9,16 @@
     "build": "tsc && chmod +x dist/index.js",
     "build-nexe": "npm run build && nexe -r \"dist/**/*\" --python /usr/bin/python3.8 -t 14.15.3",
     "start": "cat res/files/company.json | node dist/index.js --dri company-validation --repo \"http://localhost:8080\" validate",
-    "bin": "npm link"
+    "bin": "npm link",
+    "prepublishOnly": "npm run build"
   },
   "bin": {
     "soya": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "res"
+  ],
   "author": "Gabriel Unterholzer",
   "license": "MIT",
   "devDependencies": {
