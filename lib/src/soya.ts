@@ -1,12 +1,12 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import { VaultItem } from "vaultifier";
+import { MimeType, VaultItem } from "vaultifier/dist/main";
 import winston from "winston";
 import { JsonParseError } from "./errors";
-import { SoyaDocument } from "./interfaces";
+import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
-import { SoyaQuery, SoyaQueryResult } from "./services/repo";
+import { SoyaQuery, SoyaQueryResult, SoyaInfo } from "./services/repo";
 import { DEFAULT_SOYA_NAMESPACE, RepoService } from "./services/repo";
-import { flat2ld, SoyaInstance } from "./system/flat2ld";
+import { flat2ld } from "./system/flat2ld";
 import { getSoyaForm, SoyaForm } from "./system/form";
 import { yaml2soya } from "./system/yaml2soya";
 import { calculateBaseUri, CalculationResult } from "./utils/dri";
@@ -17,6 +17,13 @@ const asStringInput = (input: unknown): string => {
     return JSON.stringify(input);
   else
     return input as string;
+}
+
+const asObjectInput = (input: unknown): any => {
+  if (typeof input === 'string')
+    return JSON.parse(input);
+  else
+    return input as any;
 }
 
 export interface SoyaConfig {
@@ -43,7 +50,39 @@ export class Soya {
   }
 
   push = async (input: unknown): Promise<VaultItem> => {
-    return this.service.push(asStringInput(input));
+    const data = asObjectInput(input);
+
+    if (isInstance(data)) {
+      logger.info('Pushing instance');
+
+      let structureName: string | undefined;
+
+      try {
+        const url = data['@context']['@vocab'];
+        structureName = url.split('/')
+          .reverse()
+          // leave out empty items (can happen if there is a trailing slash)
+          .filter(x => !!x)[0];
+
+        if (!structureName)
+          throw new Error();
+      } catch {
+        throw new Error('Could not extract name of structure from @vocab');
+      }
+
+      const info = await this.info(structureName);
+
+      return this.service.pushItem({
+        content: data,
+        mimeType: MimeType.JSON,
+        dri: (await this.calculateDri(data)).dri,
+        schemaDri: info.dri,
+      })
+    } else {
+      logger.info('Pushing structure');
+
+      return this.service.pushValue(data);
+    }
   }
 
   similar = async (input: unknown): Promise<any> => {
@@ -54,7 +93,7 @@ export class Soya {
     return this.service.query(query);
   }
 
-  info = async (path: string): Promise<any> => {
+  info = async (path: string): Promise<SoyaInfo> => {
     return this.service.info(path);
   }
 
@@ -71,7 +110,7 @@ export class Soya {
       json = content;
 
     logger.debug('Raw input:');
-    logger.debug(content);
+    logger.debug(JSON.stringify(json));
 
     let quads: DatasetExt = await parseJsonLd(json);
 

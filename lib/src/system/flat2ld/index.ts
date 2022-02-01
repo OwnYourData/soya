@@ -1,18 +1,9 @@
-import { IntSoyaDocument, SoyaDocument } from "../../interfaces";
 import { parseJsonLd } from "../../utils/rdf";
 import rdf from "rdf-ext";
 import DatasetExt from "rdf-ext/lib/Dataset";
+import { SoyaInstance, SoyaDocument } from "../../interfaces";
 
 const namedNode = rdf.namedNode;
-
-type IntSoyaInstance = {
-  "@context": {
-    "@version": number,
-    "@vocab": string,
-  },
-} & Pick<IntSoyaDocument, 'graph'>;
-
-export type SoyaInstance = Omit<IntSoyaInstance, 'graph'> & { '@graph': any[] };
 
 const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: string) => {
   for (const prop in flatJson) {

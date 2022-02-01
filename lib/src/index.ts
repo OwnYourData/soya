@@ -7,4 +7,4 @@ export * as Overlays from './overlays';
 
 export * as Errors from './errors';
 
-export { SoyaDocument } from './interfaces';
+export { SoyaDocument, SoyaInstance } from './interfaces';

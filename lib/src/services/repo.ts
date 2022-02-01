@@ -1,4 +1,4 @@
-import { Vaultifier, VaultItem } from 'vaultifier/dist/main';
+import { Vaultifier, VaultItem, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
 import { logger } from './logger';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
@@ -12,6 +12,20 @@ export interface SoyaQueryResult {
 
 export interface SoyaQuery {
   name?: string,
+}
+
+export interface SoyaInfo {
+  dri: string;
+  history: {
+    schema: string;
+    date: string;
+  }[];
+  bases: string[];
+  overlays: {
+    type: string;
+    name: string;
+    base: string;
+  };
 }
 
 export class RepoService {
@@ -51,9 +65,9 @@ export class RepoService {
     return this.get(`/${path}`, false);
   }
 
-  push = async (data: any): Promise<VaultItem> => {
+  private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultItem> => {
     const v = await this.getVaultifier();
-    const meta = await v.postValue(data);
+    const meta = await cb(v);
 
     logger.debug('Return value of push', meta);
     logger.debug(`Fetching item with id ${meta.id}`);
@@ -62,16 +76,32 @@ export class RepoService {
     });
   }
 
+  pushValue = async (data: any): Promise<VaultItem> => {
+    return this._push((v) => {
+      logger.debug('Pushing value');
+      logger.debug(JSON.stringify(data));
+      return v.postValue(data);
+    });
+  }
+
+  pushItem = async (item: VaultPostItem): Promise<VaultItem> => {
+    return this._push((v) => {
+      logger.debug('Pushing item');
+      logger.debug(JSON.stringify(item));
+      return v.postItem(item);
+    });
+  }
+
   similar = async (data: any): Promise<any> => {
     return this.post(`/api/soya/similar`, false, data);
   }
 
-  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {    
+  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {
     // @ts-expect-error TypeScript is not happy with this, i know...
     return this.get(`/api/soya/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
   }
 
-  info = async (path: string): Promise<any> => {
+  info = async (path: string): Promise<SoyaInfo> => {
     return this.get(`/${path}/info`, false);
   }
 }

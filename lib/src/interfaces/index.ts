@@ -15,3 +15,16 @@ export interface IntSoyaDocument {
 }
 
 export type SoyaDocument = Omit<IntSoyaDocument, 'graph'> & { '@graph': any[] };
+
+export type IntSoyaInstance = {
+  "@context": {
+    "@version": number,
+    "@vocab": string,
+  },
+} & Pick<IntSoyaDocument, 'graph'>;
+
+export type SoyaInstance = Omit<IntSoyaInstance, 'graph'> & { '@graph': any[] };
+
+export const isInstance = (document: any): document is SoyaInstance => {
+  return document['@context'] && document['@context']['@vocab'];
+}
