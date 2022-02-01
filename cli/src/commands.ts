@@ -144,7 +144,10 @@ const playground = async (): Promise<void> => {
     return exitWithError('Could not URI encode JSON-LD!');
   }
 
-  open(`https://json-ld.org/playground/#json-ld=${queryParam}`);
+  const url = `https://json-ld.org/playground/#json-ld=${queryParam}`;
+  open(url);
+
+  console.log(url);
 }
 const query = async (params: any[], soya: Soya): Promise<void> => {
   const [param1] = params;
