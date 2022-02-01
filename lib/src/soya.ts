@@ -120,7 +120,7 @@ export class Soya {
     });
   }
 
-  acquire = async (path: string, flatJson: any): Promise<SoyaInstance> => {
+  acquire = async (path: string, flatJson: any): Promise<SoyaInstance[]> => {
     let soyaStructure: SoyaDocument = await this.service.pull(path);
     return flat2ld(flatJson, soyaStructure);
   }

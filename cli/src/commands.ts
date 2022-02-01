@@ -5,7 +5,6 @@ import { tryPrintTemplate } from "./system/template";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import open from "open";
-import { JsonParseError } from "soya-js/dist/errors";
 
 const acquire = async (params: any[], soya: Soya): Promise<void> => {
   const [param1] = params;
@@ -21,7 +20,7 @@ const acquire = async (params: any[], soya: Soya): Promise<void> => {
   try {
     flatJson = JSON.parse(flatJsonContent);
   } catch {
-    throw new JsonParseError('Could not parse input as JSON!');
+    throw new Errors.JsonParseError('Could not parse input as JSON!');
   }
 
   try {
