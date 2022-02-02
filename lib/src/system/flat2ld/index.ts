@@ -30,23 +30,20 @@ const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: s
   }
 }
 
-// TODO: also support Arrays here
+export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promise<SoyaInstance> => {
+  const graph: any[] = [];
+  const base = soyaStructure["@context"]["@base"];
+  const retItem: SoyaInstance = {
+    "@context": {
+      "@version": 1.1,
+      "@vocab": base,
+    },
+    "@graph": graph,
+  };
 
-export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promise<SoyaInstance[]> => {
-  const retArray: SoyaInstance[] = [];
   const flatItems = Array.isArray(flatJson) ? flatJson : [flatJson];
 
   for (const flatItem of flatItems) {
-    const base = soyaStructure["@context"]["@base"];
-    const retItem: SoyaInstance = {
-      "@context": {
-        "@version": 1.1,
-        "@vocab": base,
-      },
-      "@graph": [],
-    };
-    retArray.push(retItem);
-
     const dataSet = await parseJsonLd(soyaStructure);
     // console.dir(dataSet, { depth: 10 });
 
@@ -59,10 +56,10 @@ export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promi
     const item: any = {
       "@type": mainClass?.subject.value.replace(retItem["@context"]["@vocab"], ''),
     }
-    retItem["@graph"].push(item);
+    graph.push(item);
 
     iterateItemProps(dataSet, item, flatItem, base);
   }
 
-  return retArray;
+  return retItem;
 }
