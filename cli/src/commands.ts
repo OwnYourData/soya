@@ -1,5 +1,5 @@
 import { Soya, Errors } from "soya-js";
-import { logNiceJson } from ".";
+import { logNiceConsole } from ".";
 import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";
 import { exitWithError } from "./utils/core";
@@ -24,7 +24,7 @@ const acquire = async (params: any[], soya: Soya): Promise<void> => {
   }
 
   try {
-    logNiceJson(await soya.acquire(param1, flatJson));
+    logNiceConsole(await soya.acquire(param1, flatJson));
   } catch (e: any) {
     if (typeof e.response.status === 'number') {
       logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
@@ -49,7 +49,7 @@ const init = async (_: any[], soya: Soya): Promise<void> => {
   if (!yamlContent)
     return exitWithError('No YAML content provided via stdin!');
 
-  logNiceJson(await soya.init(yamlContent));
+  logNiceConsole(await soya.init(yamlContent));
 }
 const pull = async (params: any[], soya: Soya): Promise<void> => {
   const [param1] = params;
@@ -57,7 +57,7 @@ const pull = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('No path specified!');
 
   try {
-    logNiceJson(await soya.pull(param1));
+    logNiceConsole(await soya.pull(param1));
   } catch (e: any) {
     logger.error('Could not fetch resource from repo!');
 
@@ -72,9 +72,9 @@ const push = async (_: any[], soya: Soya): Promise<void> => {
     return exitWithError('No content provided via stdin!');
 
   try {
-    const item = await soya.push(contentDocument);
-    logger.debug('Pushed item', item);
-    console.log(item);
+    const res = await soya.push(contentDocument);
+    logger.debug('Pushed item', res.item.content);
+    logNiceConsole(res.value);
   } catch (e: any) {
     if (typeof e.message === 'string')
       logger.error(e.message);
@@ -100,7 +100,7 @@ const calculateDri = async (_: any[], soya: Soya): Promise<void> => {
 }
 const similar = async (_: any[], soya: Soya): Promise<void> => {
   try {
-    logNiceJson(await soya.similar(await Std.in()));
+    logNiceConsole(await soya.similar(await Std.in()));
   } catch (e) {
     console.error(e)
     return exitWithError('Could not process provided document');
@@ -112,7 +112,7 @@ const info = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('No path specified!');
 
   try {
-    logNiceJson(await soya.info(param1));
+    logNiceConsole(await soya.info(param1));
   } catch {
     return exitWithError('Could not fetch SOyA info');
   }
@@ -124,7 +124,7 @@ const form = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('No path specified!');
 
   try {
-    logNiceJson(await soya.getForm(param1));
+    logNiceConsole(await soya.getForm(param1));
   } catch {
     return exitWithError('Could not generate SOyA form!');
   }
@@ -155,7 +155,7 @@ const query = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('No path specified!');
 
   try {
-    logNiceJson(await soya.query({
+    logNiceConsole(await soya.query({
       name: param1,
     }));
   } catch {

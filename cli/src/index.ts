@@ -17,7 +17,14 @@ const overlayPlugins: CommandObject = {
   'validate': new Overlays.SoyaValidate(),
 };
 
-export const logNiceJson = (json: any) => console.log(JSON.stringify(json, undefined, 2));
+export const logNiceConsole = (value: any) => {
+  let out = value;
+
+  if (typeof value === 'object')
+    out = JSON.stringify(value, undefined, 2);
+
+  console.log(out);
+}
 
 (async () => {
   if (cmdArgs.version)
@@ -97,7 +104,7 @@ export const logNiceJson = (json: any) => console.log(JSON.stringify(json, undef
 
   let output: any = res.data;
   try {
-    logNiceJson(output);
+    logNiceConsole(output);
   } catch {
     console.log(output);
   }

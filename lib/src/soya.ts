@@ -31,6 +31,11 @@ export interface SoyaConfig {
   logger?: winston.Logger;
 }
 
+export interface PushResponse {
+  value: any;
+  item: VaultItem;
+}
+
 export class Soya {
   public service: RepoService;
 
@@ -49,8 +54,10 @@ export class Soya {
     return this.service.pull(path);
   }
 
-  push = async (input: unknown): Promise<VaultItem> => {
+  push = async (input: unknown): Promise<PushResponse> => {
     const data = asObjectInput(input);
+    let res: VaultItem;
+    let value: string | undefined;
 
     if (isInstance(data)) {
       logger.info('Pushing instance');
@@ -87,17 +94,24 @@ export class Soya {
 
       const info = await new RepoService(repo).info(path);
 
-      return this.service.pushItem({
+      res = await this.service.pushItem({
         content: data,
         mimeType: MimeType.JSON,
         dri: (await this.calculateDri(data)).dri,
         schemaDri: info.dri,
-      })
+      });
+      value = res.dri;
     } else {
       logger.info('Pushing structure');
 
-      return this.service.pushValue(data);
+      res = await this.service.pushValue(data);
+      value = res.raw;
     }
+
+    return {
+      value: value,
+      item: res,
+    };
   }
 
   similar = async (input: unknown): Promise<any> => {
