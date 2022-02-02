@@ -74,7 +74,7 @@ const push = async (_: any[], soya: Soya): Promise<void> => {
   try {
     const item = await soya.push(contentDocument);
     logger.debug('Pushed item', item);
-    console.log(item.dri);
+    console.log(item);
   } catch (e: any) {
     if (typeof e.message === 'string')
       logger.error(e.message);

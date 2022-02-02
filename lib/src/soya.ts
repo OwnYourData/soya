@@ -55,22 +55,37 @@ export class Soya {
     if (isInstance(data)) {
       logger.info('Pushing instance');
 
-      let structureName: string | undefined;
+      let path: string | undefined;
+      let repo: string | undefined;
 
       try {
         const url = data['@context']['@vocab'];
-        structureName = url.split('/')
-          .reverse()
-          // leave out empty items (can happen if there is a trailing slash)
-          .filter(x => !!x)[0];
+        // we already reverse the array here as we have to remove trailing slashes from the end
+        let splitParts = url.split('/').reverse();
 
-        if (!structureName)
+        // kill empty items (can happen if there is a trailing slash) at the end
+        const firstNonempty = splitParts.findIndex(x => !!x);
+        if (firstNonempty !== -1)
+          splitParts = splitParts.slice(firstNonempty)
+
+        // bring it into correct order
+        splitParts = splitParts.reverse();
+
+        // last bit is structure name or DRI
+        path = splitParts[splitParts.length - 1];
+        // everything before is the repo
+        repo = splitParts.slice(0, -1).join('/');
+
+        if (!path || !repo)
           throw new Error();
       } catch {
         throw new Error('Could not extract name of structure from @vocab');
       }
 
-      const info = await this.info(structureName);
+      logger.debug(`Path: ${path}`);
+      logger.debug(`Repo: ${repo}`);
+
+      const info = await new RepoService(repo).info(path);
 
       return this.service.pushItem({
         content: data,
