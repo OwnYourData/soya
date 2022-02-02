@@ -100,12 +100,12 @@ export class Soya {
         dri: (await this.calculateDri(data)).dri,
         schemaDri: info.dri,
       });
-      value = res.dri;
+      value = res.raw;
     } else {
       logger.info('Pushing structure');
 
       res = await this.service.pushValue(data);
-      value = res.raw;
+      value = res.dri;
     }
 
     return {
