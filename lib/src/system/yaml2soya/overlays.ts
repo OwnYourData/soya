@@ -109,6 +109,11 @@ const handleValidation = (doc: IntSoyaDocument, overlay: any) => {
               '@value': range.max,
             };
         }
+      } else if (constraintKey === 'valueOption') {
+        if (Array.isArray(value))
+          constraints['sh:in'] = {
+            '@list': value,
+          }
       }
     }
 
