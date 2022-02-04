@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 docker run -it node:17 bash -c "npm i --silent -g soya-cli@latest &>/dev/null; soya pull Person_Test" > tmp.doc
-soya pull Person_Test > tmp1.doc
-if ! cmp - tmp.doc tmp1.doc ; then
+if ! cmp -s tmp.doc checks/person_test.jsonld ; then
 	echo "error: npm soya install failed"
 	rm tmp*.doc
 	exit 1
