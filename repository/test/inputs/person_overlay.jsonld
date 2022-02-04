@@ -32,7 +32,13 @@
         },
         {
           "sh:path": "sex",
-          "sh:maxCount": 1
+          "sh:maxCount": 1,
+          "sh:in": {
+            "@list": [
+              "male",
+              "female"
+            ]
+          }
         },
         {
           "sh:path": "employer"
