@@ -92,7 +92,14 @@ if ! cmp -s tmp.doc checks/acquire.jsonld ; then
 	echo "error: acquire failed"
 	rm tmp.doc
 	exit 1
+fi
+
+cat inputs/team.json | soya acquire Employee > tmp.doc
+if ! cmp -s tmp.doc checks/acquire_array.jsonld ; then
+	echo "error: acquire array failed"
+	rm tmp.doc
+	exit 1
 else
-	echo "passed: acuqistion checks"
+	echo "passed: acquistion checks"
 fi
 rm tmp.doc
