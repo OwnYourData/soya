@@ -73,7 +73,6 @@ const push = async (_: any[], soya: Soya): Promise<void> => {
 
   try {
     const res = await soya.push(contentDocument);
-    logger.debug('Pushed item', res.item.content);
     logNiceConsole(res.value);
   } catch (e: any) {
     if (typeof e.message === 'string')
