@@ -146,6 +146,13 @@ Composition {#composition}
 
 text
 
+<p align="center">
+  <img src="res/components.png" width="800"><br>
+  <em>Figure 2: SOyA Components</em>
+</p>
+</div>
+
+
 Structure {#structure_element}
 ---------
 

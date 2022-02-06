@@ -103,3 +103,13 @@ else
 	echo "passed: acquistion checks"
 fi
 rm tmp.doc
+
+cat inputs/team.json | soya acquire Employee | soya push --repo https://playground.data-container.net | jq '.["responses"]' > tmp.doc
+if ! cmp -s tmp.doc checks/instance.json ; then
+	echo "error: pushing instance failed"
+	rm tmp.doc
+	exit 1
+else
+	echo "passed: pushing instance"
+fi
+rm tmp.doc
