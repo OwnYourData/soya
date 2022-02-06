@@ -1,0 +1,1 @@
+docker run -it --rm -w /usr/src/app/docker/test oydeu/soya-cli:latest /usr/src/app/docker/test/run.sh

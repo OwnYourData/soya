@@ -10,7 +10,9 @@
     "build-nexe": "npm run build && nexe -r \"dist/**/*\" --python /usr/bin/python3.8 -t 14.15.3",
     "start": "cat res/files/company.json | node dist/index.js --dri company-validation --repo \"http://localhost:8080\" validate",
     "bin": "npm link",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test:without-build": "./docker/test/run_docker.sh",
+    "test": "./build.sh && npm run test:without-build"
   },
   "bin": {
     "soya": "./dist/index.js"
