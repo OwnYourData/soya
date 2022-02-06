@@ -1,4 +1,4 @@
-import { Vaultifier, VaultItem, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
+import { Vaultifier, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
 import { logger } from './logger';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
@@ -65,18 +65,14 @@ export class RepoService {
     return this.get(`/${path}`, false);
   }
 
-  private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultItem> => {
+  private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
     const v = await this.getVaultifier();
     const meta = await cb(v);
 
-    logger.debug('Return value of push', meta);
-    logger.debug(`Fetching item with id ${meta.id}`);
-    return v.getItem({
-      id: meta.id,
-    });
+    return meta;
   }
 
-  pushValue = async (data: any): Promise<VaultItem> => {
+  pushValue = async (data: any): Promise<VaultMinMeta> => {
     return this._push((v) => {
       logger.debug('Pushing value');
       logger.debug(JSON.stringify(data));
@@ -84,7 +80,7 @@ export class RepoService {
     });
   }
 
-  pushItem = async (item: VaultPostItem): Promise<VaultItem> => {
+  pushItem = async (item: VaultPostItem): Promise<VaultMinMeta> => {
     return this._push((v) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));

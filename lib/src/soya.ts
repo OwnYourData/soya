@@ -1,5 +1,5 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import { MimeType, VaultItem } from "vaultifier/dist/main";
+import { MimeType, VaultMinMeta } from "vaultifier/dist/main";
 import winston from "winston";
 import { JsonParseError } from "./errors";
 import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
@@ -33,7 +33,7 @@ export interface SoyaConfig {
 
 export interface PushResponse {
   value: any;
-  item: VaultItem;
+  item: VaultMinMeta;
 }
 
 export class Soya {
@@ -56,7 +56,7 @@ export class Soya {
 
   push = async (input: unknown): Promise<PushResponse> => {
     const data = asObjectInput(input);
-    let res: VaultItem;
+    let res: VaultMinMeta;
     let value: string | undefined;
 
     if (isInstance(data)) {
@@ -105,7 +105,11 @@ export class Soya {
       logger.info('Pushing structure');
 
       res = await this.service.pushValue(data);
-      value = res.dri;
+      const vaultItem = await (await this.service.getVaultifier()).getItem({
+        id: res.id,
+      });
+
+      value = vaultItem.dri;
     }
 
     return {
