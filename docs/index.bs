@@ -241,19 +241,47 @@ SOyA integrates with a number of established tools to provide its functionalitie
 
 ### SHACL ### {#shacl}
 
-text
+SHACL (Shapes Constraint Language) is a language for validating RDF graphs against a set of conditions - find [more information here](https://www.w3.org/TR/shacl/). It is used in Validation overlays.
+
+*Note: use the [online jq Playground](https://jqplay.org/) to test your transformation*
+
+<div class=example id=shacl_example>
+A validation overlay example with SHACL notation.
+<pre class=include>
+path: examples/shacl.html
+</pre>
+</div>
+
 
 ### jq ### {#jq}
 
-text
+`jq` is a lightweight and flexible command-line JSON processor - find [more information here](https://stedolan.github.io/jq/). It is used in Transformation overlays.
+
+*Note: use the [online Jolt Transformation Demo](http://jolt-demo.appspot.com/#inception) to test your transformation*
+
+<div class=example id=jq_example>
+A transformation overlay example using jq.
+<pre class=include>
+path: examples/jq.html
+</pre>
+</div>
+
 
 ### Jolt ### {#jolt}
 
-text
+Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document. It is used in Transformation overlays.
+
+<div class=example id=jolt_example>
+A transformation overlay example using Jolt.
+<pre class=include>
+path: examples/jolt.html
+</pre>
+</div>
+
 
 ### Semantic Container ### {#semcon}
 
-text
+Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find [more information here](https://www.OwnYourData.eu/semcon).
 
 
 Processing {#processing}

@@ -1270,13 +1270,260 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h3 class="heading settled" data-level="2.3" id="sw-stack"><span class="secno">2.3. </span><span class="content">SW Stack</span><a class="self-link" href="#sw-stack"></a></h3>
    <p>SOyA integrates with a number of established tools to provide its functionalities.</p>
    <h4 class="heading settled" data-level="2.3.1" id="shacl"><span class="secno">2.3.1. </span><span class="content">SHACL</span><a class="self-link" href="#shacl"></a></h4>
-   <p>text</p>
+   <p>SHACL (Shapes Constraint Language) is a language for validating RDF graphs against a set of conditions - find <a href="https://www.w3.org/TR/shacl/">more information here</a>. It is used in Validation overlays.</p>
+   <p>*Note: use the <a href="https://jqplay.org/">online jq Playground</a> to test your transformation*</p>
+   <div class="example" id="shacl_example">
+    <a class="self-link" href="#shacl_example"></a> A validation overlay example with SHACL notation. 
+    <div class="tab">
+     <button class="tablinks" onclick="openTab(event, &apos;shacl_yml&apos;)">YML</button>
+     <button class="tablinks" onclick="openTab(event, &apos;shacl_jsonld&apos;)">JSON-LD</button>
+      <a href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonValidation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22PersonShape%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22sh%3ANodeShape%22%2C%0A%20%20%20%20%20%20%22sh%3AtargetClass%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22sh%3Aproperty%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22name%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxLength%22%3A%2019%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apattern%22%3A%20%22%5E%5Ba-z%20%2C.&apos;-%5D%2B%24%22%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22dateOfBirth%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminRange%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40type%22%3A%20%22xsd%3Adate%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40value%22%3A%20%221900-01-01%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22age%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22sex%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Ain%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40list%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22male%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22female%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22other%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonValidationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A" target="_blank"><button class="tablinks">Open in playground</button></a> 
+    </div>
+    <div class="tabcontent" id="shacl_yml">
+     <p>use <code>soya template validation</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> PersonValidation
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>overlays</c-><c- p>:</c-> 
+    - <c- f>type</c-><c- p>:</c-> OverlayValidation
+      <c- f>base</c-><c- p>:</c-> https://soya.data-container.net/Person
+      <c- f>name</c-><c- p>:</c-> PersonValidationOverlay
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>name</c-><c- p>:</c-> 
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"1..1"</c->
+          <c- f>length</c-><c- p>:</c-> <c- s>"[0..20)"</c->
+          <c- f>pattern</c-><c- p>:</c-> <c- s>"^[a-z</c-><c- g> </c-><c- s>,.'-]+$"</c->
+        <c- f>dateOfBirth</c-><c- p>:</c->
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"1..1"</c->
+          <c- f>valueRange</c-><c- p>:</c-> <c- s>"[1900-01-01..*]"</c->                    
+        <c- f>age</c-><c- p>:</c-> 
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"0..1"</c->
+          <c- f>valueRange</c-><c- p>:</c-> <c- s>"[0..*]"</c->
+        <c- f>sex</c-><c- p>:</c->
+          <c- f>cardinality</c-><c- p>:</c-> <c- s>"0..1"</c->
+          <c- f>valueOption</c-><c- p>:</c->
+            - male
+            - female
+            - other
+</pre>
+     <a href="#shacl_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="shacl_jsonld">
+     <p>use <code>soya template valiation | soya init</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json highlight"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
+    <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
+    <c- f>"@base"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonValidation/"</c->
+  <c- p>},</c->
+  <c- f>"@graph"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"PersonShape"</c-><c- p>,</c->
+      <c- f>"@type"</c-><c- p>:</c-> <c- u>"sh:NodeShape"</c-><c- p>,</c->
+      <c- f>"sh:targetClass"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/Person"</c-><c- p>,</c->
+      <c- f>"sh:property"</c-><c- p>:</c-> <c- p>[</c->
+        <c- p>{</c->
+          <c- f>"sh:path"</c-><c- p>:</c-> <c- u>"name"</c-><c- p>,</c->
+          <c- f>"sh:minCount"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+          <c- f>"sh:maxCount"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+          <c- f>"sh:maxLength"</c-><c- p>:</c-> <c- mi>19</c-><c- p>,</c->
+          <c- f>"sh:pattern"</c-><c- p>:</c-> <c- u>"^[a-z ,.'-]+$"</c->
+        <c- p>},</c->
+        <c- p>{</c->
+          <c- f>"sh:path"</c-><c- p>:</c-> <c- u>"dateOfBirth"</c-><c- p>,</c->
+          <c- f>"sh:minCount"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+          <c- f>"sh:maxCount"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+          <c- f>"sh:minRange"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"@type"</c-><c- p>:</c-> <c- u>"xsd:date"</c-><c- p>,</c->
+            <c- f>"@value"</c-><c- p>:</c-> <c- u>"1900-01-01"</c->
+          <c- p>}</c->
+        <c- p>},</c->
+        <c- p>{</c->
+          <c- f>"sh:path"</c-><c- p>:</c-> <c- u>"age"</c-><c- p>,</c->
+          <c- f>"sh:maxCount"</c-><c- p>:</c-> <c- mi>1</c->
+        <c- p>},</c->
+        <c- p>{</c->
+          <c- f>"sh:path"</c-><c- p>:</c-> <c- u>"sex"</c-><c- p>,</c->
+          <c- f>"sh:maxCount"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+          <c- f>"sh:in"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"@list"</c-><c- p>:</c-> <c- p>[</c->
+              <c- u>"male"</c-><c- p>,</c->
+              <c- u>"female"</c-><c- p>,</c->
+              <c- u>"other"</c->
+            <c- p>]</c->
+          <c- p>}</c->
+        <c- p>}</c->
+      <c- p>]</c->
+    <c- p>},</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"OverlayValidation"</c-><c- p>,</c->
+      <c- f>"@type"</c-><c- p>:</c-> <c- u>"OverlayValidation"</c-><c- p>,</c->
+      <c- f>"onBase"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/Person"</c-><c- p>,</c->
+      <c- f>"name"</c-><c- p>:</c-> <c- u>"PersonValidationOverlay"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+     <a href="#shacl_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+   </div>
    <h4 class="heading settled" data-level="2.3.2" id="jq"><span class="secno">2.3.2. </span><span class="content">jq</span><a class="self-link" href="#jq"></a></h4>
-   <p>text</p>
+   <p><code>jq</code> is a lightweight and flexible command-line JSON processor - find <a href="https://stedolan.github.io/jq/">more information here</a>. It is used in Transformation overlays.</p>
+   <p>*Note: use the <a href="http://jolt-demo.appspot.com/#inception">online Jolt Transformation Demo</a> to test your transformation*</p>
+   <div class="example" id="jq_example">
+    <a class="self-link" href="#jq_example"></a> A transformation overlay example using jq. 
+    <div class="tab">
+     <button class="tablinks" onclick="openTab(event, &apos;jq_yml&apos;)">YML</button>
+     <button class="tablinks" onclick="openTab(event, &apos;jq_jsonld&apos;)">JSON-LD</button>
+      <a href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA_jq_transformation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonATransformation%22%2C%0A%20%20%20%20%20%20%22engine%22%3A%20%22jq%22%2C%0A%20%20%20%20%20%20%22value%22%3A%20%22.%5B%5C%22%40graph%5C%22%5D%20%7C%20%5Cn%7B%5Cn%20%20%5C%22%40context%5C%22%3A%20%7B%5Cn%20%20%20%20%5C%22%40version%5C%22%3A1.1%2C%5Cn%20%20%20%20%5C%22%40vocab%5C%22%3A%5C%22https%3A%2F%2Fsoya.data-container.net%2FPersonB%2F%5C%22%7D%2C%5Cn%20%20%5C%22%40graph%5C%22%3A%20map(%20%5Cn%20%20%20%20%7B%5C%22%40id%5C%22%3A.%5B%5C%22%40id%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22%40type%5C%22%3A%5C%22PersonB%5C%22%2C%20%5Cn%20%20%20%20%5C%22first_name%5C%22%3A.%5B%5C%22basePerson%3Afirstname%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22surname%5C%22%3A.%5B%5C%22basePerson%3Alastname%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22birthdate%5C%22%3A.%5B%5C%22basePerson%3AdateOfBirth%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22gender%5C%22%3A.%5B%5C%22basePerson%3Asex%5C%22%5D%7D%5Cn%20%20)%5Cn%7D%5Cn%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22TransformationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A" target="_blank"><button class="tablinks">Open in playground</button></a> 
+    </div>
+    <div class="tabcontent" id="jq_yml">
+     <p>use <code>soya template transformation.jq</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> PersonA_jq_transformation
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>overlays</c-><c- p>:</c-> 
+    - <c- f>type</c-><c- p>:</c-> OverlayTransformation
+      <c- f>name</c-><c- p>:</c-> TransformationOverlay
+      <c- f>base</c-><c- p>:</c-> https://soya.data-container.net/PersonA
+      <c- f>engine</c-><c- p>:</c-> jq
+      <c- f>value</c-><c- p>:</c-> |
+        <c- no>.["@graph"] | </c->
+        <c- no>{</c->
+          <c- no>"@context": {</c->
+            <c- no>"@version":1.1,</c->
+            <c- no>"@vocab":"https://soya.data-container.net/PersonB/"},</c->
+          <c- no>"@graph": map( </c->
+            <c- no>{"@id":.["@id"], </c->
+            <c- no>"@type":"PersonB", </c->
+            <c- no>"first_name":.["basePerson:firstname"], </c->
+            <c- no>"surname":.["basePerson:lastname"], </c->
+            <c- no>"birthdate":.["basePerson:dateOfBirth"], </c->
+            <c- no>"gender":.["basePerson:sex"]}</c->
+          <c- no>)</c->
+        <c- no>}</c->
+</pre>
+     <a href="#jq_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="jq_jsonld">
+     <p>use <code>soya template transformation.jq | soya init</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json highlight"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
+    <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
+    <c- f>"@base"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonA_jq_transformation/"</c->
+  <c- p>},</c->
+  <c- f>"@graph"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonATransformation"</c-><c- p>,</c->
+      <c- f>"engine"</c-><c- p>:</c-> <c- u>"jq"</c-><c- p>,</c->
+      <c- f>"value"</c-><c- p>:</c-> <c- u>".[\"@graph\"] | \n{\n \"@context\": {\n \"@version\":1.1,\n \"@vocab\":\"https://soya.data-container.net/PersonB/\"},\n  \"@graph\": map( \n {\"@id\":.[\"@id\"], \n \"@type\":\"PersonB\", \n \"first_name\":.[\"basePerson:firstname\"], \n \"surname\":.[\"basePerson:lastname\"], \n \"birthdate\":.[\"basePerson:dateOfBirth\"], \n \"gender\":.[\"basePerson:sex\"]}\n )\n}\n"</c->
+    <c- p>},</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"OverlayTransformation"</c-><c- p>,</c->
+      <c- f>"@type"</c-><c- p>:</c-> <c- u>"OverlayTransformation"</c-><c- p>,</c->
+      <c- f>"onBase"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonA"</c-><c- p>,</c->
+      <c- f>"name"</c-><c- p>:</c-> <c- u>"TransformationOverlay"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+     <a href="#jq_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+   </div>
    <h4 class="heading settled" data-level="2.3.3" id="jolt"><span class="secno">2.3.3. </span><span class="content">Jolt</span><a class="self-link" href="#jolt"></a></h4>
-   <p>text</p>
+   <p>Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document. It is used in Transformation overlays.</p>
+   <div class="example" id="jolt_example">
+    <a class="self-link" href="#jolt_example"></a> A transformation overlay example using Jolt. 
+    <div class="tab">
+     <button class="tablinks" onclick="openTab(event, &apos;jolt_yml&apos;)">YML</button>
+     <button class="tablinks" onclick="openTab(event, &apos;jolt_jsonld&apos;)">JSON-LD</button>
+      <a href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA_jolt_Transformation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonATransformation%22%2C%0A%20%20%20%20%20%20%22engine%22%3A%20%22jolt%22%2C%0A%20%20%20%20%20%20%22value%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22operation%22%3A%20%22shift%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22spec%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40context%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40version%22%3A%20%22%5C%5C%40context.%5C%5C%40version%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%23https%3A%2F%2Fsoya.data-container.net%2FPersonB%2F%22%3A%20%22%5C%5C%40context.%5C%5C%40vocab%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40graph%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22*%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%23PersonB%22%3A%20%22%5C%5C%40graph%5B%232%5D.%5C%5C%40type%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40id%22%3A%20%22%5C%5C%40graph%5B%232%5D.%5C%5C%40id%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Afirstname%22%3A%20%22%5C%5C%40graph%5B%232%5D.first_name%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Alastname%22%3A%20%22%5C%5C%40graph%5B%232%5D.surname%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3AdateOfBirth%22%3A%20%22%5C%5C%40graph%5B%232%5D.birthdate%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Asex%22%3A%20%22%5C%5C%40graph%5B%232%5D.gender%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22TransformationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A" target="_blank"><button class="tablinks">Open in playground</button></a> 
+    </div>
+    <div class="tabcontent" id="jolt_yml">
+     <p>use <code>soya template transformation.jolt</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> PersonA_jolt_Transformation
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>overlays</c-><c- p>:</c-> 
+    - <c- f>type</c-><c- p>:</c-> OverlayTransformation
+      <c- f>name</c-><c- p>:</c-> TransformationOverlay
+      <c- f>base</c-><c- p>:</c-> https://soya.data-container.net/PersonA
+      <c- f>engine</c-><c- p>:</c-> jolt
+      <c- f>value</c-><c- p>:</c->
+        - <c- f>operation</c-><c- p>:</c-> shift
+          <c- f>spec</c-><c- p>:</c-> 
+            <c- s>"\\@context"</c->:
+              <c- s>"\\@version"</c->: <c- s>"\\@context.\\@version"</c->
+              <c- s>"#https://soya.data-container.net/PersonB/"</c->: <c- s>"\\@context.\\@vocab"</c->
+            <c- s>"\\@graph"</c->: 
+              <c- s>"*"</c->: 
+                <c- s>"#PersonB"</c->: <c- s>"\\@graph[#2].\\@type"</c->
+                <c- s>"\\@id"</c->: <c- s>"\\@graph[#2].\\@id"</c->
+                <c- s>"basePerson:firstname"</c->: <c- s>"\\@graph[#2].first_name"</c->
+                <c- s>"basePerson:lastname"</c->: <c- s>"\\@graph[#2].surname"</c->
+                <c- s>"basePerson:dateOfBirth"</c->: <c- s>"\\@graph[#2].birthdate"</c->
+                <c- s>"basePerson:sex"</c->: <c- s>"\\@graph[#2].gender"</c->
+</pre>
+     <a href="#jolt_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="jolt_jsonld">
+     <p>use <code>soya template transformation.jolt | soya init</code> to show this example on the command line</p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json highlight"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
+    <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
+    <c- f>"@base"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonA_jolt_Transformation/"</c->
+  <c- p>},</c->
+  <c- f>"@graph"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonATransformation"</c-><c- p>,</c->
+      <c- f>"engine"</c-><c- p>:</c-> <c- u>"jolt"</c-><c- p>,</c->
+      <c- f>"value"</c-><c- p>:</c-> <c- p>[</c->
+        <c- p>{</c->
+          <c- f>"operation"</c-><c- p>:</c-> <c- u>"shift"</c-><c- p>,</c->
+          <c- f>"spec"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"\\@context"</c-><c- p>:</c-> <c- p>{</c->
+              <c- f>"\\@version"</c-><c- p>:</c-> <c- u>"\\@context.\\@version"</c-><c- p>,</c->
+              <c- f>"#https://soya.data-container.net/PersonB/"</c-><c- p>:</c-> <c- u>"\\@context.\\@vocab"</c->
+            <c- p>},</c->
+            <c- f>"\\@graph"</c-><c- p>:</c-> <c- p>{</c->
+              <c- f>"*"</c-><c- p>:</c-> <c- p>{</c->
+                <c- f>"#PersonB"</c-><c- p>:</c-> <c- u>"\\@graph[#2].\\@type"</c-><c- p>,</c->
+                <c- f>"\\@id"</c-><c- p>:</c-> <c- u>"\\@graph[#2].\\@id"</c-><c- p>,</c->
+                <c- f>"basePerson:firstname"</c-><c- p>:</c-> <c- u>"\\@graph[#2].first_name"</c-><c- p>,</c->
+                <c- f>"basePerson:lastname"</c-><c- p>:</c-> <c- u>"\\@graph[#2].surname"</c-><c- p>,</c->
+                <c- f>"basePerson:dateOfBirth"</c-><c- p>:</c-> <c- u>"\\@graph[#2].birthdate"</c-><c- p>,</c->
+                <c- f>"basePerson:sex"</c-><c- p>:</c-> <c- u>"\\@graph[#2].gender"</c->
+              <c- p>}</c->
+            <c- p>}</c->
+          <c- p>}</c->
+        <c- p>}</c->
+      <c- p>]</c->
+    <c- p>},</c->
+    <c- p>{</c->
+      <c- f>"@id"</c-><c- p>:</c-> <c- u>"OverlayTransformation"</c-><c- p>,</c->
+      <c- f>"@type"</c-><c- p>:</c-> <c- u>"OverlayTransformation"</c-><c- p>,</c->
+      <c- f>"onBase"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/PersonA"</c-><c- p>,</c->
+      <c- f>"name"</c-><c- p>:</c-> <c- u>"TransformationOverlay"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+     <a href="#jolt_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+   </div>
    <h4 class="heading settled" data-level="2.3.4" id="semcon"><span class="secno">2.3.4. </span><span class="content">Semantic Container</span><a class="self-link" href="#semcon"></a></h4>
-   <p>text</p>
+   <p>Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find <a href="https://www.OwnYourData.eu/semcon">more information here</a>.</p>
    <h2 class="heading settled" data-level="3" id="processing"><span class="secno">3. </span><span class="content">Processing</span><a class="self-link" href="#processing"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
    <p>text</p>

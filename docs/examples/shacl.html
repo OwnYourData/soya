@@ -1,0 +1,101 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'shacl_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'shacl_jsonld')">JSON-LD</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonValidation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22PersonShape%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22sh%3ANodeShape%22%2C%0A%20%20%20%20%20%20%22sh%3AtargetClass%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22sh%3Aproperty%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22name%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxLength%22%3A%2019%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apattern%22%3A%20%22%5E%5Ba-z%20%2C.'-%5D%2B%24%22%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22dateOfBirth%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminRange%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40type%22%3A%20%22xsd%3Adate%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40value%22%3A%20%221900-01-01%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22age%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22sex%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Ain%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40list%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22male%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22female%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22other%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonValidationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="shacl_yml" class="tabcontent">
+<p>use <code>soya template validation</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: PersonValidation
+
+content:
+  overlays: 
+    - type: OverlayValidation
+      base: https://soya.data-container.net/Person
+      name: PersonValidationOverlay
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[a-z ,.'-]+$"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
+        age: 
+          cardinality: "0..1"
+          valueRange: "[0..*]"
+        sex:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+            - other
+```
+<a href="#shacl_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="shacl_jsonld" class="tabcontent">
+<p>use <code>soya template valiation | soya init</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonValidation/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "https://soya.data-container.net/Person",
+      "sh:property": [
+        {
+          "sh:path": "name",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:maxLength": 19,
+          "sh:pattern": "^[a-z ,.'-]+$"
+        },
+        {
+          "sh:path": "dateOfBirth",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:minRange": {
+            "@type": "xsd:date",
+            "@value": "1900-01-01"
+          }
+        },
+        {
+          "sh:path": "age",
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "sex",
+          "sh:maxCount": 1,
+          "sh:in": {
+            "@list": [
+              "male",
+              "female",
+              "other"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "@id": "OverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "https://soya.data-container.net/Person",
+      "name": "PersonValidationOverlay"
+    }
+  ]
+}
+```
+<a href="#shacl_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>

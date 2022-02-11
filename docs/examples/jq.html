@@ -1,0 +1,67 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'jq_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'jq_jsonld')">JSON-LD</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA_jq_transformation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonATransformation%22%2C%0A%20%20%20%20%20%20%22engine%22%3A%20%22jq%22%2C%0A%20%20%20%20%20%20%22value%22%3A%20%22.%5B%5C%22%40graph%5C%22%5D%20%7C%20%5Cn%7B%5Cn%20%20%5C%22%40context%5C%22%3A%20%7B%5Cn%20%20%20%20%5C%22%40version%5C%22%3A1.1%2C%5Cn%20%20%20%20%5C%22%40vocab%5C%22%3A%5C%22https%3A%2F%2Fsoya.data-container.net%2FPersonB%2F%5C%22%7D%2C%5Cn%20%20%5C%22%40graph%5C%22%3A%20map(%20%5Cn%20%20%20%20%7B%5C%22%40id%5C%22%3A.%5B%5C%22%40id%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22%40type%5C%22%3A%5C%22PersonB%5C%22%2C%20%5Cn%20%20%20%20%5C%22first_name%5C%22%3A.%5B%5C%22basePerson%3Afirstname%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22surname%5C%22%3A.%5B%5C%22basePerson%3Alastname%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22birthdate%5C%22%3A.%5B%5C%22basePerson%3AdateOfBirth%5C%22%5D%2C%20%5Cn%20%20%20%20%5C%22gender%5C%22%3A.%5B%5C%22basePerson%3Asex%5C%22%5D%7D%5Cn%20%20)%5Cn%7D%5Cn%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22TransformationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="jq_yml" class="tabcontent">
+<p>use <code>soya template transformation.jq</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: PersonA_jq_transformation
+
+content:
+  overlays: 
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: https://soya.data-container.net/PersonA
+      engine: jq
+      value: |
+        .["@graph"] | 
+        {
+          "@context": {
+            "@version":1.1,
+            "@vocab":"https://soya.data-container.net/PersonB/"},
+          "@graph": map( 
+            {"@id":.["@id"], 
+            "@type":"PersonB", 
+            "first_name":.["basePerson:firstname"], 
+            "surname":.["basePerson:lastname"], 
+            "birthdate":.["basePerson:dateOfBirth"], 
+            "gender":.["basePerson:sex"]}
+          )
+        }
+```
+<a href="#jq_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="jq_jsonld" class="tabcontent">
+<p>use <code>soya template transformation.jq | soya init</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonA_jq_transformation/"
+  },
+  "@graph": [
+    {
+      "@id": "https://soya.data-container.net/PersonATransformation",
+      "engine": "jq",
+      "value": ".[\"@graph\"] | \n{\n \"@context\": {\n \"@version\":1.1,\n \"@vocab\":\"https://soya.data-container.net/PersonB/\"},\n  \"@graph\": map( \n {\"@id\":.[\"@id\"], \n \"@type\":\"PersonB\", \n \"first_name\":.[\"basePerson:firstname\"], \n \"surname\":.[\"basePerson:lastname\"], \n \"birthdate\":.[\"basePerson:dateOfBirth\"], \n \"gender\":.[\"basePerson:sex\"]}\n )\n}\n"
+    },
+    {
+      "@id": "OverlayTransformation",
+      "@type": "OverlayTransformation",
+      "onBase": "https://soya.data-container.net/PersonA",
+      "name": "TransformationOverlay"
+    }
+  ]
+}
+```
+<a href="#jq_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>
