@@ -1,0 +1,244 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'structure_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'structure_jsonld')">JSON-LD</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FFoaf%2F%22%2C%0A%20%20%20%20%22foaf%22%3A%20%22http%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22Agent%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3AClass%22%2C%0A%20%20%20%20%20%20%22subClassOf%22%3A%20%22foaf%3Aagent%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3AClass%22%2C%0A%20%20%20%20%20%20%22subClassOf%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%22Agent%22%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22firstName%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Astring%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22lastName%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Astring%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22did%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Astring%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22Agent%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22gender%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22The%20gender%20of%20this%20Agent%20(typically%20but%20not%20necessarily%20male%20or%20female).%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22birthday%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22The%20birthday%20of%20this%20Agent.%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22made%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Something%20that%20was%20made%20by%20this%20agent.%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22age%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22The%20age%20in%20years%20of%20some%20agent.%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22Agent%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22AgentAnnotationOverlay%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22Person%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22firstName%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22The%20first%20name%20of%20a%20person.%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22lastName%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22The%20last%20name%20of%20a%20person.%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22did%22%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Identifier%20with%20keys%20and%20service%20endpoints%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonAnnotationOverlay%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22firstName%22%2C%0A%20%20%20%20%20%20%22rdfs%3AsubPropertyOf%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%22foaf%3AgivenName%22%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22lastName%22%2C%0A%20%20%20%20%20%20%22rdfs%3AsubPropertyOf%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%22foaf%3AfamilyName%22%2C%0A%20%20%20%20%20%20%20%20%22foaf%3Asurname%22%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayAlignment%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayAlignment%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonAlignmentOverlay%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22PersonShape%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22sh%3ANodeShape%22%2C%0A%20%20%20%20%20%20%22sh%3AtargetClass%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22sh%3Aproperty%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22firstName%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxLength%22%3A%2030%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22sh%3Apath%22%3A%20%22lastName%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AminCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxCount%22%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20%22sh%3AmaxLength%22%3A%2040%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayValidation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonValidationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="structure_yml" class="tabcontent">
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: Foaf
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  bases:
+    - name: Agent
+      subClassOf: foaf:agent
+    - name: Person
+      subClassOf: 
+        - Agent
+      attributes:
+        firstName: String
+        lastName: String
+        did: string
+  overlays: 
+    - type: OverlayAnnotation
+      base: Agent
+      name: AgentAnnotationOverlay
+      attributes:
+        gender: 
+          comment: 
+            en: The gender of this Agent (typically but not necessarily 'male' or 'female').
+        birthday:
+          comment:
+            en: The birthday of this Agent.
+        made:
+          comment:
+            en: Something that was made by this agent.
+        age:
+          comment:
+            en: The age in years of some agent.
+    - type: OverlayAnnotation
+      base: Person
+      name: PersonAnnotationOverlay
+      attributes:
+        firstName: 
+          comment: 
+            en: The first name of a person.
+        lastName:
+          comment:
+            en: The last name of a person.
+        did:
+          comment:
+            en: Identifier with keys and service endpoints
+    - type: OverlayAlignment
+      base: Person
+      name: PersonAlignmentOverlay
+      attributes:
+        firstName: 
+          - foaf:givenName
+        lastName:
+          - foaf:familyName
+          - foaf:surname
+    - type: OverlayValidation
+      base: Person
+      name: PersonValidationOverlay
+      attributes:
+        firstName: 
+          cardinality: "0..1"
+          length: "(0..30]"
+        lastName:
+          cardinality: "1..1"
+          length: "(0..40]"
+
+```
+<a href="#structure_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="structure_jsonld" class="tabcontent">
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Foaf/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "@graph": [
+    {
+      "@id": "Agent",
+      "@type": "owl:Class",
+      "subClassOf": "foaf:agent"
+    },
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": [
+        "Agent"
+      ]
+    },
+    {
+      "@id": "firstName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "lastName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "did",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "Agent"
+    },
+    {
+      "@id": "gender",
+      "comment": {
+        "en": [
+          "The gender of this Agent (typically but not necessarily male or female)."
+        ]
+      }
+    },
+    {
+      "@id": "birthday",
+      "comment": {
+        "en": [
+          "The birthday of this Agent."
+        ]
+      }
+    },
+    {
+      "@id": "made",
+      "comment": {
+        "en": [
+          "Something that was made by this agent."
+        ]
+      }
+    },
+    {
+      "@id": "age",
+      "comment": {
+        "en": [
+          "The age in years of some agent."
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "Agent",
+      "name": "AgentAnnotationOverlay"
+    },
+    {
+      "@id": "Person"
+    },
+    {
+      "@id": "firstName",
+      "comment": {
+        "en": [
+          "The first name of a person."
+        ]
+      }
+    },
+    {
+      "@id": "lastName",
+      "comment": {
+        "en": [
+          "The last name of a person."
+        ]
+      }
+    },
+    {
+      "@id": "did",
+      "comment": {
+        "en": [
+          "Identifier with keys and service endpoints"
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "Person",
+      "name": "PersonAnnotationOverlay"
+    },
+    {
+      "@id": "firstName",
+      "rdfs:subPropertyOf": [
+        "foaf:givenName"
+      ]
+    },
+    {
+      "@id": "lastName",
+      "rdfs:subPropertyOf": [
+        "foaf:familyName",
+        "foaf:surname"
+      ]
+    },
+    {
+      "@id": "OverlayAlignment",
+      "@type": "OverlayAlignment",
+      "onBase": "Person",
+      "name": "PersonAlignmentOverlay"
+    },
+    {
+      "@id": "PersonShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "Person",
+      "sh:property": [
+        {
+          "sh:path": "firstName",
+          "sh:maxCount": 1,
+          "sh:maxLength": 30
+        },
+        {
+          "sh:path": "lastName",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:maxLength": 40
+        }
+      ]
+    },
+    {
+      "@id": "OverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "Person",
+      "name": "PersonValidationOverlay"
+    }
+  ]
+}
+```
+<a href="#structure_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>

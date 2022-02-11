@@ -1,0 +1,129 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'overlay_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'overlay_jsonld')">JSON-LD</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonAnnotation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22label%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Person%22%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%22de%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22die%20Person%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22der%20Mensch%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22name%22%2C%0A%20%20%20%20%20%20%22label%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Name%22%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%22de%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Name%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22dateOfBirth%22%2C%0A%20%20%20%20%20%20%22label%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Date%20of%20Birth%22%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%22de%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Geburtsdatum%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Birthdate%20of%20Person%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22sex%22%2C%0A%20%20%20%20%20%20%22label%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Gender%22%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%22de%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Geschlecht%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22comment%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%22en%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Gender%20(male%20or%20female)%22%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%22de%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%22Geschlecht%20(m%C3%A4nnlich%20oder%20weiblich)%22%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayAnnotation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22PersonAnnotationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="overlay_yml" class="tabcontent">
+<p>use <code>soya template annotation</code> to show this example on the command line</p>
+<p>with <code>soya template --help</code> all available overlay examples are displayed</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: PersonAnnotation
+
+content:
+  overlays: 
+    - type: OverlayAnnotation
+      base: https://soya.data-container.net/Person
+      name: PersonAnnotationOverlay
+      class: 
+        label: 
+          en: Person
+          de: 
+            - die Person
+            - der Mensch
+      attributes:
+        name: 
+          label: 
+            en: Name
+            de: Name
+        dateOfBirth: 
+          label: 
+            en: Date of Birth 
+            de: Geburtsdatum
+          comment: 
+            en: Birthdate of Person
+        sex: 
+          label: 
+            en: Gender
+            de: Geschlecht
+          comment: 
+            en: Gender (male or female)
+            de: Geschlecht (männlich oder weiblich)
+```
+<a href="#overlay_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="overlay_jsonld" class="tabcontent">
+<p>use <code>soya template annotation | soya init</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonAnnotation/"
+  },
+  "@graph": [
+    {
+      "@id": "https://soya.data-container.net/Person",
+      "label": {
+        "en": [
+          "Person"
+        ],
+        "de": [
+          "die Person",
+          "der Mensch"
+        ]
+      }
+    },
+    {
+      "@id": "name",
+      "label": {
+        "en": [
+          "Name"
+        ],
+        "de": [
+          "Name"
+        ]
+      }
+    },
+    {
+      "@id": "dateOfBirth",
+      "label": {
+        "en": [
+          "Date of Birth"
+        ],
+        "de": [
+          "Geburtsdatum"
+        ]
+      },
+      "comment": {
+        "en": [
+          "Birthdate of Person"
+        ]
+      }
+    },
+    {
+      "@id": "sex",
+      "label": {
+        "en": [
+          "Gender"
+        ],
+        "de": [
+          "Geschlecht"
+        ]
+      },
+      "comment": {
+        "en": [
+          "Gender (male or female)"
+        ],
+        "de": [
+          "Geschlecht (männlich oder weiblich)"
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "https://soya.data-container.net/Person",
+      "name": "PersonAnnotationOverlay"
+    }
+  ]
+}
+```
+<a href="#overlay_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>

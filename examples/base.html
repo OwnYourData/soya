@@ -1,0 +1,81 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'base_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'base_jsonld')">JSON-LD</button>
+  <button class="tablinks" onclick="openTab(event, 'base_graph')">Graph</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPerson%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3AClass%22%2C%0A%20%20%20%20%20%20%22subClassOf%22%3A%20%22Base%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22name%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Astring%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22dateOfBirth%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Adate%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22age%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Ainteger%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22sex%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22owl%3ADatatypeProperty%22%2C%0A%20%20%20%20%20%20%22domain%22%3A%20%22Person%22%2C%0A%20%20%20%20%20%20%22range%22%3A%20%22xsd%3Astring%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="base_yml" class="tabcontent">
+<p>use <code>soya template base</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: Person
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        age: Integer
+        sex: String
+```
+<a href="#base_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="base_jsonld" class="tabcontent">
+<p>use <code>soya template base | soya init</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Person/"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "age",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "sex",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}
+```
+<a href="#base_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="base_graph" class="tabcontent">
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+<p align="center">
+  <img src="res/base_graph.png" width="750"><br>
+</p>
+<a href="#base_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>
