@@ -1,0 +1,9 @@
+meta:
+  name: Person_Test
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date

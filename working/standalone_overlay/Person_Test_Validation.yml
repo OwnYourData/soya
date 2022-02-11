@@ -1,0 +1,16 @@
+meta:
+  name: Person_Test_Validation
+
+content:
+  overlays: 
+    - type: OverlayValidation
+      base: https://soya.data-container.net/Person_Test
+      name: PersonValidationOverlay
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[a-z ,.'-]+$"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"
