@@ -1,0 +1,86 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'jolt_yml')">YML</button>
+  <button class="tablinks" onclick="openTab(event, 'jolt_jsonld')">JSON-LD</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40import%22%3A%20%22https%3A%2F%2Fns.ownyourdata.eu%2Fns%2Fsoya-context.json%22%2C%0A%20%20%20%20%22%40base%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA_jolt_Transformation%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonATransformation%22%2C%0A%20%20%20%20%20%20%22engine%22%3A%20%22jolt%22%2C%0A%20%20%20%20%20%20%22value%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22operation%22%3A%20%22shift%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22spec%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40context%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40version%22%3A%20%22%5C%5C%40context.%5C%5C%40version%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%23https%3A%2F%2Fsoya.data-container.net%2FPersonB%2F%22%3A%20%22%5C%5C%40context.%5C%5C%40vocab%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40graph%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22*%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%23PersonB%22%3A%20%22%5C%5C%40graph%5B%232%5D.%5C%5C%40type%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%5C%5C%40id%22%3A%20%22%5C%5C%40graph%5B%232%5D.%5C%5C%40id%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Afirstname%22%3A%20%22%5C%5C%40graph%5B%232%5D.first_name%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Alastname%22%3A%20%22%5C%5C%40graph%5B%232%5D.surname%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3AdateOfBirth%22%3A%20%22%5C%5C%40graph%5B%232%5D.birthdate%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22basePerson%3Asex%22%3A%20%22%5C%5C%40graph%5B%232%5D.gender%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22%40id%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22%40type%22%3A%20%22OverlayTransformation%22%2C%0A%20%20%20%20%20%20%22onBase%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FPersonA%22%2C%0A%20%20%20%20%20%20%22name%22%3A%20%22TransformationOverlay%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="jolt_yml" class="tabcontent">
+<p>use <code>soya template transformation.jolt</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: PersonA_jolt_Transformation
+
+content:
+  overlays: 
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: https://soya.data-container.net/PersonA
+      engine: jolt
+      value:
+        - operation: shift
+          spec: 
+            "\\@context":
+              "\\@version": "\\@context.\\@version"
+              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+            "\\@graph": 
+              "*": 
+                "#PersonB": "\\@graph[#2].\\@type"
+                "\\@id": "\\@graph[#2].\\@id"
+                "basePerson:firstname": "\\@graph[#2].first_name"
+                "basePerson:lastname": "\\@graph[#2].surname"
+                "basePerson:dateOfBirth": "\\@graph[#2].birthdate"
+                "basePerson:sex": "\\@graph[#2].gender"
+```
+<a href="#jolt_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="jolt_jsonld" class="tabcontent">
+<p>use <code>soya template transformation.jolt | soya init</code> to show this example on the command line</p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonA_jolt_Transformation/"
+  },
+  "@graph": [
+    {
+      "@id": "https://soya.data-container.net/PersonATransformation",
+      "engine": "jolt",
+      "value": [
+        {
+          "operation": "shift",
+          "spec": {
+            "\\@context": {
+              "\\@version": "\\@context.\\@version",
+              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+            },
+            "\\@graph": {
+              "*": {
+                "#PersonB": "\\@graph[#2].\\@type",
+                "\\@id": "\\@graph[#2].\\@id",
+                "basePerson:firstname": "\\@graph[#2].first_name",
+                "basePerson:lastname": "\\@graph[#2].surname",
+                "basePerson:dateOfBirth": "\\@graph[#2].birthdate",
+                "basePerson:sex": "\\@graph[#2].gender"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@id": "OverlayTransformation",
+      "@type": "OverlayTransformation",
+      "onBase": "https://soya.data-container.net/PersonA",
+      "name": "TransformationOverlay"
+    }
+  ]
+}
+```
+<a href="#jolt_example" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>
