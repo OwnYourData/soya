@@ -355,13 +355,20 @@ The Command Line Tool provides a set of utilities for handling SOyA structures a
 Repository {#repository}
 ----------
 
-text
+The SOyA Repository is a storage for SOyA structures and provides the follwowing functionalities:
 
+* <strong>Read (`soya pull [name]`):</strong> retrieve the SOyA structure with the given name
+* <strong>Information (`soya info [name]`):</strong> retrieve information about a SOyA structure (history, included bases and overlays) for the given name
+* <strong>Query:</strong> get a list of all SOyA structure that include bases containing the given string    
+    (available as API endpoint `GET /api/soya/query?name=[string]`)
+* <strong>Write (`cat file.jsonld | soya push`):</strong> stores the provided SOyA structure in the repository    
+    a *frozen* version (duplicate) is also created and accessible via corresponding DRI
+* <strong>Find Similar (`cat file.jsonld | soya similar`):</strong> list similar entries in the SOyA repository for a given SOyA structure
 
-Semantic Container {#semantic_container}
-------------------
+Further information:    
 
-text
+* Swagger Informaiton: https://api-docs.ownyourdata.eu/soya/    
+* Docker Image: https://hub.docker.com/r/oydeu/soya-base
 
 
 Reference Implementation {#implementation}

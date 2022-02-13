@@ -606,7 +606,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2022-02-11">11 February 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2022-02-13">13 February 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1572,7 +1572,28 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>Fast prototyping with quick links to <a href="https://json-ld.org/playground/">JSON-LD Playground</a></p>
    </ul>
    <h3 class="heading settled" data-level="4.3" id="repository"><span class="secno">4.3. </span><span class="content">Repository</span><a class="self-link" href="#repository"></a></h3>
-   <p>text</p>
+   <p>The SOyA Repository is a storage for SOyA structures and provides the follwowing functionalities:</p>
+   <ul>
+    <li data-md>
+     <p><strong>Read (<code>soya pull [name]</code>):</strong> retrieve the SOyA structure with the given name</p>
+    <li data-md>
+     <p><strong>Information (<code>soya info [name]</code>):</strong> retrieve information about a SOyA structure (history, included bases and overlays) for the given name</p>
+    <li data-md>
+     <p><strong>Query:</strong> get a list of all SOyA structure that include bases containing the given string
+(available as API endpoint <code>GET /api/soya/query?name=[string]</code>)</p>
+    <li data-md>
+     <p><strong>Write (<code>cat file.jsonld | soya push</code>):</strong> stores the provided SOyA structure in the repository
+a <em>frozen</em> version (duplicate) is also created and accessible via corresponding DRI</p>
+    <li data-md>
+     <p><strong>Find Similar (<code>cat file.jsonld | soya similar</code>):</strong> list similar entries in the SOyA repository for a given SOyA structure</p>
+   </ul>
+   <p>Further information:</p>
+   <ul>
+    <li data-md>
+     <p>Swagger Informaiton: https://api-docs.ownyourdata.eu/soya/</p>
+    <li data-md>
+     <p>Docker Image: https://hub.docker.com/r/oydeu/soya-base</p>
+   </ul>
    <h3 class="heading settled" data-level="4.4" id="semantic_container"><span class="secno">4.4. </span><span class="content">Semantic Container</span><a class="self-link" href="#semantic_container"></a></h3>
    <p>text</p>
    <h2 class="heading settled" data-level="5" id="implementation"><span class="secno">5. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
