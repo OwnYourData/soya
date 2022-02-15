@@ -169,9 +169,9 @@ const handleClassification = (doc: IntSoyaDocument, overlay: any) => {
 const handleAnnotation = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;
 
-  const handleAttribute = (annotation: any, attrName: string, base?: string) => {
+  const handleAttribute = (annotation: any, attrName: string) => {
     const attributeObject: any = {
-      '@id': base ? `${attrName}` : attrName,
+      '@id': `${attrName}`,
     };
     graph.push(attributeObject);
 
@@ -184,7 +184,7 @@ const handleAnnotation = (doc: IntSoyaDocument, overlay: any) => {
 
   for (const attrName in overlay.attributes) {
     let annotation = overlay.attributes[attrName];
-    handleAttribute(annotation, attrName, overlay.base);
+    handleAttribute(annotation, attrName);
   }
 }
 
