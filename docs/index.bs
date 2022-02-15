@@ -8,7 +8,7 @@
 
 /* Style the buttons inside the tab */
 .tab button {
-  background-color: inherit;
+  background-color: var(--bg);
   float: left;
   border: none;
   outline: none;
@@ -83,7 +83,7 @@ This specification is not a W3C Standard nor is it on the W3C Standards Track. L
 ## History ## {#history}
 
 * Version 0.1: 19 October 2021 (initial draft, [link](https://github.com/OwnYourData/soya/blob/main/docs/https://github.com/OwnYourData/soya/blob/main/docs/SOyA_WhitePaper_Nov21.pdf))
-* Version 0.2: 28 January 2022 (current version)
+* Version 0.2: 28 February 2022 (current version)
 
 
 Introduction {#intro}
@@ -144,31 +144,44 @@ SOyA satisfies the following design goals:
 Composition {#composition}
 ===========
 
-text
+The Semantic Overlay Architecture (SOyA) is built on the following core components to describe and manage data models. Those components are:
 
-Structure {#structure_element}
----------
+* **Structures:** description of a data model using bases and overlays together with some meta attributes
+* **Ontologies:** OWL2 compliant representation of data models (that can be generated automatically from structures)
+* **SW Stack:** integration of established technologies to handle instances of data and data models - SHACL, jq, jolt, Semantic Container
+
+<p align="center">
+  <img src="res/components.png" width="800"><br>
+  <em>Figure 2: SOyA Components</em>
+</p>
+</div>
+
+
+Structures {#structure_element}
+----------
 
 All artefacts ([=terms/bases=] and [=terms/overlays=]) in SOyA are declared is a [=terms/structure=] and it holds the following information:
 * meta    
     * name    
+    * context    
     * namespace    
 * content    
     * bases    
     * overlays    
 
-The `meta` node includes a property to define the overall name of the structure and allows to list optional namespaces (exiting ontologies). `content` is the payload defining `bases` and `overlays` described in detail in the following sections.
-
 <div class=example id=structure_example>
 An example structure.
 <pre class=include>
-path: structure.html
+path: examples/structure.html
 </pre>
 </div>
 
 
-Base {#base_element}
-----
+### Meta ### {#meta_element}
+
+The `meta` section in a structure defines the name of the structure, specifies an optional context (default: https://ns.ownyourdata.eu/soya/soya-context.json), and allows to reference namespaces (exiting ontologies).
+
+### Base ### {#base_element}
 
 A [=terms/base=] declares a dataset and holds the following information:
 * name
@@ -180,21 +193,95 @@ When a base is represented in RDF it is a class with one or more properties. Eac
 <div class=example id=base_example>
 An example base.
 <pre class=include>
-path: base.html
+path: examples/base.html
 </pre>
 </div>
 
 
-Overlay {#overlay_element}
--------
+### Overlay ### {#overlay_element}
 
-text
+Overlays provide addtional information for a defined base. This information can either be directly included in a structure together with a base or is provided independently and linked to the relevant base. The following types of overlays are pre-defined in default `context` (https://ns.ownyourdata.eu/soya/soya-context.json):
+
+* **Alignment:** reference existing RDF definitions (e.g. foaf); this also includes declaring a derived base so that attributes can be pre-filled from a data store holding a record with that base (e.g.,  don't require first name, last name to be entered but filled out automatically)    
+* **Annotation:** translations in different languages for name and descriptions of base names, labels, and descriptions    
+* **Classification:** select a subset of the attributes (e.g., personally identifiable information - PII, configuring list views)    
+* **Encoding:** specify the character set encoding used in storing the data of an instance (e.g., UTF-8)    
+* **Format:** defines how data is presented to the user    
+* **Transformation:** define for each element in a structure how it should be transformed    
+* **Validation:** predefined entries, range selection, any other validation incl. input methods    
+
+It is possible to create additional overlay types by using another context.
 
 
-Instance {#instance_element}
+<div class=example id=overlay_example>
+An overlay example.
+<pre class=include>
+path: examples/overlay.html
+</pre>
+</div>
+
+
+Ontologies {#ontology}
+----------
+
+### OWL2 Compliance ### {#owl2}
+
+reason for using OWL2 text - Fajar
+
+
+### JSON-LD ### {#jsonld}
+
+reason for [[JSON-LD]] - Fajar
+
+
+SW Stack {#sw-stack}
 --------
 
-text
+SOyA integrates with a number of established tools to provide its functionalities.
+
+### SHACL ### {#shacl}
+
+SHACL (Shapes Constraint Language) is a language for validating RDF graphs against a set of conditions - find [more information here](https://www.w3.org/TR/shacl/). It is used in Validation overlays.
+
+*Note: use the [online jq Playground](https://jqplay.org/) to test your transformation*
+
+<div class=example id=shacl_example>
+A validation overlay example with SHACL notation.
+<pre class=include>
+path: examples/shacl.html
+</pre>
+</div>
+
+
+### jq ### {#jq}
+
+`jq` is a lightweight and flexible command-line JSON processor - find [more information here](https://stedolan.github.io/jq/). It is used in Transformation overlays.
+
+*Note: use the [online Jolt Transformation Demo](http://jolt-demo.appspot.com/#inception) to test your transformation*
+
+<div class=example id=jq_example>
+A transformation overlay example using jq.
+<pre class=include>
+path: examples/jq.html
+</pre>
+</div>
+
+
+### Jolt ### {#jolt}
+
+Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document. It is used in Transformation overlays.
+
+<div class=example id=jolt_example>
+A transformation overlay example using Jolt.
+<pre class=include>
+path: examples/jolt.html
+</pre>
+</div>
+
+
+### Semantic Container ### {#semcon}
+
+Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find [more information here](https://www.OwnYourData.eu/semcon).
 
 
 Processing {#processing}
@@ -268,13 +355,20 @@ The Command Line Tool provides a set of utilities for handling SOyA structures a
 Repository {#repository}
 ----------
 
-text
+The SOyA Repository is a storage for SOyA structures and provides the follwowing functionalities:
 
+* <strong>Read (`soya pull [name]`):</strong> retrieve the SOyA structure with the given name
+* <strong>Information (`soya info [name]`):</strong> retrieve information about a SOyA structure (history, included bases and overlays) for the given name
+* <strong>Query:</strong> get a list of all SOyA structure that include bases containing the given string    
+    (available as API endpoint `GET /api/soya/query?name=[string]`)
+* <strong>Write (`cat file.jsonld | soya push`):</strong> stores the provided SOyA structure in the repository    
+    a *frozen* version (duplicate) is also created and accessible via corresponding DRI
+* <strong>Find Similar (`cat file.jsonld | soya similar`):</strong> list similar entries in the SOyA repository for a given SOyA structure
 
-Semantic Container {#semcon}
-------------------
+Further information:    
 
-text
+* Swagger Informaiton: https://api-docs.ownyourdata.eu/soya/    
+* Docker Image: https://hub.docker.com/r/oydeu/soya-base
 
 
 Reference Implementation {#implementation}

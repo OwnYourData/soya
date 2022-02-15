@@ -1,0 +1,21 @@
+meta:
+  name: Person_Test_Combined
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+  overlays: 
+    - type: OverlayValidation
+      base: Person
+      name: PersonValidationOverlay
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[a-z ,.'-]+$"
+        dateOfBirth:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"                    
