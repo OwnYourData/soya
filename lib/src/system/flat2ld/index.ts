@@ -9,7 +9,13 @@ const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: s
   for (const prop in flatJson) {
     const val = flatJson[prop];
 
-    if (typeof val === 'object') {
+    if (
+      typeof val === 'object' &&
+      // typeof val also outputs 'object' for Arrays
+      // therefore we have to check them separately here
+      // arrays should be acquired directly, therefore we don't include them in this "if"
+      !Array.isArray(val)
+    ) {
       const refClasses = dataSet.match(
         namedNode(`${base}${prop}`),
         namedNode('https://www.w3.org/2000/01/rdf-schema#range'),
