@@ -290,31 +290,33 @@ Processing {#processing}
 Authoring {#authoring}
 ---------
 
-text
+* YML for simple description of data models and properties
+* JSON-LD as encoding and standards-based representation
 
 
 Publishing {#publishing}
 ----------
 
-text
+* repository to host SOyA structures
+* mechanisms for uploading, retrieving, searching, and comparing entries
 
 
 Acquisition {#acquisition}
 ----------
 
-text
+* automatic mechanism to convert flat data to linked data through following naming conventions
 
 
 Validation {#validation}
 ----------
 
-text
+* validate if given instances (recordsets) comply with constraints defined in an overlay of the underlying data model
 
 
 Transformation {#transformation}
 ----------
 
-text
+* transform a given instance with well-defined data model into another data model using transformation information in an overlay
 
 
 
