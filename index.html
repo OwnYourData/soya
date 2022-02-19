@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="c59c6ab95d66b76bd3df2bf10975978d02f389ed" name="document-revision">
+  <meta content="cb4a91bb5b258c6bdc8432e6fa0a4fd972016e6f" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-15">15 February 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-19">19 February 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1531,15 +1531,34 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find <a href="https://www.OwnYourData.eu/semcon">more information here</a>.</p>
    <h2 class="heading settled" data-level="3" id="processing"><span class="secno">3. </span><span class="content">Processing</span><a class="self-link" href="#processing"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
-   <p>text</p>
+   <ul>
+    <li data-md>
+     <p>YML for simple description of data models and properties</p>
+    <li data-md>
+     <p>JSON-LD as encoding and standards-based representation</p>
+   </ul>
    <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
-   <p>text</p>
+   <ul>
+    <li data-md>
+     <p>repository to host SOyA structures</p>
+    <li data-md>
+     <p>mechanisms for uploading, retrieving, searching, and comparing entries</p>
+   </ul>
    <h3 class="heading settled" data-level="3.3" id="acquisition"><span class="secno">3.3. </span><span class="content">Acquisition</span><a class="self-link" href="#acquisition"></a></h3>
-   <p>text</p>
+   <ul>
+    <li data-md>
+     <p>automatic mechanism to convert flat data to linked data through following naming conventions</p>
+   </ul>
    <h3 class="heading settled" data-level="3.4" id="validation"><span class="secno">3.4. </span><span class="content">Validation</span><a class="self-link" href="#validation"></a></h3>
-   <p>text</p>
+   <ul>
+    <li data-md>
+     <p>validate if given instances (recordsets) comply with constraints defined in an overlay of the underlying data model</p>
+   </ul>
    <h3 class="heading settled" data-level="3.5" id="transformation"><span class="secno">3.5. </span><span class="content">Transformation</span><a class="self-link" href="#transformation"></a></h3>
-   <p>text</p>
+   <ul>
+    <li data-md>
+     <p>transform a given instance with well-defined data model into another data model using transformation information in an overlay</p>
+   </ul>
    <h2 class="heading settled" data-level="4" id="tools"><span class="secno">4. </span><span class="content">Tools</span><a class="self-link" href="#tools"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="library"><span class="secno">4.1. </span><span class="content"><code>soya-js</code> Library</span><a class="self-link" href="#library"></a></h3>
    <p><a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> provides interfaces in JavaScript for handling SOyA structures and interacting with SOyA respositories.</p>
