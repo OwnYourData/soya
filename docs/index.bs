@@ -221,17 +221,23 @@ path: examples/overlay.html
 </div>
 
 
-Ontologies {#ontology}
-----------
+Semantic Web Standards Adoption {#semantic_web}
+-------------------------------
 
-### OWL2 Compliance ### {#owl2}
+### Data Model: RDFS/OWL ### {#rdfs_owl}
 
-reason for using OWL2 text - Fajar
+A SOyA structure is designed to comply with the semantic web standards (i.e., RDFS/OWL) for data model representations. The goal is to ensure compatibility and reusability of SOyA data and data models with the established semantic web technology stack, e.g., SOLID and schema.org, as well as opening up the possibility to use relevant tools and methods, e.g., SHACL, RML, Triplestores. Furthermore, this decision would allow for higher interoperability with the currently available linked (open) data.
 
 
-### JSON-LD ### {#jsonld}
+### Data Serialization: JSON-LD ### {#jsonld}
 
-reason for [[JSON-LD]] - Fajar
+We chose [[JSON-LD]] as the default serialization in SOyA for the following reasons:    
+i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future    
+ii) Rich supports of tools    
+iii) Ease of use by both developers and knowledge engineers    
+iv) Compatibility to RDF    
+
+Furthermore, tools supporting JSON data manipulation and visualizations are widely available.
 
 
 SW Stack {#sw-stack}
