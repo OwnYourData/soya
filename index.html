@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="cb4a91bb5b258c6bdc8432e6fa0a4fd972016e6f" name="document-revision">
+  <meta content="14d736322c52644ecd2c4ffba0385b3620af07d8" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-19">19 February 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-20">20 February 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -656,10 +656,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
         <li><a href="#overlay_element"><span class="secno">2.1.3</span> <span class="content">Overlay</span></a>
        </ol>
       <li>
-       <a href="#ontology"><span class="secno">2.2</span> <span class="content">Ontologies</span></a>
+       <a href="#semantic_web"><span class="secno">2.2</span> <span class="content">Semantic Web Standards Adoption</span></a>
        <ol class="toc">
-        <li><a href="#owl2"><span class="secno">2.2.1</span> <span class="content">OWL2 Compliance</span></a>
-        <li><a href="#jsonld"><span class="secno">2.2.2</span> <span class="content">JSON-LD</span></a>
+        <li><a href="#rdfs_owl"><span class="secno">2.2.1</span> <span class="content">Data Model: RDFS/OWL</span></a>
+        <li><a href="#jsonld"><span class="secno">2.2.2</span> <span class="content">Data Serialization: JSON-LD</span></a>
        </ol>
       <li>
        <a href="#sw-stack"><span class="secno">2.3</span> <span class="content">SW Stack</span></a>
@@ -1267,11 +1267,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#overlay_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
     </div>
    </div>
-   <h3 class="heading settled" data-level="2.2" id="ontology"><span class="secno">2.2. </span><span class="content">Ontologies</span><a class="self-link" href="#ontology"></a></h3>
-   <h4 class="heading settled" data-level="2.2.1" id="owl2"><span class="secno">2.2.1. </span><span class="content">OWL2 Compliance</span><a class="self-link" href="#owl2"></a></h4>
-   <p>reason for using OWL2 text - Fajar</p>
-   <h4 class="heading settled" data-level="2.2.2" id="jsonld"><span class="secno">2.2.2. </span><span class="content">JSON-LD</span><a class="self-link" href="#jsonld"></a></h4>
-   <p>reason for <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> - Fajar</p>
+   <h3 class="heading settled" data-level="2.2" id="semantic_web"><span class="secno">2.2. </span><span class="content">Semantic Web Standards Adoption</span><a class="self-link" href="#semantic_web"></a></h3>
+   <h4 class="heading settled" data-level="2.2.1" id="rdfs_owl"><span class="secno">2.2.1. </span><span class="content">Data Model: RDFS/OWL</span><a class="self-link" href="#rdfs_owl"></a></h4>
+   <p>A SOyA structure is designed to comply with the semantic web standards (i.e., RDFS/OWL) for data model representations. The goal is to ensure compatibility and reusability of SOyA data and data models with the established semantic web technology stack, e.g., SOLID and schema.org, as well as opening up the possibility to use relevant tools and methods, e.g., SHACL, RML, Triplestores. Furthermore, this decision would allow for higher interoperability with the currently available linked (open) data.</p>
+   <h4 class="heading settled" data-level="2.2.2" id="jsonld"><span class="secno">2.2.2. </span><span class="content">Data Serialization: JSON-LD</span><a class="self-link" href="#jsonld"></a></h4>
+   <p>We chose <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> as the default serialization in SOyA for the following reasons:
+i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future    
+ii) Rich supports of tools    
+iii) Ease of use by both developers and knowledge engineers    
+iv) Compatibility to RDF</p>
+   <p>Furthermore, tools supporting JSON data manipulation and visualizations are widely available.</p>
    <h3 class="heading settled" data-level="2.3" id="sw-stack"><span class="secno">2.3. </span><span class="content">SW Stack</span><a class="self-link" href="#sw-stack"></a></h3>
    <p>SOyA integrates with a number of established tools to provide its functionalities.</p>
    <h4 class="heading settled" data-level="2.3.1" id="shacl"><span class="secno">2.3.1. </span><span class="content">SHACL</span><a class="self-link" href="#shacl"></a></h4>
