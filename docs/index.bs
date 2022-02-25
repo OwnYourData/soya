@@ -118,7 +118,7 @@ This document uses the following terms as defined in external specifications and
     :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
             *in RDF:* instance of an RDF Class
 
-    : <dfn lt=overlays|Overlays>Overlay</dfn>
+    : <dfn lt=overlay|overlays|Overlays>Overlay</dfn>
     :: additional information about a [=terms/Base=]<br>
         *in RDF:* annotation properties attached to an RDF Class or Property
 
@@ -296,8 +296,7 @@ Features {#features}
 Authoring {#authoring}
 ---------
 
-* YML for simple description of data models and properties
-* JSON-LD as encoding and standards-based representation
+SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a [=terms/base] (data model). Additionally, a number of optionally associated [=terms/overlays=] can define specific behaviour. This input (YML) is then transformed using the [SOyA CLI](#cli) into JSON-LD for a standards-based representation.
 
 
 Publishing {#publishing}
