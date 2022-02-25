@@ -296,7 +296,7 @@ Features {#features}
 Authoring {#authoring}
 ---------
 
-SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a [=terms/base] (data model). Additionally, a number of optionally associated [=terms/overlays=] can define specific behaviour. This input (YML) is then transformed using the [SOyA CLI](#cli) into JSON-LD for a standards-based representation.
+SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a [=terms/base=] (data model). Additionally, a number of optionally associated [=terms/overlays=] can define specific behaviour. This input (YML) is then transformed using the [SOyA CLI](#cli) into JSON-LD for a standards-based representation.
 
 
 Publishing {#publishing}
