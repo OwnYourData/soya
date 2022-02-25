@@ -290,8 +290,8 @@ path: examples/jolt.html
 Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find [more information here](https://www.OwnYourData.eu/semcon).
 
 
-Processing {#processing}
-==========
+Features {#features}
+========
 
 Authoring {#authoring}
 ---------
