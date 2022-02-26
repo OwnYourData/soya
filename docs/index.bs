@@ -323,7 +323,14 @@ An important aspect of SOyA is the collaboration on developing data models. A re
 Acquisition {#acquisition}
 ----------
 
-* automatic mechanism to convert flat data to linked data through following naming conventions
+The acquisition feature allows to transform flat JSON data into linked data (in JSON-LD) based on matching attribute names.
+
+<div class=example id=acquire_example>
+An acquisition example.
+<pre class=include>
+path: examples/acquire.html
+</pre>
+</div>
 
 
 Validation {#validation}
