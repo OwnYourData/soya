@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="094d860ec89c1b41425b3188ff66907bdafd259a" name="document-revision">
+  <meta content="eceeda3feef94f9d7b6d41ea8678b434c991f385" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-25">25 February 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-26">26 February 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1537,12 +1537,31 @@ iv) Compatibility to RDF</p>
    <h2 class="heading settled" data-level="3" id="features"><span class="secno">3. </span><span class="content">Features</span><a class="self-link" href="#features"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
    <p>SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑥">base</a> (data model). Additionally, a number of optionally associated <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay②">overlays</a> can define specific behaviour. This input (YML) is then transformed using the <a href="#cli">SOyA CLI</a> into JSON-LD for a standards-based representation.</p>
-   <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
+   <p><strong>Specific Authoring Functions:</strong></p>
    <ul>
     <li data-md>
-     <p>repository to host SOyA structures</p>
+     <p>predefined <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay③">Overlay</a> types: alignment, annotation, classification, encoding, format, transformation, transformation, validation</p>
     <li data-md>
-     <p>mechanisms for uploading, retrieving, searching, and comparing entries</p>
+     <p><code>subClassOf</code>: referencing base classes</p>
+    <li data-md>
+     <p>nesting: use intendation to implicitly use <code>subClassOf</code> property</p>
+   </ul>
+   <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
+   <p>An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the <a href="#cli">SOyA CLI</a> provides a number of functions to interact with a repository. A default, public repository is hosted at <code>soya.ownyourdata.eu</code> with the <a href="https://api-docs.ownyourdata.eu/soya/">OpenAPI Specification available</a>. Private repositories can be hosted using <a href="https://github.com/OwnYourData/soya/tree/main/repository">sources on Github</a> or <a href="https://hub.docker.com/r/oydeu/soya-base">pre-build Docker images</a>.</p>
+   <p><strong>Specific Publishing Functions:</strong></p>
+   <ul>
+    <li data-md>
+     <p><code>soya push</code> reads a valid SOyA structure from STDIN and stores it in the repository</p>
+    <li data-md>
+     <p>every SOyA structure is stored can be access through the defined human-readable name and is additionally stored using a content-based address (<a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a>); the human-readable version can be overwritten by a new version while the content-based address is kept unchanged</p>
+    <li data-md>
+     <p><code>soya pull</code> retrieves the specified SOyA structures and writes to STDOUT</p>
+    <li data-md>
+     <p><code>soya similar</code> compares a valid SOyA structure read from STDIN with other structures in the repository and displays the top 20 matching structures in decreasing order of similarity</p>
+    <li data-md>
+     <p><code>soya info</code> show detailed information (bases, overlays, history, DRI version) for a specifed SOyA structure</p>
+    <li data-md>
+     <p>search for structures based on parts of the name (only available via API)</p>
    </ul>
    <h3 class="heading settled" data-level="3.3" id="acquisition"><span class="secno">3.3. </span><span class="content">Acquisition</span><a class="self-link" href="#acquisition"></a></h3>
    <ul>
@@ -1583,7 +1602,7 @@ iv) Compatibility to RDF</p>
    <p><a href="https://github.com/OwnYourData/soya/blob/main/cli/README.md">soya-cli</a> is built on top of <a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> and exposes most of its <a href="https://github.com/OwnYourData/soya/blob/main/lib/README.md">features</a> as commands on the command line. In addition there are features like:</p>
    <ul>
     <li data-md>
-     <p><a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a> calculation for SOyA structures</p>
+     <p><a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris②">DRI</a> calculation for SOyA structures</p>
     <li data-md>
      <p>Data transformation using</p>
      <ul>
@@ -1745,7 +1764,8 @@ function openTab(evt, cityName) {
    <b><a href="#terms-dris">#terms-dris</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-dris">1.2. Design Goals and Rationale</a>
-    <li><a href="#ref-for-terms-dris①">4.2. Command Line Tool</a>
+    <li><a href="#ref-for-terms-dris①">3.2. Publishing</a>
+    <li><a href="#ref-for-terms-dris②">4.2. Command Line Tool</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-overlay">
@@ -1753,7 +1773,7 @@ function openTab(evt, cityName) {
    <ul>
     <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
     <li><a href="#ref-for-terms-overlay①">2.1. Structures</a>
-    <li><a href="#ref-for-terms-overlay②">3.1. Authoring</a>
+    <li><a href="#ref-for-terms-overlay②">3.1. Authoring</a> <a href="#ref-for-terms-overlay③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-structures">
