@@ -1,0 +1,69 @@
+<html>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'acquire_input')">Input</button>
+  <button class="tablinks" onclick="openTab(event, 'acquire_base')">Base</button>
+  <button class="tablinks" onclick="openTab(event, 'acquire_output')">Output</button>
+  <a target="_blank" href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40vocab%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FEmployee%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22name%22%3A%20%22Christoph%20Fabianek%22%2C%0A%20%20%20%20%20%20%22dateOfBirth%22%3A%20%221977-07-21%22%2C%0A%20%20%20%20%20%20%22gender%22%3A%20%22male%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A"><button class="tablinks">Open in playground</button></a>
+</div>
+
+<div id="acquire_input" class="tabcontent">
+<p>The following record is an example flat JSON to be transformed into linked data - also <a href="https://playground.data-container.net/cfa" target="_blank">availabel via `curl https://playground.data-container.net/cfa`</a>.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json
+{
+    "name": "Christoph Fabianek",
+    "dateOfBirth": "1977-07-21",
+    "gender": "male",
+    "employer": {
+        "Company": "OwnYourdata",
+        "country": "Austria"
+    }
+}
+```
+<a href="#acquisition" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="acquire_base" class="tabcontent">
+<p>The following base from the SOyA structure `Employee` is used in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```yaml
+meta:
+  name: Employee
+
+content:
+  base:
+    - name: Employee
+      attributes:
+        name: String
+        dateOfBirth: Date
+        gender: String
+        employer: Company
+    - name: Company
+      attributes:
+        company: string
+        country: string
+```
+<a href="#acquisition" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+
+<div id="acquire_output" class="tabcontent">
+<p>The output of the acquire in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+<span onclick="this.parentElement.style.display='none'" style="float: right;">❌</span>
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.data-container.net/Employee/"
+  },
+  "@graph": [
+    {
+      "name": "Christoph Fabianek",
+      "dateOfBirth": "1977-07-21",
+      "gender": "male"
+    }
+  ]
+}
+```
+<a href="#acquisition" onclick="this.parentElement.style.display='none'">close</a>
+</div>
+</html>
