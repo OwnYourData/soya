@@ -336,14 +336,27 @@ path: examples/acquire.html
 Validation {#validation}
 ----------
 
-* validate if given instances (recordsets) comply with constraints defined in an overlay of the underlying data model
+Through validation a given JSON-LD record (or an array of records) can be validated against a SOyA structure that includes an validation [=terms/overlay=]. (Currently, [\SHACL](#shacl) (Shapes Constraint Language) is used in validation overlays.)
+
+<div class=example id=validation_feature_example>
+An example command to perform a validation.
+<pre>
+curl -s https://playground.data-container.net/cfa | soya acquire Employee | soya validate Employee
+</pre>
+</div>
 
 
 Transformation {#transformation}
 ----------
 
-* transform a given instance with well-defined data model into another data model using transformation information in an overlay
+Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation [=terms/overlay=]. (Currently, [jq](#jq) and [Jolt](#jolt) are available engines for transformation overlays.)
 
+<div class=example id=transformation_feature_example>
+An example command to perform a transformation.
+<pre>
+curl -s https://playground.data-container.net/PersonAinstance | soya transform PersonB
+</pre>
+</div>
 
 
 Tools {#tools}
