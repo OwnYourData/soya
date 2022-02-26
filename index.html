@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="eceeda3feef94f9d7b6d41ea8678b434c991f385" name="document-revision">
+  <meta content="ff60bae701840da54ea6502b0f602f877e89ed5e" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -1564,10 +1564,71 @@ iv) Compatibility to RDF</p>
      <p>search for structures based on parts of the name (only available via API)</p>
    </ul>
    <h3 class="heading settled" data-level="3.3" id="acquisition"><span class="secno">3.3. </span><span class="content">Acquisition</span><a class="self-link" href="#acquisition"></a></h3>
-   <ul>
-    <li data-md>
-     <p>automatic mechanism to convert flat data to linked data through following naming conventions</p>
-   </ul>
+   <p>The acquisition feature allows to transform flat JSON data into linked data (in JSON-LD) based on matching attribute names.</p>
+   <div class="example" id="acquire_example">
+    <a class="self-link" href="#acquire_example"></a> An acquisition example. 
+    <div class="tab">
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_input&apos;)">Input</button>
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_base&apos;)">Base</button>
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_output&apos;)">Output</button>
+      <a href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40vocab%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FEmployee%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22name%22%3A%20%22Christoph%20Fabianek%22%2C%0A%20%20%20%20%20%20%22dateOfBirth%22%3A%20%221977-07-21%22%2C%0A%20%20%20%20%20%20%22gender%22%3A%20%22male%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A" target="_blank"><button class="tablinks">Open in playground</button></a> 
+    </div>
+    <div class="tabcontent" id="acquire_input">
+     <p>The following record is an example flat JSON to be transformed into linked data - also <a href="https://playground.data-container.net/cfa" target="_blank">availabel via <code>curl https://playground.data-container.net/cfa</code></a>.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json highlight"><c- p>{</c->
+    <c- f>"name"</c-><c- p>:</c-> <c- u>"Christoph Fabianek"</c-><c- p>,</c->
+    <c- f>"dateOfBirth"</c-><c- p>:</c-> <c- u>"1977-07-21"</c-><c- p>,</c->
+    <c- f>"gender"</c-><c- p>:</c-> <c- u>"male"</c-><c- p>,</c->
+    <c- f>"employer"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"Company"</c-><c- p>:</c-> <c- u>"OwnYourdata"</c-><c- p>,</c->
+        <c- f>"country"</c-><c- p>:</c-> <c- u>"Austria"</c->
+    <c- p>}</c->
+<c- p>}</c->
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="acquire_base">
+     <p>The following base from the SOyA structure <code>Employee</code> is used in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> Employee
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>base</c-><c- p>:</c->
+    - <c- f>name</c-><c- p>:</c-> Employee
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>name</c-><c- p>:</c-> String
+        <c- f>dateOfBirth</c-><c- p>:</c-> Date
+        <c- f>gender</c-><c- p>:</c-> String
+        <c- f>employer</c-><c- p>:</c-> Company
+    - <c- f>name</c-><c- p>:</c-> Company
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>company</c-><c- p>:</c-> string
+        <c- f>country</c-><c- p>:</c-> string
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="acquire_output">
+     <p>The output of the acquire in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json-ld highlight"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
+    <c- f>"@vocab"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/Employee/"</c->
+  <c- p>},</c->
+  <c- f>"@graph"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"name"</c-><c- p>:</c-> <c- u>"Christoph Fabianek"</c-><c- p>,</c->
+      <c- f>"dateOfBirth"</c-><c- p>:</c-> <c- u>"1977-07-21"</c-><c- p>,</c->
+      <c- f>"gender"</c-><c- p>:</c-> <c- u>"male"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+   </div>
    <h3 class="heading settled" data-level="3.4" id="validation"><span class="secno">3.4. </span><span class="content">Validation</span><a class="self-link" href="#validation"></a></h3>
    <ul>
     <li data-md>
