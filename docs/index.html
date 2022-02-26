@@ -606,7 +606,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2022-02-13">13 February 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2022-02-26">26 February 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -650,10 +650,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
         <li><a href="#overlay_element"><span class="secno">2.1.3</span> <span class="content">Overlay</span></a>
        </ol>
       <li>
-       <a href="#ontology"><span class="secno">2.2</span> <span class="content">Ontologies</span></a>
+       <a href="#semantic_web"><span class="secno">2.2</span> <span class="content">Semantic Web Standards Adoption</span></a>
        <ol class="toc">
-        <li><a href="#owl2"><span class="secno">2.2.1</span> <span class="content">OWL2 Compliance</span></a>
-        <li><a href="#jsonld"><span class="secno">2.2.2</span> <span class="content">JSON-LD</span></a>
+        <li><a href="#rdfs_owl"><span class="secno">2.2.1</span> <span class="content">Data Model: RDFS/OWL</span></a>
+        <li><a href="#jsonld"><span class="secno">2.2.2</span> <span class="content">Data Serialization: JSON-LD</span></a>
        </ol>
       <li>
        <a href="#sw-stack"><span class="secno">2.3</span> <span class="content">SW Stack</span></a>
@@ -665,7 +665,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
        </ol>
      </ol>
     <li>
-     <a href="#processing"><span class="secno">3</span> <span class="content">Processing</span></a>
+     <a href="#features"><span class="secno">3</span> <span class="content">Features</span></a>
      <ol class="toc">
       <li><a href="#authoring"><span class="secno">3.1</span> <span class="content">Authoring</span></a>
       <li><a href="#publishing"><span class="secno">3.2</span> <span class="content">Publishing</span></a>
@@ -679,7 +679,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#library"><span class="secno">4.1</span> <span class="content"><code>soya-js</code> Library</span></a>
       <li><a href="#cli"><span class="secno">4.2</span> <span class="content">Command Line Tool</span></a>
       <li><a href="#repository"><span class="secno">4.3</span> <span class="content">Repository</span></a>
-      <li><a href="#semantic_container"><span class="secno">4.4</span> <span class="content">Semantic Container</span></a>
      </ol>
     <li><a href="#implementation"><span class="secno">5</span> <span class="content">Reference Implementation</span></a>
     <li>
@@ -729,7 +728,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
       <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
-     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="overlays|Overlays" id="terms-overlays">Overlay</dfn>
+     <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="overlay|overlays|Overlays" id="terms-overlay">Overlay</dfn>
      <dd data-md>
       <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base②">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-repository">Repository<a class="self-link" href="#terms-repository"></a></dfn>
@@ -737,7 +736,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <p>online storage for <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures①">Structures</a> with versioning capabilities</p>
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="Structures|structure" id="terms-structures">Structure</dfn>
      <dd data-md>
-      <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Bases</a> and <a data-link-type="dfn" href="#terms-overlays" id="ref-for-terms-overlays">Overlays</a><br> <em>in RDF:</em> an ontology</p>
+      <p>a combination of <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base③">Bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay">Overlays</a><br> <em>in RDF:</em> an ontology</p>
     </dl>
    </div>
    <h3 class="heading settled" data-level="1.2" id="goals"><span class="secno">1.2. </span><span class="content">Design Goals and Rationale</span><a class="self-link" href="#goals"></a></h3>
@@ -768,7 +767,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </ul>
    <p align="center"> <img src="res/components.png" width="800"><br> <em>Figure 2: SOyA Components</em> </p>
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structures</span><a class="self-link" href="#structure_element"></a></h3>
-   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlays" id="ref-for-terms-overlays①">overlays</a>) in SOyA are declared is a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
+   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay①">overlays</a>) in SOyA are declared is a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
    <ul>
     <li data-md>
      <p>meta</p>
@@ -1262,11 +1261,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#overlay_example" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
     </div>
    </div>
-   <h3 class="heading settled" data-level="2.2" id="ontology"><span class="secno">2.2. </span><span class="content">Ontologies</span><a class="self-link" href="#ontology"></a></h3>
-   <h4 class="heading settled" data-level="2.2.1" id="owl2"><span class="secno">2.2.1. </span><span class="content">OWL2 Compliance</span><a class="self-link" href="#owl2"></a></h4>
-   <p>reason for using OWL2 text - Fajar</p>
-   <h4 class="heading settled" data-level="2.2.2" id="jsonld"><span class="secno">2.2.2. </span><span class="content">JSON-LD</span><a class="self-link" href="#jsonld"></a></h4>
-   <p>reason for <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> - Fajar</p>
+   <h3 class="heading settled" data-level="2.2" id="semantic_web"><span class="secno">2.2. </span><span class="content">Semantic Web Standards Adoption</span><a class="self-link" href="#semantic_web"></a></h3>
+   <h4 class="heading settled" data-level="2.2.1" id="rdfs_owl"><span class="secno">2.2.1. </span><span class="content">Data Model: RDFS/OWL</span><a class="self-link" href="#rdfs_owl"></a></h4>
+   <p>A SOyA structure is designed to comply with the semantic web standards (i.e., RDFS/OWL) for data model representations. The goal is to ensure compatibility and reusability of SOyA data and data models with the established semantic web technology stack, e.g., SOLID and schema.org, as well as opening up the possibility to use relevant tools and methods, e.g., SHACL, RML, Triplestores. Furthermore, this decision would allow for higher interoperability with the currently available linked (open) data.</p>
+   <h4 class="heading settled" data-level="2.2.2" id="jsonld"><span class="secno">2.2.2. </span><span class="content">Data Serialization: JSON-LD</span><a class="self-link" href="#jsonld"></a></h4>
+   <p>We chose <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> as the default serialization in SOyA for the following reasons:
+i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future    
+ii) Rich supports of tools    
+iii) Ease of use by both developers and knowledge engineers    
+iv) Compatibility to RDF</p>
+   <p>Furthermore, tools supporting JSON data manipulation and visualizations are widely available.</p>
    <h3 class="heading settled" data-level="2.3" id="sw-stack"><span class="secno">2.3. </span><span class="content">SW Stack</span><a class="self-link" href="#sw-stack"></a></h3>
    <p>SOyA integrates with a number of established tools to provide its functionalities.</p>
    <h4 class="heading settled" data-level="2.3.1" id="shacl"><span class="secno">2.3.1. </span><span class="content">SHACL</span><a class="self-link" href="#shacl"></a></h4>
@@ -1524,17 +1528,115 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </div>
    <h4 class="heading settled" data-level="2.3.4" id="semcon"><span class="secno">2.3.4. </span><span class="content">Semantic Container</span><a class="self-link" href="#semcon"></a></h4>
    <p>Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find <a href="https://www.OwnYourData.eu/semcon">more information here</a>.</p>
-   <h2 class="heading settled" data-level="3" id="processing"><span class="secno">3. </span><span class="content">Processing</span><a class="self-link" href="#processing"></a></h2>
+   <h2 class="heading settled" data-level="3" id="features"><span class="secno">3. </span><span class="content">Features</span><a class="self-link" href="#features"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
-   <p>text</p>
+   <p>SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑥">base</a> (data model). Additionally, a number of optionally associated <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay②">overlays</a> can define specific behaviour. This input (YML) is then transformed using the <a href="#cli">SOyA CLI</a> into JSON-LD for a standards-based representation.</p>
+   <p><strong>Specific Authoring Functions:</strong></p>
+   <ul>
+    <li data-md>
+     <p>predefined <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay③">Overlay</a> types: alignment, annotation, classification, encoding, format, transformation, transformation, validation</p>
+    <li data-md>
+     <p><code>subClassOf</code>: referencing base classes</p>
+    <li data-md>
+     <p>nesting: use intendation to implicitly use <code>subClassOf</code> property</p>
+   </ul>
    <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
-   <p>text</p>
+   <p>An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the <a href="#cli">SOyA CLI</a> provides a number of functions to interact with a repository. A default, public repository is hosted at <code>soya.ownyourdata.eu</code> with the <a href="https://api-docs.ownyourdata.eu/soya/">OpenAPI Specification available</a>. Private repositories can be hosted using <a href="https://github.com/OwnYourData/soya/tree/main/repository">sources on Github</a> or <a href="https://hub.docker.com/r/oydeu/soya-base">pre-build Docker images</a>.</p>
+   <p><strong>Specific Publishing Functions:</strong></p>
+   <ul>
+    <li data-md>
+     <p><code>soya push</code> reads a valid SOyA structure from STDIN and stores it in the repository</p>
+    <li data-md>
+     <p>every SOyA structure is stored can be access through the defined human-readable name and is additionally stored using a content-based address (<a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a>); the human-readable version can be overwritten by a new version while the content-based address is kept unchanged</p>
+    <li data-md>
+     <p><code>soya pull</code> retrieves the specified SOyA structures and writes to STDOUT</p>
+    <li data-md>
+     <p><code>soya similar</code> compares a valid SOyA structure read from STDIN with other structures in the repository and displays the top 20 matching structures in decreasing order of similarity</p>
+    <li data-md>
+     <p><code>soya info</code> show detailed information (bases, overlays, history, DRI version) for a specifed SOyA structure</p>
+    <li data-md>
+     <p>search for structures based on parts of the name (only available via API)</p>
+   </ul>
    <h3 class="heading settled" data-level="3.3" id="acquisition"><span class="secno">3.3. </span><span class="content">Acquisition</span><a class="self-link" href="#acquisition"></a></h3>
-   <p>text</p>
+   <p>The acquisition feature allows to transform flat JSON data into linked data (in JSON-LD) based on matching attribute names.</p>
+   <div class="example" id="acquire_example">
+    <a class="self-link" href="#acquire_example"></a> An acquisition example. 
+    <div class="tab">
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_input&apos;)">Input</button>
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_base&apos;)">Base</button>
+     <button class="tablinks" onclick="openTab(event, &apos;acquire_output&apos;)">Output</button>
+      <a href="https://json-ld.org/playground/#json-ld=%7B%0A%20%20%22%40context%22%3A%20%7B%0A%20%20%20%20%22%40version%22%3A%201.1%2C%0A%20%20%20%20%22%40vocab%22%3A%20%22https%3A%2F%2Fsoya.data-container.net%2FEmployee%2F%22%0A%20%20%7D%2C%0A%20%20%22%40graph%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22name%22%3A%20%22Christoph%20Fabianek%22%2C%0A%20%20%20%20%20%20%22dateOfBirth%22%3A%20%221977-07-21%22%2C%0A%20%20%20%20%20%20%22gender%22%3A%20%22male%22%0A%20%20%20%20%7D%0A%20%20%5D%0A%7D%0A" target="_blank"><button class="tablinks">Open in playground</button></a> 
+    </div>
+    <div class="tabcontent" id="acquire_input">
+     <p>The following record is an example flat JSON to be transformed into linked data - also <a href="https://playground.data-container.net/cfa" target="_blank">availabel via <code>curl https://playground.data-container.net/cfa</code></a>.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json highlight"><c- p>{</c->
+    <c- f>"name"</c-><c- p>:</c-> <c- u>"Christoph Fabianek"</c-><c- p>,</c->
+    <c- f>"dateOfBirth"</c-><c- p>:</c-> <c- u>"1977-07-21"</c-><c- p>,</c->
+    <c- f>"gender"</c-><c- p>:</c-> <c- u>"male"</c-><c- p>,</c->
+    <c- f>"employer"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"Company"</c-><c- p>:</c-> <c- u>"OwnYourdata"</c-><c- p>,</c->
+        <c- f>"country"</c-><c- p>:</c-> <c- u>"Austria"</c->
+    <c- p>}</c->
+<c- p>}</c->
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="acquire_base">
+     <p>The following base from the SOyA structure <code>Employee</code> is used in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+  <c- f>name</c-><c- p>:</c-> Employee
+
+<c- f>content</c-><c- p>:</c->
+  <c- f>base</c-><c- p>:</c->
+    - <c- f>name</c-><c- p>:</c-> Employee
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>name</c-><c- p>:</c-> String
+        <c- f>dateOfBirth</c-><c- p>:</c-> Date
+        <c- f>gender</c-><c- p>:</c-> String
+        <c- f>employer</c-><c- p>:</c-> Company
+    - <c- f>name</c-><c- p>:</c-> Company
+      <c- f>attributes</c-><c- p>:</c->
+        <c- f>company</c-><c- p>:</c-> string
+        <c- f>country</c-><c- p>:</c-> string
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+    <div class="tabcontent" id="acquire_output">
+     <p>The output of the acquire in the example.<br>Run the following command to test acquire:<br><code>curl https://playground.data-container.net/cfa | soya acquire Employee</code></p>
+      <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span> 
+<pre class="language-json-ld highlight"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
+    <c- f>"@vocab"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/Employee/"</c->
+  <c- p>},</c->
+  <c- f>"@graph"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"name"</c-><c- p>:</c-> <c- u>"Christoph Fabianek"</c-><c- p>,</c->
+      <c- f>"dateOfBirth"</c-><c- p>:</c-> <c- u>"1977-07-21"</c-><c- p>,</c->
+      <c- f>"gender"</c-><c- p>:</c-> <c- u>"male"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+     <a href="#acquisition" onclick="this.parentElement.style.display=&apos;none&apos;">close</a> 
+    </div>
+   </div>
    <h3 class="heading settled" data-level="3.4" id="validation"><span class="secno">3.4. </span><span class="content">Validation</span><a class="self-link" href="#validation"></a></h3>
-   <p>text</p>
+   <p>Through validation a given JSON-LD record (or an array of records) can be validated against a SOyA structure that includes an validation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay④">overlay</a>. (Currently, <a href="#shacl">\SHACL</a> (Shapes Constraint Language) is used in validation overlays.)</p>
+   <div class="example" id="validation_feature_example">
+    <a class="self-link" href="#validation_feature_example"></a> An example command to perform a validation. 
+<pre>curl -s https://playground.data-container.net/cfa | soya acquire Employee | soya validate Employee
+</pre>
+   </div>
    <h3 class="heading settled" data-level="3.5" id="transformation"><span class="secno">3.5. </span><span class="content">Transformation</span><a class="self-link" href="#transformation"></a></h3>
-   <p>text</p>
+   <p>Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay⑤">overlay</a>. (Currently, <a href="#jq">jq</a> and <a href="#jolt">Jolt</a> are available engines for transformation overlays.)</p>
+   <div class="example" id="transformation_feature_example">
+    <a class="self-link" href="#transformation_feature_example"></a> An example command to perform a transformation. 
+<pre>curl -s https://playground.data-container.net/PersonAinstance | soya transform PersonB
+</pre>
+   </div>
    <h2 class="heading settled" data-level="4" id="tools"><span class="secno">4. </span><span class="content">Tools</span><a class="self-link" href="#tools"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="library"><span class="secno">4.1. </span><span class="content"><code>soya-js</code> Library</span><a class="self-link" href="#library"></a></h3>
    <p><a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> provides interfaces in JavaScript for handling SOyA structures and interacting with SOyA respositories.</p>
@@ -1559,7 +1661,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p><a href="https://github.com/OwnYourData/soya/blob/main/cli/README.md">soya-cli</a> is built on top of <a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> and exposes most of its <a href="https://github.com/OwnYourData/soya/blob/main/lib/README.md">features</a> as commands on the command line. In addition there are features like:</p>
    <ul>
     <li data-md>
-     <p><a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a> calculation for SOyA structures</p>
+     <p><a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris②">DRI</a> calculation for SOyA structures</p>
     <li data-md>
      <p>Data transformation using</p>
      <ul>
@@ -1594,8 +1696,6 @@ a <em>frozen</em> version (duplicate) is also created and accessible via corresp
     <li data-md>
      <p>Docker Image: https://hub.docker.com/r/oydeu/soya-base</p>
    </ul>
-   <h3 class="heading settled" data-level="4.4" id="semantic_container"><span class="secno">4.4. </span><span class="content">Semantic Container</span><a class="self-link" href="#semantic_container"></a></h3>
-   <p>text</p>
    <h2 class="heading settled" data-level="5" id="implementation"><span class="secno">5. </span><span class="content">Reference Implementation</span><a class="self-link" href="#implementation"></a></h2>
    <p>Work in progress as part of a research project funded by the “IKT der Zukunft” program from the Federal Ministry for Transport, Innovation and Technology in Austria – <a href="https://projekte.ffg.at/projekt/4125456">FFG Projekt 887052</a>.</p>
    <p>The following implementation artefacts are available (published under the open source MIT License):</p>
@@ -1682,8 +1782,9 @@ function openTab(evt, cityName) {
    <li><a href="#terms-base">bases</a><span>, in § 1.1</span>
    <li><a href="#terms-dris">DRIs</a><span>, in § 1.1</span>
    <li><a href="#terms-instance">Instance</a><span>, in § 1.1</span>
-   <li><a href="#terms-overlays">Overlays</a><span>, in § 1.1</span>
-   <li><a href="#terms-overlays">overlays</a><span>, in § 1.1</span>
+   <li><a href="#terms-overlay">overlay</a><span>, in § 1.1</span>
+   <li><a href="#terms-overlay">Overlays</a><span>, in § 1.1</span>
+   <li><a href="#terms-overlay">overlays</a><span>, in § 1.1</span>
    <li><a href="#terms-repository">Repository</a><span>, in § 1.1</span>
    <li><a href="#terms-structures">structure</a><span>, in § 1.1</span>
    <li><a href="#terms-structures">Structures</a><span>, in § 1.1</span>
@@ -1715,20 +1816,25 @@ function openTab(evt, cityName) {
     <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
     <li><a href="#ref-for-terms-base④">2.1. Structures</a>
     <li><a href="#ref-for-terms-base⑤">2.1.2. Base</a>
+    <li><a href="#ref-for-terms-base⑥">3.1. Authoring</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-dris">
    <b><a href="#terms-dris">#terms-dris</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-dris">1.2. Design Goals and Rationale</a>
-    <li><a href="#ref-for-terms-dris①">4.2. Command Line Tool</a>
+    <li><a href="#ref-for-terms-dris①">3.2. Publishing</a>
+    <li><a href="#ref-for-terms-dris②">4.2. Command Line Tool</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="terms-overlays">
-   <b><a href="#terms-overlays">#terms-overlays</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="terms-overlay">
+   <b><a href="#terms-overlay">#terms-overlay</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-terms-overlays">1.1. Terminology</a>
-    <li><a href="#ref-for-terms-overlays①">2.1. Structures</a>
+    <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
+    <li><a href="#ref-for-terms-overlay①">2.1. Structures</a>
+    <li><a href="#ref-for-terms-overlay②">3.1. Authoring</a> <a href="#ref-for-terms-overlay③">(2)</a>
+    <li><a href="#ref-for-terms-overlay④">3.4. Validation</a>
+    <li><a href="#ref-for-terms-overlay⑤">3.5. Transformation</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-structures">

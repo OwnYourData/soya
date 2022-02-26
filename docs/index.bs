@@ -298,31 +298,65 @@ Authoring {#authoring}
 
 SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a [=terms/base=] (data model). Additionally, a number of optionally associated [=terms/overlays=] can define specific behaviour. This input (YML) is then transformed using the [SOyA CLI](#cli) into JSON-LD for a standards-based representation.
 
+**Specific Authoring Functions:**    
+
+* predefined [=terms/Overlay=] types: alignment, annotation, classification, encoding, format, transformation, transformation, validation    
+* `subClassOf`: referencing base classes    
+* nesting: use intendation to implicitly use `subClassOf` property    
+
 
 Publishing {#publishing}
 ----------
 
-* repository to host SOyA structures
-* mechanisms for uploading, retrieving, searching, and comparing entries
+An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the [SOyA CLI](#cli) provides a number of functions to interact with a repository. A default, public repository is hosted at `soya.ownyourdata.eu` with the [OpenAPI Specification available](https://api-docs.ownyourdata.eu/soya/). Private repositories can be hosted using [sources on Github](https://github.com/OwnYourData/soya/tree/main/repository) or [pre-build Docker images](https://hub.docker.com/r/oydeu/soya-base).
+
+**Specific Publishing Functions:**    
+
+* `soya push` reads a valid SOyA structure from STDIN and stores it in the repository    
+* every SOyA structure is stored can be access through the defined human-readable name and is additionally stored using a content-based address ([=terms/DRI=]); the human-readable version can be overwritten by a new version while the content-based address is kept unchanged    
+* `soya pull` retrieves the specified SOyA structures and writes to STDOUT    
+* `soya similar` compares a valid SOyA structure read from STDIN with other structures in the repository and displays the top 20 matching structures in decreasing order of similarity    
+* `soya info` show detailed information (bases, overlays, history, DRI version) for a specifed SOyA structure    
+* search for structures based on parts of the name (only available via API)    
 
 
 Acquisition {#acquisition}
 ----------
 
-* automatic mechanism to convert flat data to linked data through following naming conventions
+The acquisition feature allows to transform flat JSON data into linked data (in JSON-LD) based on matching attribute names.
+
+<div class=example id=acquire_example>
+An acquisition example.
+<pre class=include>
+path: examples/acquire.html
+</pre>
+</div>
 
 
 Validation {#validation}
 ----------
 
-* validate if given instances (recordsets) comply with constraints defined in an overlay of the underlying data model
+Through validation a given JSON-LD record (or an array of records) can be validated against a SOyA structure that includes an validation [=terms/overlay=]. (Currently, [\SHACL](#shacl) (Shapes Constraint Language) is used in validation overlays.)
+
+<div class=example id=validation_feature_example>
+An example command to perform a validation.
+<pre>
+curl -s https://playground.data-container.net/cfa | soya acquire Employee | soya validate Employee
+</pre>
+</div>
 
 
 Transformation {#transformation}
 ----------
 
-* transform a given instance with well-defined data model into another data model using transformation information in an overlay
+Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation [=terms/overlay=]. (Currently, [jq](#jq) and [Jolt](#jolt) are available engines for transformation overlays.)
 
+<div class=example id=transformation_feature_example>
+An example command to perform a transformation.
+<pre>
+curl -s https://playground.data-container.net/PersonAinstance | soya transform PersonB
+</pre>
+</div>
 
 
 Tools {#tools}
