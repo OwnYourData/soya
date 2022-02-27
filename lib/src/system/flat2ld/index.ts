@@ -1,11 +1,8 @@
 import { parseJsonLd } from "../../utils/rdf";
-import rdf from "rdf-ext";
-import DatasetExt from "rdf-ext/lib/Dataset";
 import { SoyaInstance, SoyaDocument } from "../../interfaces";
+import { SparqlQueryBuilder } from "../../utils/sparql";
 
-const namedNode = rdf.namedNode;
-
-const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: string) => {
+const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson: any, base: string) => {
   for (const prop in flatJson) {
     const val = flatJson[prop];
 
@@ -16,19 +13,25 @@ const iterateItemProps = (dataSet: DatasetExt, item: any, flatJson: any, base: s
       // arrays should be acquired directly, therefore we don't include them in this "if"
       !Array.isArray(val)
     ) {
-      const refClasses = dataSet.match(
-        namedNode(`${base}${prop}`),
-        namedNode('https://www.w3.org/2000/01/rdf-schema#range'),
-        undefined,
-      ).toArray();
+      const refClasses = await builder.query(`
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      PREFIX base: <${base}>
+      SELECT ?o WHERE {
+        base:${prop} rdfs:range ?o .
+      }
+      `)
 
       if (refClasses[0]) {
-        const subItem: any = {
-          "@type": refClasses[0].object.value.replace(base, ''),
-        }
-        item[prop] = [subItem];
+        const refClass = refClasses[0].get('?o');
 
-        iterateItemProps(dataSet, subItem, val, base);
+        if (refClass) {
+          const subItem: any = {
+            "@type": refClass.replace(base, ''),
+          }
+          item[prop] = [subItem];
+
+          await iterateItemProps(builder, subItem, val, base);
+        }
       }
     }
     else
@@ -48,23 +51,38 @@ export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promi
   };
 
   const flatItems = Array.isArray(flatJson) ? flatJson : [flatJson];
+  const dataSet = await parseJsonLd(soyaStructure);
+  const builder = new SparqlQueryBuilder(dataSet);
 
   for (const flatItem of flatItems) {
-    const dataSet = await parseJsonLd(soyaStructure);
-    // console.dir(dataSet, { depth: 10 });
-
-    const mainClass = dataSet.match(
-      undefined,
-      namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      namedNode('https://www.w3.org/2002/07/owl#Class'),
-    ).toArray()[0];
-
-    const item: any = {
-      "@type": mainClass?.subject.value.replace(retItem["@context"]["@vocab"], ''),
+    const mainClasses = await builder.query(`
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX base: <${base}>
+    SELECT ?s WHERE {
+      ?s rdfs:subClassOf base:Base .
     }
-    graph.push(item);
+    `);
+    // const mainClass = dataSet.match(
+    //   undefined,
+    //   namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+    //   namedNode('http://www.w3.org/2002/07/owl#Class'),
+    // ).toArray()[0];
 
-    iterateItemProps(dataSet, item, flatItem, base);
+
+    const mainClass = mainClasses[0];
+    if (mainClass) {
+      const mainClassName = mainClass.get('?s');
+
+      if (mainClassName) {
+        const item: any = {
+          "@type": mainClassName.replace(retItem["@context"]["@vocab"], ''),
+        }
+        graph.push(item);
+
+        await iterateItemProps(builder, item, flatItem, base);
+      }
+    }
   }
 
   return retItem;
