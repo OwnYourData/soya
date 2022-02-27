@@ -41,7 +41,7 @@ COPY --chown=user:user --from=java_builder /app/jolt/cli/target/jolt-cli-0.1.6-S
 WORKDIR /usr/src/app
 COPY --chown=user:user ./docker ./docker
 ENV NODE_ENV=development
-RUN npm install && \
+RUN npm install --only=prod && \
     npm run bin && \
     chown -R user:user /usr/src/app && \
     sed -e "s/\${soya}/`soya --version`/" -e "s/\${jq}/`jq --version`/" docker/welcome.txt > /etc/motd && \
