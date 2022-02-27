@@ -2,10 +2,8 @@ import { OverlayPlugin, OverlayResult } from "./interface";
 import SHACLValidator from "rdf-validate-shacl";
 import { parseJsonLd } from "../utils/rdf";
 import { logger } from "../services/logger";
-import rdf from "rdf-ext";
 import { SoyaDocument } from "../interfaces";
-
-const namedNode = rdf.namedNode;
+import { SparqlQueryBuilder } from "../utils/sparql";
 
 export class SoyaValidate implements OverlayPlugin {
 
@@ -19,32 +17,34 @@ export class SoyaValidate implements OverlayPlugin {
     const validator = new SHACLValidator(layerSet);
     const res = await validator.validate(dataSet);
 
+    const layerBuilder = new SparqlQueryBuilder(layerSet);
+    const requiredClasses = await layerBuilder.query(`
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    SELECT ?c WHERE {
+      ?s a sh:NodeShape .
+	    ?s sh:targetClass ?c .
+    }`);
+
+    const dataBuilder = new SparqlQueryBuilder(dataSet);
+    const classChecks: any[] = [];
+
     // this are some additional class checks
     // SHACL is not really made to give invalid results if it has an empty set it's applied on
     // therefore we additionally check for the availabiligy of all classes that are defined as SHACL shapes
-    const requiredClasses = layerSet.match(
-      undefined,
-      namedNode('http://www.w3.org/ns/shacl#targetClass'),
-      undefined,
-    );
-
-    const availableClasses = dataSet.match(
-      undefined,
-      namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      undefined,
-    )
-
-    const classChecks: any[] = [];
-    // check, if all required node shapes are available
     for (const required of requiredClasses) {
-      if (availableClasses.match(
-        undefined,
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        required.object,
-      ).length === 0)
+      const requiredClassUri = required.get('?c');
+      const matches = await dataBuilder.query(`
+      SELECT ?s WHERE {
+        ?s a <${requiredClassUri}> .
+      }`);
+
+      const exists = matches.length !== 0;
+
+      // check, if all required node shapes are available
+      if (!exists)
         classChecks.push({
           message: 'Missing class',
-          name: required.object.value,
+          name: requiredClassUri,
         });
     }
 
