@@ -6,13 +6,29 @@ import { Algebra } from "sparqljs";
 import rdf from "rdf-ext";
 import NamedNodeExt from "rdf-ext/lib/NamedNode";
 import { QueryOutput } from "sparql-engine/dist/engine/plan-builder";
+import BlankNodeExt from "rdf-ext/lib/BlankNode";
+import LiteralExt from "rdf-ext/lib/Literal";
+import VariableExt from "rdf-ext/lib/Variable";
 const namedNode = rdf.namedNode;
+const blankNode = rdf.blankNode;
 
-const getMatchPart = (val: string): NamedNodeExt<string> | undefined => {
-  if (!val.startsWith('?'))
+const mapMatchToExt = (val: string): NamedNodeExt<string> | BlankNodeExt | undefined => {
+  if (val.startsWith('?'))
+    return;
+
+  if (val.startsWith('http'))
     return namedNode(val);
+  else
+    return blankNode(val);
+}
 
-  return;
+const mapExtToString = (x: NamedNodeExt | LiteralExt | BlankNodeExt | VariableExt): string => {
+  let ret = x.value;
+
+  if ((x as LiteralExt).language)
+    ret = `"${ret}"@${(x as LiteralExt).language}`;
+
+  return ret;
 }
 
 export class SparqlGraph extends Graph {
@@ -28,15 +44,15 @@ export class SparqlGraph extends Graph {
   }
   find({ subject, predicate, object }: Algebra.TripleObject, _: ExecutionContext): PipelineInput<Algebra.TripleObject> {
     const res = this._graph.match(
-      getMatchPart(subject),
-      getMatchPart(predicate),
-      getMatchPart(object),
+      mapMatchToExt(subject),
+      mapMatchToExt(predicate),
+      mapMatchToExt(object),
     );
 
     return Array.from(res).map((x): Algebra.TripleObject => ({
-      subject: x.subject.value,
-      predicate: x.predicate.value,
-      object: x.object.value,
+      subject: mapExtToString(x.subject),
+      predicate: mapExtToString(x.predicate),
+      object: mapExtToString(x.object),
     }));
   }
   clear(): Promise<void> {

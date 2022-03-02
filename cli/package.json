@@ -1,6 +1,6 @@
 {
   "name": "soya-cli",
-  "version": "0.14.15",
+  "version": "0.14.16",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,7 +37,7 @@
     "find-root": "^1.1.0",
     "node-jq": "^2.0.0",
     "open": "^8.4.0",
-    "soya-js": "^0.3.5",
+    "soya-js": "^0.3.6",
     "winston": "^3.3.3"
   }
 }
