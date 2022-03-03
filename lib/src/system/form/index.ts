@@ -117,11 +117,13 @@ class FormBuilder {
             OPTIONAL { ?shprop sh:in ?in . }
           }`);
 
+        let minCount: number = 0;
         if (shaclConstraintList[0]) {
           const shaclConstraint = shaclConstraintList[0];
 
-          const minCount = shaclConstraint.get('?minCount');
-          if (minCount && parseInt(minCount) >= 1)
+          const _minCount = shaclConstraint.get('?minCount');
+
+          if (_minCount && (minCount = parseInt(_minCount)) >= 1)
             schema.required.push(propName);
 
           const maxLength = shaclConstraint.get('?maxLength');
@@ -143,6 +145,10 @@ class FormBuilder {
           }`);
 
         if (multiItems.length !== 0) {
+          if (minCount >= 1) {
+            propSchema.type = 'array';
+            propSchema.uniqueItems = true;
+          }
           propSchema.enum = multiItems.map(x => x.get('?entry')).filter(x => !!x) as string[]; // `as` is safe
         }
 
