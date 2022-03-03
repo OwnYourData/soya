@@ -7,9 +7,16 @@ import { JsonSchema, Layout, SoyaForm } from "./interfaces";
 
 export * from './interfaces';
 
+const splitLast = (value: string | undefined, split: string): string | undefined => {
+  if (!value)
+    return value;
+  
+  const arr = value.split(split);
+  return arr[arr.length - 1];
+}
+
 const getLastUriPart = (uri: string): string | undefined => {
-  const split = uri.split('/');
-  return split[split.length - 1];
+  return splitLast(splitLast(uri, '/'), '#');
 }
 
 interface FormBuilderOptions {
