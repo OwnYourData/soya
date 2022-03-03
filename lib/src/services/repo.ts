@@ -15,6 +15,7 @@ export interface SoyaQuery {
 }
 
 export interface SoyaInfo {
+  name: string;
   dri: string;
   history: {
     schema: string;
@@ -97,7 +98,13 @@ export class RepoService {
     return this.get(`/api/soya/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
   }
 
-  info = async (path: string): Promise<SoyaInfo> => {
-    return this.get(`/${path}/info`, false);
+  // TODO: check if interface is still applicable (SoyaInfo)
+  async info (path: string[]): Promise<SoyaInfo[]>;
+  async info (path: string): Promise<SoyaInfo>;
+  async info (path: string | string[]): Promise<SoyaInfo | SoyaInfo[]> {
+    if (Array.isArray(path))
+      return this.post(`/api/soya/info`, false, path);
+    else
+      return this.get(`/${path}/info`, false);
   }
 }
