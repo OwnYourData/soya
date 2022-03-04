@@ -1,4 +1,4 @@
-import { Soya, Errors } from "soya-js";
+import { Soya, Errors, SoyaDocument } from "soya-js";
 import { logNiceConsole } from ".";
 import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";
@@ -161,6 +161,20 @@ const query = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not query repo!');
   }
 }
+const canonical = async (_: any[], soya: Soya): Promise<void> => {
+  try {
+    const input = await Std.in();
+
+    if (!input)
+      return exitWithError('No input JSON-LD specified!');
+
+    const jsonLd = JSON.parse(input) as SoyaDocument;
+
+    logNiceConsole(await soya.toCanonical(jsonLd));
+  } catch {
+    return exitWithError('Could not get canonical form!');
+  }
+}
 
 export const systemCommands: {
   [key: string]: (params: Array<any>, soya: Soya) => Promise<void>,
@@ -176,4 +190,5 @@ export const systemCommands: {
   playground,
   'calculate-dri': calculateDri,
   query,
+  canonical,
 };

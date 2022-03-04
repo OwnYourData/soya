@@ -126,6 +126,10 @@ export class Soya {
     return this.service.query(query);
   }
 
+  toCanonical = async (soyaDoc: SoyaDocument): Promise<string> => {
+    const dataset = await parseJsonLd(soyaDoc);
+    return dataset.toCanonical();
+  }
 
   async info(path: string[]): Promise<SoyaInfo[]>;
   async info(path: string): Promise<SoyaInfo>;
