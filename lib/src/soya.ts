@@ -126,8 +126,16 @@ export class Soya {
     return this.service.query(query);
   }
 
-  info = async (path: string): Promise<SoyaInfo> => {
-    return this.service.info(path);
+  toCanonical = async (soyaDoc: SoyaDocument): Promise<string> => {
+    const dataset = await parseJsonLd(soyaDoc);
+    return dataset.toCanonical();
+  }
+
+  async info(path: string[]): Promise<SoyaInfo[]>;
+  async info(path: string): Promise<SoyaInfo>;
+  async info(path: string | string[]): Promise<SoyaInfo | SoyaInfo[]> {
+    // @ts-expect-error ts does not get this although it's correct
+    return await this.service.info(path);
   }
 
   calculateDri = async (content: any): Promise<CalculationResult> => {

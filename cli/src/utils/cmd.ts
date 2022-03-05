@@ -241,6 +241,22 @@ const printPlaygroundHelp = () => {
     getGeneralOptions(),
   ]))
 }
+const printCanonicalHelp = () => {
+  console.log(commandLineUsage([
+    {
+      header: 'Description',
+      content: 'Derives canonical form from JSON-LD form',
+    },
+    {
+      header: 'Usage',
+      content: [
+        '$ cat input.json | soya canonical',
+        '$ soya pull <name | DRI> | soya canonical',
+      ]
+    },
+    getGeneralOptions(),
+  ]))
+}
 
 export const printCliHelp = async (command?: string): Promise<never> => {
   if (!command)
@@ -270,6 +286,9 @@ export const printCliHelp = async (command?: string): Promise<never> => {
         break;
       case 'playground':
         printPlaygroundHelp();
+        break;
+      case 'canonical':
+        printCanonicalHelp();
         break;
       default:
         if (getCommands().indexOf(command) !== -1)
