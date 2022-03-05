@@ -11,6 +11,22 @@ This tutorial introduces the use of `soya`.
 * [Working with Instances](#3-working-with-instances)
 * [Editing SOyA Instances in HTML Forms](#4-editing-soya-instances-in-html-forms)
 
+## Prequisites
+
+To execute commands in the steps below make sure to have the following tools installed:    
+* `soya`: download and installation instructions [available here](https://github.com/OwnYourData/soya/tree/main/cli)    
+* `jq`: download and installation instructions [available here](https://stedolan.github.io/jq/download/)    
+* `jolt`: download and installation instructions [available here](https://github.com/bazaarvoice/jolt/)
+
+Alternatively, you can use a ready-to-use Docker image with all tools pre-installed: [https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli). Use the following command to start the image:    
+
+```console
+docker run -it --rm -v ~/.soya:/home/user oydeu/soya-cli
+```
+
+*Note:* since it makes sense to keep private keys and revocation information beyond a Docker session a directory is mounted in the container to persist files; create a local directory, `mkdir ~/.oydid`
+
+
 ## 1. Describing Data Models in YAML
 
 ### `meta` and `bases` Section
