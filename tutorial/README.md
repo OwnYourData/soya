@@ -1,8 +1,8 @@
 # SOyA 🌱 Tutorial
 
-*latest update: 6 February 2022*
+*latest update: 6 March 2022*
 
-This tutorial introduces the use of `soya`.
+This tutorial introduces the use of **S**emantic **O**verla**y** **A**rchitecture.
 
 **Content**    
 
@@ -24,12 +24,67 @@ Alternatively, you can use a ready-to-use Docker image with all tools pre-instal
 docker run -it --rm -v ~/.soya:/home/user oydeu/soya-cli
 ```
 
-*Note:* since it makes sense to keep private keys and revocation information beyond a Docker session a directory is mounted in the container to persist files; create a local directory, `mkdir ~/.oydid`
+*Note:* since it makes sense to keep data beyond a Docker session, a directory is mounted in the container to persist files; create this local directory with the command `mkdir ~/.soya`
 
 
 ## 1. Describing Data Models in YAML
 
 ### `meta` and `bases` Section
+
+Start with creating a very simple data model for a person that only has the 2 attributes `firstname` and `lastname`:
+
+Example: [`person_simple.yml`](examples/person_simple.yml)
+```yaml
+meta:
+  name: Person
+
+content:
+  bases:
+    - name: Person 
+      attributes:
+        firstname: String
+        lastname: String
+```
+
+The 2 main sections in the YML file are `meta` (providing the name) and `content`. In this simple example the `content` includes only 1 `base` (or data model), namely the class `Person` with the attributes `firstname` and `lastname`.
+
+Use the command `soya init` to create a JSON-LD document from the yml input file:
+```bash
+cat person_simple.yml | soya init
+```
+<details>
+	<summary>Output</summary>
+
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Person/"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "firstname",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "lastname",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}
+```
+
+</details>
 
 #### Attributes
 
