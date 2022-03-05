@@ -13,9 +13,7 @@ This tutorial introduces the use of `soya`.
 
 ## 1. Describing Data Models in YAML
 
-### `meta` Section
-
-### `bases` Section
+### `meta` and `bases` Section
 
 #### Attributes
 

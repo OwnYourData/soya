@@ -40,6 +40,7 @@ COPY --chown=user:user --from=node_builder /app/*.json /usr/src/app/
 COPY --chown=user:user --from=java_builder /app/jolt/cli/target/jolt-cli-0.1.6-SNAPSHOT.jar /usr/src/app/jolt
 WORKDIR /usr/src/app
 COPY --chown=user:user ./docker ./docker
+COPY profile /etc/profile
 ENV NODE_ENV=development
 RUN npm install --only=prod && \
     npm run bin && \
