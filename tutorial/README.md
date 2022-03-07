@@ -189,6 +189,8 @@ curl -s https://playground.data-container.net/employee | jq -r .yml | soya init
 }
 ```
 
+</details>
+
 #### Classes
 
 * `subClassOf`    
@@ -265,6 +267,8 @@ curl -s https://playground.data-container.net/foaf_person | jq -r .yml | soya in
   ]
 }
 ```
+
+</details>
 
 * Indentation    
 
