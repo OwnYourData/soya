@@ -1,9 +1,0 @@
-meta:
-  name: Person
-
-content:
-  bases:
-    - name: Person 
-      attributes:
-        firstname: String
-        lastname: String
