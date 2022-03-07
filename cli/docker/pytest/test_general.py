@@ -1,7 +1,16 @@
 import pytest
 import os
+import sys
 import glob
+import requests
 import subprocess
+from pathlib import Path
+
+repo = "https://soya.data-container.net"
+
+def test_repo():
+    response = requests.get(repo + "/api/active")
+    assert response.status_code == 200
 
 # doc: https://pypi.org/project/pytest-subprocess/
 cwd = os.getcwd()

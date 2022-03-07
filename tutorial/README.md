@@ -18,7 +18,10 @@ To execute commands in the steps below make sure to have the following tools ins
 * `jq`: download and installation instructions [available here](https://stedolan.github.io/jq/download/)    
 * `jolt`: download and installation instructions [available here](https://github.com/bazaarvoice/jolt/)
 
-Alternatively, you can use a ready-to-use Docker image with all tools pre-installed: [https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli). Use the following command to start the image:    
+Alternatively, you can use a ready-to-use Docker image with all tools pre-installed:    
+[https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli) 
+
+Use the following command to start the image:    
 
 ```console
 docker run -it --rm -v ~/.soya:/home/user oydeu/soya-cli
@@ -55,6 +58,11 @@ cat person_simple.yml | soya init
 <details>
 	<summary>Output</summary>
 
+Use the following command to generate the output:    
+```bash
+curl -s https://playground.data-container.net/person_simple | jq -r .yml | soya init
+```
+
 ```json-ld
 {
   "@context": {
@@ -88,9 +96,176 @@ cat person_simple.yml | soya init
 
 #### Attributes
 
+Attributes are single fields in a base with a name and an associated type. The associated type can be one of the predefined values (`Boolean`, `Integer`, `Float`, `String`, `Date`) or reference another base. The following example provides the description of an employee demonstrating the use of various attributes.
+
+```yaml
+meta:
+  name: Employee
+
+content:
+  bases:
+    - name: Employee
+      attributes:
+        name: String
+        dateOfBirth: Date
+        management: Boolean
+        salary: Float
+        employer: Company
+    - name: Company
+      attributes:
+        company: String
+        staff_count: Integer
+```
+
+<details>
+  <summary>Output</summary>
+
+Use the following command to generate the output:    
+```bash
+curl -s https://playground.data-container.net/employee | jq -r .yml | soya init
+```
+
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Employee/"
+  },
+  "@graph": [
+    {
+      "@id": "Employee",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "management",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:boolean"
+    },
+    {
+      "@id": "salary",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:float"
+    },
+    {
+      "@id": "employer",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "Company"
+    },
+    {
+      "@id": "Company",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "company",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Company",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "staff_count",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Company",
+      "range": "xsd:integer"
+    }
+  ]
+}
+```
+
 #### Classes
 
 * `subClassOf`    
+
+To inherit properties from another existing class you can use `subClassOf` within a base. In the following example we inherit `Person` from `Agent` (which in turn is inherited from the class with the same name in the [FOAF Ontology](https://en.wikipedia.org/wiki/FOAF_(ontology)) - also note referencing the foaf namespace in the `meta` section at the top:
+
+```yaml
+meta:
+  name: Foaf
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  bases:
+    - name: Agent
+      subClassOf: foaf:agent
+    - name: Person
+      subClassOf: 
+        - Agent
+      attributes:
+        firstName: String
+        lastName: String
+        did: string
+```
+
+
+<details>
+  <summary>Output</summary>
+
+Use the following command to generate the output:    
+```bash
+curl -s https://playground.data-container.net/foaf_person | jq -r .yml | soya init
+```
+
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Foaf/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "@graph": [
+    {
+      "@id": "Agent",
+      "@type": "owl:Class",
+      "subClassOf": "foaf:agent"
+    },
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": [
+        "Agent"
+      ]
+    },
+    {
+      "@id": "firstName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "lastName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "did",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}
+```
+
 * Indentation    
 
 ### `overlays` Section

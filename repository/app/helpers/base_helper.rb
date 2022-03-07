@@ -34,18 +34,21 @@ module BaseHelper
     end
 
     def createDriVersion(input)
+        begin
 puts "in createDriVersion"
-        base_url = input["@context"]["@base"] rescue ""
+            base_url = input["@context"]["@base"] rescue ""
 puts "base_url: " + base_url.to_s
-        input["@context"].delete("@base") rescue nil
-        raw = iterate(JSON.parse(input.to_json_c14n)).to_json_c14n
-        dri = Multibases.pack("base58btc", Multihashes.encode(Digest::SHA256.digest(raw), "sha2-256").unpack('C*')).to_s
-        raw = JSON.parse(raw)
-        raw["@context"]["@base"] = base_url.split('/')[0..-2].join("/") + "/" + dri + "/"
+            input["@context"].delete("@base") rescue nil
+            raw = iterate(JSON.parse(input.to_json_c14n)).to_json_c14n
+            dri = Multibases.pack("base58btc", Multihashes.encode(Digest::SHA256.digest(raw), "sha2-256").unpack('C*')).to_s
+            raw = JSON.parse(raw)
+            raw["@context"]["@base"] = base_url.split('/')[0..-2].join("/") + "/" + dri + "/"
 puts "raw------------"
 puts raw.to_json
 puts "------------"
-
+        rescue
+            return input
+        end
         return raw
     end
 
