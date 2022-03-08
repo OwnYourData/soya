@@ -7,12 +7,16 @@ from pathlib import Path
 
 cwd = os.getcwd()
 repo = "https://soya.data-container.net"
+playgrond = "https://playground.data-container.net"
 
-def test_repo():
+# ensure SOyA Repo and Playground are available
+def test_repos():
     response = requests.get(repo + "/api/active")
     assert response.status_code == 200
+    response = requests.get(playgrond + "/api/active")
+    assert response.status_code == 200
 
-# Tutorial tests
+# Tutorial tests with some input and jsonld output
 @pytest.mark.parametrize('input', ["person_simple", "employee", "foaf_person", "rest_api"])
 def test_tutorial01(fp, input):
     fp.allow_unregistered(True)
