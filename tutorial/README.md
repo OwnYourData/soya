@@ -462,8 +462,6 @@ curl -s https://playground.data-container.net/rest_api | jq -r .yml | soya init
 
 #### Transformation
 
-### Using Templages
-
 ## 2. Publishing Structures
 
 ### Transform YAML to JSON-LD (`soya init`)
