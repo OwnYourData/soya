@@ -36,6 +36,24 @@ soya-cli is also available from [npmjs.com](https://www.npmjs.com/package/soya-c
 npm install -g soya-cli@latest
 ```
 
+## Build Docker image
+
+To package soya-cli with additional tools (jq, jolt, and [OYDID](https://ownyourdata.github.io/oydid/)) in a ready-to-use Docker container run the following command in the `cli` directory:    
+
+```bash
+./build.sh
+```
+
+The current `oydeu/soya-cli` Docker image is available here: https://hub.docker.com/r/oydeu/soya-cli
+
+### Verify with automated tests    
+
+Use the following command to run the automated tests in the `oydeu/soya-cli` Docker image:    
+
+```bash
+docker run -it --rm -w /usr/src/app/docker/pytest oydeu/soya-cli pytest
+```
+
 ## Run soya-cli
 
 Use `soya --help` or `soya -h` to get more information about soya-cli.

@@ -516,4 +516,4 @@ If you want to contribute, please follow these steps:
 
 ## Lizenz
 
-[MIT License 2021 - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)
+[MIT License 2022 - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)
