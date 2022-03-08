@@ -13,7 +13,7 @@ def test_repo():
     assert response.status_code == 200
 
 # Tutorial tests
-@pytest.mark.parametrize('input', ["person_simple", "employee", "foaf_person"])
+@pytest.mark.parametrize('input', ["person_simple", "employee", "foaf_person", "rest_api"])
 def test_tutorial01(fp, input):
     fp.allow_unregistered(True)
     cmd = "curl -s https://playground.data-container.net/" + input + " | jq -r .yml | soya init"

@@ -3,4 +3,5 @@ docker run --rm -v $(pwd):/data jplimce/bikeshed:3.2.0 bikeshed spec /data/index
 file:///Users/christoph/semcon/soya/docs/index.html
 
 # test docker image
-docker run -it --rm -w /usr/src/app/docker/test oydeu/soya-cli:latest /usr/src/app/docker/test/run.sh
+docker run -it --rm -w /usr/src/app/docker/pytest oydeu/soya-cli:alpha pytest
+#docker run -it --rm -w /usr/src/app/docker/test oydeu/soya-cli:latest /usr/src/app/docker/test/run.sh
