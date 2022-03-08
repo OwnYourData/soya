@@ -493,3 +493,27 @@ curl -s https://playground.data-container.net/rest_api | jq -r .yml | soya init
 ### Configure Forms Rendering
 
 ### Semantic Container and SOyA
+
+
+&nbsp;    
+
+## SOyA Tutorial Issues
+
+Please report bugs and suggestions for new features in the tutorial using the [GitHub Issue-Tracker](https://github.com/OwnYourData/soya/issues) and follow the [Contributor Guidelines](https://github.com/twbs/ratchet/blob/master/CONTRIBUTING.md).
+
+All examples in this tutorial are automated using [`pytest`](https://pypi.org/project/pytest/) - check out [test_tutorial.py](https://github.com/OwnYourData/soya/blob/main/tutorial/test_tutorial.py).    
+
+If you want to contribute, please follow these steps:
+
+1. Fork it!
+2. Create a feature branch: `git checkout -b my-new-feature`
+3. Make sure all examples are included in [test_tutorial.py](https://github.com/OwnYourData/soya/blob/main/tutorial/test_tutorial.py)
+4. Commit changes: `git commit -am 'Add some feature'`
+5. Push into branch: `git push origin my-new-feature`
+6. Send a Pull Request
+
+&nbsp;    
+
+## Lizenz
+
+[MIT License 2021 - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)
