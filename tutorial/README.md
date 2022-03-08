@@ -193,9 +193,7 @@ curl -s https://playground.data-container.net/employee | jq -r .yml | soya init
 
 </details>
 
-#### Classes
-
-* **`subClassOf`**    
+#### `subClassOf`
 
 To inherit properties from another existing class you can use `subClassOf` within a base. In the following example we inherit `Person` from `Agent` (which in turn is inherited from the class with the same name in the [FOAF Ontology](https://en.wikipedia.org/wiki/FOAF_(ontology)) - also note referencing the foaf namespace in the `meta` section at the top:
 
@@ -271,7 +269,7 @@ curl -s https://playground.data-container.net/foaf_person | jq -r .yml | soya in
 
 </details>
 
-* **Indentation**    
+#### Indentation    
 
 `subClassOf` provides a powerful way to inherit properties from any parent class. With `subClasses` and indentation data model authors can implicitly define nested data structures as shown in the next example: `GET`, `POST`, `PUT`, and `DELETE` are subclasses of `Service` and inherit the `endpoint` property.
 
