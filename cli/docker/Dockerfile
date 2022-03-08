@@ -30,6 +30,9 @@ RUN addgroup -S user && \
     gem install securerandom httparty ed25519 multibases multihashes multicodecs optparse rbnacl dag uri && \
     gem install json-canonicalization -v 0.2.1 && \
     apk del make gcc musl-dev && \
+    apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && \
+    python3 -m ensurepip && \
+    pip3 install --no-cache --upgrade pip setuptools && \
     wget https://raw.githubusercontent.com/OwnYourData/oydid/main/cli/oydid.rb -O /usr/local/bin/oydid && \
     chmod 755 /usr/local/bin/oydid && \
     mkdir -p /usr/src/app/jolt
