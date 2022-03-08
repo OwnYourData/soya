@@ -62,8 +62,12 @@ export class RepoService {
     return res;
   }
 
+  private _pullCache: { [path: string]: any } = {};
   pull = async (path: string): Promise<any> => {
-    return this.get(`/${path}`, false);
+    if (this._pullCache[path])
+      return this._pullCache[path];
+    else
+      return this._pullCache[path] = await this.get(`/${path}`, false);
   }
 
   private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
@@ -99,9 +103,9 @@ export class RepoService {
   }
 
   // TODO: check if interface is still applicable (SoyaInfo)
-  async info (path: string[]): Promise<SoyaInfo[]>;
-  async info (path: string): Promise<SoyaInfo>;
-  async info (path: string | string[]): Promise<SoyaInfo | SoyaInfo[]> {
+  async info(path: string[]): Promise<SoyaInfo[]>;
+  async info(path: string): Promise<SoyaInfo>;
+  async info(path: string | string[]): Promise<SoyaInfo | SoyaInfo[]> {
     if (Array.isArray(path))
       return this.post(`/api/soya/info`, false, path);
     else
