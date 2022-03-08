@@ -12,7 +12,7 @@
   * [`jolt`](https://github.com/bazaarvoice/jolt)
 * Fast prototyping with quick links to [JSON-LD Playground](https://json-ld.org/playground/)
 
-## Installation
+## Install and build from source
 
 Install all dependencies with node package manager (npm)
 
@@ -25,6 +25,15 @@ npm run build
 
 # register soya-cli in path
 npm run bin
+```
+
+## Install from npmjs.com
+
+soya-cli is also available from [npmjs.com](https://www.npmjs.com/package/soya-cli) as a prebuilt package that can be installed with:
+
+```bash
+# install or update soya-cli globally with -g
+npm install -g soya-cli@latest
 ```
 
 ## Run soya-cli
