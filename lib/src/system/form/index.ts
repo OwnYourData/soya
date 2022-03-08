@@ -10,7 +10,7 @@ export * from './interfaces';
 const splitLast = (value: string | undefined, split: string): string | undefined => {
   if (!value)
     return value;
-  
+
   const arr = value.split(split);
   return arr[arr.length - 1];
 }
@@ -35,6 +35,25 @@ class FormBuilder {
       type: 'VerticalLayout',
       elements: [],
     };
+  }
+
+  private _getTranslatedProperty = async (propUri: string, predicate: string): Promise<string | undefined> => {
+    const language = this.options.language ?? 'en';
+    const query = await this._builder.query(`
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT * WHERE {
+        <${propUri}> ${predicate} ?var .
+        FILTER(lang(?var) = "${language}")
+      }`);
+
+    if (query[0])
+      return query[0].get('?var')
+        // split off language tag
+        ?.split('@')[0]
+        // remove leading and trailing quotes
+        ?.slice(1, -1) || undefined;
+    else
+      return;
   }
 
   private _handleClass = async (
@@ -166,19 +185,17 @@ class FormBuilder {
         };
         layout.elements.push(element);
 
-        const labelQuery = await this._builder.query(`
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT * WHERE {
-          <${propUri}> rdfs:label ?label .
-          FILTER(lang(?label) = "${this.options.language || 'en'}")
-        }`);
-        if (labelQuery[0])
-          // @ts-expect-error FIXME: label is not recognized, probably an error in official types
-          element.label = labelQuery[0].get('?label')
-            // split off language tag
-            ?.split('@')[0]
-            // remove leading and trailing quotes
-            ?.slice(1, -1) || undefined;
+        // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+        element.label = await this._getTranslatedProperty(
+          propUri,
+          'rdfs:label',
+        );
+
+        // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+        element.description = await this._getTranslatedProperty(
+          propUri,
+          'rdfs:comment',
+        );
       }
     }
 
