@@ -6,7 +6,7 @@ This tutorial introduces the use of **S**emantic **O**verla**y** **A**rchitectur
 
 **<a id="top"></a>Content**    
 
-* [Describing Data Models in YAML](#1-describe-data-model-in-yaml)
+* [Describing Data Models in YAML](#1-describing-data-models-in-yaml)
 * [Publishing Structures](#2-publishing-structures)
 * [Working with Instances](#3-working-with-instances)
 * [Editing SOyA Instances in HTML Forms](#4-editing-soya-instances-in-html-forms)
