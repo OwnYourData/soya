@@ -1,0 +1,37 @@
+# based on: https://rapidapi.com/blog/api-glossary/payload/
+meta:
+  name: RESTful
+  context: https://ns.ownyourdata.eu/ns/soya-context.json 
+
+content:
+  bases: 
+    - name: Service
+      attributes:
+        endpoint: String
+      subClasses:
+        - name: GET
+          attributes:
+            responsePayload: ResponsePayload
+        - name: POST
+          attributes:
+            requestPayload: RequestPayload
+            responsePayload: ResponsePayload
+        - name: PUT
+          attributes:
+            requestPayload: RequestPayload
+        - name: DELETE
+    - name: RequestPayload
+      attributes:
+        interfaceType: String
+        methodName: String
+        parameters: String
+    - name: ResponsePayload
+      attributes:
+        responseType: String
+      subClasses:
+        - name: ResponsePayloadFailed
+          attributes:
+            messages: String
+        - name: ResponsePayloadOK
+          attributes:
+            data: String

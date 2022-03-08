@@ -4,7 +4,7 @@
 
 This tutorial introduces the use of **S**emantic **O**verla**y** **A**rchitecture.
 
-**Content**    
+**<a id="top"></a>Content**    
 
 * [Describing Data Models in YAML](#1-describe-data-model-in-yaml)
 * [Publishing Structures](#2-publishing-structures)
@@ -15,20 +15,22 @@ This tutorial introduces the use of **S**emantic **O**verla**y** **A**rchitectur
 
 To execute commands in the steps below make sure to have the following tools installed:    
 * `soya`: download and installation instructions [available here](https://github.com/OwnYourData/soya/tree/main/cli)    
+    TL;DR: just run `npm i -g soya-cli@latest` or update with `npm update -g soya-cli`
 * `jq`: download and installation instructions [available here](https://stedolan.github.io/jq/download/)    
 * `jolt`: download and installation instructions [available here](https://github.com/bazaarvoice/jolt/)
 
 Alternatively, you can use a ready-to-use Docker image with all tools pre-installed:    
 [https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli) 
 
-Use the following command to start the image:    
+> Use the following command to start the image:    
+> 
+> ```console
+> docker run -it --rm -v ~/.soya:/home/user oydeu/soya-cli
+> ```
+> 
+> *Note:* since it makes sense to keep data beyond a Docker session, a directory is mounted in the container to persist files; create this local directory with the command `mkdir ~/.soya`
 
-```console
-docker run -it --rm -v ~/.soya:/home/user oydeu/soya-cli
-```
-
-*Note:* since it makes sense to keep data beyond a Docker session, a directory is mounted in the container to persist files; create this local directory with the command `mkdir ~/.soya`
-
+[back to top ↑](#top)
 
 ## 1. Describing Data Models in YAML
 
@@ -193,7 +195,7 @@ curl -s https://playground.data-container.net/employee | jq -r .yml | soya init
 
 #### Classes
 
-* `subClassOf`    
+* **`subClassOf`**    
 
 To inherit properties from another existing class you can use `subClassOf` within a base. In the following example we inherit `Person` from `Agent` (which in turn is inherited from the class with the same name in the [FOAF Ontology](https://en.wikipedia.org/wiki/FOAF_(ontology)) - also note referencing the foaf namespace in the `meta` section at the top:
 
@@ -215,7 +217,6 @@ content:
         lastName: String
         did: string
 ```
-
 
 <details>
   <summary>Output</summary>
@@ -270,7 +271,182 @@ curl -s https://playground.data-container.net/foaf_person | jq -r .yml | soya in
 
 </details>
 
-* Indentation    
+* **Indentation**    
+
+`subClassOf` provides a powerful way to inherit properties from any parent class. With `subClasses` and indentation data model authors can implicitly define nested data structures as shown in the next example: `GET`, `POST`, `PUT`, and `DELETE` are subclasses of `Service` and inherit the `endpoint` property.
+
+```yaml
+# based on: https://rapidapi.com/blog/api-glossary/payload/
+meta:
+  name: RESTful
+  context: https://ns.ownyourdata.eu/ns/soya-context.json 
+
+content:
+  bases: 
+    - name: Service
+      attributes:
+        endpoint: String
+      subClasses:
+        - name: GET
+          attributes:
+            responsePayload: ResponsePayload
+        - name: POST
+          attributes:
+            requestPayload: RequestPayload
+            responsePayload: ResponsePayload
+        - name: PUT
+          attributes:
+            requestPayload: RequestPayload
+        - name: DELETE
+    - name: RequestPayload
+      attributes:
+        interfaceType: String
+        methodName: String
+        parameters: String
+    - name: ResponsePayload
+      attributes:
+        responseType: String
+      subClasses:
+        - name: ResponsePayloadFailed
+          attributes:
+            messages: String
+        - name: ResponsePayloadOK
+          attributes:
+            data: String
+```
+
+<details>
+  <summary>Output</summary>
+
+Use the following command to generate the output:    
+```bash
+curl -s https://playground.data-container.net/rest_api | jq -r .yml | soya init
+```
+
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/RESTful/"
+  },
+  "@graph": [
+    {
+      "@id": "Service",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "endpoint",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "GET",
+      "@type": "owl:Class",
+      "subClassOf": "Service"
+    },
+    {
+      "@id": "responsePayload",
+      "@type": "owl:DatatypeProperty",
+      "domain": "GET",
+      "range": "ResponsePayload"
+    },
+    {
+      "@id": "POST",
+      "@type": "owl:Class",
+      "subClassOf": "Service"
+    },
+    {
+      "@id": "requestPayload",
+      "@type": "owl:DatatypeProperty",
+      "domain": "POST",
+      "range": "RequestPayload"
+    },
+    {
+      "@id": "responsePayload",
+      "@type": "owl:DatatypeProperty",
+      "domain": "POST",
+      "range": "ResponsePayload"
+    },
+    {
+      "@id": "PUT",
+      "@type": "owl:Class",
+      "subClassOf": "Service"
+    },
+    {
+      "@id": "requestPayload",
+      "@type": "owl:DatatypeProperty",
+      "domain": "PUT",
+      "range": "RequestPayload"
+    },
+    {
+      "@id": "DELETE",
+      "@type": "owl:Class",
+      "subClassOf": "Service"
+    },
+    {
+      "@id": "RequestPayload",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "interfaceType",
+      "@type": "owl:DatatypeProperty",
+      "domain": "RequestPayload",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "methodName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "RequestPayload",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "parameters",
+      "@type": "owl:DatatypeProperty",
+      "domain": "RequestPayload",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "ResponsePayload",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "responseType",
+      "@type": "owl:DatatypeProperty",
+      "domain": "ResponsePayload",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "ResponsePayloadFailed",
+      "@type": "owl:Class",
+      "subClassOf": "ResponsePayload"
+    },
+    {
+      "@id": "messages",
+      "@type": "owl:DatatypeProperty",
+      "domain": "ResponsePayloadFailed",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "ResponsePayloadOK",
+      "@type": "owl:Class",
+      "subClassOf": "ResponsePayload"
+    },
+    {
+      "@id": "data",
+      "@type": "owl:DatatypeProperty",
+      "domain": "ResponsePayloadOK",
+      "range": "xsd:string"
+    }
+  ]
+}
+```
+
+</details>
 
 ### `overlays` Section
 
