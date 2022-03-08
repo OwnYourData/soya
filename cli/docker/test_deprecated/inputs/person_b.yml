@@ -1,0 +1,48 @@
+meta:
+  name: PersonB
+
+content:
+  base: 
+    - name: PersonB
+      attributes:
+        first_name: String
+        surname: String
+        birthdate: Date
+        gender: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: PersonB
+      name: PersonBValidationOverlay
+      attributes:
+        surname: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[A-Za-z ,.'-]+$"
+        birthdate:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..*]"
+        gender:
+          cardinality: "0..1"
+          valueOption:
+            - male
+            - female
+    - type: OverlayTransformation
+      name: TransformationOverlay_jq
+      base: PersonA
+      engine: jq
+      value: |
+        .["@graph"] | 
+        {
+          "@context": {
+            "@version":1.1,
+            "@vocab":"https://soya.data-container.net/PersonB/"},
+          "@graph": map( 
+            {"@id":.["@id"], 
+            "@type":"PersonB", 
+            "first_name":.["basePerson:firstname"], 
+            "surname":.["basePerson:lastname"], 
+            "birthdate":.["basePerson:dateOfBirth"], 
+            "gender":.["basePerson:sex"]}
+          )
+        }

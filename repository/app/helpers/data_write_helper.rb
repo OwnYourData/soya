@@ -70,6 +70,7 @@ module DataWriteHelper
             end
             Store.transaction do
                 input.each do |item|
+                    orig_item = item.deep_dup
                     mime_type = "application/json"
                     if item["content"].to_s != ""
                         item = item["content"]
@@ -91,43 +92,98 @@ puts "name: " + soya_name.to_s
 puts "base name: " + base_name.to_s
                     @record = Store.find_by_dri(soya_name)
                     if soya_name.to_s == "" || @record.nil?
-                        @record = Store.new(
-                            item: item.to_json, 
-                            dri: soya_name,
-                            table_name: base_name,
-                            soya_name: soya_name)
-                        @record.save
+                        if base_name.to_s == ""
+
+puts "Content =========="
+puts orig_item.to_json
+                            # this is an instance
+                            content = orig_item
+                            dri = nil
+                            if content["dri"].to_s != ""
+                                dri = content["dri"].to_s
+                            end
+                            @record = Store.find_by_dri(dri)
+                            if dri.nil? || @record.nil?
+                                schema_dri = nil
+                                if content["schema_dri"].to_s != ""
+                                    schema_dri = content["schema_dri"].to_s
+                                end
+                                if content["table_name"].to_s != ""
+                                    table_name = content["table_name"].to_s
+                                end
+                                mime_type = "application/json"
+                                if content["mime_type"].to_s != ""
+                                    mime_type = content["mime_type"].to_s
+                                end
+                                if content["content"].to_s != ""
+                                    content = content["content"]
+                                end
+                                @record = Store.new(
+                                    item: content.to_json, 
+                                    prov_id: prov_id, 
+                                    dri: dri, 
+                                    schema_dri: schema_dri, 
+                                    mime_type: mime_type,
+                                    table_name: table_name)
+                                @record.save
+                            else                                
+                                if content["schema_dri"].to_s != ""
+                                    @record.update_attributes(schema_dri: content["schema_dri"].to_s)
+                                end
+                                if content["table_name"].to_s != ""
+                                    @record.update_attributes(table_name: content["table_name"].to_s)
+                                end
+                                if content["mime_type"].to_s != ""
+                                    @record.update_attributes(mime_type: content["mime_type"].to_s)
+                                end
+                                if content["content"].to_s != ""
+                                    @record.update_attributes(item: content["content"].to_json)
+                                else
+                                    @record.update_attributes(item: content.to_json)
+                                end
+                            end
+                        else
+                            @record = Store.new(
+                                item: item.to_json, 
+                                dri: soya_name,
+                                table_name: base_name,
+                                soya_name: soya_name)
+                            @record.save
+                        end
                     else
                         @record.update_attributes(item: item.to_json, dri: soya_name, table_name: base_name, soya_name: soya_name)
                     end
                     new_items << @record.id
 
+                    # assumption: instances don't have a base_name => therefore, only SOyA structures will create a 2nd version
+                    if base_name.to_s != ""
 puts "write DRIzed record"
-                    dri_item = updateOnBase(item.deep_dup)
-                    dri_item = createDriVersion(dri_item)
-                    dri = calculateDri(dri_item.deep_dup)
-                    base_name = getBaseName(dri_item)
-                    if base_name == ""
-                        base_name = dri
-                    end
+                        dri_item = updateOnBase(item.deep_dup)
+                        dri_item = createDriVersion(dri_item)
+                        dri = calculateDri(dri_item.deep_dup)
+                        base_name = getBaseName(dri_item)
+                        if base_name == ""
+                            base_name = dri
+                        end
 puts "DRI: " + dri.to_s
 puts "base name: " + base_name.to_s
 puts dri_item.to_json
 
-                    @record_dri = Store.find_by_dri(dri)
-                    if dri.nil? || @record_dri.nil?
-                        @record_dri = Store.new(
-                            item: dri_item.to_json, 
-                            dri: dri,
-                            table_name: base_name,
-                            soya_name: soya_name,
-                            soya_dri: dri)
-                        @record_dri.save
-                    else
-                        @record_dri.update_attributes(item: dri_item.to_json, dri: dri, soya_name: soya_name, table_name: base_name, soya_dri: dri.to_s)
+                        @record_dri = Store.find_by_dri(dri)
+                        if dri.nil? || @record_dri.nil?
+                            @record_dri = Store.new(
+                                item: dri_item.to_json, 
+                                dri: dri,
+                                table_name: base_name,
+                                soya_name: soya_name,
+                                soya_dri: dri)
+                            @record_dri.save
+                        else
+                            @record_dri.update_attributes(item: dri_item.to_json, dri: dri, soya_name: soya_name, table_name: base_name, soya_dri: dri.to_s)
+                        end
+                        @record.update_attributes(soya_dri: dri.to_s)
+                        new_items << @record_dri.id
                     end
-                    @record.update_attributes(soya_dri: dri.to_s)
-                    new_items << @record_dri.id
                 end
             end
         end

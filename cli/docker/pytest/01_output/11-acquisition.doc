@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.data-container.net/Employee/"
+  },
+  "@graph": [
+    {
+      "@type": "Employee",
+      "name": "Christoph Fabianek",
+      "dateOfBirth": "1977-07-21",
+      "gender": "male",
+      "employer": [
+        {
+          "@type": "Company",
+          "Company": "OwnYourdata",
+          "country": "Austria"
+        }
+      ]
+    }
+  ]
+}

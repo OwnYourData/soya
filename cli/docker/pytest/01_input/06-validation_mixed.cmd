@@ -1,0 +1,1 @@
+curl -k -s "https://playground.data-container.net/Person2instance" | soya validate Person_Test

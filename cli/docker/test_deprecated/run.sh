@@ -16,6 +16,7 @@ if ! cmp -s tmp.doc checks/push_overlay.txt ; then
 	exit 1
 fi
 
+# 03-person_overlay:
 soya pull PersonOverlay_Test > tmp.doc
 if ! cmp -s tmp.doc inputs/person_overlay.jsonld ; then
 	echo "error: validating overlay layer after push failed"
@@ -25,8 +26,7 @@ fi
 echo "passed: pushing from YML"
 rm tmp.doc
 
-
-# test validating flat JSON
+# 04-flat_json: test validating flat JSON
 echo '{"hello": "world"}' | soya validate Person_Test > tmp.doc
 if ! cmp -s tmp.doc checks/flat.txt ; then
 	echo "error: validating flat JSON failed"
@@ -37,7 +37,7 @@ else
 fi
 rm tmp.doc
 
-# test validation overlay
+# 05-validation_overlay: test validation overlay
 curl -k -s "https://playground.data-container.net/Person2instance_test" | soya validate Person_Test > tmp.doc
 if ! cmp -s tmp.doc checks/invalidPerson.json ; then
 	echo "error: invalidPerson validation failed"
@@ -46,6 +46,7 @@ if ! cmp -s tmp.doc checks/invalidPerson.json ; then
 fi
 rm tmp.doc
 
+# 06-valdidation_mixed
 curl -k -s "https://playground.data-container.net/Person2instance" | soya validate Person_Test > tmp.doc
 if ! cmp -s tmp.doc checks/mixedPersonClasses.json ; then
 	echo "error: mixed Person classes validation failed"
@@ -54,6 +55,7 @@ if ! cmp -s tmp.doc checks/mixedPersonClasses.json ; then
 fi
 rm tmp.doc
 
+# 07-validation_valid
 curl -k -s "https://playground.data-container.net/PersonValid" | soya validate Person_Test > tmp.doc
 if ! cmp -s tmp.doc checks/validPerson.json ; then
 	echo "error: validPerson validation failed"
@@ -65,10 +67,12 @@ fi
 rm tmp.doc
 
 # test transformation overlay
+# 08x-transformation_setup
 cat inputs/person_a.yml | soya init | soya push > /dev/null
 cat inputs/person_b.yml | soya init | soya push > /dev/null
 cat inputs/person_b_jolt.yml | soya init | soya push > /dev/null
 
+# 09-transformation_jq
 curl -k -s https://playground.data-container.net/PersonAinstance | soya transform PersonB | soya validate PersonB > tmp.doc
 if ! cmp -s tmp.doc checks/PersonBjq.json ; then
 	echo "error: transform with jq failed"
@@ -77,6 +81,7 @@ if ! cmp -s tmp.doc checks/PersonBjq.json ; then
 fi
 rm tmp.doc
 
+# 10-transform_jolt
 curl -k -s https://playground.data-container.net/PersonAinstance | soya transform PersonBjolt | soya validate PersonB > tmp.doc
 if ! cmp -s tmp.doc checks/PersonBjolt.json ; then
 	echo "error: transform with jolt failed"
@@ -87,7 +92,7 @@ else
 fi
 rm tmp.doc
 
-# test acquistion
+# 11-acquisition: test acquistion
 curl -k -s https://playground.data-container.net/cfa | soya acquire Employee > tmp.doc
 if ! cmp -s tmp.doc checks/acquire.jsonld ; then
 	echo "error: acquire failed"
@@ -95,6 +100,7 @@ if ! cmp -s tmp.doc checks/acquire.jsonld ; then
 	exit 1
 fi
 
+# 11a-acquisition
 cat inputs/team.json | soya acquire Employee > tmp.doc
 if ! cmp -s tmp.doc checks/acquire_array.jsonld ; then
 	echo "error: acquire array failed"
@@ -105,6 +111,7 @@ else
 fi
 rm tmp.doc
 
+# 12-instance_push
 cat inputs/team.json | soya acquire Employee | soya push --repo https://playground.data-container.net | jq '.["responses"]' > tmp.doc
 if ! cmp -s tmp.doc checks/instance.json ; then
 	echo "error: pushing instance failed"
