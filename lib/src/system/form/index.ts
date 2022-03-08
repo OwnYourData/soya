@@ -19,7 +19,7 @@ const getLastUriPart = (uri: string): string | undefined => {
   return splitLast(splitLast(uri, '/'), '#');
 }
 
-interface FormBuilderOptions {
+export interface FormBuilderOptions {
   language?: string;
 }
 
@@ -218,7 +218,7 @@ class FormBuilder {
     // FIXME: This query does unfortunately not work
     // although it does work within graphDB
     // Therefore we have to go the manual, programmatic way ...
-    
+
     // get all available languages
     // const langQuery = await this._builder.query(`
     // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
