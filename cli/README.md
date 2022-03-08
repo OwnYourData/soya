@@ -38,7 +38,7 @@ npm install -g soya-cli@latest
 
 ## Build Docker image
 
-To package soya-cli with additional tools (jq, jolt, and [OYDID](https://ownyourdata.github.io/oydid/)) in a ready-to-use Docker container run the following command in the `cli` directory:    
+To package soya-cli with additional tools ([jq](https://stedolan.github.io/jq/), [jolt](https://github.com/bazaarvoice/jolt/), and [OYDID](https://ownyourdata.github.io/oydid/)) in a ready-to-use Docker container run the following command in the `cli` directory:    
 
 ```bash
 ./build.sh
