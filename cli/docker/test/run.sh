@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# test pushing a YML
+# 01-person_test: test pushing a YML
 cat inputs/person_test.yml | soya init | soya push > tmp.doc
 if ! cmp -s tmp.doc checks/push.txt ; then
 	echo "error: pushing base layer from YML failed"
@@ -8,6 +8,7 @@ if ! cmp -s tmp.doc checks/push.txt ; then
 	exit 1
 fi
 
+# 02-person_validation:
 cat inputs/person_validation_test.yml | soya init | soya push > tmp.doc
 if ! cmp -s tmp.doc checks/push_overlay.txt ; then
 	echo "error: pushing overlay layer from YML failed"

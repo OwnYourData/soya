@@ -1,0 +1,16 @@
+meta:
+  name: Employee
+
+content:
+  bases:
+    - name: Employee
+      attributes:
+        name: String
+        dateOfBirth: Date
+        management: Boolean
+        salary: Float
+        employer: Company
+    - name: Company
+      attributes:
+        company: String
+        staff_count: Integer

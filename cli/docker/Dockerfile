@@ -27,9 +27,13 @@ MAINTAINER "Christoph Fabianek" christoph@ownyourdata.eu
 RUN addgroup -S user && \
     adduser -S user -G user && \
     apk add --no-cache libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
-    gem install securerandom httparty ed25519 multibases multihashes multicodecs optparse rbnacl dag uri && \
+    gem install httparty ed25519 multibases multihashes multicodecs optparse rbnacl dag uri && \
+    gem install securerandom -v 0.1.1 && \
     gem install json-canonicalization -v 0.2.1 && \
     apk del make gcc musl-dev && \
+    apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && \
+    python3 -m ensurepip && \
+    pip3 install --no-cache --upgrade pip setuptools pytest requests pytest-subprocess && \
     wget https://raw.githubusercontent.com/OwnYourData/oydid/main/cli/oydid.rb -O /usr/local/bin/oydid && \
     chmod 755 /usr/local/bin/oydid && \
     mkdir -p /usr/src/app/jolt
@@ -39,8 +43,8 @@ COPY --chown=user:user --from=node_builder /app/res /usr/src/app/res
 COPY --chown=user:user --from=node_builder /app/*.json /usr/src/app/
 COPY --chown=user:user --from=java_builder /app/jolt/cli/target/jolt-cli-0.1.6-SNAPSHOT.jar /usr/src/app/jolt
 WORKDIR /usr/src/app
+COPY ./docker/start.sh /usr/local/bin/start.sh
 COPY --chown=user:user ./docker ./docker
-ENV NODE_ENV=development
 RUN npm install --only=prod && \
     npm run bin && \
     chown -R user:user /usr/src/app && \
@@ -49,6 +53,5 @@ RUN npm install --only=prod && \
 
 USER user
 WORKDIR /home/user
-COPY docker/home .
+CMD ["/usr/local/bin/start.sh"]
 
-CMD ["bash"]

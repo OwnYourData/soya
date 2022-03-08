@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Foaf/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "@graph": [
+    {
+      "@id": "Agent",
+      "@type": "owl:Class",
+      "subClassOf": "foaf:agent"
+    },
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": [
+        "Agent"
+      ]
+    },
+    {
+      "@id": "firstName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "lastName",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "did",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    }
+  ]
+}

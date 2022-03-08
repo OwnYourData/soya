@@ -19,6 +19,7 @@ class DrisController < ApplicationController
 
     def info
         soya_dri = Store.find_by_dri(params[:dri].to_s).soya_dri rescue ""
+        soya_name = Store.find_by_dri(params[:dri].to_s).soya_name rescue ""
         # if soya_dri == ""
         #     soya_dri = Store.find_by_soya_name(params[:dri].to_s).soya_dri rescue ""
         # end
@@ -78,7 +79,7 @@ class DrisController < ApplicationController
                 end
             end unless graph == []
         end
-        render json: {"dri": soya_dri, "history": history, "bases": bases.uniq, "overlays": overlays.uniq},
+        render json: {"name": soya_name, "dri": soya_dri, "history": history, "bases": bases.uniq, "overlays": overlays.uniq},
                status: 200
     end
 
