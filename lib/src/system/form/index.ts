@@ -215,6 +215,33 @@ class FormBuilder {
       ui: this._ui,
     };
 
+    // FIXME: This query does unfortunately not work
+    // although it does work within graphDB
+    // Therefore we have to go the manual, programmatic way ...
+    
+    // get all available languages
+    // const langQuery = await this._builder.query(`
+    // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    // SELECT DISTINCT (lang(?label) as ?lang) WHERE {
+    //     ?shprop rdfs:label ?label .
+    // }`);
+    const langQuery = await this._builder.query(`
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?label WHERE {
+        ?shprop rdfs:label ?label .
+    }`);
+    if (langQuery.length !== 0)
+      retVal.languages = langQuery
+        .map(x => x.get('?label'))
+        .map(x => {
+          const s = x?.split('@');
+          if (s)
+            return s[s.length - 1];
+
+          return;
+        })
+        .filter((val, index, self) => !!val && self.indexOf(val) === index) as string[];
+
     return retVal;
   }
 }
