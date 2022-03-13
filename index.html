@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="698f052fcd2fa43a1662148e2eee53daa35b2f68" name="document-revision">
+  <meta content="4c41c0319a2adff61c86651597b6e59666f915bb" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-10">10 March 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-13">13 March 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -678,6 +678,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#acquisition"><span class="secno">3.3</span> <span class="content">Acquisition</span></a>
       <li><a href="#validation"><span class="secno">3.4</span> <span class="content">Validation</span></a>
       <li><a href="#transformation"><span class="secno">3.5</span> <span class="content">Transformation</span></a>
+      <li><a href="#forms"><span class="secno">3.6</span> <span class="content">Forms</span></a>
      </ol>
     <li>
      <a href="#tools"><span class="secno">4</span> <span class="content">Tools</span></a>
@@ -716,7 +717,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>Version 0.2: 28 February 2022 (current version)</p>
    </ul>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
-   <p>SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.</p>
+   <p>SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a libray for integration in other projects, a command line tool for interactive data model management, and an online repository for hosting data models.</p>
    <p align="center"> <img src="res/overview.png" width="800"><br> <em>Figure 1: Building blocks in SOyA</em> </p>
    <h3 class="heading settled" data-level="1.1" id="terminology"><span class="secno">1.1. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h3>
    <p>This document uses the following terms as defined in external specifications and defines terms specific to SOyA.</p>
@@ -733,7 +734,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <p>A <strong>D</strong>ecentralized <strong>R</strong>esource <strong>I</strong>dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash <a data-link-type="biblio" href="#biblio-multihash">[MULTIHASH]</a> (default: <code>sha2-256</code>) is used for hashing a JSON object and Multibase <a data-link-type="biblio" href="#biblio-multibase">[MULTIBASE]</a> (default: <code>base58-btc</code>) for encoding the hash value.</p>
      <dt data-md><dfn data-dfn-for="terms" data-dfn-type="dfn" data-export id="terms-instance">Instance<a class="self-link" href="#terms-instance"></a></dfn>
      <dd data-md>
-      <p>is a record conforming to a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
+      <p>is a data record (e.g. an data describing an employee) with a set of properties as defined in a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base①">Base</a> or <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures">Structure</a><br> <em>in RDF:</em> instance of an RDF Class</p>
      <dt data-md><dfn class="dfn-paneled" data-dfn-for="terms" data-dfn-type="dfn" data-export data-lt="overlay|overlays|Overlays" id="terms-overlay">Overlay</dfn>
      <dd data-md>
       <p>additional information about a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base②">Base</a><br> <em>in RDF:</em> annotation properties attached to an RDF Class or Property</p>
@@ -773,7 +774,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </ul>
    <p align="center"> <img src="res/components.png" width="800"><br> <em>Figure 2: SOyA Components</em> </p>
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structures</span><a class="self-link" href="#structure_element"></a></h3>
-   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay①">overlays</a>) in SOyA are declared is a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
+   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay①">overlays</a>) in SOyA are declared in a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
    <ul>
     <li data-md>
      <p>meta</p>
@@ -1042,7 +1043,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>name</p>
     <li data-md>
-     <p>subClassOf</p>
+     <p>subClassOf (optional)</p>
     <li data-md>
      <p>list of attribute names and associated type</p>
    </ul>
@@ -1136,7 +1137,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>Format:</strong> defines how data is presented to the user</p>
     <li data-md>
-     <p><strong>Transformation:</strong> define for each element in a structure how it should be transformed</p>
+     <p><strong>Transformation:</strong> define a set of transformation rules for a data record</p>
     <li data-md>
      <p><strong>Validation:</strong> predefined entries, range selection, any other validation incl. input methods</p>
    </ul>
@@ -1271,17 +1272,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h4 class="heading settled" data-level="2.2.1" id="rdfs_owl"><span class="secno">2.2.1. </span><span class="content">Data Model: RDFS/OWL</span><a class="self-link" href="#rdfs_owl"></a></h4>
    <p>A SOyA structure is designed to comply with the semantic web standards (i.e., RDFS/OWL) for data model representations. The goal is to ensure compatibility and reusability of SOyA data and data models with the established semantic web technology stack, e.g., SOLID and schema.org, as well as opening up the possibility to use relevant tools and methods, e.g., SHACL, RML, Triplestores. Furthermore, this decision would allow for higher interoperability with the currently available linked (open) data.</p>
    <h4 class="heading settled" data-level="2.2.2" id="jsonld"><span class="secno">2.2.2. </span><span class="content">Data Serialization: JSON-LD</span><a class="self-link" href="#jsonld"></a></h4>
-   <p>We chose <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> as the default serialization in SOyA for the following reasons:
-i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future    
+   <p>We chose <a data-link-type="biblio" href="#biblio-json-ld">[JSON-LD]</a> as the default serialization in SOyA for the following reasons:</p>
+   <p>i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future
 ii) Rich supports of tools    
 iii) Ease of use by both developers and knowledge engineers    
 iv) Compatibility to RDF</p>
    <p>Furthermore, tools supporting JSON data manipulation and visualizations are widely available.</p>
+   <p>With the above stated it is also important to note that it is possible to support with SOyA also other serialization formats like Turtle, N-Quads, or even Labeled Property Graphs.</p>
    <h3 class="heading settled" data-level="2.3" id="sw-stack"><span class="secno">2.3. </span><span class="content">SW Stack</span><a class="self-link" href="#sw-stack"></a></h3>
    <p>SOyA integrates with a number of established tools to provide its functionalities.</p>
    <h4 class="heading settled" data-level="2.3.1" id="shacl"><span class="secno">2.3.1. </span><span class="content">SHACL</span><a class="self-link" href="#shacl"></a></h4>
    <p>SHACL (Shapes Constraint Language) is a language for validating RDF graphs against a set of conditions - find <a href="https://www.w3.org/TR/shacl/">more information here</a>. It is used in Validation overlays.</p>
-   <p>*Note: use the <a href="https://jqplay.org/">online jq Playground</a> to test your transformation*</p>
+   <p><em>Note: use the <a href="https://shacl-playground.zazuko.com/">online SHACL Playground</a> to test your validations</em></p>
    <div class="example" id="shacl_example">
     <a class="self-link" href="#shacl_example"></a> A validation overlay example with SHACL notation. 
     <div class="tab">
@@ -1381,8 +1383,8 @@ iv) Compatibility to RDF</p>
     </div>
    </div>
    <h4 class="heading settled" data-level="2.3.2" id="jq"><span class="secno">2.3.2. </span><span class="content">jq</span><a class="self-link" href="#jq"></a></h4>
-   <p><code>jq</code> is a lightweight and flexible command-line JSON processor - find <a href="https://stedolan.github.io/jq/">more information here</a>. It is used in Transformation overlays.</p>
-   <p>*Note: use the <a href="http://jolt-demo.appspot.com/#inception">online Jolt Transformation Demo</a> to test your transformation*</p>
+   <p><code>jq</code> is a lightweight and flexible command-line JSON processor - find <a href="https://stedolan.github.io/jq/">more information here</a>. It can be used in Transformation overlays.</p>
+   <p><em>Note: use the <a href="https://jqplay.org/">online jq playground</a> to test your jq transformation</em></p>
    <div class="example" id="jq_example">
     <a class="self-link" href="#jq_example"></a> A transformation overlay example using jq. 
     <div class="tab">
@@ -1448,7 +1450,8 @@ iv) Compatibility to RDF</p>
     </div>
    </div>
    <h4 class="heading settled" data-level="2.3.3" id="jolt"><span class="secno">2.3.3. </span><span class="content">Jolt</span><a class="self-link" href="#jolt"></a></h4>
-   <p>Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document. It is used in Transformation overlays.</p>
+   <p>Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document - find <a href="https://github.com/bazaarvoice/jolt/#jolt">more information here</a>. It can be used in Transformation overlays.</p>
+   <p><em>Note: use the <a href="http://jolt-demo.appspot.com/#inception">online Jolt Transformation Demo</a> to test your jolt transformation</em></p>
    <div class="example" id="jolt_example">
     <a class="self-link" href="#jolt_example"></a> A transformation overlay example using Jolt. 
     <div class="tab">
@@ -1547,13 +1550,13 @@ iv) Compatibility to RDF</p>
      <p>nesting: use intendation to implicitly use <code>subClassOf</code> property</p>
    </ul>
    <h3 class="heading settled" data-level="3.2" id="publishing"><span class="secno">3.2. </span><span class="content">Publishing</span><a class="self-link" href="#publishing"></a></h3>
-   <p>An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the <a href="#cli">SOyA CLI</a> provides a number of functions to interact with a repository. A default, public repository is hosted at <code>soya.ownyourdata.eu</code> with the <a href="https://api-docs.ownyourdata.eu/soya/">OpenAPI Specification available</a>. Private repositories can be hosted using <a href="https://github.com/OwnYourData/soya/tree/main/repository">sources on Github</a> or <a href="https://hub.docker.com/r/oydeu/soya-base">pre-build Docker images</a>.</p>
+   <p>An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the <a href="#cli">SOyA CLI</a> provides a number of functions to interact with a repository. A default, public repository is hosted at <code>soya.ownyourdata.eu</code> with the <a href="https://api-docs.ownyourdata.eu/soya/">OpenAPI Specification available</a>. Private repositories can be hosted using <a href="https://github.com/OwnYourData/soya/tree/main/repository">sources on Github</a> or <a href="https://hub.docker.com/r/oydeu/soya-base">pre-built Docker images</a>.</p>
    <p><strong>Specific Publishing Functions:</strong></p>
    <ul>
     <li data-md>
      <p><code>soya push</code> reads a valid SOyA structure from STDIN and stores it in the repository</p>
     <li data-md>
-     <p>every SOyA structure is stored can be access through the defined human-readable name and is additionally stored using a content-based address (<a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a>); the human-readable version can be overwritten by a new version while the content-based address is kept unchanged</p>
+     <p>every stored SOyA structure can be accessed through the defined human-readable name and is additionally available using a content-based address (<a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris①">DRI</a>); the human-readable version can be overwritten by a new version, while the version with the content-based address is kept unchanged and continues to be available for interoperability</p>
     <li data-md>
      <p><code>soya pull</code> retrieves the specified SOyA structures and writes to STDOUT</p>
     <li data-md>
@@ -1643,6 +1646,13 @@ iv) Compatibility to RDF</p>
 <pre>curl -s https://playground.data-container.net/PersonAinstance | soya transform PersonB
 </pre>
    </div>
+   <h3 class="heading settled" data-level="3.6" id="forms"><span class="secno">3.6. </span><span class="content">Forms</span><a class="self-link" href="#forms"></a></h3>
+   <p>For data capture and general editing of records SOyA allows to render forms using the <a href="https://jsonforms.io/">JSON-Forms framework</a>.</p>
+   <div class="example" id="forms_feature_example">
+    <a class="self-link" href="#forms_feature_example"></a> An example command to generate a form for a SOyA structure. 
+<pre>soya form Employee
+</pre>
+   </div>
    <h2 class="heading settled" data-level="4" id="tools"><span class="secno">4. </span><span class="content">Tools</span><a class="self-link" href="#tools"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="library"><span class="secno">4.1. </span><span class="content"><code>soya-js</code> Library</span><a class="self-link" href="#library"></a></h3>
    <p><a href="https://github.com/OwnYourData/soya/tree/main/lib">soya-js</a> provides interfaces in JavaScript for handling SOyA structures and interacting with SOyA respositories.</p>
@@ -1660,7 +1670,7 @@ iv) Compatibility to RDF</p>
     <li data-md>
      <p>Data transformation using popular <a href="https://stedolan.github.io/jq/">jq</a> processor</p>
     <li data-md>
-     <p>Forms generation based on SOyA structures using <a href="https://jsonforms.io/">JSONForms</a> (React, Angular, Vue)</p>
+     <p>Forms generation based on SOyA structures using <a href="https://jsonforms.io/">JSONForms</a> (React, Angular, Vue, and other UI toolkits)</p>
    </ul>
    <h3 class="heading settled" data-level="4.2" id="cli"><span class="secno">4.2. </span><span class="content">Command Line Tool</span><a class="self-link" href="#cli"></a></h3>
    <p>The Command Line Tool provides a set of utilities for handling SOyA structures and interacting with SOyA respositories.</p>
