@@ -18,8 +18,7 @@ const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson
       PREFIX base: <${base}>
       SELECT ?o WHERE {
         base:${prop} rdfs:range ?o .
-      }
-      `)
+      }`);
 
       if (refClasses[0]) {
         const refClass = refClasses[0].get('?o');
@@ -58,17 +57,10 @@ export const flat2ld = async (flatJson: any, soyaStructure: SoyaDocument): Promi
     const mainClasses = await builder.query(`
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX base: <${base}>
+    PREFIX soya: <https://w3id.org/soya/ns#>
     SELECT ?s WHERE {
-      ?s rdfs:subClassOf base:Base .
-    }
-    `);
-    // const mainClass = dataSet.match(
-    //   undefined,
-    //   namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-    //   namedNode('http://www.w3.org/2002/07/owl#Class'),
-    // ).toArray()[0];
-
+      ?s rdfs:subClassOf soya:Base .
+    }`);
 
     const mainClass = mainClasses[0];
     if (mainClass) {
