@@ -89,7 +89,7 @@ This specification is not a W3C Standard nor is it on the W3C Standards Track. L
 Introduction {#intro}
 ============
 
-SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a command line tool and an online repository for hosting these data models.
+SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a libray for integration in other projects, a command line tool for interactive data model management, and an online repository for hosting data models.
 
 <p align="center">
   <img src="res/overview.png" width="800"><br>
@@ -115,7 +115,7 @@ This document uses the following terms as defined in external specifications and
     :: A **D**ecentralized **R**esource **I**dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash [[MULTIHASH]] (default: `sha2-256`) is used for hashing a JSON object and Multibase [[MULTIBASE]] (default: `base58-btc`) for encoding the hash value.
 
     : <dfn>Instance</dfn>
-    :: is a record conforming to a [=terms/Base=] or [=terms/Structure=]<br>
+    :: is a data record (e.g. an data describing an employee) with a set of properties as defined in a [=terms/Base=] or [=terms/Structure=]<br>
             *in RDF:* instance of an RDF Class
 
     : <dfn lt=overlay|overlays|Overlays>Overlay</dfn>
@@ -160,7 +160,7 @@ The Semantic Overlay Architecture (SOyA) is built on the following core componen
 Structures {#structure_element}
 ----------
 
-All artefacts ([=terms/bases=] and [=terms/overlays=]) in SOyA are declared is a [=terms/structure=] and it holds the following information:
+All artefacts ([=terms/bases=] and [=terms/overlays=]) in SOyA are declared in a [=terms/structure=] and it holds the following information:
 * meta    
     * name    
     * context    
@@ -185,7 +185,7 @@ The `meta` section in a structure defines the name of the structure, specifies a
 
 A [=terms/base=] declares a dataset and holds the following information:
 * name
-* subClassOf
+* subClassOf (optional)
 * list of attribute names and associated type
 
 When a base is represented in RDF it is a class with one or more properties. Each property itself is a single data type or an object property referencing another base. `subClassOf` optionally allows to inherit properties/attributes from other existing classes.  Multiple bases can be combined in a structure for related concepts.
@@ -207,7 +207,7 @@ Overlays provide addtional information for a defined base. This information can 
 * **Classification:** select a subset of the attributes (e.g., personally identifiable information - PII, configuring list views)    
 * **Encoding:** specify the character set encoding used in storing the data of an instance (e.g., UTF-8)    
 * **Format:** defines how data is presented to the user    
-* **Transformation:** define for each element in a structure how it should be transformed    
+* **Transformation:** define a set of transformation rules for a data record    
 * **Validation:** predefined entries, range selection, any other validation incl. input methods    
 
 It is possible to create additional overlay types by using another context.
@@ -232,12 +232,15 @@ A SOyA structure is designed to comply with the semantic web standards (i.e., RD
 ### Data Serialization: JSON-LD ### {#jsonld}
 
 We chose [[JSON-LD]] as the default serialization in SOyA for the following reasons:    
+
 i) JSON-LD status as a W3C recommendation ensures a stable standard for the foreseeable future    
 ii) Rich supports of tools    
 iii) Ease of use by both developers and knowledge engineers    
 iv) Compatibility to RDF    
 
 Furthermore, tools supporting JSON data manipulation and visualizations are widely available.
+
+With the above stated it is also important to note that it is possible to support with SOyA also other serialization formats like Turtle, N-Quads, or even Labeled Property Graphs.
 
 
 SW Stack {#sw-stack}
@@ -249,7 +252,7 @@ SOyA integrates with a number of established tools to provide its functionalitie
 
 SHACL (Shapes Constraint Language) is a language for validating RDF graphs against a set of conditions - find [more information here](https://www.w3.org/TR/shacl/). It is used in Validation overlays.
 
-*Note: use the [online jq Playground](https://jqplay.org/) to test your transformation*
+<em>Note: use the [online SHACL Playground](https://shacl-playground.zazuko.com/) to test your validations</em>
 
 <div class=example id=shacl_example>
 A validation overlay example with SHACL notation.
@@ -261,9 +264,9 @@ path: examples/shacl.html
 
 ### jq ### {#jq}
 
-`jq` is a lightweight and flexible command-line JSON processor - find [more information here](https://stedolan.github.io/jq/). It is used in Transformation overlays.
+`jq` is a lightweight and flexible command-line JSON processor - find [more information here](https://stedolan.github.io/jq/). It can be used in Transformation overlays.
 
-*Note: use the [online Jolt Transformation Demo](http://jolt-demo.appspot.com/#inception) to test your transformation*
+<em>Note: use the [online jq playground](https://jqplay.org/) to test your jq transformation</em>
 
 <div class=example id=jq_example>
 A transformation overlay example using jq.
@@ -275,7 +278,9 @@ path: examples/jq.html
 
 ### Jolt ### {#jolt}
 
-Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document. It is used in Transformation overlays.
+Jolt is a library for JSON to JSON transformation where the "specification" for the transform is itself a JSON document - find [more information here](https://github.com/bazaarvoice/jolt/#jolt). It can be used in Transformation overlays.
+
+<em>Note: use the [online Jolt Transformation Demo](http://jolt-demo.appspot.com/#inception) to test your jolt transformation</em>
 
 <div class=example id=jolt_example>
 A transformation overlay example using Jolt.
@@ -308,12 +313,12 @@ SOyA as authoring platform for data models allows to describe a dataset using a 
 Publishing {#publishing}
 ----------
 
-An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the [SOyA CLI](#cli) provides a number of functions to interact with a repository. A default, public repository is hosted at `soya.ownyourdata.eu` with the [OpenAPI Specification available](https://api-docs.ownyourdata.eu/soya/). Private repositories can be hosted using [sources on Github](https://github.com/OwnYourData/soya/tree/main/repository) or [pre-build Docker images](https://hub.docker.com/r/oydeu/soya-base).
+An important aspect of SOyA is the collaboration on developing data models. A repository to host SOyA structures is an integral part of the workflow and the [SOyA CLI](#cli) provides a number of functions to interact with a repository. A default, public repository is hosted at `soya.ownyourdata.eu` with the [OpenAPI Specification available](https://api-docs.ownyourdata.eu/soya/). Private repositories can be hosted using [sources on Github](https://github.com/OwnYourData/soya/tree/main/repository) or [pre-built Docker images](https://hub.docker.com/r/oydeu/soya-base).
 
 **Specific Publishing Functions:**    
 
 * `soya push` reads a valid SOyA structure from STDIN and stores it in the repository    
-* every SOyA structure is stored can be access through the defined human-readable name and is additionally stored using a content-based address ([=terms/DRI=]); the human-readable version can be overwritten by a new version while the content-based address is kept unchanged    
+* every stored SOyA structure can be accessed through the defined human-readable name and is additionally available using a content-based address ([=terms/DRI=]); the human-readable version can be overwritten by a new version, while the version with the content-based address is kept unchanged and continues to be available for interoperability   
 * `soya pull` retrieves the specified SOyA structures and writes to STDOUT    
 * `soya similar` compares a valid SOyA structure read from STDIN with other structures in the repository and displays the top 20 matching structures in decreasing order of similarity    
 * `soya info` show detailed information (bases, overlays, history, DRI version) for a specifed SOyA structure    
@@ -347,7 +352,7 @@ curl -s https://playground.data-container.net/cfa | soya acquire Employee | soya
 
 
 Transformation {#transformation}
-----------
+--------------
 
 Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation [=terms/overlay=]. (Currently, [jq](#jq) and [Jolt](#jolt) are available engines for transformation overlays.)
 
@@ -358,6 +363,18 @@ curl -s https://playground.data-container.net/PersonAinstance | soya transform P
 </pre>
 </div>
 
+
+Forms {#forms}
+-----
+
+For data capture and general editing of records SOyA allows to render forms using the [JSON-Forms framework](https://jsonforms.io/).
+
+<div class=example id=forms_feature_example>
+An example command to generate a form for a SOyA structure.
+<pre>
+soya form Employee
+</pre>
+</div>
 
 Tools {#tools}
 =====
@@ -373,7 +390,7 @@ Tools {#tools}
 * Data validation through [\SHACL](https://www.w3.org/TR/shacl/)
 * Data acquisition (transforming flat JSON data into rich JSON-LD data)
 * Data transformation using popular [jq](https://stedolan.github.io/jq/) processor
-* Forms generation based on SOyA structures using [JSONForms](https://jsonforms.io/) (React, Angular, Vue)
+* Forms generation based on SOyA structures using [JSONForms](https://jsonforms.io/) (React, Angular, Vue, and other UI toolkits)
 
 
 Command Line Tool {#cli}

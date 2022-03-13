@@ -1,0 +1,26 @@
+{
+    "@context": {
+        "@version": 1.1,
+        "@vocab": "https://soya.data-container.net/UsagePolicy/",
+        "dpv": "http://www.w3.org/ns/dpv#",
+        "dpv:hasPersonalDataCategory": {
+            "@type": "@id"
+        },
+        "dpv:hasProcessing": {
+            "@type": "@id"
+        },
+        "dpv:hasPurpose": {
+            "@type": "@id"
+        },
+        "dpv:hasExpiryTime": {
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        }
+    },
+    "@graph": [{
+        "@type": "UsagePolicy",
+        "dpv:hasPersonalDataCategory": ["dpv:PersonalDataCategory"],
+        "dpv:hasProcessing": ["dpv:Processing"],
+        "dpv:hasPurpose": "dpv:Purpose",
+        "dpv:hasExpiryTime": "2022-01-27T14:00:00"
+    }]
+}
