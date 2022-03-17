@@ -367,7 +367,9 @@ curl -s https://playground.data-container.net/PersonAinstance | soya transform P
 Forms {#forms}
 -----
 
-For data capture and general editing of records SOyA allows to render forms using the [JSON-Forms framework](https://jsonforms.io/).
+Based on SOyA structures forms can be generated automatically, allowing for capture and editing of data records. While basic editing functionality relies on SOyA bases only, more complex forms can be achieved by providing additional overlays, like validation overlays for enhanced form validation. Furthermore, annotation overlays allow for internationalization of SOyA forms, providing multi-language display.    
+
+SOyA forms are based on the [JSON-Forms framework](https://jsonforms.io/) and therefore come with adapters for different UI libraries and frameworks, allowing for easy integration in already existing projects.
 
 <div class=example id=forms_feature_example>
 An example command to generate a form for a SOyA structure.
