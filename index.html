@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="4c41c0319a2adff61c86651597b6e59666f915bb" name="document-revision">
+  <meta content="66deed2bb2e73367f3d04e44ee5246d7121f8375" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-13">13 March 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-17">17 March 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1647,7 +1647,8 @@ iv) Compatibility to RDF</p>
 </pre>
    </div>
    <h3 class="heading settled" data-level="3.6" id="forms"><span class="secno">3.6. </span><span class="content">Forms</span><a class="self-link" href="#forms"></a></h3>
-   <p>For data capture and general editing of records SOyA allows to render forms using the <a href="https://jsonforms.io/">JSON-Forms framework</a>.</p>
+   <p>Based on SOyA structures forms can be generated automatically, allowing for capture and editing of data records. While basic editing functionality relies on SOyA bases only, more complex forms can be achieved by providing additional overlays, like validation overlays for enhanced form validation. Furthermore, annotation overlays allow for internationalization of SOyA forms, providing multi-language display.</p>
+   <p>SOyA forms are based on the <a href="https://jsonforms.io/">JSON-Forms framework</a> and therefore come with adapters for different UI libraries and frameworks, allowing for easy integration in already existing projects.</p>
    <div class="example" id="forms_feature_example">
     <a class="self-link" href="#forms_feature_example"></a> An example command to generate a form for a SOyA structure. 
 <pre>soya form Employee
