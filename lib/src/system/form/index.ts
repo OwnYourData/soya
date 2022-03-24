@@ -161,23 +161,71 @@ class FormBuilder {
             propSchema.pattern = pattern;
         }
 
-        const multiItems = await this._builder.query(`
-          PREFIX sh: <http://www.w3.org/ns/shacl#>
+        // TODO: unfortunately this query is SUPER SLOW for big graphs
+        // ... I mean, really really slow
+        // ... unlike this one https://www.youtube.com/watch?v=XeD_WB17NBc
+        // most probably this is due to the * operator
+
+        // const multiItems = await this._builder.query(`
+        //   PREFIX sh: <http://www.w3.org/ns/shacl#>
+        //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        //   SELECT * WHERE {
+        //       ?shprop sh:path ?propUri .
+        //       ?shprop sh:in ?in .
+        //       ?in rdf:rest*/rdf:first ?entry .
+        //   }`);
+
+        // BEGIN of ugly rewrite of above SPARQL query
+        const firstItem = await this._builder.query(`
+        PREFIX sh: <http://www.w3.org/ns/shacl#>
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           SELECT * WHERE {
-              ?shprop sh:path <${propUri}> .
-              ?shprop sh:in ?in .
-              ?in rdf:rest*/rdf:first ?entry .
+            ?shprop sh:path <${propUri}> .
+            ?shprop sh:in ?in .
+            ?in rdf:first ?entry .
           }`);
 
-        if (multiItems.length !== 0) {
+        const enumList: string[] = [];
+        if (firstItem.length !== 0) {
+          let item = firstItem[0];
+          const firstValue = item?.get('?entry');
+          
+          if (item && firstValue) {
+            enumList.push(firstValue);
+            
+            const subItems = await this._builder.query(`
+              PREFIX sh: <http://www.w3.org/ns/shacl#>
+              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+              SELECT * WHERE {   
+                ?in rdf:rest ?rest .
+                ?rest rdf:first ?first .
+              }`);
+              
+              let rest: string | null | undefined = item.get('?in');
+
+              // this resolves the chained list of rest and first
+              while (rest) {
+                const tempItem = subItems.find(x => x.get('?in') === rest);
+                const tempRest = tempItem?.get('?rest');
+                const value = tempItem?.get('?first');
+                
+              if (value)
+              enumList.push(value);
+              
+              rest = tempRest;
+            }
+          }
+        }
+        // END of ugly rewrite of above SPARQL query
+        
+        if (enumList.length !== 0) {
           if (minCount >= 1) {
             propSchema.type = 'array';
             propSchema.uniqueItems = true;
           }
-          propSchema.enum = multiItems.map(x => x.get('?entry')).filter(x => !!x) as string[]; // `as` is safe
+          propSchema.enum = enumList;
         }
-
+        
         const element: UISchemaElement = {
           type: 'Control',
           // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
