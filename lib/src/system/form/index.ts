@@ -123,13 +123,18 @@ class FormBuilder {
       } else {
         // it's something else (e.g. XML schema)
         // try to get hash from XML schema string
+        propSchema.type = 'string';
+
         switch (range.split('#')[1]) {
           case 'date':
-            propSchema.type = 'string';
             propSchema.format = 'date';
             break;
-          default:
-            propSchema.type = 'string';
+          case 'time':
+            propSchema.format = 'time';
+            break;
+          case 'dateTime':
+            propSchema.format = 'date-time';
+            break;
         }
 
         // see if we can get some information out of a SHACL shape
@@ -189,10 +194,10 @@ class FormBuilder {
         if (firstItem.length !== 0) {
           let item = firstItem[0];
           const firstValue = item?.get('?entry');
-          
+
           if (item && firstValue) {
             enumList.push(firstValue);
-            
+
             const subItems = await this._builder.query(`
               PREFIX sh: <http://www.w3.org/ns/shacl#>
               PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -200,24 +205,24 @@ class FormBuilder {
                 ?in rdf:rest ?rest .
                 ?rest rdf:first ?first .
               }`);
-              
-              let rest: string | null | undefined = item.get('?in');
 
-              // this resolves the chained list of rest and first
-              while (rest) {
-                const tempItem = subItems.find(x => x.get('?in') === rest);
-                const tempRest = tempItem?.get('?rest');
-                const value = tempItem?.get('?first');
-                
+            let rest: string | null | undefined = item.get('?in');
+
+            // this resolves the chained list of rest and first
+            while (rest) {
+              const tempItem = subItems.find(x => x.get('?in') === rest);
+              const tempRest = tempItem?.get('?rest');
+              const value = tempItem?.get('?first');
+
               if (value)
-              enumList.push(value);
-              
+                enumList.push(value);
+
               rest = tempRest;
             }
           }
         }
         // END of ugly rewrite of above SPARQL query
-        
+
         if (enumList.length !== 0) {
           if (minCount >= 1) {
             propSchema.type = 'array';
@@ -225,7 +230,7 @@ class FormBuilder {
           }
           propSchema.enum = enumList;
         }
-        
+
         const element: UISchemaElement = {
           type: 'Control',
           // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
