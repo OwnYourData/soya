@@ -20,6 +20,10 @@ content:
         sex:
           cardinality: "0..1"
           valueOption:
+            # with translation and explicit labels
+            - id: female
+              label:
+                en: Female
+                de: Weiblich
             - male
-            - female
             - other

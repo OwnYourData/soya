@@ -1,7 +1,7 @@
 import { UISchemaElement } from "@jsonforms/core";
 import { FormRenderError } from "../../errors";
 import { SoyaDocument } from "../../interfaces";
-import { parseJsonLd } from "../../utils/rdf";
+import { isIRI, parseJsonLd } from "../../utils/rdf";
 import { SparqlQueryBuilder } from "../../utils/sparql";
 import { JsonSchema, Layout, SoyaForm } from "./interfaces";
 
@@ -37,7 +37,10 @@ class FormBuilder {
     };
   }
 
-  private _getTranslatedProperty = async (propUri: string, predicate: string): Promise<string | undefined> => {
+  private _getTranslatedProperty = async (propUri: string, predicate: string = 'rdfs:label'): Promise<string | undefined> => {
+    if (!isIRI(propUri))
+      return;
+
     const language = this.options.language ?? 'en';
     const query = await this._builder.query(`
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -182,7 +185,7 @@ class FormBuilder {
 
         // BEGIN of ugly rewrite of above SPARQL query
         const firstItem = await this._builder.query(`
-        PREFIX sh: <http://www.w3.org/ns/shacl#>
+          PREFIX sh: <http://www.w3.org/ns/shacl#>
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           SELECT * WHERE {
             ?shprop sh:path <${propUri}> .
@@ -190,13 +193,25 @@ class FormBuilder {
             ?in rdf:first ?entry .
           }`);
 
-        const enumList: string[] = [];
+        // this enum format is defined by jsonforms
+        // however they don't seem to export an interface
+        const enumList: {
+          const: string,
+          title: string,
+        }[] = [];
+        const addEnumItem = async (value: string) => {
+          enumList.push({
+            const: value,
+            title: await this._getTranslatedProperty(value) ?? value,
+          });
+        }
+
         if (firstItem.length !== 0) {
           let item = firstItem[0];
           const firstValue = item?.get('?entry');
 
           if (item && firstValue) {
-            enumList.push(firstValue);
+            await addEnumItem(firstValue);
 
             const subItems = await this._builder.query(`
               PREFIX sh: <http://www.w3.org/ns/shacl#>
@@ -215,7 +230,7 @@ class FormBuilder {
               const value = tempItem?.get('?first');
 
               if (value)
-                enumList.push(value);
+                await addEnumItem(value);
 
               rest = tempRest;
             }
@@ -239,10 +254,7 @@ class FormBuilder {
         layout.elements.push(element);
 
         // @ts-expect-error FIXME: label is not recognized, probably an error in official types
-        element.label = await this._getTranslatedProperty(
-          propUri,
-          'rdfs:label',
-        );
+        element.label = await this._getTranslatedProperty(propUri);
 
         // @ts-expect-error FIXME: label is not recognized, probably an error in official types
         element.description = await this._getTranslatedProperty(
