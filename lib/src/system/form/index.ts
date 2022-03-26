@@ -199,10 +199,12 @@ class FormBuilder {
           const: string,
           title: string,
         }[] = [];
-        const addEnumItem = async (value: string) => {
+        const addEnumItem = async (valueOrIRI: string) => {
+          const _value = getLastUriPart(valueOrIRI) ?? valueOrIRI;
+
           enumList.push({
-            const: value,
-            title: await this._getTranslatedProperty(value) ?? value,
+            const: _value,
+            title: await this._getTranslatedProperty(valueOrIRI) ?? _value,
           });
         }
 
