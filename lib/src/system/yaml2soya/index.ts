@@ -38,10 +38,11 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
 
   for (const attrName in base.attributes) {
     const specifiedDataType = base.attributes[attrName];
-    const specifiedDataTypeLC = specifiedDataType.toLowerCase();
+    // for matching, also lowercase all xsTypes
+    const xsdIndex = xsTypes.map(x => x.toLowerCase()).indexOf(specifiedDataType.toLowerCase());
 
-    const dataType = xsTypes.indexOf(specifiedDataTypeLC) !== -1 ?
-      `xsd:${specifiedDataTypeLC}` :
+    const dataType = xsdIndex !== -1 ?
+      `xsd:${xsTypes[xsdIndex]}` :
       specifiedDataType;
 
     graph.push({
