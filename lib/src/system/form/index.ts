@@ -109,39 +109,48 @@ class FormBuilder {
 
       const propSchema: JsonSchema = schema.properties[propName] = {};
 
-      // check if URI exists as a graph object
-      const refRange = await this._builder.query(`
+      // we don't check URIs from w3.org for linked classes
+      // as they can be used as "primitive" data types
+      // e.g. owl:Class with an enumeration of possible classes
+      if (!range.startsWith('http://www.w3.org')) {
+        // check if URI exists as a graph object
+        const refRange = await this._builder.query(`
         SELECT * WHERE {
           <${range}> ?p ?o .
         }`);
 
-      if (refRange.length !== 0) {
-        // it's a graph object
-        // start recursion
-        schema.properties[propName] = await this._handleClass(
-          propName,
-          range,
-          `${layoutSubPath}${propName}/properties/`
-        );
-      } else {
-        // it's something else (e.g. XML schema)
-        // try to get hash from XML schema string
-        propSchema.type = 'string';
+        if (refRange.length !== 0) {
+          // it's a graph object
+          // start recursion
+          schema.properties[propName] = await this._handleClass(
+            propName,
+            range,
+            `${layoutSubPath}${propName}/properties/`
+          );
 
-        switch (range.split('#')[1]) {
-          case 'date':
-            propSchema.format = 'date';
-            break;
-          case 'time':
-            propSchema.format = 'time';
-            break;
-          case 'dateTime':
-            propSchema.format = 'date-time';
-            break;
+          // proceed with next property
+          continue;
         }
+      }
 
-        // see if we can get some information out of a SHACL shape
-        const shaclConstraintList = await this._builder.query(`
+      // it's something else (e.g. XML schema)
+      // try to get hash from XML schema string
+      propSchema.type = 'string';
+
+      switch (range.split('#')[1]) {
+        case 'date':
+          propSchema.format = 'date';
+          break;
+        case 'time':
+          propSchema.format = 'time';
+          break;
+        case 'dateTime':
+          propSchema.format = 'date-time';
+          break;
+      }
+
+      // see if we can get some information out of a SHACL shape
+      const shaclConstraintList = await this._builder.query(`
           PREFIX sh: <http://www.w3.org/ns/shacl#>
           SELECT * WHERE {
             ?shprop sh:path <${propUri}> .
@@ -151,40 +160,40 @@ class FormBuilder {
             OPTIONAL { ?shprop sh:in ?in . }
           }`);
 
-        let minCount: number = 0;
-        if (shaclConstraintList[0]) {
-          const shaclConstraint = shaclConstraintList[0];
+      let minCount: number = 0;
+      if (shaclConstraintList[0]) {
+        const shaclConstraint = shaclConstraintList[0];
 
-          const _minCount = shaclConstraint.get('?minCount');
+        const _minCount = shaclConstraint.get('?minCount');
 
-          if (_minCount && (minCount = parseInt(_minCount)) >= 1)
-            schema.required.push(propName);
+        if (_minCount && (minCount = parseInt(_minCount)) >= 1)
+          schema.required.push(propName);
 
-          const maxLength = shaclConstraint.get('?maxLength');
-          if (maxLength)
-            propSchema.maxLength = parseInt(maxLength);
+        const maxLength = shaclConstraint.get('?maxLength');
+        if (maxLength)
+          propSchema.maxLength = parseInt(maxLength);
 
-          const pattern = shaclConstraint.get('?pattern');
-          if (pattern)
-            propSchema.pattern = pattern;
-        }
+        const pattern = shaclConstraint.get('?pattern');
+        if (pattern)
+          propSchema.pattern = pattern;
+      }
 
-        // TODO: unfortunately this query is SUPER SLOW for big graphs
-        // ... I mean, really really slow
-        // ... unlike this one https://www.youtube.com/watch?v=XeD_WB17NBc
-        // most probably this is due to the * operator
+      // TODO: unfortunately this query is SUPER SLOW for big graphs
+      // ... I mean, really really slow
+      // ... unlike this one https://www.youtube.com/watch?v=XeD_WB17NBc
+      // most probably this is due to the * operator
 
-        // const multiItems = await this._builder.query(`
-        //   PREFIX sh: <http://www.w3.org/ns/shacl#>
-        //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        //   SELECT * WHERE {
-        //       ?shprop sh:path ?propUri .
-        //       ?shprop sh:in ?in .
-        //       ?in rdf:rest*/rdf:first ?entry .
-        //   }`);
+      // const multiItems = await this._builder.query(`
+      //   PREFIX sh: <http://www.w3.org/ns/shacl#>
+      //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      //   SELECT * WHERE {
+      //       ?shprop sh:path ?propUri .
+      //       ?shprop sh:in ?in .
+      //       ?in rdf:rest*/rdf:first ?entry .
+      //   }`);
 
-        // BEGIN of ugly rewrite of above SPARQL query
-        const firstItem = await this._builder.query(`
+      // BEGIN of ugly rewrite of above SPARQL query
+      const firstItem = await this._builder.query(`
           PREFIX sh: <http://www.w3.org/ns/shacl#>
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           SELECT * WHERE {
@@ -193,29 +202,29 @@ class FormBuilder {
             ?in rdf:first ?entry .
           }`);
 
-        // this enum format is defined by jsonforms
-        // however they don't seem to export an interface
-        const enumList: {
-          const: string,
-          title: string,
-        }[] = [];
-        const addEnumItem = async (valueOrIRI: string) => {
-          const _value = getLastUriPart(valueOrIRI) ?? valueOrIRI;
+      // this enum format is defined by jsonforms
+      // however they don't seem to export an interface
+      const enumList: {
+        const: string,
+        title: string,
+      }[] = [];
+      const addEnumItem = async (valueOrIRI: string) => {
+        const _value = getLastUriPart(valueOrIRI) ?? valueOrIRI;
 
-          enumList.push({
-            const: _value,
-            title: await this._getTranslatedProperty(valueOrIRI) ?? _value,
-          });
-        }
+        enumList.push({
+          const: _value,
+          title: await this._getTranslatedProperty(valueOrIRI) ?? _value,
+        });
+      }
 
-        if (firstItem.length !== 0) {
-          let item = firstItem[0];
-          const firstValue = item?.get('?entry');
+      if (firstItem.length !== 0) {
+        let item = firstItem[0];
+        const firstValue = item?.get('?entry');
 
-          if (item && firstValue) {
-            await addEnumItem(firstValue);
+        if (item && firstValue) {
+          await addEnumItem(firstValue);
 
-            const subItems = await this._builder.query(`
+          const subItems = await this._builder.query(`
               PREFIX sh: <http://www.w3.org/ns/shacl#>
               PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
               SELECT * WHERE {   
@@ -223,47 +232,46 @@ class FormBuilder {
                 ?rest rdf:first ?first .
               }`);
 
-            let rest: string | null | undefined = item.get('?in');
+          let rest: string | null | undefined = item.get('?in');
 
-            // this resolves the chained list of rest and first
-            while (rest) {
-              const tempItem = subItems.find(x => x.get('?in') === rest);
-              const tempRest = tempItem?.get('?rest');
-              const value = tempItem?.get('?first');
+          // this resolves the chained list of rest and first
+          while (rest) {
+            const tempItem = subItems.find(x => x.get('?in') === rest);
+            const tempRest = tempItem?.get('?rest');
+            const value = tempItem?.get('?first');
 
-              if (value)
-                await addEnumItem(value);
+            if (value)
+              await addEnumItem(value);
 
-              rest = tempRest;
-            }
+            rest = tempRest;
           }
         }
-        // END of ugly rewrite of above SPARQL query
-
-        if (enumList.length !== 0) {
-          if (minCount >= 1) {
-            propSchema.type = 'array';
-            propSchema.uniqueItems = true;
-          }
-          propSchema.enum = enumList;
-        }
-
-        const element: UISchemaElement = {
-          type: 'Control',
-          // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
-          scope: `#/properties/${layoutSubPath}${propName}`,
-        };
-        layout.elements.push(element);
-
-        // @ts-expect-error FIXME: label is not recognized, probably an error in official types
-        element.label = await this._getTranslatedProperty(propUri);
-
-        // @ts-expect-error FIXME: label is not recognized, probably an error in official types
-        element.description = await this._getTranslatedProperty(
-          propUri,
-          'rdfs:comment',
-        );
       }
+      // END of ugly rewrite of above SPARQL query
+
+      if (enumList.length !== 0) {
+        if (minCount >= 1) {
+          propSchema.type = 'array';
+          propSchema.uniqueItems = true;
+        }
+        propSchema.enum = enumList;
+      }
+
+      const element: UISchemaElement = {
+        type: 'Control',
+        // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
+        scope: `#/properties/${layoutSubPath}${propName}`,
+      };
+      layout.elements.push(element);
+
+      // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+      element.label = await this._getTranslatedProperty(propUri);
+
+      // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+      element.description = await this._getTranslatedProperty(
+        propUri,
+        'rdfs:comment',
+      );
     }
 
     return schema;
