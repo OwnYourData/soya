@@ -112,7 +112,15 @@ const handleValidation = (doc: IntSoyaDocument, overlay: any) => {
       } else if (constraintKey === 'valueOption') {
         if (Array.isArray(value))
           constraints['sh:in'] = {
-            '@list': value,
+            '@list': value.map(x => {
+              if (x && x.id) {
+                // rename property (if it exists) from id to @id
+                x['@id'] = x.id;
+                delete x.id;
+              }
+
+              return x;
+            }),
           }
       }
     }

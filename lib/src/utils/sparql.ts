@@ -9,6 +9,7 @@ import { QueryOutput } from "sparql-engine/dist/engine/plan-builder";
 import BlankNodeExt from "rdf-ext/lib/BlankNode";
 import LiteralExt from "rdf-ext/lib/Literal";
 import VariableExt from "rdf-ext/lib/Variable";
+import { isIRI } from "./rdf";
 const namedNode = rdf.namedNode;
 const blankNode = rdf.blankNode;
 
@@ -16,7 +17,7 @@ const mapMatchToExt = (val: string): NamedNodeExt<string> | BlankNodeExt | undef
   if (val.startsWith('?'))
     return;
 
-  if (val.startsWith('http'))
+  if (isIRI(val))
     return namedNode(val);
   else
     return blankNode(val);

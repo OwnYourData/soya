@@ -49,4 +49,11 @@ export const serializeJsonLd = async (stream: NodeJS.EventEmitter, options?: IJs
   };
 }
 
+export const isIRI = (value?: string) => {
+  // well this is not really elaborate
+  // yet better than nothing
+  // and also extensible to be more comprehensive in the future
+  return value?.startsWith('http');
+}
+
 export { factory };

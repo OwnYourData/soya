@@ -3,15 +3,28 @@ import { SoyaDocument, IntSoyaDocument } from '../../interfaces';
 import { logger } from '../../services/logger';
 import { handleOverlay } from './overlays';
 
+// according to https://www.w3.org/TR/xmlschema-2/#built-in-primitive-datatypes
 const xsTypes = [
   'string',
-  'decimal',
-  'integer',
-  'float',
   'boolean',
-  'date',
+  'decimal',
+  'float',
+  'double',
+  'duration',
+  'dateTime',
   'time',
-];
+  'date',
+  'gYearMonth',
+  'gYear',
+  'gMonthDay',
+  'gDay',
+  'gMonth',
+  'hexBinary',
+  'base64Binary',
+  'anyURI',
+  'QName',
+  'NOTATION',
+]
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
