@@ -38,7 +38,7 @@ module Api
                 retVal = []
                 name_query = params[:name].to_s
                 if name_query != ""
-                    items = Store.where('soya_name LIKE ?', "%" + name_query + "%").all.pluck(:soya_name).uniq
+                    items = Store.where('lower(soya_name) LIKE ?', "%" + name_query.downcase + "%").all.pluck(:soya_name).uniq
                     items.each do |item|
                         retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
                     end
