@@ -25,6 +25,7 @@ export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
     case 'OverlayFormat': handleFormat(doc, overlay); break;
     case 'OverlayValidation': handleValidation(doc, overlay); break;
     case 'OverlayTransformation': handleTransformation(doc, overlay); break;
+    case 'OverlayForm': handleForm(doc, overlay); break;
     // for unsupported overlays we just return here
     // all following code will not be executed
     default: return;
@@ -38,6 +39,17 @@ export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
     name: overlay.name,
   })
 };
+
+const handleForm = (doc: IntSoyaDocument, overlay: any) => {
+  const { graph } = doc;
+
+  const item = {
+    '@id': `${overlay.base}Form`,
+    'schema': overlay.schema,
+    'ui': overlay.ui,
+  };
+  graph.push(item);
+}
 
 const handleTransformation = (doc: IntSoyaDocument, overlay: any) => {
   const { graph } = doc;

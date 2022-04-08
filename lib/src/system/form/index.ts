@@ -321,10 +321,26 @@ class FormBuilder {
   }
 }
 
+interface StaticForm {
+  ui?: any,
+  schema?: any,
+}
+
 export const getSoyaForm = async (
   soyaStructure: SoyaDocument,
   options?: FormBuilderOptions,
 ): Promise<SoyaForm> => {
+  // check if there is a static form available
+  // ui and schema are currently our "fingerprint" for finding form schemas
+  const staticForm: StaticForm | undefined = soyaStructure["@graph"].find(x => !!x.ui || !!x.schema);
+
+  // if there is a static form that has both ui and schema specified
+  if (staticForm?.ui && staticForm?.schema)
+    return {
+      schema: staticForm.schema,
+      ui: staticForm.ui,
+    };
+
   const dataSet = await parseJsonLd(soyaStructure);
   const builder = new SparqlQueryBuilder(dataSet);
 
@@ -349,9 +365,15 @@ export const getSoyaForm = async (
   if (!mainClassUri)
     throw new FormRenderError('Main class URI not found.');
 
-  return new FormBuilder(
+  const computedForm = await new FormBuilder(
     builder,
     mainClassUri,
     options,
   ).build();
+
+  return {
+    schema: staticForm?.schema ?? computedForm.schema,
+    ui: staticForm?.ui ?? computedForm.ui,
+    languages: computedForm.languages,
+  };
 }
