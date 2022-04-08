@@ -1,0 +1,30 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonAlignment/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "dc": "http://purl.org/dc/elements/1.1/"
+  },
+  "@graph": [
+    {
+      "@id": "name",
+      "rdfs:subPropertyOf": [
+        "foaf:name",
+        "dc:title"
+      ]
+    },
+    {
+      "@id": "sex",
+      "rdfs:subPropertyOf": [
+        "foaf:gender"
+      ]
+    },
+    {
+      "@id": "OverlayAlignment",
+      "@type": "OverlayAlignment",
+      "onBase": "Person",
+      "name": "PersonAlignmentOverlay"
+    }
+  ]
+}

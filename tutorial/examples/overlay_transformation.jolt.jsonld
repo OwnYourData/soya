@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonA_jolt_Transformation/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonATransformation",
+      "engine": "jolt",
+      "value": [
+        {
+          "operation": "shift",
+          "spec": {
+            "\\@context": {
+              "\\@version": "\\@context.\\@version",
+              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+            },
+            "\\@graph": {
+              "*": {
+                "#PersonB": "\\@graph[#2].\\@type",
+                "\\@id": "\\@graph[#2].\\@id",
+                "basePerson:firstname": "\\@graph[#2].first_name",
+                "basePerson:lastname": "\\@graph[#2].surname",
+                "basePerson:dateOfBirth": "\\@graph[#2].birthdate",
+                "basePerson:sex": "\\@graph[#2].gender"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@id": "OverlayTransformation",
+      "@type": "OverlayTransformation",
+      "onBase": "PersonA",
+      "name": "TransformationOverlay"
+    }
+  ]
+}

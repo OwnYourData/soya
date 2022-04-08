@@ -1,0 +1,73 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonAnnotation/"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "label": {
+        "en": [
+          "Person"
+        ],
+        "de": [
+          "die Person",
+          "der Mensch"
+        ]
+      }
+    },
+    {
+      "@id": "name",
+      "label": {
+        "en": [
+          "Name"
+        ],
+        "de": [
+          "Name"
+        ]
+      }
+    },
+    {
+      "@id": "dateOfBirth",
+      "label": {
+        "en": [
+          "Date of Birth"
+        ],
+        "de": [
+          "Geburtsdatum"
+        ]
+      },
+      "comment": {
+        "en": [
+          "Birthdate of Person"
+        ]
+      }
+    },
+    {
+      "@id": "sex",
+      "label": {
+        "en": [
+          "Gender"
+        ],
+        "de": [
+          "Geschlecht"
+        ]
+      },
+      "comment": {
+        "en": [
+          "Gender (male or female)"
+        ],
+        "de": [
+          "Geschlecht (männlich oder weiblich)"
+        ]
+      }
+    },
+    {
+      "@id": "OverlayAnnotation",
+      "@type": "OverlayAnnotation",
+      "onBase": "Person",
+      "name": "PersonAnnotationOverlay"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import pytest
 import os
+import re
 import glob
 import requests
 import subprocess
@@ -24,3 +25,14 @@ def test_tutorial01(fp, input):
     process = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     assert process.returncode == 0
     assert process.stdout.strip() == Path(cwd+"/examples/"+input+".jsonld").read_text().strip()
+
+# Tutorial tests for overlays
+@pytest.mark.parametrize('input',  glob.glob(cwd+'/examples/overlay_*.jsonld'))
+def test_tutorial02(fp, input):
+    fp.allow_unregistered(True)
+    m = re.search('overlay_(.+?).jsonld', input)
+    op = m.group(1)
+    cmd = "soya template " + op + " | soya init"
+    process = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    assert process.returncode == 0
+    assert process.stdout.strip() == Path(input).read_text().strip()

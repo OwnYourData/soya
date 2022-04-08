@@ -1,0 +1,19 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/PersonFormat/"
+  },
+  "@graph": [
+    {
+      "@id": "dateOfBirth",
+      "format": "DD/MM/YYYY"
+    },
+    {
+      "@id": "OverlayFormat",
+      "@type": "OverlayFormat",
+      "onBase": "Person",
+      "name": "PersonFormatOverlay"
+    }
+  ]
+}
