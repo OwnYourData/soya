@@ -122,13 +122,15 @@ const info = async (params: ParamObject, soya: Soya): Promise<void> => {
   }
 }
 const form = async (params: ParamObject, soya: Soya): Promise<void> => {
-  const param1 = params.default;
-
-  if (!param1)
-    return exitWithError('No path specified!');
-
   try {
-    logNiceConsole(await soya.getForm(param1, {
+    const input = await Std.in();
+
+    if (!input)
+      return exitWithError('No input JSON-LD specified!');
+
+    const jsonLd = JSON.parse(input) as SoyaDocument;
+
+    logNiceConsole(await soya.getForm(jsonLd, {
       language: params['language'],
     }));
   } catch {

@@ -282,7 +282,8 @@ const printFormHelp = () => {
     {
       header: 'Usage',
       content: [
-        '$ soya form Employee',
+        '$ soya pull Employee | soya form',
+        '$ cat input.json | soya form --language en',
       ]
     },
     {

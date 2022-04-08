@@ -166,8 +166,7 @@ export class Soya {
     return flat2ld(flatJson, soyaStructure);
   }
 
-  getForm = async (path: string, options?: FormBuilderOptions): Promise<SoyaForm> => {
-    const soyaStruc = await this.pull(path);
-    return getSoyaForm(soyaStruc, options);
+  getForm = async (soyaDoc: SoyaDocument, options?: FormBuilderOptions): Promise<SoyaForm> => {
+    return getSoyaForm(soyaDoc, options);
   }
 }
