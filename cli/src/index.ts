@@ -57,7 +57,10 @@ export const logNiceConsole = (value: any) => {
     const func = systemCommands[command];
 
     if (func) {
-      func([param1], soya);
+      func({
+        ...cmdArgs,
+        default: param1,
+      }, soya);
       return;
     }
   }

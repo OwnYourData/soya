@@ -6,9 +6,10 @@ import { packageJson } from './package';
 
 type cmdInterface = (commandLineArgs.OptionDefinition & commandLineUsage.OptionDefinition);
 
-interface CmdArgs {
+export interface CmdArgs {
   default?: string[],
   repo?: string,
+  language?: string,
   verbose?: boolean[],
   help?: false,
   executable?: string,
@@ -44,6 +45,12 @@ const globalDefinition: cmdInterface[] = [
     description: 'Show version number of soya-cli',
     type: Boolean,
     defaultValue: false,
+  },
+  {
+    name: 'language',
+    description: 'Default language to be used (2 character ISO language code)',
+    alias: 'l',
+    type: String,
   }
 ];
 
@@ -258,6 +265,34 @@ const printCanonicalHelp = () => {
   ]))
 }
 
+const formDefinition: cmdInterface[] = [
+  {
+    name: 'language',
+    description: 'Language that should be used for rendering the form (2 character ISO language code)',
+    alias: 'l',
+    type: String,
+  }
+];
+const printFormHelp = () => {
+  console.log(commandLineUsage([
+    {
+      header: 'Description',
+      content: 'Renders a form in jsonforms format',
+    },
+    {
+      header: 'Usage',
+      content: [
+        '$ soya form Employee',
+      ]
+    },
+    {
+      header: 'Options',
+      optionList: formDefinition,
+    },
+    getGeneralOptions(),
+  ]))
+}
+
 export const printCliHelp = async (command?: string): Promise<never> => {
   if (!command)
     printGeneralHelp();
@@ -289,6 +324,9 @@ export const printCliHelp = async (command?: string): Promise<never> => {
         break;
       case 'canonical':
         printCanonicalHelp();
+        break;
+      case 'form':
+        printFormHelp();
         break;
       default:
         if (getCommands().indexOf(command) !== -1)

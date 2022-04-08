@@ -5,9 +5,14 @@ import { tryPrintTemplate } from "./system/template";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
 import open from "open";
+import { CmdArgs } from "./utils/cmd";
 
-const acquire = async (params: any[], soya: Soya): Promise<void> => {
-  const [param1] = params;
+type ParamObject = Omit<CmdArgs, 'default'> & {
+  default?: string;
+};
+
+const acquire = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const param1 = params.default;
   if (!param1)
     return exitWithError('No soya structure specified!');
 
@@ -36,14 +41,14 @@ const acquire = async (params: any[], soya: Soya): Promise<void> => {
     }
   }
 }
-const template = async (params: any[]): Promise<void> => {
-  const [param1] = params;
+const template = async (params: ParamObject): Promise<void> => {
+  const param1 = params.default;
   if (!param1)
     return exitWithError('No template name specified!');
 
   tryPrintTemplate(param1);
 }
-const init = async (_: any[], soya: Soya): Promise<void> => {
+const init = async (_: ParamObject, soya: Soya): Promise<void> => {
   const yamlContent = await Std.in();
 
   if (!yamlContent)
@@ -51,8 +56,8 @@ const init = async (_: any[], soya: Soya): Promise<void> => {
 
   logNiceConsole(await soya.init(yamlContent));
 }
-const pull = async (params: any[], soya: Soya): Promise<void> => {
-  const [param1] = params;
+const pull = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const param1 = params.default;
   if (!param1)
     return exitWithError('No path specified!');
 
@@ -66,7 +71,7 @@ const pull = async (params: any[], soya: Soya): Promise<void> => {
     }
   }
 }
-const push = async (_: any[], soya: Soya): Promise<void> => {
+const push = async (_: ParamObject, soya: Soya): Promise<void> => {
   const contentDocument = await Std.in();
   if (!contentDocument)
     return exitWithError('No content provided via stdin!');
@@ -81,7 +86,7 @@ const push = async (_: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not push SOyA document');
   }
 }
-const calculateDri = async (_: any[], soya: Soya): Promise<void> => {
+const calculateDri = async (_: ParamObject, soya: Soya): Promise<void> => {
   const content = await Std.in();
 
   if (!content)
@@ -97,7 +102,7 @@ const calculateDri = async (_: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not calculate DRI!');
   }
 }
-const similar = async (_: any[], soya: Soya): Promise<void> => {
+const similar = async (_: ParamObject, soya: Soya): Promise<void> => {
   try {
     logNiceConsole(await soya.similar(await Std.in()));
   } catch (e) {
@@ -105,8 +110,8 @@ const similar = async (_: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not process provided document');
   }
 }
-const info = async (params: any[], soya: Soya): Promise<void> => {
-  const [param1] = params;
+const info = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const param1 = params.default;
   if (!param1)
     return exitWithError('No path specified!');
 
@@ -116,14 +121,16 @@ const info = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not fetch SOyA info');
   }
 }
-const form = async (params: any[], soya: Soya): Promise<void> => {
-  const [param1] = params;
+const form = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const param1 = params.default;
 
   if (!param1)
     return exitWithError('No path specified!');
 
   try {
-    logNiceConsole(await soya.getForm(param1));
+    logNiceConsole(await soya.getForm(param1, {
+      language: params['language'],
+    }));
   } catch {
     return exitWithError('Could not generate SOyA form!');
   }
@@ -147,8 +154,8 @@ const playground = async (): Promise<void> => {
 
   console.log(url);
 }
-const query = async (params: any[], soya: Soya): Promise<void> => {
-  const [param1] = params;
+const query = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const param1 = params.default;
 
   if (!param1)
     return exitWithError('No path specified!');
@@ -161,7 +168,7 @@ const query = async (params: any[], soya: Soya): Promise<void> => {
     return exitWithError('Could not query repo!');
   }
 }
-const canonical = async (_: any[], soya: Soya): Promise<void> => {
+const canonical = async (_: ParamObject, soya: Soya): Promise<void> => {
   try {
     const input = await Std.in();
 
@@ -177,7 +184,7 @@ const canonical = async (_: any[], soya: Soya): Promise<void> => {
 }
 
 export const systemCommands: {
-  [key: string]: (params: Array<any>, soya: Soya) => Promise<void>,
+  [key: string]: (params: ParamObject, soya: Soya) => Promise<void>,
 } = {
   acquire,
   template,
