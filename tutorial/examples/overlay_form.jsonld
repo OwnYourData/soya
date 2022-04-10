@@ -1,0 +1,50 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Person/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonForm",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": []
+      },
+      "ui": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Group",
+            "label": "Person",
+            "elements": [
+              {
+                "type": "Control",
+                "scope": "#/properties/name"
+              },
+              {
+                "type": "Control",
+                "scope": "#/properties/dateOfBirth"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "@id": "OverlayForm",
+      "@type": "OverlayForm",
+      "onBase": "Person",
+      "name": "PersonFormOverlay"
+    }
+  ]
+}

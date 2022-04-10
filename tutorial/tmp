@@ -1,0 +1,61 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Employee/"
+  },
+  "@graph": [
+    {
+      "@id": "Employee",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "management",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:boolean"
+    },
+    {
+      "@id": "salary",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "xsd:float"
+    },
+    {
+      "@id": "employer",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Employee",
+      "range": "Company"
+    },
+    {
+      "@id": "Company",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "company",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Company",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "staff_count",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Company",
+      "range": "Integer"
+    }
+  ]
+}

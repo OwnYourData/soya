@@ -206,12 +206,12 @@ Overlays provide addtional information for a defined base. This information can 
 * **Annotation:** translations in different languages for name and descriptions of base names, labels, and descriptions    
 * **Classification:** select a subset of the attributes (e.g., personally identifiable information - PII, configuring list views)    
 * **Encoding:** specify the character set encoding used in storing the data of an instance (e.g., UTF-8)    
+* **Form:** configure rendering HTML forms for visualizing and editing instances    
 * **Format:** defines how data is presented to the user    
 * **Transformation:** define a set of transformation rules for a data record    
 * **Validation:** predefined entries, range selection, any other validation incl. input methods    
 
 It is possible to create additional overlay types by using another context.
-
 
 <div class=example id=overlay_example>
 An overlay example.
@@ -367,14 +367,14 @@ curl -s https://playground.data-container.net/PersonAinstance | soya transform P
 Forms {#forms}
 -----
 
-Based on SOyA structures forms can be generated automatically, allowing for capture and editing of data records. While basic editing functionality relies on SOyA bases only, more complex forms can be achieved by providing additional overlays, like validation overlays for enhanced form validation. Furthermore, annotation overlays allow for internationalization of SOyA forms, providing multi-language display.    
+Based on SOyA structures forms can be generated automatically, allowing for visulization and editing of data records. While basic editing functionality relies on SOyA bases only, more complex forms can be achieved by providing additional overlays, like validation overlays for enhanced form validation. Furthermore, annotation overlays allow for internationalization of SOyA forms, providing multi-language display. Finally, a form overlay provides extensive configuraiton to fine-tune arranging and displaying controls.    
 
 SOyA forms are based on the [JSON-Forms framework](https://jsonforms.io/) and therefore come with adapters for different UI libraries and frameworks, allowing for easy integration in already existing projects.
 
 <div class=example id=forms_feature_example>
 An example command to generate a form for a SOyA structure.
 <pre>
-soya form Employee
+soya pull Employee | soya form
 </pre>
 </div>
 
