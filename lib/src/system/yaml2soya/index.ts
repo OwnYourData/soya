@@ -3,7 +3,7 @@ import { SoyaDocument, IntSoyaDocument } from '../../interfaces';
 import { logger } from '../../services/logger';
 import { handleOverlay } from './overlays';
 
-// according to https://www.w3.org/TR/xmlschema-2/#built-in-primitive-datatypes
+// according to https://www.w3.org/TR/xmlschema11-2
 const xsTypes = [
   'string',
   'boolean',
@@ -24,6 +24,30 @@ const xsTypes = [
   'anyURI',
   'QName',
   'NOTATION',
+
+  'integer',
+  'long',
+  'int',
+  'short',
+  'byte',
+  'nonNegativeInteger',
+  'positiveInteger',
+  'unsignedLong',
+  'unsignedInt',
+  'unsignedShort',
+  'unsignedByte',
+  'nonPositiveInteger',
+  'negativeInteger',
+
+  'normalizedString',
+  'token',
+  'language',
+  'Name',
+  'NCName',
+  'ENTITY',
+  'ID',
+  'IDREF',
+  'NMTOKEN',
 ]
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
