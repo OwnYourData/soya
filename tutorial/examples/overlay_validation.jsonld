@@ -35,8 +35,14 @@
           "sh:maxCount": 1,
           "sh:in": {
             "@list": [
+              {
+                "label": {
+                  "en": "Female",
+                  "de": "Weiblich"
+                },
+                "@id": "female"
+              },
               "male",
-              "female",
               "other"
             ]
           }

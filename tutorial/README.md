@@ -456,6 +456,7 @@ Overlays provide addtional information for a defined base. This information can 
 * [Annotation](#annotation)
 * [Format](#format)
 * [Encoding](#encoding)
+* [Form](#form)
 * [Classification](#classification)
 * [Alignment](#alignment)
 * [Validation](#validation)
@@ -691,6 +692,117 @@ soya template encoding | soya init
       "@type": "OverlayEncoding",
       "onBase": "Person",
       "name": "PersonEncodingOverlay"
+    }
+  ]
+}
+```
+
+</details>
+
+#### Form
+
+The *Form* overlay allows to configure rendering HTML forms for visualizing and editing instances. In YAML it has the following format:
+
+```yaml
+meta:
+  name: SampleEncoding
+
+content:
+  overlays: 
+    - type: OverlayEncoding
+      base: NameOfBase    
+      name: SampleEncodingOverlay
+      attributes:
+        name: UTF-8
+        company: ASCII
+meta:
+  name: SampleForm
+
+content:
+  overlays: 
+    - type: OverlayForm
+      base: NameOfBase
+      name: SampleFormOverlay
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          dateOfBirth:
+            type: string
+            format: date
+        required: []
+      ui:
+        type: VerticalLayout
+        elements:
+        - type: Group
+          label: Person
+          elements:
+          - type: Control
+            scope: "#/properties/name"
+          - type: Control
+            scope: "#/properties/dateOfBirth"
+
+```
+
+*Hint:* use the command `soya template form` to show an example on the command line
+
+<details>
+  <summary>Output</summary>
+
+Use the following command to generate the output:    
+```bash
+soya template form | soya init
+```
+
+```json-ld
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Person/"
+  },
+  "@graph": [
+    {
+      "@id": "PersonForm",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": []
+      },
+      "ui": {
+        "type": "VerticalLayout",
+        "elements": [
+          {
+            "type": "Group",
+            "label": "Person",
+            "elements": [
+              {
+                "type": "Control",
+                "scope": "#/properties/name"
+              },
+              {
+                "type": "Control",
+                "scope": "#/properties/dateOfBirth"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "@id": "OverlayForm",
+      "@type": "OverlayForm",
+      "onBase": "Person",
+      "name": "PersonFormOverlay"
     }
   ]
 }

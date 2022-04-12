@@ -2,7 +2,7 @@ meta:
   name: Employee
 
 content:
-  base:
+  bases:
     - name: Employee
       attributes:
         name: String
