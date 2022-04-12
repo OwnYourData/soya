@@ -796,10 +796,7 @@ soya template form | soya init
             ]
           }
         ]
-      }
-    },
-    {
-      "@id": "OverlayForm",
+      },
       "@type": "OverlayForm",
       "onBase": "Person",
       "name": "PersonFormOverlay"
@@ -1028,17 +1025,19 @@ soya template validation | soya init
           "sh:maxCount": 1,
           "sh:in": {
             "@list": [
+              {
+                "label": {
+                  "en": "Female",
+                  "de": "Weiblich"
+                },
+                "@id": "female"
+              },
               "male",
-              "female",
               "other"
             ]
           }
         }
-      ]
-    },
-    {
-      "@id": "OverlayValidation",
-      "@type": "OverlayValidation",
+      ],
       "onBase": "Person",
       "name": "PersonValidationOverlay"
     }
@@ -1102,10 +1101,7 @@ soya template transformation.jq | soya init
     {
       "@id": "PersonATransformation",
       "engine": "jq",
-      "value": ".[\"@graph\"] | \n{\n  \"@context\": {\n    \"@version\":1.1,\n    \"@vocab\":\"https://soya.data-container.net/PersonB/\"},\n  \"@graph\": map( \n    {\"@id\":.[\"@id\"], \n    \"@type\":\"PersonB\", \n    \"first_name\":.[\"basePerson:firstname\"], \n    \"surname\":.[\"basePerson:lastname\"], \n    \"birthdate\":.[\"basePerson:dateOfBirth\"], \n    \"gender\":.[\"basePerson:sex\"]}\n  )\n}\n"
-    },
-    {
-      "@id": "OverlayTransformation",
+      "value": ".[\"@graph\"] | \n{\n  \"@context\": {\n    \"@version\":1.1,\n    \"@vocab\":\"https://soya.data-container.net/PersonB/\"},\n  \"@graph\": map( \n    {\"@id\":.[\"@id\"], \n    \"@type\":\"PersonB\", \n    \"first_name\":.[\"basePerson:firstname\"], \n    \"surname\":.[\"basePerson:lastname\"], \n    \"birthdate\":.[\"basePerson:dateOfBirth\"], \n    \"gender\":.[\"basePerson:sex\"]}\n  )\n}\n",
       "@type": "OverlayTransformation",
       "onBase": "PersonA",
       "name": "TransformationOverlay"
@@ -1186,10 +1182,7 @@ soya template transformation.jolt | soya init
             }
           }
         }
-      ]
-    },
-    {
-      "@id": "OverlayTransformation",
+      ],
       "@type": "OverlayTransformation",
       "onBase": "PersonA",
       "name": "TransformationOverlay"

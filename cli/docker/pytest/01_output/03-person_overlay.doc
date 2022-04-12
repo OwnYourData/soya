@@ -43,11 +43,7 @@
         {
           "sh:path": "employer"
         }
-      ]
-    },
-    {
-      "@id": "OverlayValidation",
-      "@type": "OverlayValidation",
+      ],
       "onBase": "https://soya.data-container.net/Person_Test/Person",
       "name": "PersonValidationOverlay_Test"
     }

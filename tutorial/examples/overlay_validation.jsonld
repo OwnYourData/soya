@@ -47,11 +47,7 @@
             ]
           }
         }
-      ]
-    },
-    {
-      "@id": "OverlayValidation",
-      "@type": "OverlayValidation",
+      ],
       "onBase": "Person",
       "name": "PersonValidationOverlay"
     }

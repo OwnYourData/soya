@@ -38,10 +38,7 @@
             ]
           }
         ]
-      }
-    },
-    {
-      "@id": "OverlayForm",
+      },
       "@type": "OverlayForm",
       "onBase": "Person",
       "name": "PersonFormOverlay"

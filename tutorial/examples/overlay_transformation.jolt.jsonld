@@ -28,10 +28,7 @@
             }
           }
         }
-      ]
-    },
-    {
-      "@id": "OverlayTransformation",
+      ],
       "@type": "OverlayTransformation",
       "onBase": "PersonA",
       "name": "TransformationOverlay"
