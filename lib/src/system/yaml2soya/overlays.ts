@@ -1,6 +1,11 @@
 import { IntSoyaDocument } from "../../interfaces";
 import { DateRange, NumberRange, parseRange } from "../../utils/range";
 
+interface GraphItem {
+  "@id": string;
+  [key: string]: any;
+}
+
 const arrayifyIfLeaf = (obj: any) => {
 
   if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
@@ -17,30 +22,44 @@ const arrayifyIfLeaf = (obj: any) => {
 }
 
 export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
+  let mainItem: GraphItem | undefined;
+
   switch (overlay.type) {
-    case 'OverlayAnnotation': handleAnnotation(doc, overlay); break;
-    case 'OverlayAlignment': handleAlignment(doc, overlay); break;
-    case 'OverlayClassification': handleClassification(doc, overlay); break;
-    case 'OverlayEncoding': handleEncoding(doc, overlay); break;
-    case 'OverlayFormat': handleFormat(doc, overlay); break;
-    case 'OverlayValidation': handleValidation(doc, overlay); break;
-    case 'OverlayTransformation': handleTransformation(doc, overlay); break;
-    case 'OverlayForm': handleForm(doc, overlay); break;
+    case 'OverlayAnnotation': mainItem = handleAnnotation(doc, overlay); break;
+    case 'OverlayAlignment': mainItem = handleAlignment(doc, overlay); break;
+    case 'OverlayClassification': mainItem = handleClassification(doc, overlay); break;
+    case 'OverlayEncoding': mainItem = handleEncoding(doc, overlay); break;
+    case 'OverlayFormat': mainItem = handleFormat(doc, overlay); break;
+    case 'OverlayValidation': mainItem = handleValidation(doc, overlay); break;
+    case 'OverlayTransformation': mainItem = handleTransformation(doc, overlay); break;
+    case 'OverlayForm': mainItem = handleForm(doc, overlay); break;
     // for unsupported overlays we just return here
     // all following code will not be executed
     default: return;
   }
 
-  // add an informational element
-  doc.graph.push({
-    '@id': overlay.type,
+  // if the overlay method did not provide a main item
+  // we just create one artificially
+  if (!mainItem) {
+    mainItem = {
+      "@id": overlay.type,
+    };
+    doc.graph.push(mainItem);
+  }
+
+  // add meta information
+  // already existing items from mainItem take precedence and must not be overwritten!
+  const metaizedItem = Object.assign({
     '@type': overlay.type,
     'onBase': overlay.base,
     name: overlay.name,
-  })
+  }, mainItem);
+
+  // reassign properties
+  Object.assign(mainItem, metaizedItem);
 };
 
-const handleForm = (doc: IntSoyaDocument, overlay: any) => {
+const handleForm = (doc: IntSoyaDocument, overlay: any): GraphItem => {
   const { graph } = doc;
 
   const item = {
@@ -49,9 +68,11 @@ const handleForm = (doc: IntSoyaDocument, overlay: any) => {
     'ui': overlay.ui,
   };
   graph.push(item);
+
+  return item;
 }
 
-const handleTransformation = (doc: IntSoyaDocument, overlay: any) => {
+const handleTransformation = (doc: IntSoyaDocument, overlay: any): GraphItem => {
   const { graph } = doc;
 
   const item = {
@@ -60,9 +81,11 @@ const handleTransformation = (doc: IntSoyaDocument, overlay: any) => {
     'value': overlay.value,
   };
   graph.push(item);
+
+  return item;
 }
 
-const handleValidation = (doc: IntSoyaDocument, overlay: any) => {
+const handleValidation = (doc: IntSoyaDocument, overlay: any): GraphItem => {
   const { graph } = doc;
 
   const shacl = {
@@ -142,9 +165,11 @@ const handleValidation = (doc: IntSoyaDocument, overlay: any) => {
       ...constraints,
     });
   }
+
+  return shacl;
 }
 
-const handleFormat = (doc: IntSoyaDocument, overlay: any) => {
+const handleFormat = (doc: IntSoyaDocument, overlay: any): undefined => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -155,9 +180,11 @@ const handleFormat = (doc: IntSoyaDocument, overlay: any) => {
       'format': encoding,
     });
   }
+
+  return undefined;
 }
 
-const handleEncoding = (doc: IntSoyaDocument, overlay: any) => {
+const handleEncoding = (doc: IntSoyaDocument, overlay: any): undefined => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -168,9 +195,11 @@ const handleEncoding = (doc: IntSoyaDocument, overlay: any) => {
       'encoding': encoding,
     });
   }
+
+  return undefined;
 }
 
-const handleClassification = (doc: IntSoyaDocument, overlay: any) => {
+const handleClassification = (doc: IntSoyaDocument, overlay: any): undefined => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -184,9 +213,11 @@ const handleClassification = (doc: IntSoyaDocument, overlay: any) => {
       'classification': classifications,
     });
   }
+
+  return undefined;
 }
 
-const handleAnnotation = (doc: IntSoyaDocument, overlay: any) => {
+const handleAnnotation = (doc: IntSoyaDocument, overlay: any): undefined => {
   const { graph } = doc;
 
   const handleAttribute = (annotation: any, attrName: string) => {
@@ -206,9 +237,11 @@ const handleAnnotation = (doc: IntSoyaDocument, overlay: any) => {
     let annotation = overlay.attributes[attrName];
     handleAttribute(annotation, attrName);
   }
+
+  return undefined;
 }
 
-const handleAlignment = (doc: IntSoyaDocument, overlay: any) => {
+const handleAlignment = (doc: IntSoyaDocument, overlay: any): undefined => {
   const { graph } = doc;
 
   for (const attrName in overlay.attributes) {
@@ -222,4 +255,6 @@ const handleAlignment = (doc: IntSoyaDocument, overlay: any) => {
       'rdfs:subPropertyOf': relations,
     });
   }
+
+  return undefined;
 }
