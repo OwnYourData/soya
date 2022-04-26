@@ -254,7 +254,7 @@ class FormBuilder {
           propSchema.type = 'array';
           propSchema.uniqueItems = true;
         }
-        propSchema.enum = enumList;
+        propSchema.oneOf = enumList;
       }
 
       const element: UISchemaElement = {
