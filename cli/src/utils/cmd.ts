@@ -10,6 +10,7 @@ export interface CmdArgs {
   default?: string[],
   repo?: string,
   language?: string,
+  tag?: string,
   verbose?: boolean[],
   help?: false,
   executable?: string,
@@ -46,12 +47,6 @@ const globalDefinition: cmdInterface[] = [
     type: Boolean,
     defaultValue: false,
   },
-  {
-    name: 'language',
-    description: 'Default language to be used (2 character ISO language code)',
-    alias: 'l',
-    type: String,
-  }
 ];
 
 const getCommands = (): string[] => {
@@ -271,7 +266,13 @@ const formDefinition: cmdInterface[] = [
     description: 'Language that should be used for rendering the form (2 character ISO language code)',
     alias: 'l',
     type: String,
-  }
+  },
+  {
+    name: 'tag',
+    description: 'Tag that can be used to specify a certain form',
+    alias: 't',
+    type: String,
+  },
 ];
 const printFormHelp = () => {
   console.log(commandLineUsage([
@@ -283,7 +284,7 @@ const printFormHelp = () => {
       header: 'Usage',
       content: [
         '$ soya pull Employee | soya form',
-        '$ cat input.json | soya form --language en',
+        '$ cat input.json | soya form --language en --tag MySpecialForm',
       ]
     },
     {
@@ -343,4 +344,5 @@ export const printCliHelp = async (command?: string): Promise<never> => {
 export const cmdArgs = commandLineArgs([
   ...globalDefinition,
   ...transformDefinition,
+  ...formDefinition,
 ]) as CmdArgs;

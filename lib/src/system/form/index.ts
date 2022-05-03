@@ -3,7 +3,7 @@ import { FormRenderError } from "../../errors";
 import { SoyaDocument } from "../../interfaces";
 import { isIRI, parseJsonLd } from "../../utils/rdf";
 import { SparqlQueryBuilder } from "../../utils/sparql";
-import { JsonSchema, Layout, SoyaForm } from "./interfaces";
+import { JsonSchema, Layout, SoyaFormOptions, SoyaFormResponse, StaticForm } from "./interfaces";
 
 export * from './interfaces';
 
@@ -19,17 +19,13 @@ const getLastUriPart = (uri: string): string | undefined => {
   return splitLast(splitLast(uri, '/'), '#');
 }
 
-export interface FormBuilderOptions {
-  language?: string;
-}
-
 class FormBuilder {
   private _ui: Layout;
 
   constructor(
     private _builder: SparqlQueryBuilder,
     private _mainClassUri: string,
-    public readonly options: FormBuilderOptions = {},
+    public readonly options: SoyaFormOptions,
   ) {
     this._ui = {
       type: 'VerticalLayout',
@@ -277,17 +273,18 @@ class FormBuilder {
     return schema;
   }
 
-  build = async (): Promise<SoyaForm> => {
+  build = async (): Promise<SoyaFormResponse> => {
     const name = getLastUriPart(this._mainClassUri);
     if (!name)
       throw new FormRenderError('Main class name not found.');
 
-    const retVal: SoyaForm = {
+    const retVal: SoyaFormResponse = {
       schema: await this._handleClass(
         name,
         this._mainClassUri,
       ),
       ui: this._ui,
+      options: [],
     };
 
     // FIXME: This query does unfortunately not work
@@ -306,7 +303,7 @@ class FormBuilder {
         ?shprop rdfs:label ?label .
     }`);
     if (langQuery.length !== 0)
-      retVal.languages = langQuery
+      retVal.options = (langQuery
         .map(x => x.get('?label'))
         .map(x => {
           const s = x?.split('@');
@@ -315,31 +312,23 @@ class FormBuilder {
 
           return;
         })
-        .filter((val, index, self) => !!val && self.indexOf(val) === index) as string[];
+        .filter((val, index, self) => !!val && self.indexOf(val) === index) as string[])
+        .map(lang => ({
+          language: lang,
+        }));
 
     return retVal;
   }
 }
 
-interface StaticForm {
-  ui?: any,
-  schema?: any,
-}
-
 export const getSoyaForm = async (
   soyaStructure: SoyaDocument,
-  options?: FormBuilderOptions,
-): Promise<SoyaForm> => {
+  options: SoyaFormOptions = {},
+): Promise<SoyaFormResponse> => {
   // check if there is a static form available
   // ui and schema are currently our "fingerprint" for finding form schemas
-  const staticForm: StaticForm | undefined = soyaStructure["@graph"].find(x => !!x.ui || !!x.schema);
 
-  // if there is a static form that has both ui and schema specified
-  if (staticForm?.ui && staticForm?.schema)
-    return {
-      schema: staticForm.schema,
-      ui: staticForm.ui,
-    };
+  const staticForms: StaticForm[] = soyaStructure["@graph"].filter(x => !!x.ui || !!x.schema);
 
   const dataSet = await parseJsonLd(soyaStructure);
   const builder = new SparqlQueryBuilder(dataSet);
@@ -365,15 +354,39 @@ export const getSoyaForm = async (
   if (!mainClassUri)
     throw new FormRenderError('Main class URI not found.');
 
-  const computedForm = await new FormBuilder(
+  const defaultForm = await new FormBuilder(
     builder,
     mainClassUri,
     options,
   ).build();
 
+  // check if we can find the requested form in our static forms
+  const requestedForm = staticForms.find(f =>
+    f.language == options.language &&
+    f.tag == options.tag
+    // fallback is of course our computed form
+  ) ?? defaultForm;
+
+  const formOptions: SoyaFormOptions[] = [
+    ...defaultForm.options,
+    ...staticForms.map<SoyaFormOptions>(f => ({
+      language: f.language,
+      tag: f.tag,
+    }))
+  ];
+
   return {
-    schema: staticForm?.schema ?? computedForm.schema,
-    ui: staticForm?.ui ?? computedForm.ui,
-    languages: computedForm.languages,
+    // substitute schema with schema from computed form, if not available
+    schema: requestedForm.schema ?? defaultForm.schema,
+    // substitute ui with ui from computed form, if not available
+    ui: requestedForm.ui ?? defaultForm.ui,
+    // distinct the list of options
+    // so that we do not show an option combination twice
+    options: formOptions.filter((fo, idx, arr) => {
+      return arr.findIndex((val) =>
+        val.language === fo.language &&
+        val.tag === fo.tag
+      ) === idx;
+    })
   };
 }

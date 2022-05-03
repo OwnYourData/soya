@@ -6,6 +6,10 @@ content:
     - type: OverlayForm
       base: Person
       name: PersonFormOverlay
+      # provide a language tag for multi-language support
+      language: en
+      # provide a general tag for providing different forms
+      tag: basic
       schema:
         type: object
         properties:

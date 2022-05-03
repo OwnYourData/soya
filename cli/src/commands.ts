@@ -132,6 +132,7 @@ const form = async (params: ParamObject, soya: Soya): Promise<void> => {
 
     logNiceConsole(await soya.getForm(jsonLd, {
       language: params['language'],
+      tag: params['tag'],
     }));
   } catch {
     return exitWithError('Could not generate SOyA form!');

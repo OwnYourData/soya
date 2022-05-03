@@ -66,7 +66,10 @@ const handleForm = (doc: IntSoyaDocument, overlay: any): GraphItem => {
     '@id': `${overlay.base}Form`,
     'schema': overlay.schema,
     'ui': overlay.ui,
+    'tag': overlay.tag,
+    'language': overlay.language,
   };
+
   graph.push(item);
 
   return item;

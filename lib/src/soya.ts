@@ -7,7 +7,7 @@ import { logger, setLogger } from "./services/logger";
 import { SoyaQuery, SoyaQueryResult, SoyaInfo } from "./services/repo";
 import { DEFAULT_SOYA_NAMESPACE, RepoService } from "./services/repo";
 import { flat2ld } from "./system/flat2ld";
-import { FormBuilderOptions, getSoyaForm, SoyaForm } from "./system/form";
+import { SoyaFormOptions, getSoyaForm, SoyaFormResponse } from "./system/form";
 import { yaml2soya } from "./system/yaml2soya";
 import { calculateBaseUri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
@@ -166,7 +166,7 @@ export class Soya {
     return flat2ld(flatJson, soyaStructure);
   }
 
-  getForm = async (soyaDoc: SoyaDocument, options?: FormBuilderOptions): Promise<SoyaForm> => {
+  getForm = async (soyaDoc: SoyaDocument, options?: SoyaFormOptions): Promise<SoyaFormResponse> => {
     return getSoyaForm(soyaDoc, options);
   }
 }
