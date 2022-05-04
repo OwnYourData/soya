@@ -344,21 +344,20 @@ export const getSoyaForm = async (
     }
   }`);
 
-  if (!classes[0])
-    throw new FormRenderError('Main class not found.');
+  let defaultForm: SoyaFormResponse | undefined = undefined;
+  if (classes[0]) {
+    // we only support one base for now
+    const mainClass = classes[0];
+    const mainClassUri = mainClass.get('?s');
 
-  // we only support one base for now
-  const mainClass = classes[0];
-  const mainClassUri = mainClass.get('?s');
-
-  if (!mainClassUri)
-    throw new FormRenderError('Main class URI not found.');
-
-  const defaultForm = await new FormBuilder(
-    builder,
-    mainClassUri,
-    options,
-  ).build();
+    if (mainClassUri) {
+      defaultForm = await new FormBuilder(
+        builder,
+        mainClassUri,
+        options,
+      ).build();
+    }
+  }
 
   // check if we can find the requested form in our static forms
   const requestedForm = staticForms.find(f =>
@@ -367,26 +366,36 @@ export const getSoyaForm = async (
     // fallback is of course our computed form
   ) ?? defaultForm;
 
-  const formOptions: SoyaFormOptions[] = [
-    ...defaultForm.options,
-    ...staticForms.map<SoyaFormOptions>(f => ({
-      language: f.language,
-      tag: f.tag,
-    }))
-  ];
+  let formOptions: SoyaFormOptions[] = [];
 
-  return {
-    // substitute schema with schema from computed form, if not available
-    schema: requestedForm.schema ?? defaultForm.schema,
-    // substitute ui with ui from computed form, if not available
-    ui: requestedForm.ui ?? defaultForm.ui,
-    // distinct the list of options
-    // so that we do not show an option combination twice
-    options: formOptions.filter((fo, idx, arr) => {
-      return arr.findIndex((val) =>
-        val.language === fo.language &&
-        val.tag === fo.tag
-      ) === idx;
-    })
-  };
+  // add default options, if available
+  if (defaultForm)
+    formOptions = formOptions.concat(defaultForm.options);
+
+  // add static options
+  formOptions = formOptions.concat(staticForms.map<SoyaFormOptions>(f => ({
+    language: f.language,
+    tag: f.tag,
+  })));
+
+  // substitute schema with schema from computed form, if not available
+  const schema = requestedForm?.schema ?? defaultForm?.schema;
+  // substitute ui with ui from computed form, if not available
+  const ui = requestedForm?.ui ?? defaultForm?.ui;
+
+  if (schema && ui)
+    return {
+      schema,
+      ui,
+      // distinct the list of options
+      // so that we do not show an option combination twice
+      options: formOptions.filter((fo, idx, arr) => {
+        return arr.findIndex((val) =>
+          val.language === fo.language &&
+          val.tag === fo.tag
+        ) === idx;
+      })
+    };
+  else
+    throw new FormRenderError('Could not find static forms and could not render default form');
 }
