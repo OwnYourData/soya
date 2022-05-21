@@ -42,6 +42,7 @@ export class RepoService {
   // TODO: implement caching
 
   getVaultifier = async (): Promise<Vaultifier> => {
+    logger.debug(`Initializing vaultifier: ${this.repo}`);
     const v = new Vaultifier(this.repo);
     await v.initialize();
 
@@ -73,6 +74,8 @@ export class RepoService {
   private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
     const v = await this.getVaultifier();
     const meta = await cb(v);
+
+    logger.debug(`Returned id from push: ${meta.id}`);
 
     return meta;
   }

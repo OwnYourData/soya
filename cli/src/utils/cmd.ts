@@ -161,7 +161,7 @@ const printSimilarHelp = () => {
     {
       header: 'Usage',
       content: [
-        '$ document.jsonld | soya similar',
+        '$ cat document.jsonld | soya similar',
       ]
     },
     getGeneralOptions(),
