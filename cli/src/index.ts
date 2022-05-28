@@ -44,8 +44,10 @@ export const logNiceConsole = (value: any) => {
   logger.info(`${packageJson.name} (${packageJson.version})\n`);
 
   let repoService: RepoService | undefined = undefined
-  if (repo)
+  if (repo) {
+    logger.debug(`Using repo: ${repo}`);
     repoService = new RepoService(repo);
+  }
 
   const soya = new Soya({
     service: repoService,
