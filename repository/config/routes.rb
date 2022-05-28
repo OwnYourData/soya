@@ -5,6 +5,11 @@ Rails.application.routes.draw do
 	use_doorkeeper do
 		skip_controllers :applications
 	end
+
+    root 'static_pages#home'
+    match '/' => 'static_pages#home', via: 'get'
+    match 'test' => 'static_pages#home', via: 'get'
+
 	namespace :api, defaults: { format: :json } do
 		scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 			match 'active',             to: 'processes#active',       via: 'get'
@@ -85,6 +90,7 @@ Rails.application.routes.draw do
     match ':dri/:name/:sub', to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri/:name',      to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri',            to: 'dris#read', via: 'get', constraints: {dri: /.*/}
+
 
 
 	match ':not_found' => 'application#missing', :constraints => { :not_found => /.*/ }, via: [:get, :post]
