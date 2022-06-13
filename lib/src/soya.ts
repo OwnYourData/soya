@@ -54,7 +54,7 @@ export class Soya {
     return this.service.pull(path);
   }
 
-  push = async (input: unknown): Promise<PushResponse> => {
+  push = async (input: unknown, additionalProperties: { [key: string]: any } = {}): Promise<PushResponse> => {
     const data = asObjectInput(input);
     let res: VaultMinMeta;
     let value: string | undefined;
@@ -104,7 +104,11 @@ export class Soya {
     } else {
       logger.info('Pushing structure');
 
-      res = await this.service.pushValue(data);
+      res = await this.service.pushItem({
+        content: data,
+        mimeType: MimeType.JSON,
+        ...additionalProperties,
+      });
       const vaultItem = await (await this.service.getVaultifier()).getItem({
         id: res.id,
       });

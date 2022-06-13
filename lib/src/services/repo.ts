@@ -80,6 +80,9 @@ export class RepoService {
     return meta;
   }
 
+  /**
+   * @deprecated 
+   */
   pushValue = async (data: any): Promise<VaultMinMeta> => {
     return this._push((v) => {
       logger.debug('Pushing value');
@@ -88,11 +91,13 @@ export class RepoService {
     });
   }
 
-  pushItem = async (item: VaultPostItem): Promise<VaultMinMeta> => {
-    return this._push((v) => {
+  // we extend the VaultPostItem type here to allow for additional properties
+  // that might be soya specific
+  pushItem = async (item: VaultPostItem & { [key: string]: any }): Promise<VaultMinMeta> => {
+    return this._push(async (v) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));
-      return v.postItem(item);
+      return v.parsePostResult(await v.post('/api/data', false, item));
     });
   }
 

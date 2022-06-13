@@ -86,6 +86,26 @@ const push = async (_: ParamObject, soya: Soya): Promise<void> => {
     return exitWithError('Could not push SOyA document');
   }
 }
+const initPush = async (_: ParamObject, soya: Soya): Promise<void> => {
+  const yamlContent = await Std.in();
+
+  if (!yamlContent)
+    return exitWithError('No YAML content provided via stdin!');
+
+  const contentDocument = await soya.init(yamlContent);
+
+  try {
+    const res = await soya.push(contentDocument, {
+      soya_yaml: yamlContent,
+    });
+    logNiceConsole(res.value);
+  } catch (e: any) {
+    if (typeof e.message === 'string')
+      logger.error(e.message);
+
+    return exitWithError('Could not push SOyA document');
+  }
+}
 const calculateDri = async (_: ParamObject, soya: Soya): Promise<void> => {
   const content = await Std.in();
 
@@ -194,6 +214,7 @@ export const systemCommands: {
   init,
   pull,
   push,
+  'init-push': initPush,
   similar,
   info,
   form,
