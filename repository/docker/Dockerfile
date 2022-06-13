@@ -18,7 +18,8 @@ RUN bundle config git.allow_insecure true && \
 
 COPY . .
 
-RUN bundle update
+RUN bundle update && \
+	rm public/index.html
 
 CMD ["./script/run.sh"]
 
