@@ -14,6 +14,7 @@ export interface CmdArgs {
   verbose?: boolean[],
   help?: false,
   executable?: string,
+  type?: string,
   version: boolean,
 }
 
@@ -136,6 +137,13 @@ const printInitHelp = () => {
   ]));
 }
 
+const pullDefinition: cmdInterface[] = [
+  {
+    name: 'type',
+    description: 'Data type to be pulled from repository',
+    type: String,
+  },
+];
 const printPullHelp = () => {
   console.log(commandLineUsage([
     {
@@ -146,7 +154,12 @@ const printPullHelp = () => {
       header: 'Usage',
       content: [
         '$ soya pull <name | DRI> > document.jsonld',
+        '$ soya pull <name | DRI> --type yaml > document.yaml',
       ]
+    },
+    {
+      header: 'Options',
+      optionList: pullDefinition,
     },
     getGeneralOptions(),
   ]));
@@ -365,4 +378,5 @@ export const cmdArgs = commandLineArgs([
   ...globalDefinition,
   ...transformDefinition,
   ...formDefinition,
+  ...pullDefinition,
 ]) as CmdArgs;

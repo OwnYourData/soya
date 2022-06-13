@@ -1,4 +1,4 @@
-import { Soya, Errors, SoyaDocument } from "soya-js";
+import { Soya, Errors, SoyaDocument, PullOptions } from "soya-js";
 import { logNiceConsole } from ".";
 import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";
@@ -61,8 +61,12 @@ const pull = async (params: ParamObject, soya: Soya): Promise<void> => {
   if (!param1)
     return exitWithError('No path specified!');
 
+  const pullOptions: PullOptions | undefined = params.type === 'yaml' ? {
+    pullType: 'yaml',
+  } : undefined;
+
   try {
-    logNiceConsole(await soya.pull(param1));
+    logNiceConsole(await soya.pull(param1, pullOptions));
   } catch (e: any) {
     logger.error('Could not fetch resource from repo!');
 
