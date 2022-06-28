@@ -14,6 +14,7 @@ export interface CmdArgs {
   verbose?: boolean[],
   help?: false,
   executable?: string,
+  type?: string,
   version: boolean,
 }
 
@@ -124,7 +125,7 @@ const printInitHelp = () => {
   console.log(commandLineUsage([
     {
       header: 'Description',
-      content: 'Transforms a SOyA to its respective JSON-LD representation',
+      content: 'Transforms a SOyA structure to its respective JSON-LD representation',
     },
     {
       header: 'Usage',
@@ -136,6 +137,13 @@ const printInitHelp = () => {
   ]));
 }
 
+const pullDefinition: cmdInterface[] = [
+  {
+    name: 'type',
+    description: 'Data type to be pulled from repository',
+    type: String,
+  },
+];
 const printPullHelp = () => {
   console.log(commandLineUsage([
     {
@@ -146,7 +154,12 @@ const printPullHelp = () => {
       header: 'Usage',
       content: [
         '$ soya pull <name | DRI> > document.jsonld',
+        '$ soya pull <name | DRI> --type yaml > document.yaml',
       ]
+    },
+    {
+      header: 'Options',
+      optionList: pullDefinition,
     },
     getGeneralOptions(),
   ]));
@@ -194,6 +207,23 @@ const printPushHelp = () => {
       header: 'Usage',
       content: [
         '$ cat document.jsonld | soya push',
+      ]
+    },
+    getGeneralOptions(),
+  ]));
+}
+
+const printInitPushHelp = () => {
+  console.log(commandLineUsage([
+    {
+      header: 'Description',
+      content: `Transforms a SOyA structure to its respective JSON-LD representation and pushes the SOyA document to the repository.
+This is a shorthand for soya init and soya push with the added benefit that also the initial YAML file is stored in the repository.`,
+    },
+    {
+      header: 'Usage',
+      content: [
+        '$ cat my-doc.yaml | soya init-push',
       ]
     },
     getGeneralOptions(),
@@ -318,6 +348,9 @@ export const printCliHelp = async (command?: string): Promise<never> => {
       case 'push':
         printPushHelp();
         break;
+      case 'init-push':
+        printInitPushHelp();
+        break;
       case 'transform':
         printTransformHelp();
         break;
@@ -345,4 +378,5 @@ export const cmdArgs = commandLineArgs([
   ...globalDefinition,
   ...transformDefinition,
   ...formDefinition,
+  ...pullDefinition,
 ]) as CmdArgs;

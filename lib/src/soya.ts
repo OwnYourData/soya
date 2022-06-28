@@ -36,6 +36,10 @@ export interface PushResponse {
   item: VaultMinMeta;
 }
 
+export interface PullOptions {
+  pullType: 'json-ld' | 'yaml',
+}
+
 export class Soya {
   public service: RepoService;
 
@@ -50,11 +54,14 @@ export class Soya {
     return yaml2soya(yaml, DEFAULT_SOYA_NAMESPACE, this.service.repo);
   }
 
-  pull = async (path: string): Promise<SoyaDocument> => {
-    return this.service.pull(path);
+  pull = async (path: string, options: PullOptions = {
+    pullType: 'json-ld',
+  }): Promise<SoyaDocument> => {
+    const subPath = options.pullType === 'yaml' ? '/yaml' : '';
+    return this.service.pull(`${path}${subPath}`);
   }
 
-  push = async (input: unknown): Promise<PushResponse> => {
+  push = async (input: unknown, additionalProperties: { [key: string]: any } = {}): Promise<PushResponse> => {
     const data = asObjectInput(input);
     let res: VaultMinMeta;
     let value: string | undefined;
@@ -104,7 +111,11 @@ export class Soya {
     } else {
       logger.info('Pushing structure');
 
-      res = await this.service.pushValue(data);
+      res = await this.service.pushItem({
+        content: data,
+        mimeType: MimeType.JSON,
+        ...additionalProperties,
+      });
       const vaultItem = await (await this.service.getVaultifier()).getItem({
         id: res.id,
       });
