@@ -17,6 +17,22 @@ class DrisController < ApplicationController
                status: 200
     end
 
+    def read_yaml
+        @item = Store.find_by_dri(params[:dri]) rescue nil
+        if @item.nil?
+            render json: {"error": "not found"},
+                    status: 404
+            return
+        end
+        if @item.soya_yaml.to_s == ""
+            render plain: "",
+                   status: 405
+        else
+            render plain: @item.soya_yaml,
+                   status: 200
+        end
+    end
+
     def info
         soya_dri = Store.find_by_dri(params[:dri].to_s).soya_dri rescue ""
         soya_name = Store.find_by_dri(params[:dri].to_s).soya_name rescue ""

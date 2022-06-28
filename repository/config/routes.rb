@@ -87,6 +87,8 @@ Rails.application.routes.draw do
 
 	# SOyA Structures
     match ':dri/info',       to: 'dris#info', via: 'get', constraints: {dri: /.*/}
+    match ':dri/yml',        to: 'dris#read_yaml', via: 'get', constraints: {dri: /.*/}
+    match ':dri/yaml',       to: 'dris#read_yaml', via: 'get', constraints: {dri: /.*/}
     match ':dri/:name/:sub', to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri/:name',      to: 'dris#read', via: 'get', constraints: {dri: /.*/}
     match ':dri',            to: 'dris#read', via: 'get', constraints: {dri: /.*/}

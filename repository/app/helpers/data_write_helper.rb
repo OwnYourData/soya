@@ -4,6 +4,7 @@ module DataWriteHelper
     def writeData(content, input, provenance, read_hash)
         # write data to container store
         new_items = []
+        soya_yaml = nil
 
         if input.class == String
             if input == ""
@@ -62,6 +63,9 @@ module DataWriteHelper
             if input["tale_name"].to_s != ""
                @item.update_attributes(table_name: input["table_name"].to_s) 
             end
+            if input["soya_yaml"].to_s != ""
+                @item.update_attributes(soya_yaml: input["soya_yaml"].to_s) 
+            end
             new_items = [@item.id]
         else
             # write data of new record
@@ -72,6 +76,9 @@ module DataWriteHelper
                 input.each do |item|
                     orig_item = item.deep_dup
                     mime_type = "application/json"
+                    if item["soya_yaml"].to_s != ""
+                        soya_yaml = item["soya_yaml"]
+                    end
                     if item["content"].to_s != ""
                         item = item["content"]
                     end
@@ -79,23 +86,15 @@ module DataWriteHelper
                         item = JSON.parse(item)
                     end
 
-puts "Item ============"
-puts item.to_json
-
-puts "write current record"
                     soya_name = getSoyaName(item)
                     base_name = getBaseName(item)
                     if base_name == ""
                         base_name = soya_name
                     end
-puts "name: " + soya_name.to_s
-puts "base name: " + base_name.to_s
                     @record = Store.find_by_dri(soya_name)
                     if soya_name.to_s == "" || @record.nil?
                         if base_name.to_s == ""
 
-puts "Content =========="
-puts orig_item.to_json
                             # this is an instance
                             content = orig_item
                             dri = nil
@@ -115,6 +114,9 @@ puts orig_item.to_json
                                 if content["mime_type"].to_s != ""
                                     mime_type = content["mime_type"].to_s
                                 end
+                                if content["soya_yaml"].to_s != ""
+                                    soya_yaml = content["soya_yaml"].to_s
+                                end
                                 if content["content"].to_s != ""
                                     content = content["content"]
                                 end
@@ -124,7 +126,8 @@ puts orig_item.to_json
                                     dri: dri, 
                                     schema_dri: schema_dri, 
                                     mime_type: mime_type,
-                                    table_name: table_name)
+                                    table_name: table_name,
+                                    soya_yaml: soya_yaml)
                                 @record.save
                             else                                
                                 if content["schema_dri"].to_s != ""
@@ -135,6 +138,9 @@ puts orig_item.to_json
                                 end
                                 if content["mime_type"].to_s != ""
                                     @record.update_attributes(mime_type: content["mime_type"].to_s)
+                                end
+                                if content["soya_yaml"].to_s != ""
+                                    @record.update_attributes(soya_yaml: content["soya_yaml"].to_s)
                                 end
                                 if content["content"].to_s != ""
                                     @record.update_attributes(item: content["content"].to_json)
@@ -147,17 +153,17 @@ puts orig_item.to_json
                                 item: item.to_json, 
                                 dri: soya_name,
                                 table_name: base_name,
-                                soya_name: soya_name)
+                                soya_name: soya_name,
+                                soya_yaml: soya_yaml)
                             @record.save
                         end
                     else
-                        @record.update_attributes(item: item.to_json, dri: soya_name, table_name: base_name, soya_name: soya_name)
+                        @record.update_attributes(item: item.to_json, dri: soya_name, table_name: base_name, soya_name: soya_name, soya_yaml: soya_yaml)
                     end
                     new_items << @record.id
 
                     # assumption: instances don't have a base_name => therefore, only SOyA structures will create a 2nd version
                     if base_name.to_s != ""
-puts "write DRIzed record"
                         dri_item = updateOnBase(item.deep_dup)
                         dri_item = createDriVersion(dri_item)
                         dri = calculateDri(dri_item.deep_dup)
@@ -165,9 +171,6 @@ puts "write DRIzed record"
                         if base_name == ""
                             base_name = dri
                         end
-puts "DRI: " + dri.to_s
-puts "base name: " + base_name.to_s
-puts dri_item.to_json
 
                         @record_dri = Store.find_by_dri(dri)
                         if dri.nil? || @record_dri.nil?
@@ -176,10 +179,11 @@ puts dri_item.to_json
                                 dri: dri,
                                 table_name: base_name,
                                 soya_name: soya_name,
-                                soya_dri: dri)
+                                soya_dri: dri,
+                                soya_yaml: soya_yaml)
                             @record_dri.save
                         else
-                            @record_dri.update_attributes(item: dri_item.to_json, dri: dri, soya_name: soya_name, table_name: base_name, soya_dri: dri.to_s)
+                            @record_dri.update_attributes(item: dri_item.to_json, dri: dri, soya_name: soya_name, table_name: base_name, soya_dri: dri.to_s, soya_yaml: soya_yaml)
                         end
                         @record.update_attributes(soya_dri: dri.to_s)
                         new_items << @record_dri.id

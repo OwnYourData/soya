@@ -1,0 +1,40 @@
+meta:
+  name: Did
+  namespace:
+    did: "https://www.w3.org/ns/did/v1"
+
+content:
+  bases: 
+    - name: Did
+      subClassOf: did
+      attributes:
+        id: String
+        alsoKnownAs: String
+        verificationMethod: VerificationMethod
+        assertionMethod: String
+        authentication: String
+        capabilityDelegation: String
+        capabilityInvocation: String
+        keyAgreement: String
+        controller: String
+        service: Service
+    - name: VerificationMethod
+      attributes:
+        id: String
+        controller: String
+        type: String
+        publicKeyJwk: String
+        publicKeyMultibase: String
+    - name: Service
+      attributes:
+        id: String
+        type: String
+        serviceEndpoint: String
+        
+  overlays: 
+    - type: OverlayValidation
+      base: Did
+      name: DidValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"

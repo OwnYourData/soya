@@ -1,0 +1,29 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+  "verificationMethod": [
+    {
+      "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr#key-doc",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+      "publicKeyMultibase": "z6MuwvdHwfVBCy6WDhPzBtDEds6fSFJEMtM5hmhEWdWJ5P46"
+    },
+    {
+      "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr#key-rev",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+      "publicKeyMultibase": "z6Mv8UgQom2f3HEoTbMnpxS3n672p6V7wZf6AKGmRpSD68zE"
+    }
+  ],
+  "service": [
+    {
+      "id": "#semcon",
+      "type": "DecentralizedWebNode",
+      "serviceEndpoint": {
+        "nodes": [
+          "https://dwn.data-container.net"
+        ]
+      }
+    }
+  ]
+}

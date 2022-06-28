@@ -1,0 +1,31 @@
+{
+  "id": "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w",
+  "verificationMethod": [
+    {
+      "id": "#someKeyId",
+      "controller": "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w",
+      "type": "EcdsaSecp256k1VerificationKey2019",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "crv": "secp256k1",
+        "x": "WfY7Px6AgH6x-_dgAoRbg8weYRJA36ON-gQiFnETrqw",
+        "y": "IzFx3BUGztK0cyDStiunXbrZYYTtKbOUzx16SUK0sAY"
+      }
+    }
+  ],
+  "service": [
+    {
+      "id": "#linkedin",
+      "type": "linkedin",
+      "serviceEndpoint": "linkedin.com/in/henry-tsai-6b884014"
+    },
+    {
+      "id": "#github",
+      "type": "github",
+      "serviceEndpoint": "github.com/thehenrytsai"
+    }
+  ],
+  "authentication": [
+    "#someKeyId"
+  ]
+}
