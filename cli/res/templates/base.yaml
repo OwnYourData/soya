@@ -12,6 +12,11 @@ content:
         dateOfBirth: Date
         age: Integer
         sex: String
+        # set requires distinct data
+        phoneNumbers: Set<String>
+        # list can contain duplicates
+        prefixes: List<String>
+
       # bases support nesting
       # all subClasses will implicitly receive subClassOf property
       subClasses:
