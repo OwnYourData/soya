@@ -64,14 +64,17 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
     const specifiedDataType = base.attributes[attrName];
     // for matching, also lowercase all xsTypes
     const xsdIndex = xsTypes.map(x => x.toLowerCase()).indexOf(specifiedDataType.toLowerCase());
+    const isXsd = xsdIndex !== -1;
 
-    const dataType = xsdIndex !== -1 ?
+    const dataType = isXsd ?
       `xsd:${xsTypes[xsdIndex]}` :
       specifiedDataType;
 
     graph.push({
       '@id': attrName,
-      '@type': 'owl:DatatypeProperty',
+      // use DataTypeProperty if our datatype could be identified as xsd datatype
+      // use ObjectProperty otherwise -> more general
+      '@type': `owl:${isXsd ? 'Datatype' : 'Object'}Property`,
       'domain': base.name,
       'range': dataType,
     })
