@@ -53,7 +53,7 @@ const xsTypes = [
 // we do this globally to save some runtime
 const xsTypesLowerCase = xsTypes.map(x => x.toLowerCase());
 
-const genericsRegex = /^(\w+)<(\w+)>/;
+const genericsRegex = /^(\w+)<(.+)>$/;
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
