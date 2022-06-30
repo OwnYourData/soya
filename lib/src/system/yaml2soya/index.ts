@@ -48,7 +48,10 @@ const xsTypes = [
   'ID',
   'IDREF',
   'NMTOKEN',
-]
+];
+
+// we do this globally to save some runtime
+const xsTypesLowerCase = xsTypes.map(x => x.toLowerCase());
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
@@ -63,7 +66,7 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
   for (const attrName in base.attributes) {
     const specifiedDataType = base.attributes[attrName];
     // for matching, also lowercase all xsTypes
-    const xsdIndex = xsTypes.map(x => x.toLowerCase()).indexOf(specifiedDataType.toLowerCase());
+    const xsdIndex = xsTypesLowerCase.indexOf(specifiedDataType.toLowerCase());
     const isXsd = xsdIndex !== -1;
 
     const dataType = isXsd ?
