@@ -1,0 +1,32 @@
+meta:
+  name: Did
+  namespace:
+    did: "https://www.w3.org/ns/did/v1"
+
+content:
+  bases: 
+    - name: Did
+      subClassOf: did
+      attributes:
+        id: String
+        alsoKnownAs: set<String>
+        verificationMethod: set<VerificationMethod>
+        assertionMethod: set<VerificationMethod | String>
+        authentication: set<VerificationMethod | String>
+        capabilityDelegation: set<VerificationMethod | String>
+        capabilityInvocation: set<VerificationMethod | String>
+        keyAgreement: set<VerificationMethod | String>
+        controller: String
+        service: *Service
+    - name: VerificationMethod
+      attributes:
+        id: String
+        controller: String
+        type: String
+        publicKeyJwk: String
+        publicKeyMultibase: String
+    - name: Service
+      attributes:
+        id: String
+        type: String
+        serviceEndpoint: String
