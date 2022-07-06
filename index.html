@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version 37b7e7e68, updated Fri May 27 15:08:11 2022 -0700" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="5869ea4d2ab57c06d5ca12ac1dfdb98e12a5507b" name="document-revision">
+  <meta content="1df3bcd931960f728df5d36dcfc81562f52389ef" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -607,7 +607,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-06-30">30 June 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-07-06">6 July 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -644,6 +644,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <ol class="toc">
       <li><a href="#terminology"><span class="secno">1.1</span> <span class="content">Terminology</span></a>
       <li><a href="#goals"><span class="secno">1.2</span> <span class="content">Design Goals and Rationale</span></a>
+      <li><a href="#motivation"><span class="secno">1.3</span> <span class="content">Motivation</span></a>
+      <li><a href="#lifecycle"><span class="secno">1.4</span> <span class="content">Lifecycle of RDF Data Engineering</span></a>
      </ol>
     <li>
      <a href="#composition"><span class="secno">2</span> <span class="content">Composition</span></a>
@@ -762,6 +764,32 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>Decentralised:</strong> avoid any centralized components or addressing (i.e., use decentralized resource identifiers - <a data-link-type="dfn" href="#terms-dris" id="ref-for-terms-dris">DRIs</a> - where possible)</p>
    </ul>
+   <h3 class="heading settled" data-level="1.3" id="motivation"><span class="secno">1.3. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h3>
+   <p>The growing importance of data over the last two decades has encourage organizations across all sectors to undergo transformations towards data-driven operations. For many years, these organizations used relational databases as their main data solutions. However, the exponential growth of data has exposed the limitations of relational databases, such as the costly adaptation of database schemas and applications in response to evolving application needs and the lack of support for interoperability and exchange between heterogeneous data sources.</p>
+   <p>RDF and the related semantic web technologies are appealing as a vendor neutral framework for using graph data as alternative solution to address the issues with relational databases. However, the perceived difficulty of use has made RDF and related semantic web technologies to be categorized as a niche technology. This is unfortunate because it restricts uptake and inhibit RDF from being viewed as a feasible choice for many use cases.</p>
+   <p>To address these challenges, Semantic Overlay Architecture (SOyA), is proposed as a lightweight, semantic-web based approach for data integration and exchange. At the core of this approach is the SOyA structure, a YAML-based data model for describing graph data that is RDF-compatible, which consists of one or more soya:<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">Base</a>, which represent RDF classes and their properties, and zero or more soya:<a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay①">Overlay</a>, which provides additional information and context to soya:Base as well as processing definitions. Furthermore, to support developers in conducting the most common data processing for graph data, a number of predefined soya:Overlay are defined, e.g., such as soya:AnnotationOverlay for data model description and soya:ValidationOverlay for constraint checking.</p>
+   <h3 class="heading settled" data-level="1.4" id="lifecycle"><span class="secno">1.4. </span><span class="content">Lifecycle of RDF Data Engineering</span><a class="self-link" href="#lifecycle"></a></h3>
+   <p>A generic lifecycle for construction and maintaining knowledge for knowledge graphs consists of four phases: (i) knowledge creation, (ii) knowledge hosting, (iii) knowledge curation, and (iv) knowledge deployment. The lifecycle is proposed to address two main challenges, which are (a) integrating data from heterogeneous sources in a scalable manner, and (b) to build a high-quality resource given the applications at hand. Complementary to this lifecycle three main roles can be identified in data-driven organizations: Data Engineers, who mainly focus on harnessing and collecting data, Knowledge Scientists, who aim to make reliable data, and Data Scientists, focusing on drawing value from data.</p>
+   <p>The Semantic Overlay Architecture (SOyA) approach aims to reduce the barrier of entries for non-semantic web experts in utilizing semantic web technologies for addressing their data interoperability and exchange needs. More precisely, SOyA aims to support stakeholders in conducting the steps in the Knowledge Graph lifecycle described above.</p>
+   <p align="center"> <img src="res/concept.png" width="800"><br> <em>Figure 2: Conceptual view of SOyA</em> </p>
+   <p>A <strong>Knowledge Scientist</strong> is responsible for designing the data model for certain applications. This person has considerable experience in data modeling, however, does not necessarily have the knowledge of Semantic Web technologies. Unlike Data Engineers, the focus is mainly on the data model and does not concern with populating the data model with data instances. The following requirements are identified:</p>
+   <ul>
+    <li data-md>
+     <p><em>Data Modeling and Constraint Definition:</em> In order to speed up the engineering process, its necessary to easily describe the structure and properties of a dataset to create a semantically well-defined model. This includes possibilities to define constraints on the data model.</p>
+    <li data-md>
+     <p><em>Data Model Alignment:</em> to achieve interoperability between data from heterogeneous data sources, it is paramount to be able to map data models to existing other data models, e.g., existing ontologies.</p>
+    <li data-md>
+     <p><em>Data Model Management:</em> to re-use existing data models it is beneficial to search and browse online repositories, as well as be ableto pull data models to a local repository. Furthermore, it is important to efficiently manage data models in respect to versioning and comparison between models.</p>
+   </ul>
+   <p>A <strong>Data Engineer</strong> works in a variety of settings to build systems that collect, manage, and convert raw data into usable information for other stakeholders to interpret and use.  The following requirements are identified:</p>
+   <ul>
+    <li data-md>
+     <p><em>Data Acquisition and Validation</em>: includes acquiring data from legacy sources into a common data model used by the organization; furthermore, it should be possible to ensure that acquired data is valid according to certain validation rules.</p>
+    <li data-md>
+     <p><em>Data Instance Management:</em> ensure that the acquired data is stored and available for further use, i.e., a mechanism to store and retrieve data.</p>
+    <li data-md>
+     <p><em>Data Transformation and Serialization:</em> a common use case is to transform and serialize data from one data model to others, as well as export it in different formats.</p>
+   </ul>
    <h2 class="heading settled" data-level="2" id="composition"><span class="secno">2. </span><span class="content">Composition</span><a class="self-link" href="#composition"></a></h2>
    <p>The Semantic Overlay Architecture (SOyA) is built on the following core components to describe and manage data models. Those components are:</p>
    <ul>
@@ -772,9 +800,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>SW Stack:</strong> integration of established technologies to handle instances of data and data models - SHACL, jq, jolt, Semantic Container</p>
    </ul>
-   <p align="center"> <img src="res/components.png" width="800"><br> <em>Figure 2: SOyA Components</em> </p>
+   <p align="center"> <img src="res/components.png" width="800"><br> <em>Figure 3: SOyA Components</em> </p>
    <h3 class="heading settled" data-level="2.1" id="structure_element"><span class="secno">2.1. </span><span class="content">Structures</span><a class="self-link" href="#structure_element"></a></h3>
-   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base④">bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay①">overlays</a>) in SOyA are declared in a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
+   <p>All artefacts (<a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑤">bases</a> and <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay②">overlays</a>) in SOyA are declared in a <a data-link-type="dfn" href="#terms-structures" id="ref-for-terms-structures②">structure</a> and it holds the following information:</p>
    <ul>
     <li data-md>
      <p>meta</p>
@@ -1038,7 +1066,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h4 class="heading settled" data-level="2.1.1" id="meta_element"><span class="secno">2.1.1. </span><span class="content">Meta</span><a class="self-link" href="#meta_element"></a></h4>
    <p>The <code>meta</code> section in a structure defines the name of the structure, specifies an optional context (default: https://ns.ownyourdata.eu/soya/soya-context.json), and allows to reference namespaces (exiting ontologies).</p>
    <h4 class="heading settled" data-level="2.1.2" id="base_element"><span class="secno">2.1.2. </span><span class="content">Base</span><a class="self-link" href="#base_element"></a></h4>
-   <p>A <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑤">base</a> declares a dataset and holds the following information:</p>
+   <p>A <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑥">base</a> declares a dataset and holds the following information:</p>
    <ul>
     <li data-md>
      <p>name</p>
@@ -1541,11 +1569,11 @@ iv) Compatibility to RDF</p>
    <p>Semantic Container are transient data stores and provide interoperability and traceability features. For SOyA Semantic Containers provide the framework to store instances (data records associated with a structure through a schema DRI) and host the SOyA form feature for editing instances - find <a href="https://www.OwnYourData.eu/semcon">more information here</a>.</p>
    <h2 class="heading settled" data-level="3" id="features"><span class="secno">3. </span><span class="content">Features</span><a class="self-link" href="#features"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="authoring"><span class="secno">3.1. </span><span class="content">Authoring</span><a class="self-link" href="#authoring"></a></h3>
-   <p>SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑥">base</a> (data model). Additionally, a number of optionally associated <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay②">overlays</a> can define specific behaviour. This input (YML) is then transformed using the <a href="#cli">SOyA CLI</a> into JSON-LD for a standards-based representation.</p>
+   <p>SOyA as authoring platform for data models allows to describe a dataset using a simple notation in YML. Listing attributes and data types in an easy and human-readable form and providing meta attributes defines a <a data-link-type="dfn" href="#terms-base" id="ref-for-terms-base⑦">base</a> (data model). Additionally, a number of optionally associated <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay③">overlays</a> can define specific behaviour. This input (YML) is then transformed using the <a href="#cli">SOyA CLI</a> into JSON-LD for a standards-based representation.</p>
    <p><strong>Specific Authoring Functions:</strong></p>
    <ul>
     <li data-md>
-     <p>predefined <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay③">Overlay</a> types: alignment, annotation, classification, encoding, format, transformation, transformation, validation</p>
+     <p>predefined <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay④">Overlay</a> types: alignment, annotation, classification, encoding, format, transformation, transformation, validation</p>
     <li data-md>
      <p><code>subClassOf</code>: referencing base classes</p>
     <li data-md>
@@ -1635,14 +1663,14 @@ iv) Compatibility to RDF</p>
     </div>
    </div>
    <h3 class="heading settled" data-level="3.4" id="validation"><span class="secno">3.4. </span><span class="content">Validation</span><a class="self-link" href="#validation"></a></h3>
-   <p>Through validation a given JSON-LD record (or an array of records) can be validated against a SOyA structure that includes an validation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay④">overlay</a>. (Currently, <a href="#shacl">\SHACL</a> (Shapes Constraint Language) is used in validation overlays.)</p>
+   <p>Through validation a given JSON-LD record (or an array of records) can be validated against a SOyA structure that includes an validation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay⑤">overlay</a>. (Currently, <a href="#shacl">\SHACL</a> (Shapes Constraint Language) is used in validation overlays.)</p>
    <div class="example" id="validation_feature_example">
     <a class="self-link" href="#validation_feature_example"></a> An example command to perform a validation. 
 <pre>curl -s https://playground.data-container.net/cfa | soya acquire Employee | soya validate Employee
 </pre>
    </div>
    <h3 class="heading settled" data-level="3.5" id="transformation"><span class="secno">3.5. </span><span class="content">Transformation</span><a class="self-link" href="#transformation"></a></h3>
-   <p>Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay⑤">overlay</a>. (Currently, <a href="#jq">jq</a> and <a href="#jolt">Jolt</a> are available engines for transformation overlays.)</p>
+   <p>Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation <a data-link-type="dfn" href="#terms-overlay" id="ref-for-terms-overlay⑥">overlay</a>. (Currently, <a href="#jq">jq</a> and <a href="#jolt">Jolt</a> are available engines for transformation overlays.)</p>
    <div class="example" id="transformation_feature_example">
     <a class="self-link" href="#transformation_feature_example"></a> An example command to perform a transformation. 
 <pre>curl -s https://playground.data-container.net/PersonAinstance | soya transform PersonB
@@ -1833,9 +1861,10 @@ function openTab(evt, cityName) {
    <b><a href="#terms-base">#terms-base</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
-    <li><a href="#ref-for-terms-base④">2.1. Structures</a>
-    <li><a href="#ref-for-terms-base⑤">2.1.2. Base</a>
-    <li><a href="#ref-for-terms-base⑥">3.1. Authoring</a>
+    <li><a href="#ref-for-terms-base④">1.3. Motivation</a>
+    <li><a href="#ref-for-terms-base⑤">2.1. Structures</a>
+    <li><a href="#ref-for-terms-base⑥">2.1.2. Base</a>
+    <li><a href="#ref-for-terms-base⑦">3.1. Authoring</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-dris">
@@ -1850,10 +1879,11 @@ function openTab(evt, cityName) {
    <b><a href="#terms-overlay">#terms-overlay</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
-    <li><a href="#ref-for-terms-overlay①">2.1. Structures</a>
-    <li><a href="#ref-for-terms-overlay②">3.1. Authoring</a> <a href="#ref-for-terms-overlay③">(2)</a>
-    <li><a href="#ref-for-terms-overlay④">3.4. Validation</a>
-    <li><a href="#ref-for-terms-overlay⑤">3.5. Transformation</a>
+    <li><a href="#ref-for-terms-overlay①">1.3. Motivation</a>
+    <li><a href="#ref-for-terms-overlay②">2.1. Structures</a>
+    <li><a href="#ref-for-terms-overlay③">3.1. Authoring</a> <a href="#ref-for-terms-overlay④">(2)</a>
+    <li><a href="#ref-for-terms-overlay⑤">3.4. Validation</a>
+    <li><a href="#ref-for-terms-overlay⑥">3.5. Transformation</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="terms-structures">
