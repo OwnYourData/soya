@@ -1,0 +1,32 @@
+meta:
+  name: PersonAnnotation
+
+content:
+  overlays: 
+    - type: OverlayAnnotation
+      base: Person
+      name: PersonAnnotationOverlay
+      class: 
+        label: 
+          en: Person
+          de: 
+            - die Person
+            - der Mensch
+      attributes:
+        name: 
+          label: 
+            en: Name
+            de: Name
+        dateOfBirth: 
+          label: 
+            en: Date of Birth 
+            de: Geburtsdatum
+          comment: 
+            en: Birthdate of Person
+        sex: 
+          label: 
+            en: Gender
+            de: Geschlecht
+          comment: 
+            en: Gender (male or female)
+            de: Geschlecht (männlich oder weiblich)

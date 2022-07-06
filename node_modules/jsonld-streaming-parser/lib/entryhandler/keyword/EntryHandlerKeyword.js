@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EntryHandlerKeyword = void 0;
+/**
+ * An abstract keyword entry handler.
+ */
+class EntryHandlerKeyword {
+    constructor(keyword) {
+        this.keyword = keyword;
+    }
+    isPropertyHandler() {
+        return false;
+    }
+    isStackProcessor() {
+        return true;
+    }
+    async validate(parsingContext, util, keys, depth, inProperty) {
+        return false;
+    }
+    async test(parsingContext, util, key, keys, depth) {
+        return key === this.keyword;
+    }
+}
+exports.EntryHandlerKeyword = EntryHandlerKeyword;
+//# sourceMappingURL=EntryHandlerKeyword.js.map

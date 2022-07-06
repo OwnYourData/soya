@@ -1,0 +1,8 @@
+export var StorageKey;
+(function (StorageKey) {
+    StorageKey["OAUTH_REDIRECT_URL"] = "oauthRedirectUrl";
+    StorageKey["PKCE_SECRET"] = "pkceSecret";
+    StorageKey["APPLICATION_ID"] = "applicationId";
+    StorageKey["BASE_URL"] = "baseUrl";
+})(StorageKey || (StorageKey = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3RvcmFnZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NyYy9jb25zdGFudHMvc3RvcmFnZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQU4sSUFBWSxVQUtYO0FBTEQsV0FBWSxVQUFVO0lBQ3BCLHFEQUF1QyxDQUFBO0lBQ3ZDLHdDQUEwQixDQUFBO0lBQzFCLDhDQUFnQyxDQUFBO0lBQ2hDLGtDQUFvQixDQUFBO0FBQ3RCLENBQUMsRUFMVyxVQUFVLEtBQVYsVUFBVSxRQUtyQiJ9

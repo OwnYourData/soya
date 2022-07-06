@@ -1,0 +1,11 @@
+import { ParsingContext } from "../../ParsingContext";
+import { Util } from "../../Util";
+import { EntryHandlerKeyword } from "./EntryHandlerKeyword";
+/**
+ * Handles @id entries.
+ */
+export declare class EntryHandlerKeywordId extends EntryHandlerKeyword {
+    constructor();
+    isStackProcessor(): boolean;
+    handle(parsingContext: ParsingContext, util: Util, key: any, keys: any[], value: any, depth: number): Promise<any>;
+}
