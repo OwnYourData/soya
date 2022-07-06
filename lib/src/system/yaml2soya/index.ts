@@ -48,7 +48,12 @@ const xsTypes = [
   'ID',
   'IDREF',
   'NMTOKEN',
-]
+];
+
+// we do this globally to save some runtime
+const xsTypesLowerCase = xsTypes.map(x => x.toLowerCase());
+
+const genericsRegex = /^(\w+)<(.+)>$/;
 
 const handleBase = (doc: IntSoyaDocument, base: any) => {
   const { graph } = doc;
@@ -61,20 +66,38 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
   });
 
   for (const attrName in base.attributes) {
-    const specifiedDataType = base.attributes[attrName];
-    // for matching, also lowercase all xsTypes
-    const xsdIndex = xsTypes.map(x => x.toLowerCase()).indexOf(specifiedDataType.toLowerCase());
+    let specifiedDataType = base.attributes[attrName];
+    let containerType: string | undefined = undefined
 
-    const dataType = xsdIndex !== -1 ?
+    const genericMatches = genericsRegex.exec(specifiedDataType);
+    // if we have two matches we've found a generic
+    if (genericMatches && genericMatches.length >= 3) {
+      containerType = genericMatches[1];
+      specifiedDataType = genericMatches[2];
+    }
+
+    // for matching, also lowercase all xsTypes
+    const xsdIndex = xsTypesLowerCase.indexOf(specifiedDataType.toLowerCase());
+    const isXsd = xsdIndex !== -1;
+
+    const dataType = isXsd ?
       `xsd:${xsTypes[xsdIndex]}` :
       specifiedDataType;
 
-    graph.push({
+    const graphItem: any = {
       '@id': attrName,
-      '@type': 'owl:DatatypeProperty',
+      // use DataTypeProperty if our datatype could be identified as xsd datatype
+      // use ObjectProperty otherwise -> more general
+      '@type': `owl:${isXsd ? 'Datatype' : 'Object'}Property`,
       'domain': base.name,
       'range': dataType,
-    })
+    };
+
+    if (containerType)
+      // lowercase, because most container types in json-ld are lowercase
+      graphItem['@container'] = `@${containerType.toLowerCase()}`;
+
+    graph.push(graphItem);
   }
 
   if (Array.isArray(base.subClasses)) {
