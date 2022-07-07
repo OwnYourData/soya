@@ -175,7 +175,7 @@ A **Data Engineer** works in a variety of settings to build systems that collect
 
 * *Data Instance Management:* ensure that the acquired data is stored and available for further use, i.e., a mechanism to store and retrieve data.
 
-* *Data Transformation and Serialization:* a common use case is to transform and serialize data from one data model to others, as well as export it in different formats.
+* *Data Transformation and Serialization:* a common use case is to transform and serialize data from one data model to others, as well as export it in different formats. 
 
 
 
