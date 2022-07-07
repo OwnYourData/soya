@@ -91,7 +91,7 @@ Introduction {#intro}
 
 SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a libray for integration in other projects, a command line tool for interactive data model management, and an online repository for hosting data models.
 
-<p align="center">
+<p align="center"> 
   <img src="res/overview.png" width="800"><br>
   <em>Figure 1: Building blocks in SOyA</em>
 </p>
