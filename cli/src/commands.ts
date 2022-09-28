@@ -31,14 +31,8 @@ const acquire = async (params: ParamObject, soya: Soya): Promise<void> => {
   try {
     logNiceConsole(await soya.acquire(param1, flatJson));
   } catch (e: any) {
-    if (typeof e.response.status === 'number') {
-      logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
-      return exitWithError('Could not fetch soya structure from repo!');
-    }
-    else {
-      logger.error(`Error: ${e.toString()}`);
-      return exitWithError('Could not transform flat JSON to JSON-LD!');
-    }
+    logger.error(`Error: ${e.toString()}`);
+    return exitWithError('Could not transform flat JSON to JSON-LD!');
   }
 }
 const template = async (params: ParamObject): Promise<void> => {
@@ -69,10 +63,7 @@ const pull = async (params: ParamObject, soya: Soya): Promise<void> => {
     logNiceConsole(await soya.pull(param1, pullOptions));
   } catch (e: any) {
     logger.error('Could not fetch resource from repo!');
-
-    if (typeof e.response.status === 'number') {
-      logger.error(`Error: ${e.response.status} ${e.response.statusText}`);
-    }
+    logger.error(e.toString())
   }
 }
 const push = async (_: ParamObject, soya: Soya): Promise<void> => {
@@ -84,9 +75,7 @@ const push = async (_: ParamObject, soya: Soya): Promise<void> => {
     const res = await soya.push(contentDocument);
     logNiceConsole(res.value);
   } catch (e: any) {
-    if (typeof e.message === 'string')
-      logger.error(e.message);
-
+    logger.error(e.toString());
     return exitWithError('Could not push SOyA document');
   }
 }
@@ -104,9 +93,7 @@ const initPush = async (_: ParamObject, soya: Soya): Promise<void> => {
     });
     logNiceConsole(res.value);
   } catch (e: any) {
-    if (typeof e.message === 'string')
-      logger.error(e.message);
-
+    logger.error(e.toString());
     return exitWithError('Could not push SOyA document');
   }
 }
