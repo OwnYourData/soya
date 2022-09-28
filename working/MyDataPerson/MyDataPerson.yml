@@ -1,0 +1,72 @@
+meta:
+  name: MyDataPerson
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        "my-email": string
+        "my-firstname": string
+        "my-lastname": string
+        "my-salutation": string
+        "my-birthdate": string
+        "my-gender": string
+        "my-nationality": string
+        "my-mailingstreet": string
+        "my-mailingcity": string
+        "my-mailingstate": string
+        "my-mailingpostcode": string
+        "my-mailingcountry": string
+        "my-homephonenumber": string
+        "my-mobilephonenumber": string
+        "my-employername": string
+        "my-employerindustry": string
+        "my-employerstreet": string
+        "my-employercity": string
+        "my-employerstate": string
+        "my-employerpostcode": string
+        "my-employercountry": string
+        "my-employerfax": string
+        "my-employeetitle": string
+        "my-employerphone": string
+        "my-communicationChannels": set<Comm>
+        "my-permissions": set<Perm>
+        "my-buyingInterests": set<Buyint>
+        "my-productsAndServices": set<Prodserv>
+
+    - name: Comm
+      attributes:
+        service: string
+        enabled: boolean
+
+    - name: Perm
+      attributes:
+        permission: string
+        enabled: boolean
+
+    - name: Buyint
+      attributes:
+        uid: string
+        description: string
+        location: string
+        price_low: float
+        price_high: float
+        beginning_date: date
+        end_date: date
+        industry: string
+        currency: string
+        brands: set<string>
+        tags: set<string>
+        created: string
+
+    - name: Prodserv
+      attributes:
+        uid: string
+        item_name: string
+        description: string
+        renewal_date: date
+        purchase_date: date
+        serial_number: string
+        related_companies: set<string>
+        createdAt: string
+

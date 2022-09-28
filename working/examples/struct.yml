@@ -1,0 +1,14 @@
+meta:
+  name: Structure
+
+content:
+  bases:
+    - name: Group1
+      attributes:
+        name: String
+        something: Integer
+        relation: Group2
+    - name: Group2
+      attributes:
+        title: String
+        age: Integer

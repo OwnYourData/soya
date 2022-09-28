@@ -39,6 +39,8 @@
           }
         ]
       },
+      "tag": "basic",
+      "language": "en",
       "@type": "OverlayForm",
       "onBase": "Person",
       "name": "PersonFormOverlay"

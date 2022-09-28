@@ -30,3 +30,10 @@ content:
         id: String
         type: String
         serviceEndpoint: String
+  overlays:
+    - type: OverlayValidation
+      base: Did
+      name: DidValidationOverlay
+      attributes:
+        verificationMethod:
+          cardinality: "1..1"

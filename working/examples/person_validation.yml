@@ -1,0 +1,62 @@
+meta:
+  name: PersonFull
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        gender: String
+
+  overlays: 
+    - type: OverlayAnnotation
+      base: Person
+      name: PersonAnnotationOverlay
+      class: 
+        label: 
+          en: Person
+          de: 
+            - die Person
+            - der Mensch
+      attributes:
+        name: 
+          label: 
+            en: Name
+            de: Name
+        dateOfBirth: 
+          label: 
+            en: Date of Birth 
+            de: Geburtsdatum
+          comment: 
+            en: Birthdate of Person
+        gender: 
+          label: 
+            en: Gender
+            de: Geschlecht
+          comment: 
+            en: Gender (male or female)
+            de: Geschlecht (männlich oder weiblich)
+
+    - type: OverlayValidation
+      base: https://soya.ownyourdata.eu/Person
+      name: PersonValidationOverlay
+      attributes:
+        name: 
+          cardinality: "1..1"
+          length: "[0..20)"
+          pattern: "^[a-zA-Z ,.'-]+$"
+        dateOfBirth:
+          valueRange: "[1900-01-01..*]"                    
+        gender:
+          cardinality: "0..1"
+          valueOption:
+            - id: female
+              label:
+                en: female
+                de: weiblich
+            - id: male
+              label:
+                en: male
+                de: männlich
+            - other

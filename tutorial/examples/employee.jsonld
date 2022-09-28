@@ -36,7 +36,7 @@
     },
     {
       "@id": "employer",
-      "@type": "owl:DatatypeProperty",
+      "@type": "owl:ObjectProperty",
       "domain": "Employee",
       "range": "Company"
     },
