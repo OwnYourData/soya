@@ -91,7 +91,7 @@ Introduction {#intro}
 
 SOyA is a data model authoring and publishing platform and also provides functionalities for validation and transformation. It includes a libray for integration in other projects, a command line tool for interactive data model management, and an online repository for hosting data models.
 
-<p align="center">
+<p align="center"> 
   <img src="res/overview.png" width="800"><br>
   <em>Figure 1: Building blocks in SOyA</em>
 </p>
@@ -141,6 +141,44 @@ SOyA satisfies the following design goals:
 * **Focus on Semantic Web:** build on top of and make use of the Semantic Web Stack
 * **Decentralised:** avoid any centralized components or addressing (i.e., use decentralized resource identifiers - [=terms/DRIs=] - where possible) 
 
+## Motivation ## {#motivation}
+
+The growing importance of data over the last two decades has encourage organizations across all sectors to undergo transformations towards data-driven operations. For many years, these organizations used relational databases as their main data solutions. However, the exponential growth of data has exposed the limitations of relational databases, such as the costly adaptation of database schemas and applications in response to evolving application needs and the lack of support for interoperability and exchange between heterogeneous data sources.
+
+RDF and the related semantic web technologies are appealing as a vendor neutral framework for using graph data as alternative solution to address the issues with relational databases. However, the perceived difficulty of use has made RDF and related semantic web technologies to be categorized as a niche technology. This is unfortunate because it restricts uptake and inhibit RDF from being viewed as a feasible choice for many use cases.
+
+To address these challenges, Semantic Overlay Architecture (SOyA), is proposed as a lightweight, semantic-web based approach for data integration and exchange. At the core of this approach is the SOyA structure, a YAML-based data model for describing graph data that is RDF-compatible, which consists of one or more soya:[=terms/Base=], which represent RDF classes and their properties, and zero or more soya:[=terms/Overlay=], which provides additional information and context to soya:Base as well as processing definitions. Furthermore, to support developers in conducting the most common data processing for graph data, a number of predefined soya:Overlay are defined, e.g., such as soya:AnnotationOverlay for data model description and soya:ValidationOverlay for constraint checking.
+
+## Lifecycle of RDF Data Engineering ## {#lifecycle}
+
+A generic lifecycle for construction and maintaining knowledge for knowledge graphs consists of four phases: (i) knowledge creation, (ii) knowledge hosting, (iii) knowledge curation, and (iv) knowledge deployment. The lifecycle is proposed to address two main challenges, which are (a) integrating data from heterogeneous sources in a scalable manner, and (b) to build a high-quality resource given the applications at hand. Complementary to this lifecycle three main roles can be identified in data-driven organizations: Data Engineers, who mainly focus on harnessing and collecting data, Knowledge Scientists, who aim to make reliable data, and Data Scientists, focusing on drawing value from data.
+
+The Semantic Overlay Architecture (SOyA) approach aims to reduce the barrier of entries for non-semantic web experts in utilizing semantic web technologies for addressing their data interoperability and exchange needs. More precisely, SOyA aims to support stakeholders in conducting the steps in the Knowledge Graph lifecycle described above.
+
+<p align="center">
+  <img src="res/concept.png" width="800"><br>
+  <em>Figure 2: Conceptual view of SOyA</em>
+</p>
+</div>
+
+A **Knowledge Scientist** is responsible for designing the data model for certain applications. This person has considerable experience in data modeling, however, does not necessarily have the knowledge of Semantic Web technologies. Unlike Data Engineers, the focus is mainly on the data model and does not concern with populating the data model with data instances. The following requirements are identified:
+
+* *Data Modeling and Constraint Definition:* In order to speed up the engineering process, its necessary to easily describe the structure and properties of a dataset to create a semantically well-defined model. This includes possibilities to define constraints on the data model.
+
+* *Data Model Alignment:* to achieve interoperability between data from heterogeneous data sources, it is paramount to be able to map data models to existing other data models, e.g., existing ontologies.
+
+* *Data Model Management:* to re-use existing data models it is beneficial to search and browse online repositories, as well as be ableto pull data models to a local repository. Furthermore, it is important to efficiently manage data models in respect to versioning and comparison between models.
+
+A **Data Engineer** works in a variety of settings to build systems that collect, manage, and convert raw data into usable information for other stakeholders to interpret and use.  The following requirements are identified:
+
+* *Data Acquisition and Validation*: includes acquiring data from legacy sources into a common data model used by the organization; furthermore, it should be possible to ensure that acquired data is valid according to certain validation rules.
+
+* *Data Instance Management:* ensure that the acquired data is stored and available for further use, i.e., a mechanism to store and retrieve data.
+
+* *Data Transformation and Serialization:* a common use case is to transform and serialize data from one data model to others, as well as export it in different formats. 
+
+
+
 Composition {#composition}
 ===========
 
@@ -152,7 +190,7 @@ The Semantic Overlay Architecture (SOyA) is built on the following core componen
 
 <p align="center">
   <img src="res/components.png" width="800"><br>
-  <em>Figure 2: SOyA Components</em>
+  <em>Figure 3: SOyA Components</em>
 </p>
 </div>
 
