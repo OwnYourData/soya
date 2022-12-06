@@ -7,7 +7,7 @@ content:
   bases: 
     - name: Did
       subClassOf: did
-      attributes:
+      attributes: # from: https://www.w3.org/TR/did-core/
         id: String
         alsoKnownAs: String
         verificationMethod: VerificationMethod
@@ -19,13 +19,27 @@ content:
         controller: String
         service: Service
     - name: VerificationMethod
-      attributes:
+      aliases: # from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
+        JsonWebKey2020
+        EcdsaSecp256k1VerificationKey2019
+        Ed25519VerificationKey2018
+        Bls12381G1Key2020
+        Bls12381G2Key2020
+        PgpVerificationKey2021
+        RsaVerificationKey2018
+        X25519KeyAgreementKey2019
+        EcdsaSecp256k1RecoveryMethod2020
+        VerifiableCondition2021
+      attributes: 
         id: String
         controller: String
         type: String
         publicKeyJwk: String
         publicKeyMultibase: String
     - name: Service
+      aliases: # from: https://www.w3.org/TR/did-spec-registries/#service-types
+        LinkedDomains
+        DIDCommMessaging
       attributes:
         id: String
         type: String
@@ -38,3 +52,19 @@ content:
       attributes:
         id: 
           cardinality: "1..1"
+        verificationMethod:
+          cardinality: "1..n"
+    - type: OverlayValidation
+      base: VerificationMethod
+      name: VerificationMethodValidationOverlay
+      attributes:
+        publicKeyJwk:
+          cardinality: "0..1"
+          cardinality_multi:
+            publicKeyJwk: 1
+            publicKeyMultibase: 0
+        publicKeyMultibase:
+          cardinality: "0..1"
+          cardinality_multi:
+            publicKeyJwk: 0
+            publicKeyMultibase: 1

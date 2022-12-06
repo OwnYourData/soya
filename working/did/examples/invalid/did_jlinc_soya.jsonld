@@ -1,0 +1,32 @@
+{
+    "@context": {
+    "@version": 1.1,
+    "did": "https://soya.data-container.net/Did/",
+    "@vocab": "https://soya.data-container.net/Did/"
+  },
+  "@graph": [{
+    "@type": "Did",
+  "did": {
+    "@context": "https://w3id.org/did/v1",
+    "id": "did:jlinc:0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI",
+    "created": "2018-10-13T17:00:00Z",
+    "publicKey": [{
+      "id": "did:jlinc:0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI#signing",
+      "type": "ed25519",
+      "owner": "did:jlinc:0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI",
+      "publicKeyBase64": "0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI"
+    },
+    {
+      "id": "did:jlinc:0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI#encrypting",
+      "type": "curve25519",
+      "owner": "did:jlinc:0fil1CNmwie8TevnTJckrvqsk9nyvo8U_3YRLeagAhI",
+      "publicKeyBase64": "w4NUG7YTyEHnu25LetDETmr1eju4OQymYnjpwbQNkCo"
+    }]
+  },
+  "secret": {
+    "cyphertext": "yOXRmKr7vZO2kI90Wzce3vrVXRQgIoRc",
+    "nonce": "_qhHMFWMNTueliszyMJMqXBaKpgPXlyw"
+  },
+  "signature": "xCNUhhxGpdMNCu5H5ym8uspP1qMAzJa5edQBzlskGPIHlDyqJoD6D1BfDMTaGHKQS7kp"
+  }]
+}

@@ -1,0 +1,20 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "@vocab": "https://soya.ownyoudata.eu/Did",
+  "id": "did:oyd:zQmeZLm3KZJtZmv9rYXXuREJRQ24vJogNpQ7RHueAzNKTNz",
+  "verificationMethod": [
+    {
+      "id": "did:oyd:zQmeZLm3KZJtZmv9rYXXuREJRQ24vJogNpQ7RHueAzNKTNz#key-doc",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:oyd:zQmeZLm3KZJtZmv9rYXXuREJRQ24vJogNpQ7RHueAzNKTNz",
+      "publicKeyMultibase": "z6Mv6TYMLBNWDMAUENXA5GzgmU3H6o6TriNKrYPcX5XEb6Kb"
+    },
+    {
+      "id": "did:oyd:zQmeZLm3KZJtZmv9rYXXuREJRQ24vJogNpQ7RHueAzNKTNz#key-rev",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:oyd:zQmeZLm3KZJtZmv9rYXXuREJRQ24vJogNpQ7RHueAzNKTNz",
+      "publicKeyMultibase": "z6Mv5ieMeMv9TC9oeMwUARdNYQFni7uSZWNoYgRUcwqN9eqM"
+    }
+  ],
+  "service": {}
+}

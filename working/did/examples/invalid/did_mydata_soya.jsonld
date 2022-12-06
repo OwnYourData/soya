@@ -1,0 +1,36 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "did": "https://soya.data-container.net/Did/",
+    "@vocab": "https://soya.data-container.net/Did/"
+  },
+  "@graph": [{
+    "@type": "Did",
+  "id": "did:mydata:0:z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E",
+  "verificationMethod": [
+    {
+      "id": "did:mydata:0:z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E#1",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:mydata:0:z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E",
+      "publicKeyBase58": "z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E"
+    }
+  ],
+  "authentication": [
+    {
+      "type": "Ed25519VerificationKey2018",
+      "publicKey": "did:mydata:0:z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E#1"
+    }
+  ],
+  "service": [
+    {
+      "id": "did:mydata:0:z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E;didcomm",
+      "type": "DIDComm",
+      "priority": 0,
+      "recipientKeys": [
+        "z6MkfiSdYhnLnS6jfwSf2yS2CiwwjZGmFUFL5QbyL2Xu8z2E"
+      ],
+      "serviceEndpoint": "https://ada-agent.example.com/service-x"
+    }
+  ]
+  }]
+}

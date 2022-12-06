@@ -1,5 +1,5 @@
 meta:
-  name: UsagePolicy2
+  name: UsagePolicy
   namespace:
     dpv: "http://www.w3.org/ns/dpv#"
     dpv-gdpr: "http://www.w3.org/ns/dpv-gdpr#"

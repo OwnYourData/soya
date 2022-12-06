@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "did": "https://soya.data-container.net/Did/",
+    "@vocab": "https://soya.data-container.net/Did/"
+  },
+  "@graph": [{
+    "@type": "Did",
+    "id": "did:sov:WRfXPg8dantKVubE3HX8pw",
+    "verificationMethod": [
+      {
+        "type": "Ed25519VerificationKey2018",
+        "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-1",
+        "controller": "did:sov:WRfXPg8dantKVubE3HX8pw",
+        "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+      },
+    {
+      "type": "X25519KeyAgreementKey2019",
+      "id": "did:sov:WRfXPg8dantKVubE3HX8pw#key-agreement-1",
+      "controller": "did:sov:WRfXPg8dantKVubE3HX8pw",
+      "publicKeyBase58": "FK2c4QudVyaodvX9LARDsbihkVBvWxe8oiJAiYQ2JpdC"
+    }
+    ]
+  }]
+}

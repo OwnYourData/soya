@@ -1,9 +1,5 @@
 {
   "@context": "https://www.w3.org/ns/did/v1",
-  "authentication": [
-    "did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc#keys-1"
-  ],
-  "service": [],
   "id": "did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc",
   "verificationMethod": [
     {
@@ -18,7 +14,11 @@
       }
     }
   ],
+  "authentication": [
+    "did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc#keys-1"
+  ],
   "assertionMethod": [
     "did:ebsi:z25ZZFS7FweHsm9MX2Qvc6gc#keys-1"
-  ]
+  ],
+  "service": []
 }

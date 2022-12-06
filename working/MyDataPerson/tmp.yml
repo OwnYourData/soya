@@ -1,0 +1,22 @@
+meta:
+  name: Temp
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        "my-email": string
+        "my-firstname": string
+        "my-lastname": string
+        "my-communicationChannels": set<Comm>
+        "my-permissions": set<Perm>
+
+    - name: Comm
+      attributes:
+        service: string
+        enabled: boolean
+
+    - name: Perm
+      attributes:
+        permission: string
+        enabled: boolean

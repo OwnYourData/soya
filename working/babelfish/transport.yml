@@ -1,0 +1,42 @@
+meta:
+  name: Transport
+
+content:
+  bases:
+    - name: TransportInfra 
+      attributes:
+        infra_did: string
+        lat_lng: Position
+        tm: TransportMode@set
+    - name: Position
+      attributes:
+        lat: double
+        lng: double
+    - name: TransportMode
+      attributes:
+        mode:string
+    - name: TransportEdge 
+      attributes:
+        transporter_did: string
+        transported_at: date
+        source_did: string
+        target_did: string
+        edgelength: double
+        edgeweight: string
+
+  overlays:
+    - type: OverlayAnnotation
+      base: TransportInfra
+      attributes:
+        lat_lng:
+          comment:
+            en: latitude and longitude in degrees, minutes, seconds
+            de: Längen- und Breitengrad in Grad, Minuten, Sekunden
+    - type: OverlayAnnotation
+      base: TransportEdge
+      attributes:
+        edgelenght:
+          comment:
+            en: length in km
+            de: Länge in km
+        edgeweigth:

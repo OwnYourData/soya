@@ -1,0 +1,14 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "did": "https://soya.data-container.net/Did/",
+    "@vocab": "https://soya.data-container.net/Did/"
+  },
+  "@graph": [
+    {
+      "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+      "@type": "Did",
+      "verificationMethod": []
+    }
+  ]
+}

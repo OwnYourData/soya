@@ -1,0 +1,157 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Did/",
+    "did": "https://www.w3.org/ns/did/v1"
+  },
+  "@graph": [
+    {
+      "@id": "Did",
+      "@type": "owl:Class",
+      "subClassOf": "did",
+      "Did": [
+        {
+          "@id": "id",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "alsoKnownAs",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "verificationMethod",
+          "@type": "owl:ObjectProperty",
+          "domain": "Did",
+          "range": "VerificationMethod"
+        },
+        {
+          "@id": "assertionMethod",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "authentication",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "capabilityDelegation",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "capabilityInvocation",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "keyAgreement",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "controller",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Did",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "service",
+          "@type": "owl:ObjectProperty",
+          "domain": "Did",
+          "range": "Service"
+        }
+      ]
+    },
+    {
+      "@id": "VerificationMethod",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base",
+      "VerificationMethod": [
+        {
+          "@id": "id",
+          "@type": "owl:DatatypeProperty",
+          "domain": "VerificationMethod",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "controller",
+          "@type": "owl:DatatypeProperty",
+          "domain": "VerificationMethod",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "type",
+          "@type": "owl:DatatypeProperty",
+          "domain": "VerificationMethod",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "publicKeyJwk",
+          "@type": "owl:DatatypeProperty",
+          "domain": "VerificationMethod",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "publicKeyMultibase",
+          "@type": "owl:DatatypeProperty",
+          "domain": "VerificationMethod",
+          "range": "xsd:string"
+        }
+      ]
+    },
+    {
+      "@id": "Service",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base",
+      "Service": [
+        {
+          "@id": "id",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Service",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "type",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Service",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "serviceEndpoint",
+          "@type": "owl:DatatypeProperty",
+          "domain": "Service",
+          "range": "xsd:string"
+        }
+      ]
+    },
+    {
+      "@id": "DidShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "Did",
+      "sh:property": [
+        {
+          "sh:path": "id",
+          "sh:minCount": 1,
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "verificationMethod",
+          "sh:minCount": 1
+        }
+      ],
+      "onBase": "Did",
+      "name": "DidValidationOverlay"
+    }
+  ]
+}
