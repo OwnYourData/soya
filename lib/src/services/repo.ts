@@ -2,8 +2,9 @@ import { Vaultifier, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
 import { logger } from './logger';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
-export const DEFAULT_REPO = 'https://soya.data-container.net';
+export const DEFAULT_REPO = 'https://soya.ownyourdata.eu';
 export const DEFAULT_SOYA_NAMESPACE = 'https://ns.ownyourdata.eu/ns/soya-context.json';
+export const DEFAULT_XSD = 'http://www.w3.org/2001/XMLSchema#';
 
 export interface SoyaQueryResult {
   name: string,

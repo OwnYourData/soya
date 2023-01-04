@@ -1,0 +1,116 @@
+    {
+      "@id": "DidShape",
+      "@type": "sh:NodeShape",
+      "onBase": "Did",
+      "name": "DidValidationOverlay",
+      "sh:targetClass": "Did",
+      "sh:property": [{
+          "sh:path": "id",
+          "sh:minCount": 1,
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "verificationMethod",
+          "sh:minCount": 1,
+          "sh:or": {
+            "@list": [
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "Ed25519VerificationKey2018",
+                        "Ed25519VerificationKey2020",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

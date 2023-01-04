@@ -1,0 +1,593 @@
+meta:
+  name: Did
+  namespace:
+    did: "https://www.w3.org/ns/did#"
+
+content:
+  bases: 
+    - name: Did #from: https://www.w3.org/TR/did-core/
+      subClassOf: "did:DIDSubject"
+      attributes: 
+        id: String
+        alsoKnownAs: String
+        verificationMethod: set<VerificationMethod>
+        assertionMethod: String
+        authentication: String
+        capabilityDelegation: String
+        capabilityInvocation: String
+        keyAgreement: String
+        controller: String
+        service: set<Service>
+    - name: VerificationMethod
+      subClassOf: "did:VerificationMethod"
+      attributes:
+        id: String
+        controller: String
+        type: String
+        publicKeyJwk: String
+        publicKeyMultibase: String
+    - name: Service
+      subClassOf: "did:Service"
+      attributes:
+        id: String
+        type: String
+        serviceEndpoint: String
+        
+  overlays: 
+    - type: OverlayValidation
+      base: Did
+      name: DidValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"
+        or:
+          - verificationMethod:
+              cardinality: "1..n"
+          - authentication:
+              cardinality: "1..n"
+          - assertionMethod:
+              cardinality: "1..n"
+          - keyAgreement:
+              cardinality: "1..n"
+          - capabilityInvocation:
+              cardinality: "1..n"
+          - capabilityDelegation:
+              cardinality: "1..n"
+        verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
+          attributes:
+            or: 
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                  cardinality: "1..1"
+        authentication:
+          attributes:
+            or: 
+              - datatype: String
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                  cardinality: "1..1"
+        assertionMethod:
+          attributes:
+            or: 
+              - datatype: String
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                  cardinality: "1..1"
+        keyAgreement:
+          attributes:
+            or: 
+              - datatype: String
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                  cardinality: "1..1"
+        capabilityInvocation:
+          attributes:
+            or: 
+              - datatype: String
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                  cardinality: "1..1"
+        capabilityDelegation:
+          attributes:
+            or: 
+              - datatype: String
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - JsonWebKey2020
+                    - JSONWebSignature2020
+                    - RsaVerificationKey2018
+                controller:
+                  cardinality: "1..1"
+                publicKeyJwk:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - Bls12381G1Key2020
+                    - Bls12381G2Key2020
+                    - EcdsaSecp256k1RecoveryMethod2020
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2018
+                    - VerifiableCondition2021
+                    - X25519KeyAgreementKey2019
+                controller:
+                  cardinality: "1..1"
+                publicKeyBase58:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1VerificationKey2019
+                controller:
+                  cardinality: "1..1"
+                blockchainAccountId:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - PgpVerificationKey2021
+                controller:
+                  cardinality: "1..1"
+                publicKeyPgp:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyHex:
+                  cardinality: "1..1"
+              - id:
+                  cardinality: "1..1"
+                type:
+                  cardinality: "1..1"
+                  valueOptions:
+                    - EcdsaSecp256k1RecoveryMethod2020
+                controller:
+                  cardinality: "1..1"
+                ethereumAddress:
+                   cardinality: "1..1"
+
+    - type: OverlayDidContextValidation
+      base: Did
+      name: DidContextValidationOverlay
+      constraints:
+        - id: "*"
+          context: "https://www.w3.org/ns/did/v1"
+        - type: JsonWebKey2020
+          context: "https://w3id.org/security/suites/jws-2020/v1"
+        - type: EcdsaSecp256k1VerificationKey2019
+          context: "https://w3id.org/security/suites/secp256k1-2019"
+        - type: Ed25519VerificationKey2018
+          context: "https://w3id.org/security/suites/ed25519-2018/v1"
+        - type: Ed25519VerificationKey2020
+          context: "https://w3id.org/security/suites/ed25519-2020/v1"
+        - type: Bls12381G1Key2020
+          context: "https://w3id.org/security/suites/bls12381-2020/v1"
+        - type: Bls12381G2Key2020
+          context: "https://w3id.org/security/suites/bls12381-2020/v1"
+        - type: PgpVerificationKey2021
+          context: "https://w3id.org/security/suites/pgp-2021/v1"
+        - type: RsaVerificationKey2018
+          context: "https://www.w3.org/2018/credentials/v1"
+        - type: X25519KeyAgreementKey2019
+          context: "http://w3id.org/security/suites/x25519-2019/v1"
+        - type: EcdsaSecp256k1RecoveryMethod2020
+          context: "https://w3id.org/security/suites/secp256k1recovery-2020"
+        - type: VerifiableCondition2021
+          context: "https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json"

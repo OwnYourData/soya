@@ -1,0 +1,116 @@
+Shape Graph
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:property": [ 
+        {
+          "sh:path": {"@id": "schema:name"},
+          "sh:maxCount": 1,
+          "sh:minCount": 1
+        },
+        {
+          "sh:path": {"@id": "schema:age"},
+          "sh:minExclusive": 19
+        }
+      ]
+    }
+  ]
+}
+
+---
+
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:or": {
+        "@list": [ 
+          {
+            "sh:path": {"@id": "schema:name"},
+            "sh:maxCount": 1,
+            "sh:minCount": 1
+          },
+          {
+            "sh:path": {"@id": "schema:age"},
+            "sh:minExclusive": 19
+          }
+        ]
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:or": {
+        "@list": [ 
+          {
+            "sh:property": [ 
+              {
+                "sh:path": {"@id": "schema:name"},
+                "sh:maxCount": 1,
+                "sh:minCount": 1
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 19
+              }
+            ]
+          },
+          {
+            "sh:property": [ 
+              {
+                "sh:path": {"@id": "schema:name"},
+                "sh:maxCount": 2,
+                "sh:minCount": 2
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:maxExclusive": 15
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+
+
+
+
+
+
+Data Graph
+{
+  "@context": {
+    "@base": "https://example.com/",
+    "@vocab": "http://schema.org/"
+  },
+  "@graph":[{
+    "@id": "John-Doe",
+    "@type": "Person",
+    "name": ["John", "asd"],
+    "age": 17
+  }]
+}

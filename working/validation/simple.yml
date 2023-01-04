@@ -1,0 +1,27 @@
+meta:
+  name: simple
+
+content:
+  bases: 
+    - name: Simple
+      attributes:
+        id: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: Did
+      name: ValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"
+          pattern: "^[a-zA-Z ,.'-]+$"
+        asdf:
+          cardinality: "1..1"
+          attributes:
+            id:
+              cardinality: "1..1"
+        or:
+          - id:
+              cardinality: "1..1"
+          - asdf:
+              pattern: "^[a-zA-Z ,.'-]+$"

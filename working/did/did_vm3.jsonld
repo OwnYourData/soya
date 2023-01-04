@@ -1,0 +1,1676 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Did/",
+    "did": "https://www.w3.org/ns/did/v1#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "Did",
+      "@type": "owl:Class",
+      "subClassOf": "did"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "alsoKnownAs",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "verificationMethod",
+      "@type": "owl:ObjectProperty",
+      "domain": "Did",
+      "range": "VerificationMethod",
+      "@container": "@set"
+    },
+    {
+      "@id": "assertionMethod",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "authentication",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "capabilityDelegation",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "capabilityInvocation",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "keyAgreement",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "controller",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "service",
+      "@type": "owl:ObjectProperty",
+      "domain": "Did",
+      "range": "Service",
+      "@container": "@set"
+    },
+    {
+      "@id": "VerificationMethod",
+      "@type": "owl:Class",
+      "subClassOf": "did:VerificationMethod"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "controller",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "type",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyJwk",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyBase58",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyMultibase",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "blockchainAccountId",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyPgp",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyHex",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "ethereumAddress",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "Service",
+      "@type": "owl:Class",
+      "subClassOf": "did:Service"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "type",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "serviceEndpoint",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "DidShape",
+      "@type": "sh:NodeShape",
+      "onBase": "Did",
+      "name": "DidValidationOverlay",
+      "sh:targetClass": "Did",
+      "sh:property": [
+        {
+          "sh:path": "id",
+          "sh:minCount": 1,
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "verificationMethod",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:path": "authentication",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:datatype": { 
+                  "@id": "xsd:string"
+                }
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:path": "assertionMethod",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:datatype": { 
+                  "@id": "xsd:string" 
+                }
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:path": "keyAgreement",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:datatype": { 
+                  "@id": "xsd:string" 
+                }
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:path": "capabilityInvocation",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:datatype": { 
+                  "@id": "xsd:string" 
+                }
+              },
+              {
+                "sh:property": [
+                {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:path": "capabilityDelegation",
+          "sh:or": {
+            "@list": [
+              {
+                "sh:datatype": { 
+                  "@id": "xsd:string" 
+                }
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "JsonWebKey2020",
+                        "JSONWebSignature2020",
+                        "RsaVerificationKey2018"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyJwk",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "Bls12381G1Key2020",
+                        "Bls12381G2Key2020",
+                        "EcdsaSecp256k1RecoveryMethod2020",
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2018",
+                        "VerifiableCondition2021",
+                        "X25519KeyAgreementKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyBase58",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019",
+                        "Ed25519VerificationKey2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyMultibase",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1VerificationKey2019"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "blockchainAccountId",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "PgpVerificationKey2021"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyPgp",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "publicKeyHex",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              },
+              {
+                "sh:property": [{
+                    "sh:path": "id",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "type",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1,
+                    "sh:in": {
+                      "@list": [
+                        "EcdsaSecp256k1RecoveryMethod2020"
+                      ]
+                    }
+                  },
+                  {
+                    "sh:path": "controller",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  },
+                  {
+                    "sh:path": "ethereumAddress",
+                    "sh:minCount": 1,
+                    "sh:maxCount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "sh:or": {
+            "@list": [
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "verificationMethod",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "authentication",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "assertionMethod",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "keyAgreement",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "capabilityInvocation",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "sh:property": [
+                  {
+                    "sh:path": "capabilityDelegation",
+                    "sh:minCount": 1,
+                    "sh:property": [
+                      {
+                        "sh:path": "id",
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "@id": "DidContextValidationOverlay",
+      "@type": "OverlayDidContextValidation",
+      "onBase": "Did",
+      "name": "DidContextValidationOverlay",
+      "constraints": [
+        {
+          "id": "*",
+          "context": "https://www.w3.org/ns/did/v1"
+        },
+        {
+          "type": "JsonWebKey2020",
+          "context": "https://w3id.org/security/suites/jws-2020/v1"
+        },
+        {
+          "type": "EcdsaSecp256k1VerificationKey2019",
+          "context": "https://w3id.org/security/suites/secp256k1-2019"
+        },
+        {
+          "type": "Ed25519VerificationKey2018",
+          "context": "https://w3id.org/security/suites/ed25519-2018/v1"
+        },
+        {
+          "type": "Ed25519VerificationKey2020",
+          "context": "https://w3id.org/security/suites/ed25519-2020/v1"
+        },
+        {
+          "type": "Bls12381G1Key2020",
+          "context": "https://w3id.org/security/suites/bls12381-2020/v1"
+        },
+        {
+          "type": "Bls12381G2Key2020",
+          "context": "https://w3id.org/security/suites/bls12381-2020/v1"
+        },
+        {
+          "type": "PgpVerificationKey2021",
+          "context": "https://w3id.org/security/suites/pgp-2021/v1"
+        },
+        {
+          "type": "RsaVerificationKey2018",
+          "context": "https://www.w3.org/2018/credentials/v1"
+        },
+        {
+          "type": "X25519KeyAgreementKey2019",
+          "context": "http://w3id.org/security/suites/x25519-2019/v1"
+        },
+        {
+          "type": "EcdsaSecp256k1RecoveryMethod2020",
+          "context": "https://w3id.org/security/suites/secp256k1recovery-2020"
+        },
+        {
+          "type": "VerifiableCondition2021",
+          "context": "https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json"
+        }
+      ]
+    }
+  ]
+}

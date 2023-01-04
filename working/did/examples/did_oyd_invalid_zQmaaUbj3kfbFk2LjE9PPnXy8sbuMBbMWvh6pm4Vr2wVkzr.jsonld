@@ -8,7 +8,7 @@
     {
       "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr#key-doc",
       "type": "Ed25519VerificationKey2020",
-      "controller": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+      "control-ler": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
       "publicKeyMultibase": "z6MuwvdHwfVBCy6WDhPzBtDEds6fSFJEMtM5hmhEWdWJ5P46"
     },
     {

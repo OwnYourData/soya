@@ -1,5 +1,6 @@
 import { IntSoyaDocument } from "../../interfaces";
 import { DateRange, NumberRange, parseRange } from "../../utils/range";
+import { tryUseXsdDataType } from '../../utils/xsd';
 
 interface GraphItem {
   "@id": string;
@@ -33,14 +34,16 @@ export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
     case 'OverlayValidation': mainItem = handleValidation(doc, overlay); break;
     case 'OverlayTransformation': mainItem = handleTransformation(doc, overlay); break;
     case 'OverlayForm': mainItem = handleForm(doc, overlay); break;
-    // for unsupported overlays we just return here
-    // all following code will not be executed
-    default: return;
+    default: 
+      // TODO: should be cleaned up!!!
+      mainItem = overlay;
+      doc.graph.push(overlay);
   }
 
   // if the overlay method did not provide a main item
   // we just create one artificially
   if (!mainItem) {
+    console.log(overlay.type);
     mainItem = {
       "@id": overlay.type,
     };
@@ -88,87 +91,125 @@ const handleTransformation = (doc: IntSoyaDocument, overlay: any): GraphItem => 
   return item;
 }
 
+const validationProcessOr = (elements: any): any[] => {
+  const constraintsArray: any[] = [];
+  for (const attrName in elements) {
+    if (attrName === 'or') {
+      for (const orGroup in elements[attrName]) {
+        const attrib_constraints = validationProcessAttributes(elements[attrName][orGroup]);
+        if (attrib_constraints.length > 0) {
+          constraintsArray.push({'sh:property': attrib_constraints});
+        }
+        for (const val in elements[attrName][orGroup]) {
+          if (val === 'datatype') {
+            constraintsArray.push({'sh:datatype': {'@id': tryUseXsdDataType(elements[attrName][orGroup][val]).dataType}});
+          }
+        }
+      }
+    }
+  }
+  return constraintsArray;
+}
+
+const validationProcessAttributes = (attributes: any): any[] => {
+  const constraintsArray: any[] = [];
+  for (const attrName in attributes) {
+    const constraints: { [key: string]: any } = {};
+    const attr = attributes[attrName];
+    if (!(attrName === 'or' || attrName === 'datatype')) {
+      constraints['sh:path'] = attrName;
+      for (const constraintKey in attr) {
+        const value = attr[constraintKey];
+        if (constraintKey === 'attributes') {
+          const attr_constraints = validationProcessAttributes(value);
+          if (attr_constraints.length > 0) {
+            constraints['sh:property'] = attr_constraints;
+          }
+          const constraintsOr = validationProcessOr(value)
+          if (constraintsOr.length > 0) {
+            constraints['sh:or'] = {'@list': constraintsOr};
+          }
+        } else {
+          if (constraintKey === 'pattern') {
+            constraints['sh:pattern'] = value;
+          } else if (constraintKey === 'cardinality') {
+            const range = parseRange(value);
+
+            if (range instanceof NumberRange) {
+              if (range.min)
+                constraints['sh:minCount'] = range.min;
+              if (range.max)
+                constraints['sh:maxCount'] = range.max;
+            }
+          } else if (constraintKey === 'length') {
+            const range = parseRange(value);
+
+            if (range instanceof NumberRange) {
+              if (range.min)
+                constraints['sh:minLength'] = range.min;
+              if (range.max)
+                constraints['sh:maxLength'] = range.max;
+            }
+          } else if (constraintKey === 'valueRange') {
+            const range = parseRange(value);
+
+            if (range instanceof NumberRange) {
+              if (range.min)
+                constraints['sh:minRange'] = range.min;
+              if (range.max)
+                constraints['sh:maxRange'] = range.max;
+            } else if (range instanceof DateRange) {
+              if (range.min)
+                constraints['sh:minRange'] = {
+                  '@type': 'xsd:date',
+                  '@value': range.min,
+                };
+              if (range.max)
+                constraints['sh:maxRange'] = {
+                  '@type': 'xsd:date',
+                  '@value': range.max,
+                };
+            }
+          } else if (constraintKey === 'valueOption') {
+            if (Array.isArray(value)) {
+              constraints['sh:in'] = {
+                '@list': value.map(x => {
+                  if (x && x.id) {
+                    // rename property (if it exists) from id to @id
+                    x['@id'] = x.id;
+                    delete x.id;
+                  }
+
+                  return x;
+                }),
+              }
+            }
+          }
+        }
+      }
+      constraintsArray.push(constraints);
+    }
+  }
+  return constraintsArray;
+}
+
 const handleValidation = (doc: IntSoyaDocument, overlay: any): GraphItem => {
   const { graph } = doc;
+
+  const attrib_constraints = validationProcessAttributes(overlay.attributes);
+  const or_constraints = validationProcessOr(overlay.attributes);
+  if (or_constraints.length > 0) {
+    attrib_constraints.push({'sh:or': {'@list': or_constraints}});
+  }
 
   const shacl = {
     '@id': `${overlay.base}Shape`,
     '@type': 'sh:NodeShape',
     'sh:targetClass': overlay.base,
-    'sh:property': [] as any[],
+    'sh:property': attrib_constraints,
   };
+
   graph.push(shacl);
-
-  for (const attrName in overlay.attributes) {
-    const attr = overlay.attributes[attrName];
-    const constraints: { [key: string]: any } = {};
-
-    for (const constraintKey in attr) {
-      const value = attr[constraintKey];
-
-      if (constraintKey === 'pattern') {
-        constraints['sh:pattern'] = value;
-      }
-      else if (constraintKey === 'cardinality') {
-        const range = parseRange(value);
-
-        if (range instanceof NumberRange) {
-          if (range.min)
-            constraints['sh:minCount'] = range.min;
-          if (range.max)
-            constraints['sh:maxCount'] = range.max;
-        }
-      } else if (constraintKey === 'length') {
-        const range = parseRange(value);
-
-        if (range instanceof NumberRange) {
-          if (range.min)
-            constraints['sh:minLength'] = range.min;
-          if (range.max)
-            constraints['sh:maxLength'] = range.max;
-        }
-      } else if (constraintKey === 'valueRange') {
-        const range = parseRange(value);
-
-        if (range instanceof NumberRange) {
-          if (range.min)
-            constraints['sh:minRange'] = range.min;
-          if (range.max)
-            constraints['sh:maxRange'] = range.max;
-        } else if (range instanceof DateRange) {
-          if (range.min)
-            constraints['sh:minRange'] = {
-              '@type': 'xsd:date',
-              '@value': range.min,
-            };
-          if (range.max)
-            constraints['sh:maxRange'] = {
-              '@type': 'xsd:date',
-              '@value': range.max,
-            };
-        }
-      } else if (constraintKey === 'valueOption') {
-        if (Array.isArray(value))
-          constraints['sh:in'] = {
-            '@list': value.map(x => {
-              if (x && x.id) {
-                // rename property (if it exists) from id to @id
-                x['@id'] = x.id;
-                delete x.id;
-              }
-
-              return x;
-            }),
-          }
-      }
-    }
-
-    shacl['sh:property'].push({
-      'sh:path': `${attrName}`,
-      ...constraints,
-    });
-  }
-
   return shacl;
 }
 

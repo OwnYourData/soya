@@ -1,0 +1,60 @@
+meta:
+  name: Did
+  namespace:
+    did: "https://www.w3.org/ns/did#"
+
+content:
+  bases: 
+    - name: Did
+      subClassOf: "did:DIDSubject"
+      attributes:
+        id: String
+        alsoKnownAs: String
+        verificationMethod: set<VerificationMethod>
+        assertionMethod: String
+        authentication: String
+        capabilityDelegation: String
+        capabilityInvocation: String
+        keyAgreement: String
+        controller: String
+        service: set<Service>
+    - name: VerificationMethod
+      subClassOf: "did:VerificationMethod"
+      attributes:
+        id: String
+        controller: String
+        type: String
+        publicKeyJwk: String
+        publicKeyMultibase: String
+    - name: Service
+      subClassOf: "did:Service"
+      attributes:
+        id: String
+        type: String
+        serviceEndpoint: String
+        
+  overlays: 
+    - type: OverlayValidation
+      base: Did
+      name: DidValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"
+        verificationMethod:
+          cardinality: "1..n"
+          attributes:
+            type:
+              cardinality: "1..1"
+              valueOptions:
+                - Bls12381G1Key2020
+                - Bls12381G2Key2020
+                - EcdsaSecp256k1RecoveryMethod2020
+                - EcdsaSecp256k1VerificationKey2019
+                - Ed25519VerificationKey2018
+                - Ed25519VerificationKey2020
+                - JsonWebKey2020
+                - JSONWebSignature2020
+                - PgpVerificationKey2021
+                - RsaVerificationKey2018
+                - VerifiableCondition2021
+                - X25519KeyAgreementKey201

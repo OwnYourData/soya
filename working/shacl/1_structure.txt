@@ -1,0 +1,158 @@
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:property": [ 
+        {
+          "sh:path": {"@id": "schema:name"},
+          "sh:maxCount": 1,
+          "sh:minCount": 1
+        },
+        {
+          "sh:path": {"@id": "schema:age"},
+          "sh:minExclusive": 19
+        }
+      ]
+    }
+  ]
+}
+
+--
+
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:or": {
+        "@list": [ 
+          {
+            "sh:path": {"@id": "schema:name"},
+            "sh:maxCount": 1,
+            "sh:minCount": 1
+          },
+          {
+            "sh:path": {"@id": "schema:age"},
+            "sh:minExclusive": 19
+          }
+        ]
+      }
+    }
+  ]
+}
+
+--
+
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:or": {
+        "@list": [
+          {
+            "sh:property": [
+              {
+                "sh:maxCount": 1,
+                "sh:minCount": 1,
+                "sh:path": {"@id": "schema:name"}
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 10
+              }
+            ]
+          },
+          {
+            "sh:property": [
+              {
+                "sh:maxCount": 2,
+                "sh:minCount": 2,
+                "sh:path": {"@id": "schema:name"}
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 20
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "schema": "http://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "schema:Person",
+      "@type": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "sh:or": {
+        "@list": [
+          {
+            "sh:property": [
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 25
+              }
+            ]
+          },
+          {
+            "sh:property": [
+              {
+                "sh:path": {"@id": "schema:name"},
+                "sh:datatype": "xsd:string"
+              }
+            ]
+          },
+          {
+            "sh:property": [
+              {
+                "sh:maxCount": 1,
+                "sh:minCount": 1,
+                "sh:path": {"@id": "schema:name"}
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 10
+              }
+            ]
+          },
+          {
+            "sh:property": [
+              {
+                "sh:maxCount": 2,
+                "sh:minCount": 2,
+                "sh:path": {"@id": "schema:name"}
+              },
+              {
+                "sh:path": {"@id": "schema:age"},
+                "sh:minExclusive": 20
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

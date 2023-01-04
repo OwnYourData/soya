@@ -2,56 +2,8 @@ import jsyaml from 'js-yaml';
 import { SoyaDocument, IntSoyaDocument } from '../../interfaces';
 import { logger } from '../../services/logger';
 import { handleOverlay } from './overlays';
+import { tryUseXsdDataType } from '../../utils/xsd';
 
-// according to https://www.w3.org/TR/xmlschema11-2
-const xsTypes = [
-  'string',
-  'boolean',
-  'decimal',
-  'float',
-  'double',
-  'duration',
-  'dateTime',
-  'time',
-  'date',
-  'gYearMonth',
-  'gYear',
-  'gMonthDay',
-  'gDay',
-  'gMonth',
-  'hexBinary',
-  'base64Binary',
-  'anyURI',
-  'QName',
-  'NOTATION',
-
-  'integer',
-  'long',
-  'int',
-  'short',
-  'byte',
-  'nonNegativeInteger',
-  'positiveInteger',
-  'unsignedLong',
-  'unsignedInt',
-  'unsignedShort',
-  'unsignedByte',
-  'nonPositiveInteger',
-  'negativeInteger',
-
-  'normalizedString',
-  'token',
-  'language',
-  'Name',
-  'NCName',
-  'ENTITY',
-  'ID',
-  'IDREF',
-  'NMTOKEN',
-];
-
-// we do this globally to save some runtime
-const xsTypesLowerCase = xsTypes.map(x => x.toLowerCase());
 
 const genericsRegex = /^(\w+)<(.+)>$/;
 
@@ -76,13 +28,7 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
       specifiedDataType = genericMatches[2];
     }
 
-    // for matching, also lowercase all xsTypes
-    const xsdIndex = xsTypesLowerCase.indexOf(specifiedDataType.toLowerCase());
-    const isXsd = xsdIndex !== -1;
-
-    const dataType = isXsd ?
-      `xsd:${xsTypes[xsdIndex]}` :
-      specifiedDataType;
+    const {dataType, isXsd} = tryUseXsdDataType(specifiedDataType);
 
     const graphItem: any = {
       '@id': attrName,
@@ -109,7 +55,7 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
   }
 }
 
-export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string): Promise<SoyaDocument | undefined> => {
+export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl: string, xsdUrl: string): Promise<SoyaDocument | undefined> => {
   const yaml: any = jsyaml.load(yamlContent);
 
   if (!yaml || typeof yaml !== 'object') {
@@ -124,6 +70,7 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
       "@version": 1.1,
       "@import": contextUrl,
       "@base": `${baseUrl}/${meta.name}/`,
+      "xsd": xsdUrl,
     },
     graph: [],
   }

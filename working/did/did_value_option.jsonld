@@ -1,0 +1,174 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.data-container.net/Did/",
+    "did": "https://www.w3.org/ns/did/v1"
+  },
+  "@graph": [
+    {
+      "@id": "Did",
+      "@type": "owl:Class",
+      "subClassOf": "did"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "alsoKnownAs",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "verificationMethod",
+      "@type": "owl:ObjectProperty",
+      "domain": "Did",
+      "range": "VerificationMethod"
+    },
+    {
+      "@id": "assertionMethod",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "authentication",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "capabilityDelegation",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "capabilityInvocation",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "keyAgreement",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "controller",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Did",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "service",
+      "@type": "owl:ObjectProperty",
+      "domain": "Did",
+      "range": "Service"
+    },
+    {
+      "@id": "VerificationMethod",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "controller",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "type",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyJwk",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "publicKeyMultibase",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "Service",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "type",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "serviceEndpoint",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Service",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "DidShape",
+      "@type": "sh:NodeShape",
+      "sh:targetClass": "Did",
+      "sh:property": [
+        {
+          "sh:path": "id",
+          "sh:minCount": 1,
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "verificationMethod",
+          "sh:minCount": 1,
+          "sh:property": [
+            {
+              "sh:path": "type",
+              "sh:minCount": 1,
+              "sh:maxCount": 1,
+              "sh:in": {
+                "@list": [
+                  "Bls12381G1Key2020",
+                  "Bls12381G2Key2020",
+                  "EcdsaSecp256k1RecoveryMethod2020",
+                  "EcdsaSecp256k1VerificationKey2019",
+                  "Ed25519VerificationKey2018",
+                  "Ed25519VerificationKey2020",
+                  "JsonWebKey2020",
+                  "JSONWebSignature2020",
+                  "PgpVerificationKey2021",
+                  "RsaVerificationKey2018",
+                  "VerifiableCondition2021",
+                  "X25519KeyAgreementKey2019"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "onBase": "Did",
+      "name": "DidValidationOverlay"
+    }
+  ]
+}

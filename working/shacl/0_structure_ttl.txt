@@ -1,0 +1,130 @@
+WORKING
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+
+schema:Person a <http://www.w3.org/2000/01/rdf-schema#Class> ;
+	sh:property [
+		sh:maxCount 1 ;
+		sh:minCount 1 ;
+		sh:path schema:name ;
+	], [
+		sh:minExclusive 19 ;
+		sh:path schema:age ;
+	] .
+
+
+
+
+
+
+
+
+
+
+--
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+
+schema:Person a <http://www.w3.org/2000/01/rdf-schema#Class> ;
+	sh:or (
+		[
+			sh:maxCount 1 ;
+			sh:minCount 1 ;
+			sh:path schema:name ;
+		]
+		[
+			sh:minExclusive 19 ;
+			sh:path schema:age ;
+		]
+	) .
+
+
+
+
+
+
+
+
+
+
+
+--
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+
+schema:Person a <http://www.w3.org/2000/01/rdf-schema#Class> ;
+	sh:or (
+		[
+			sh:property [
+				sh:maxCount 1 ;
+				sh:minCount 1 ;
+				sh:path schema:name ;
+			];
+			sh:property [
+				sh:minInclusive 10 ;
+				sh:path schema:age ;
+			]
+		]
+		[
+			sh:property [
+				sh:maxCount 2 ;
+				sh:minCount 2 ;
+				sh:path schema:name ;
+			];
+			sh:property [
+				sh:minInclusive 20 ;
+				sh:path schema:age ;
+			]
+		]
+	) .
+
+
+
+--
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+
+schema:Person a <http://www.w3.org/2000/01/rdf-schema#Class> ;
+	sh:or (
+		[
+			sh:property [
+				sh:maxCount 1 ;
+				sh:minCount 1 ;
+				sh:path schema:name ;
+			];
+			sh:property [
+				sh:minInclusive 10 ;
+				sh:path schema:age ;
+			]
+		]
+		[
+			sh:property [
+				sh:class xsd:string;
+				sh:path schema:name ;
+			];
+			sh:property [
+				sh:minInclusive 10 ;
+				sh:path schema:age ;
+			]
+		]
+	) .
+
+Data Graph
+
+{
+  "@context": {
+    "@base": "https://example.com/",
+    "@vocab": "http://schema.org/"
+  },
+  "@graph":[{
+    "@id": "John-Doe",
+    "@type": "Person",
+    "name": ["asdf", "asdf"],
+    "age": 5
+  }]
+}
+

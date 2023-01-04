@@ -5,7 +5,7 @@ import { JsonParseError } from "./errors";
 import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
 import { SoyaQuery, SoyaQueryResult, SoyaInfo } from "./services/repo";
-import { DEFAULT_SOYA_NAMESPACE, RepoService } from "./services/repo";
+import { DEFAULT_SOYA_NAMESPACE, DEFAULT_XSD, RepoService } from "./services/repo";
 import { flat2ld } from "./system/flat2ld";
 import { SoyaFormOptions, getSoyaForm, SoyaFormResponse } from "./system/form";
 import { yaml2soya } from "./system/yaml2soya";
@@ -51,7 +51,7 @@ export class Soya {
   }
 
   init = async (yaml: string): Promise<SoyaDocument | undefined> => {
-    return yaml2soya(yaml, DEFAULT_SOYA_NAMESPACE, this.service.repo);
+    return yaml2soya(yaml, DEFAULT_SOYA_NAMESPACE, this.service.repo, DEFAULT_XSD);
   }
 
   pull = async (path: string, options: PullOptions = {
