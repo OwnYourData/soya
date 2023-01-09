@@ -36,7 +36,7 @@ content:
         {
           "@context": {
             "@version":1.1,
-            "@vocab":"https://soya.data-container.net/PersonB/"},
+            "@vocab":"https://soya.ownyourdata.eu/PersonB/"},
           "@graph": map( 
             {"@id":.["@id"], 
             "@type":"PersonB", 

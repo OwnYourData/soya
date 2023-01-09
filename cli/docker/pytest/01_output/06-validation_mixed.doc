@@ -4,7 +4,7 @@
   "classChecks": [
     {
       "message": "Missing class",
-      "name": "https://soya.data-container.net/Person_Test/Person"
+      "name": "https://soya.ownyourdata.eu/Person_Test/Person"
     }
   ]
 }

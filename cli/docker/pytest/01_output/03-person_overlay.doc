@@ -2,13 +2,14 @@
   "@context": {
     "@version": 1.1,
     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.data-container.net/PersonOverlay_Test/"
+    "@base": "https://soya.ownyourdata.eu/PersonOverlay_Test/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "@graph": [
     {
-      "@id": "https://soya.data-container.net/Person_Test/PersonShape",
+      "@id": "https://soya.ownyourdata.eu/Person_Test/PersonShape",
       "@type": "sh:NodeShape",
-      "sh:targetClass": "https://soya.data-container.net/Person_Test/Person",
+      "sh:targetClass": "https://soya.ownyourdata.eu/Person_Test/Person",
       "sh:property": [
         {
           "sh:path": "name",
@@ -44,7 +45,7 @@
           "sh:path": "employer"
         }
       ],
-      "onBase": "https://soya.data-container.net/Person_Test/Person",
+      "onBase": "https://soya.ownyourdata.eu/Person_Test/Person",
       "name": "PersonValidationOverlay_Test"
     }
   ]

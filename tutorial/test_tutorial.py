@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 cwd = os.getcwd()
-repo = "https://soya.data-container.net"
+repo = "https://soya.ownyourdata.eu"
 playgrond = "https://playground.data-container.net"
 
 # ensure SOyA Repo and Playground are available

@@ -12,7 +12,7 @@ content:
           spec: 
             "\\@context":
               "\\@version": "\\@context.\\@version"
-              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
+              "#https://soya.ownyourdata.eu/PersonB/": "\\@context.\\@vocab"
             "\\@graph": 
               "*": 
                 "#PersonB": "\\@graph[#2].\\@type"

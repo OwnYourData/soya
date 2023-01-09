@@ -1,8 +1,10 @@
+OverlayEncoding
 {
   "@context": {
     "@version": 1.1,
     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.data-container.net/PersonEncoding/"
+    "@base": "https://soya.ownyourdata.eu/PersonEncoding/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "@graph": [
     {

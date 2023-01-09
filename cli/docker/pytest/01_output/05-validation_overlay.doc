@@ -4,7 +4,7 @@
     {
       "id": {
         "termType": "NamedNode",
-        "value": "https://soya.data-container.net/Person2instance_test"
+        "value": "https://soya.ownyourdata.eu/Person2instance_test"
       },
       "message": [
         {
@@ -16,7 +16,7 @@
         }
       ],
       "termType": "NamedNode",
-      "value": "https://soya.data-container.net/Person_Test/name",
+      "value": "https://soya.ownyourdata.eu/Person_Test/name",
       "severity": {
         "value": "http://www.w3.org/ns/shacl#Violation"
       }
@@ -24,7 +24,7 @@
     {
       "id": {
         "termType": "NamedNode",
-        "value": "https://soya.data-container.net/Person2instance_test"
+        "value": "https://soya.ownyourdata.eu/Person2instance_test"
       },
       "message": [
         {
@@ -36,7 +36,7 @@
         }
       ],
       "termType": "NamedNode",
-      "value": "https://soya.data-container.net/Person_Test/dateOfBirth",
+      "value": "https://soya.ownyourdata.eu/Person_Test/dateOfBirth",
       "severity": {
         "value": "http://www.w3.org/ns/shacl#Violation"
       }

@@ -42,8 +42,9 @@ export const handleOverlay = (doc: IntSoyaDocument, overlay: any) => {
 
   // if the overlay method did not provide a main item
   // we just create one artificially
+  console.log("haha");
   if (!mainItem) {
-    console.log(overlay.type);
+    console.log("hihi");
     mainItem = {
       "@id": overlay.type,
     };

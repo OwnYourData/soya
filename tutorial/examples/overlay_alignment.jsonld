@@ -1,8 +1,10 @@
+OverlayAlignment
 {
   "@context": {
     "@version": 1.1,
     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.data-container.net/PersonAlignment/",
+    "@base": "https://soya.ownyourdata.eu/PersonAlignment/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
     "foaf": "http://xmlns.com/foaf/0.1/",
     "dc": "http://purl.org/dc/elements/1.1/"
   },

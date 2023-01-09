@@ -6,7 +6,7 @@ import requests
 import subprocess
 from pathlib import Path
 
-repo = "https://soya.data-container.net"
+repo = "https://soya.ownyourdata.eu"
 
 def test_repo():
     response = requests.get(repo + "/api/active")
