@@ -1,4 +1,4 @@
-FROM node:16 as node_builder
+FROM node:19 as node_builder
 
 WORKDIR /app
 ENV NODE_ENV=development

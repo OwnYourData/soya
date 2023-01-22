@@ -1,0 +1,18 @@
+meta:
+  name: Organisation
+  namespace:
+    org: "https://schema.org/Organization#"
+
+content:
+  bases:
+    - name: Organisation
+      attributes:
+        title: string
+
+  overlays: 
+    - type: OverlayAlignment
+      base: Company
+      name: CompanyAlignmentOverlay
+      attributes:
+        title: 
+          - org:legalName
