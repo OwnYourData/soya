@@ -45,7 +45,9 @@ content:
       attributes:
         id: 
           cardinality: "1..1"
+          message: "there must be one 'id' in 'verificationMethod'"
         verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
+          message: "invalid 'verificationMethod'"
           attributes:
             or: 
               - id:
@@ -130,6 +132,7 @@ content:
                 ethereumAddress:
                   cardinality: "1..1"
         authentication:
+          message: "invalid 'authentication'"
           attributes:
             or: 
               - datatype: String
@@ -215,6 +218,7 @@ content:
                 ethereumAddress:
                   cardinality: "1..1"
         assertionMethod:
+          message: "invalid 'assertionMethod'"
           attributes:
             or: 
               - datatype: String
@@ -300,6 +304,7 @@ content:
                 ethereumAddress:
                   cardinality: "1..1"
         keyAgreement:
+          message: "invalid 'keyAgreement'"
           attributes:
             or: 
               - datatype: String
@@ -385,6 +390,7 @@ content:
                 ethereumAddress:
                   cardinality: "1..1"
         capabilityInvocation:
+          message: "invalid 'capabilityInvocation'"
           attributes:
             or: 
               - datatype: String
@@ -470,6 +476,7 @@ content:
                 ethereumAddress:
                   cardinality: "1..1"
         capabilityDelegation:
+          message: "invalid 'capabilityDelegation'"
           attributes:
             or: 
               - datatype: String
@@ -586,6 +593,7 @@ content:
                 id: 
                   cardinality: "1..1"
         service:
+          message: "invalid 'capabilityDelegation'"
           attributes:
             id:
               cardinality: "1..1"

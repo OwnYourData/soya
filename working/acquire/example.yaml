@@ -1,0 +1,12 @@
+meta:
+  name: Example
+
+content:
+  bases: 
+    - name: Example
+      attributes:
+        polygon: set<GPS>
+    - name: GPS
+      attributes:
+        lat: double
+        lon: double

@@ -173,7 +173,7 @@
           "sh:path": "id",
           "sh:minCount": 1,
           "sh:maxCount": 1,
-          "sh:message": "there must be one 'id' in the root map"
+          "sh:message": "there must be one 'id' in 'verificationMethod'"
         },
         {
           "sh:path": "verificationMethod",
@@ -185,8 +185,7 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1,
-                    "sh:message": "there must be one 'id' in 'verificationMethod'"
+                    "sh:maxCount": 1
                   },
                   {
                     "sh:path": "type",
@@ -200,23 +199,19 @@
                         "JSONWebSignature2020",
                         "RsaVerificationKey2018"
                       ]
-                    },
-                    "sh:message": "there must be one 'type' in 'verificationMethod'"
+                    }
                   },
                   {
                     "sh:path": "controller",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1,
-                    "sh:message": "there must be one 'controller' in 'verificationMethod'"
+                    "sh:maxCount": 1
                   },
                   {
                     "sh:path": "publicKeyJwk",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1,
-                    "sh:message": "there must be one 'publicKeyJwk' in 'verificationMethod'"
+                    "sh:maxCount": 1
                   }
-                ],
-                "sh:message": "invalid 'publicKeyJwk'"
+                ]
               },
               {
                 "sh:property": [
@@ -631,6 +626,7 @@
         },
         {
           "sh:path": "assertionMethod",
+          "sh:message": "invalid 'assertionMethod'",
           "sh:or": {
             "@list": [
               {
@@ -857,6 +853,7 @@
         },
         {
           "sh:path": "keyAgreement",
+          "sh:message": "invalid 'keyAgreement'",
           "sh:or": {
             "@list": [
               {
@@ -1083,6 +1080,7 @@
         },
         {
           "sh:path": "capabilityInvocation",
+          "sh:message": "invalid 'capabilityInvocation'",
           "sh:or": {
             "@list": [
               {
@@ -1309,6 +1307,7 @@
         },
         {
           "sh:path": "capabilityDelegation",
+          "sh:message": "invalid 'capabilityDelegation'",
           "sh:or": {
             "@list": [
               {
@@ -1535,6 +1534,7 @@
         },
         {
           "sh:path": "service",
+          "sh:message": "invalid 'capabilityDelegation'",
           "sh:property": [
             {
               "sh:path": "id",
@@ -1554,6 +1554,7 @@
           ]
         },
         {
+          "sh:message": "invalid 'verification Relationships'",
           "sh:or": {
             "@list": [
               {

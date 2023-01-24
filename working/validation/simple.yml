@@ -9,19 +9,10 @@ content:
 
   overlays: 
     - type: OverlayValidation
-      base: Did
+      base: Simple
       name: ValidationOverlay
       attributes:
         id: 
           cardinality: "1..1"
           pattern: "^[a-zA-Z ,.'-]+$"
-        asdf:
-          cardinality: "1..1"
-          attributes:
-            id:
-              cardinality: "1..1"
-        or:
-          - id:
-              cardinality: "1..1"
-          - asdf:
-              pattern: "^[a-zA-Z ,.'-]+$"
+          message: "there must be one 'id' in 'verificationMethod'"

@@ -183,6 +183,8 @@ const validationProcessAttributes = (attributes: any): any[] => {
                 }),
               }
             }
+          } else if (constraintKey === 'message') {
+            constraints['sh:message'] = value;
           }
         }
       }
@@ -202,8 +204,10 @@ const handleValidation = (doc: IntSoyaDocument, overlay: any): GraphItem => {
   }
 
   const shacl = {
-    '@id': `${overlay.base}Shape`,
-    '@type': 'sh:NodeShape',
+    '@id': `${overlay.base}OverlayValidation`,
+    '@type': overlay.type,
+    'onBase': overlay.base,
+    'name': overlay.name,
     'sh:targetClass': overlay.base,
     'sh:property': attrib_constraints,
   };
