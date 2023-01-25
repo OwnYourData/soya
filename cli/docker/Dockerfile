@@ -21,7 +21,7 @@ WORKDIR /app
 
 #########################################
 
-FROM ruby:3.1.2-alpine
+FROM ruby:3.1.3-alpine
 MAINTAINER "Christoph Fabianek" christoph@ownyourdata.eu
 
 RUN addgroup -S user && \

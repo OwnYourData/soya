@@ -26,9 +26,7 @@ export class SoyaValidate implements OverlayPlugin {
     // }`);
     const requiredClasses = await layerBuilder.query(`
     PREFIX sh: <http://www.w3.org/ns/shacl#>
-    PREFIX soya: <https://ns.ownyourdata.eu/soya/v1#>
     SELECT ?c WHERE {
-      ?s a soya:OverlayValidation .
       ?s sh:targetClass ?c .
     }`);
 
