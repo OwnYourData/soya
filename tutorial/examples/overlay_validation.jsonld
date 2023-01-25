@@ -7,8 +7,10 @@
   },
   "@graph": [
     {
-      "@id": "PersonShape",
-      "@type": "sh:NodeShape",
+      "@id": "PersonOverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "Person",
+      "name": "PersonValidationOverlay",
       "sh:targetClass": "Person",
       "sh:property": [
         {
@@ -48,9 +50,7 @@
             ]
           }
         }
-      ],
-      "onBase": "Person",
-      "name": "PersonValidationOverlay"
+      ]
     }
   ]
 }

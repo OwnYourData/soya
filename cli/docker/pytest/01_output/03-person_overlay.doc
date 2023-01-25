@@ -7,8 +7,10 @@
   },
   "@graph": [
     {
-      "@id": "https://soya.ownyourdata.eu/Person_Test/PersonShape",
-      "@type": "sh:NodeShape",
+      "@id": "https://soya.ownyourdata.eu/Person_Test/PersonOverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "https://soya.ownyourdata.eu/Person_Test/Person",
+      "name": "PersonValidationOverlay_Test",
       "sh:targetClass": "https://soya.ownyourdata.eu/Person_Test/Person",
       "sh:property": [
         {
@@ -44,9 +46,7 @@
         {
           "sh:path": "employer"
         }
-      ],
-      "onBase": "https://soya.ownyourdata.eu/Person_Test/Person",
-      "name": "PersonValidationOverlay_Test"
+      ]
     }
   ]
 }

@@ -18,11 +18,17 @@ export class SoyaValidate implements OverlayPlugin {
     const res = await validator.validate(dataSet);
 
     const layerBuilder = new SparqlQueryBuilder(layerSet);
+    // const requiredClasses = await layerBuilder.query(`
+    // PREFIX sh: <http://www.w3.org/ns/shacl#>
+    // SELECT ?c WHERE {
+    //   ?s a sh:NodeShape .
+    //   ?s sh:targetClass ?c .
+    // }`);
     const requiredClasses = await layerBuilder.query(`
     PREFIX sh: <http://www.w3.org/ns/shacl#>
     SELECT ?c WHERE {
-      ?s a sh:NodeShape .
-	    ?s sh:targetClass ?c .
+      ?s a 'OverlayValidation' .
+      ?s sh:targetClass ?c .
     }`);
 
     const dataBuilder = new SparqlQueryBuilder(dataSet);
