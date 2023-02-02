@@ -631,6 +631,7 @@
         },
         {
           "sh:path": "assertionMethod",
+          "sh:message": "invalid 'assertionMethod'",
           "sh:or": {
             "@list": [
               {

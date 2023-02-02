@@ -27,7 +27,7 @@ MAINTAINER "Christoph Fabianek" christoph@ownyourdata.eu
 RUN addgroup -S user && \
     adduser -S user -G user && \
     apk add --no-cache libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
-    gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri && \
+    gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri oydid && \
     gem install securerandom -v 0.1.1 && \
     apk del make gcc musl-dev && \
     apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && \

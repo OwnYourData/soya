@@ -45,11 +45,13 @@ content:
       attributes:
         id: 
           cardinality: "1..1"
-          message: "there must be one 'id' in 'verificationMethod'"
+          message: "there must be one 'id' in a DID document"
         verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
           message: "invalid 'verificationMethod'"
           attributes:
             or: 
+              message: "asefd"
+              constraints:
               - id:
                   cardinality: "1..1"
                 type:
@@ -593,14 +595,16 @@ content:
                 id: 
                   cardinality: "1..1"
         service:
-          message: "invalid 'capabilityDelegation'"
           attributes:
             id:
               cardinality: "1..1"
+              message: "there must be one 'id' in 'service'"
             type:
               cardinality: "1..1"
+              message: "there must be one 'type' in 'service'"
             serviceEndpoint:
               cardinality: "1..1"
+              message: "there must be one 'serviceEndpoint' in 'service'"
 
     - type: OverlayDidContextValidation
       base: Did
