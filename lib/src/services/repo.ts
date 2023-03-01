@@ -1,4 +1,5 @@
 import { Vaultifier, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
+import { Cache } from './cache';
 import { logger } from './logger';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
@@ -31,6 +32,8 @@ export interface SoyaInfo {
 }
 
 export class RepoService {
+  private _cache = new Cache();
+
   constructor(
     public repo: string = DEFAULT_REPO,
   ) { }
@@ -64,12 +67,8 @@ export class RepoService {
     return res;
   }
 
-  private _pullCache: { [path: string]: any } = {};
   pull = async (path: string): Promise<any> => {
-    if (this._pullCache[path])
-      return this._pullCache[path];
-    else
-      return this._pullCache[path] = await this.get(`/${path}`, false);
+    return this._cache.get(path, () => this.get(`/${path}`, false));
   }
 
   private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
