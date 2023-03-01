@@ -4,12 +4,18 @@ import factory from "rdf-ext";
 import * as jsonld from 'jsonld';
 import { ContextDefinition } from 'jsonld';
 import { DEFAULT_REPO } from '../services/repo';
+import axios from 'axios';
 
 export const parseJsonLd = (input: any) => {
   const parser = new JsonLdParser({
     ignoreMissingContextLinkHeader: true,
     baseIRI: DEFAULT_REPO, // for @ids that are not absolute this value is used as a default (to make it absolute)
     processingMode: '1.1',
+    documentLoader: {
+      // overwriting document loader here, as default implementation is
+      // fetch, which is experimental on node.js
+      load: async (url: string) => (await axios.get(url)).data,
+    },
   });
   const str = JSON.stringify(input);
 
