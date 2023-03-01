@@ -1,0 +1,15 @@
+meta:
+  name: SenML_Transformation
+
+content:
+  bases:
+    - name: SenML
+      attributes:
+        name: String
+        value: String
+
+  overlays: 
+    - type: OverlayTransformation
+      name: SenMLTransformationOverlay
+      base: SenML
+      engine: senml

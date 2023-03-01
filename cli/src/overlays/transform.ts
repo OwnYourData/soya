@@ -6,6 +6,7 @@ import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
 import { cmdArgs } from '../utils/cmd';
+import { Normalize } from 'senml-js';
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
   private runJolt = async (spec: any[], data: any): Promise<Overlays.OverlayResult> => {
@@ -63,10 +64,24 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     }
   }
 
+  private runSenMl = async (data: any): Promise<Overlays.OverlayResult> => {
+    logger.debug('Executing SenML');
+
+    const res = Normalize({
+      Records: data,
+    });
+
+    if (res instanceof Error) {
+      throw res;
+    } else {
+      return { data: res.Records };
+    }
+  }
+
   run = (soyaDoc: SoyaDocument, data: any): Promise<Overlays.OverlayResult> => {
     for (const item of soyaDoc['@graph']) {
       // not a valid transformation overlay
-      if (!(item.engine && item.value))
+      if (!(item.engine))
         continue;
 
       switch (item.engine) {
@@ -82,6 +97,12 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
           }
           else
             throw new Error('jq expects a string as input!')
+        case 'senml':
+          if (Array.isArray(data)) {
+            return this.runSenMl(data);
+          }
+          else
+            throw new Error('senml expects an array as input!')
         default:
           throw new Error(`Transform engine ${item.engine} not supported!`);
       }
