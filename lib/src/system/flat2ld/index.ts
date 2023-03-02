@@ -6,13 +6,7 @@ const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson
   for (const prop in flatJson) {
     const val = flatJson[prop];
 
-    if (
-      typeof val === 'object' &&
-      // typeof val also outputs 'object' for Arrays
-      // therefore we have to check them separately here
-      // arrays should be acquired directly, therefore we don't include them in this "if"
-      !Array.isArray(val)
-    ) {
+    if (typeof val === 'object') {
       const refClasses = await builder.query(`
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX base: <${base}>
@@ -24,12 +18,21 @@ const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson
         const refClass = refClasses[0].get('?o');
 
         if (refClass) {
-          const subItem: any = {
-            "@type": refClass.replace(base, ''),
-          }
-          item[prop] = [subItem];
+          const type = refClass.replace(base, '');
 
-          await iterateItemProps(builder, subItem, val, base);
+          if (Array.isArray(val))
+            item[prop] = val.map(x => {
+              x['@type'] = type;
+              return x;
+            });
+          else {
+            const subItem: any = {
+              "@type": type,
+            }
+            item[prop] = [subItem];
+
+            await iterateItemProps(builder, subItem, val, base);
+          }
         }
       }
     }
