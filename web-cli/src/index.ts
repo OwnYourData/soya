@@ -1,8 +1,7 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { Soya, Overlays, } from "soya-js";
 
 interface RequestModel {
-  schemaDri?: string;
   content?: string;
 }
 const app = express();
@@ -16,11 +15,12 @@ app.use('/api/v1', router);
 
 const soya = new Soya();
 
-router.post('/validate', async (req: Request<{}, {}, RequestModel>, res: Response) => {
+router.post('/validate/:schemaDri', async (req, res) => {
   const {
     content,
-    schemaDri,
-  } = req.body;
+  } = req.body as RequestModel;
+
+  const schemaDri = req.params['schemaDri'];
 
   if (!schemaDri || !content)
     return res.status(400);
@@ -30,8 +30,8 @@ router.post('/validate', async (req: Request<{}, {}, RequestModel>, res: Respons
     const resVal = await new Overlays.SoyaValidate().run(soyaDoc, content);
 
     return res.status(200).send(resVal);
-  } catch (e) {
-    return res.status(500).send(e);
+  } catch (e: any) {
+    return res.status(500).send(e.toString());
   }
 });
 
@@ -40,11 +40,14 @@ router.get('/form/:schemaDri', async (req, res) => {
 
   try {
     const soyaDoc = await soya.pull(schemaDri);
-    const form = await soya.getForm(soyaDoc);
+    const form = await soya.getForm(soyaDoc, {
+      language: req.query['language'] as string,
+      tag: req.query['tag'] as string,
+    });
 
     return res.status(200).send(form);
-  } catch (e) {
-    return res.status(500).send(e);
+  } catch (e: any) {
+    return res.status(500).send(e.toString());
   }
 });
 
