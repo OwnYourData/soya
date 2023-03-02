@@ -1,0 +1,98 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SOyA web-cli",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/api/v1",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/validate/{schemaDri}": {
+      "post": {
+        "summary": "Validates data against a schema",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schemaDri",
+            "in": "path",
+            "description": "Schema DRI of the SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to validate",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful validation"
+          }
+        }
+      }
+    },
+    "/form/{schemaDri}": {
+      "get": {
+        "summary": "Generates a JSON-Forms form",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schemaDri",
+            "in": "path",
+            "description": "Schema DRI of the SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful validation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ValidateRequest": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
