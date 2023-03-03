@@ -5,7 +5,9 @@ import * as jsonld from 'jsonld';
 import { ContextDefinition } from 'jsonld';
 import { DEFAULT_REPO } from '../services/repo';
 import axios from 'axios';
+import { Cache } from '../services/cache';
 
+const documentCache = new Cache();
 export const parseJsonLd = (input: any) => {
   const parser = new JsonLdParser({
     ignoreMissingContextLinkHeader: true,
@@ -14,9 +16,10 @@ export const parseJsonLd = (input: any) => {
     documentLoader: {
       // overwriting document loader here, as default implementation is
       // fetch, which is experimental on node.js
-      load: async (url: string) => (await axios.get(url)).data,
-    },
+      load: async (url: string) => documentCache.get(url, async () => (await axios.get(url)).data),
+    }
   });
+
   const str = JSON.stringify(input);
 
   parser.write(str);
