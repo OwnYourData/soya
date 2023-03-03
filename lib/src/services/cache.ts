@@ -14,21 +14,24 @@ export class Cache {
     public cacheTime: number = 30 * 60 * 1000,
   ) { }
 
-  get = async (path: string, action: () => Promise<CacheItem>): Promise<CacheItem> => {
-    const log = logger.child({tag: `Cache ${path}`});
+  get = async (path: string, action: () => Promise<any>): Promise<CacheItem> => {
+    const log = logger.child({ tag: `Cache ${path}` });
 
     const now = new Date().getTime();
     let item = this.cache.get(path)
 
-    if (!item || (item.timestamp + this.cacheTime) > now) {
+    if (!item || (item.timestamp + this.cacheTime) < now) {
       log.debug('Refreshing');
-      
-      item = await action();
+
+      item = {
+        data: await action(),
+        timestamp: now,
+      };
       this.cache.set(path, item);
     } else {
       log.debug('Using cached result');
     }
 
-    return item;
+    return item.data;
   }
 }
