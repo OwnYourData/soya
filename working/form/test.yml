@@ -1,0 +1,45 @@
+meta:
+  name: Test
+
+# JSON-Forms: https://jsonforms.io/
+# website: https://form.ownyourdata.unterholzer.dev/
+# list tags&languages: https://soya-web-cli.ownyourdata.eu/api/v1/form/Test
+
+content:
+  bases: 
+    - name: Test
+      attributes:
+        name: String
+        hobbies: set<String>
+
+  overlays: 
+    - type: OverlayForm
+      base: Test
+      name: TestFormOverlay
+      schema:
+        type: object
+        properties:
+          names:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                hobbies:
+                  type: object
+                  properties:
+                    hobbies:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          hobbies:
+                            type: string
+      ui:
+        type: VerticalLayout
+        elements:
+        - type: Control
+          scope: "#/properties/names"
+          options:
+            showSortButtons: true

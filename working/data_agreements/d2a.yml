@@ -1,0 +1,45 @@
+meta:
+  name: D2A
+  
+content:
+  bases:
+    - name: DataAgreement
+      attributes:
+        purposes: set<DApurpose>
+    - name: DApurpose
+      attributes:
+        purpose_description: String
+        purpose_type: String
+        service: String
+        cii_information: CII
+        jurisdiction: String
+        data_controllers: DataSubject
+        data_owners: DataSubject
+    - name: CII
+      attributes:
+        attribute_id: String
+        attribute_type: String
+        sensitivity: String
+        data_optional: Boolean
+    - name: DataSubject
+      attributes:
+        organization_id: String
+        name: String
+        address: String
+        party_type: String
+        
+  overlays:
+    - type: OverlayValidation
+      base: DataAgreement
+      name: DataAgreementValidationOverlay
+      attributes:
+        purposes:
+          cardinality: "1..*"
+    - type: OverlayValidation
+      base: CII
+      name: CiiValidationOverlay
+      attributes:
+        sensitivity:
+          valueOption:
+            - csi
+            - none

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-CONTAINER="soya-base"
+CONTAINER="soya-web-cli"
 REPOSITORY="oydeu"
+TAG="latest"
 
 # read commandline options
 BUILD_CLEAN=false
@@ -9,7 +10,7 @@ DOCKER_UPDATE=false
 BUILD_ARM=false
 PLATFORM="linux/amd64"
 BUILD_X86=true
-DOCKERFILE="./docker/Dockerfile"
+DOCKERFILE="./Dockerfile"
 
 while [ $# -gt 0 ]; do
     case "$1" in

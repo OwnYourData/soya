@@ -1,0 +1,257 @@
+## Step 1: Match fields on root level
+
+meta:
+  name: OYD_Organisation
+  namespace:
+    schema: "https://schema.org/"
+
+content:
+  bases:
+    - name: Organisation 
+      attributes:
+        name: string
+  overlays: 
+    - type: OverlayAligment
+      base: Organisation
+      name: OrganisationOverlayAligment
+      attributes:
+        name: 
+          - schema:legalName
+--
+meta:
+  name: OYD_Company
+  namespace:
+    schema: "https://schema.org/"
+
+content:    
+  bases:
+    - name: Company
+      attributes:
+        registered_name: string
+
+  overlays: 
+    - type: OverlayAlignment
+      base: Company
+      name: CompanyAlignmentOverlay
+      attributes:
+        registered_name: 
+          - schema:legalName
+--
+soya pull OYD_Organisation | soya map OYD_Company
+# output: {"registered_name":"{{$.name}}"}
+
+soya pull OYD_Organisation | soya map-push OYD_Company
+# update OYD_Company to
+meta:
+  name: OYD_Company
+  namespace:
+    schema: "https://schema.org/"
+
+content:    
+  bases:
+    - name: Company
+      attributes:
+        registered_name: string
+
+  overlays: 
+    - type: OverlayAlignment
+      base: Company
+      name: CompanyAlignmentOverlay
+      attributes:
+        registered_name: 
+          - schema:legalName
+    - type: OverlayTransformation
+      name: OYD_Organisation_TransformationOverlay
+      base: Company
+      source: OYD_Organisation
+      engine: handlebars
+      document: '{"registered_name":"{{name}}"}'
+--
+# Org Instance: {"name": "ACME Inc."}
+echo '{"name": "ACME Inc."}' | soya acquire OYD_Organisation | soya transform OYD_Company
+# output: {"registered_name":"ACME Inc."}
+
+
+
+
+
+
+
+## Step 2: Match fields on any level
+
+meta:
+  name: WhoCovid19Credential
+
+content:
+  bases:
+    - name: WhoCovid19Credential
+      attributes:
+        header: Person
+        vaccinationEvent: VaccinationEvent
+        healthCertificateIdentifier: Identifier
+        certificateIssuer: String
+        certificateValidFrom: Date
+        certificateValidUntil: Date
+        certificateSchemaVersion: String
+
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        uniqueIdentifier: Identifier
+        sex: String
+
+    - name: Identifier
+      attributes:
+        id: String
+        idSystem: String    
+
+    - name: VaccinationEvent
+      attributes: 
+        vaccineOrProphylaxis: String
+        vaccineBrand: String
+        vaccineManufacture: String
+        vaccineMarketAuthorization: String
+        vaccineBatchNumber: String
+        dateOfVaccination: Date
+        doseNumber: Integer
+        validFrom: Date
+        totalDoses: Integer
+        countryOfVaccination: String
+        administeringCentre: String
+        healthWorkerSignature: base64binary
+        healthWorkerIdentifier: Identifier
+        diseaseTarget: String
+        nextDoseDue: Date
+
+  overlays: 
+    - type: OverlayAlignment
+      base: WhoCovid19Credential
+      name: WhoCovid19CredentialAlignmentOverlay
+      attributes:
+        certificateIssuer: 
+          - schema:provider
+    - type: OverlayAlignment
+      base: Person
+      name: PersonAlignmentOverlay
+      attributes:
+        name: 
+          - schema:name
+        dateOfBirth:
+          - schema:birthDate
+
+--
+
+meta:
+  name: IataTravelPass
+
+content:
+  bases:
+    - name: VaccinationDetails
+      attributes:
+        vaccinationEvent: VaccinationEvent
+        dateOfVaccination: Date
+        doseNumber: Integer
+        countryOfVaccination: String
+        administeringCentre: String
+        vaccineBatch: String
+        nextDoseDue: Date
+
+    - name: VaccinationEvent
+      attributes:
+        personIdentification: Person
+        vaccine: String
+        brand: String
+        diseaseTarget: String
+
+    - name: Person
+      attributes:
+        name: String
+        dateOfBirth: Date
+        uniqueIdentifier: String
+        additionalIdentifiers: Array
+        sex: String
+
+  overlays: 
+    - type: OverlayAlignment
+      base: VaccinationDetails
+      name: VaccinationDetailsAlignmentOverlay
+      attributes:
+        administeringCentre: 
+          - schema:provider
+    - type: OverlayAlignment
+      base: Person
+      name: PersonAlignmentOverlay
+      attributes:
+        name: 
+          - schema:name
+        dateOfBirth:
+          - schema:birthDate
+
+soya pull WhoCovid19Credential | soya map IataTravelPass
+{"vaccinationEvent":{"personIdentification":{"name":{{header.name}}, "dateOfBirth":{{header.dateOfBirth}}}}, "administeringCentre":{{certificateIssuer}}}
+
+
+
+
+## Step 3: Regular Expression Support
+
+meta:
+  name: DriversLicence
+  namespace:
+    schema: "https://schema.org/"
+
+content:
+  bases:
+    - name: License 
+      attributes:
+        name: string
+        born: date
+        vehicle_types: string
+        valid: date
+  overlays: 
+    - type: OverlayAligment
+      base: license
+      name: LicenseOverlayAligment
+      attributes:
+        name: 
+          - schema:name
+
+--
+
+meta:
+  name: AustrianDriversLicence
+  namespace:
+    schema: "https://schema.org/"
+
+content:
+  bases:
+    - name: Fuehrerschein 
+      attributes:
+        vorname: string
+        nachname: string
+        geburts_jahr: integer
+        klassen: Kategorien
+    - name: kategorien
+      attributes:
+        typ: string
+        valid: date
+  overlays: 
+    - type: OverlayAligment
+      base: Fuehrerschein
+      name: FuehrerscheinOverlayAligment
+      attributes:
+        vorname: 
+          - schema:name
+          - schema:givenName
+        nachname:
+          - schema:name
+          - schema:familyName
+
+soya pull DriversLicence | soya map AustrianDriversLicence
+{"vorname":[[{{$.name}}/^[^\s]+/]],"nachname":[[{{$.name}}/\b\S+\z/]]}
+
+soya pull AustrianDriversLicence | soya map DriversLicence
+{"name":[[{{$.vorname}} {{$.nachname}}]]}
+
+--> SPARQL auf Instanz von SOyA Structure
