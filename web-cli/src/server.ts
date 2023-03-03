@@ -5,10 +5,6 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { getFileRoot } from './utils/fs';
 
-interface RequestModel {
-  content?: string;
-}
-
 export const init = async () => {
   const app = express();
   app.use(express.json({
@@ -25,10 +21,7 @@ export const init = async () => {
   const soya = new Soya();
 
   router.post('/validate/:schemaDri', async (req, res) => {
-    const {
-      content,
-    } = req.body as RequestModel;
-
+    const content = req.body;
     const schemaDri = req.params['schemaDri'];
 
     if (!schemaDri || !content)
