@@ -87,12 +87,7 @@
   },
   "definitions": {
     "ValidateRequest": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "object"
-        }
-      }
+      "type": "object"
     }
   }
 }
