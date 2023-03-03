@@ -25,7 +25,7 @@ export const init = async () => {
     const schemaDri = req.params['schemaDri'];
 
     if (!schemaDri || !content)
-      return res.status(400);
+      return res.status(400).send();
 
     try {
       const soyaDoc = await soya.pull(schemaDri);
