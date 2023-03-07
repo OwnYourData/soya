@@ -6,7 +6,7 @@ import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
 import { cmdArgs } from '../utils/cmd';
-import { Normalize } from 'senml-js';
+import { Normalize, Pack } from 'senml-js';
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
   private runJolt = async (spec: any[], data: any): Promise<Overlays.OverlayResult> => {
@@ -70,11 +70,13 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     const res = Normalize({
       Records: data,
     });
-
-    if (res instanceof Error) {
-      throw res;
+    
+    // @ts-expect-error check if is of type error
+    if (res.name && res.message) {
+      throw new Error(JSON.stringify(res));
     } else {
-      return { data: res.Records };
+      const _res = res as Pack;
+      return { data: _res.Records };
     }
   }
 
