@@ -6,14 +6,13 @@ import { packageJson } from "./utils/package";
 import { RepoService, Soya, Overlays } from "soya-js";
 import { exitWithError } from "./utils/core";
 import { Std } from "./utils/std";
-import { SoyaTransform } from "./overlays/transform";
 
 interface CommandObject {
   [key: string]: Overlays.OverlayPlugin,
 }
 
 const overlayPlugins: CommandObject = {
-  'transform': new SoyaTransform(),
+  'transform': new Overlays.SoyaTransform(),
   'validate': new Overlays.SoyaValidate(),
 };
 
@@ -99,7 +98,7 @@ export const logNiceConsole = (value: any) => {
   let res: Overlays.OverlayResult;
 
   try {
-    res = await plugin.run(layer, parsedInput);
+    res = await plugin.run(layer, parsedInput, cmdArgs.executable);
   } catch (e: any) {
     logger.error(`Plugin "${command}" raised an error: ${e.message}`);
     return;

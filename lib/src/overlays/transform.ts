@@ -5,11 +5,10 @@ import { Overlays, SoyaDocument } from 'soya-js';
 import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
-import { cmdArgs } from '../utils/cmd';
 import { Normalize, Pack } from 'senml-js';
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
-  private runJolt = async (spec: any[], data: any): Promise<Overlays.OverlayResult> => {
+  private runJolt = async (spec: any[], data: any, executable: string = 'jolt'): Promise<Overlays.OverlayResult> => {
     const specFile = 'jolt-spec.json';
     const dataFile = 'jolt-data.json';
 
@@ -25,15 +24,14 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     await fs.writeFile(dataFilePath, JSON.stringify(data));
 
     return new Promise<Overlays.OverlayResult>((resolve, reject) => {
-      const command = cmdArgs.executable ?? 'jolt';
       const commandParams = [
         'transform',
         escapeFilename(specFilePath),
         escapeFilename(dataFilePath),
       ];
 
-      logger.debug(`Executing jolt ${command} with ${commandParams.toString()}`);
-      proc.exec(command + ' ' + commandParams.join(' '), (_, stdout) => {
+      logger.debug(`Executing jolt ${executable} with ${commandParams.toString()}`);
+      proc.exec(executable + ' ' + commandParams.join(' '), (_, stdout) => {
         logger.debug('Removing temp dir');
         removeTempDir();
 
@@ -70,7 +68,7 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     const res = Normalize({
       Records: data,
     });
-    
+
     // @ts-expect-error check if is of type error
     if (res.name && res.message) {
       throw new Error(JSON.stringify(res));

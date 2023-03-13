@@ -13,41 +13,6 @@
     "http"
   ],
   "paths": {
-    "/validate/{schemaDri}": {
-      "post": {
-        "summary": "Validates data against a schema",
-        "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "schemaDri",
-            "in": "path",
-            "description": "Schema DRI of the SOyA structure",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "content",
-            "in": "body",
-            "description": "Content to validate",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ValidateRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful validation"
-          }
-        }
-      }
-    },
     "/form/{schemaDri}": {
       "get": {
         "summary": "Generates a JSON-Forms form",
@@ -83,10 +48,80 @@
           }
         }
       }
+    },
+    "/validate/{schemaDri}": {
+      "post": {
+        "summary": "Validates data against a schema",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schemaDri",
+            "in": "path",
+            "description": "Schema DRI of the SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to validate",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenericObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful validation"
+          }
+        }
+      }
+    },
+    "/transform/{schemaDri}": {
+      "post": {
+        "summary": "Transforms data according to a SOyA schema",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schemaDri",
+            "in": "path",
+            "description": "Schema DRI of the SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to transform",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenericObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful validation"
+          }
+        }
+      }
     }
   },
   "definitions": {
-    "ValidateRequest": {
+    "GenericObject": {
       "type": "object"
     }
   }

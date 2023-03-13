@@ -1,5 +1,5 @@
 import express from 'express';
-import { Soya, Overlays, } from "soya-js";
+import { Soya, Overlays } from "soya-js";
 import swaggerUi from 'swagger-ui-express';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -20,23 +20,6 @@ export const init = async () => {
 
   const soya = new Soya();
 
-  router.post('/validate/:schemaDri', async (req, res) => {
-    const content = req.body;
-    const schemaDri = req.params['schemaDri'];
-
-    if (!schemaDri || !content)
-      return res.status(400).send();
-
-    try {
-      const soyaDoc = await soya.pull(schemaDri);
-      const resVal = await new Overlays.SoyaValidate().run(soyaDoc, content);
-
-      return res.status(200).send(resVal);
-    } catch (e: any) {
-      return res.status(500).send(e.toString());
-    }
-  });
-
   router.get('/form/:schemaDri', async (req, res) => {
     const schemaDri = req.params['schemaDri'];
 
@@ -51,6 +34,40 @@ export const init = async () => {
     } catch (e: any) {
       return res.status(500).send(e.toString());
     }
+  });
+
+  router.post('/validate/:schemaDri', async (req, res) => {
+    const content = req.body;
+    const schemaDri = req.params['schemaDri'];
+
+    if (!schemaDri || !content)
+      return res.status(400).send();
+
+    try {
+      const soyaDoc = await soya.pull(schemaDri);
+      const resVal = await new Overlays.SoyaValidate().run(soyaDoc, content);
+
+      return res.status(200).send(resVal.data);
+    } catch (e: any) {
+      return res.status(500).send(e.toString());
+    }
+  });
+
+  router.post('/transform/:schemaDri', async (req, res) => {
+    const content = req.body;
+    const schemaDri = req.params['schemaDri'];
+
+    if (!schemaDri || !content)
+      return res.status(400).send();
+    
+      try {
+        const soyaDoc = await soya.pull(schemaDri);
+        const resVal = await new Overlays.SoyaTransform().run(soyaDoc, content);
+  
+        return res.status(200).send(resVal.data);
+      } catch (e: any) {
+        return res.status(500).send(e.toString());
+      }
   });
 
   const port = 8080;

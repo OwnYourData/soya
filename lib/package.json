@@ -1,6 +1,6 @@
 {
   "name": "soya-js",
-  "version": "0.5.14",
+  "version": "0.5.16",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,5 +36,9 @@
     "sparql-engine": "^0.8.2",
     "vaultifier": "^2.10.1",
     "winston": "^3.3.3"
+  },
+  "peerDependencies": {
+    "node-jq": "^2.0.0",
+    "senml-js": "^1.0.0"
   }
 }

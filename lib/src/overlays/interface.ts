@@ -5,5 +5,5 @@ export interface OverlayResult {
 }
 
 export interface OverlayPlugin {
-  run: (overlay: SoyaDocument, data: any) => Promise<OverlayResult>;
+  run: (overlay: SoyaDocument, data: any, options?: any) => Promise<OverlayResult>;
 }
