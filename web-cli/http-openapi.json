@@ -44,7 +44,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful validation"
+            "description": "Successful operation"
           }
         }
       }
@@ -79,7 +79,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful validation"
+            "description": "Successful operation"
           }
         }
       }
@@ -114,7 +114,42 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful validation"
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/acquire/{schemaDri}": {
+      "post": {
+        "summary": "Acquires data according to a SOyA schema",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schemaDri",
+            "in": "path",
+            "description": "Schema DRI of the SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to acquire",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenericObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
           }
         }
       }

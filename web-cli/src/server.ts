@@ -59,15 +59,30 @@ export const init = async () => {
 
     if (!schemaDri || !content)
       return res.status(400).send();
-    
-      try {
-        const soyaDoc = await soya.pull(schemaDri);
-        const resVal = await new Overlays.SoyaTransform().run(soyaDoc, content);
-  
-        return res.status(200).send(resVal.data);
-      } catch (e: any) {
-        return res.status(500).send(e.toString());
-      }
+
+    try {
+      const soyaDoc = await soya.pull(schemaDri);
+      const resVal = await new Overlays.SoyaTransform().run(soyaDoc, content);
+
+      return res.status(200).send(resVal.data);
+    } catch (e: any) {
+      return res.status(500).send(e.toString());
+    }
+  });
+
+  router.post('/acquire/:schemaDri', async (req, res) => {
+    const content = req.body;
+    const schemaDri = req.params['schemaDri'];
+
+    if (!schemaDri || !content)
+      return res.status(400).send();
+
+    try {
+      const doc = await soya.acquire(schemaDri, content);
+      return res.status(200).send(doc);
+    } catch (e: any) {
+      return res.status(500).send(e.toString());
+    }
   });
 
   const port = 8080;
