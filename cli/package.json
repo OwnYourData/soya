@@ -1,6 +1,6 @@
 {
   "name": "soya-cli",
-  "version": "0.16.20",
+  "version": "0.16.21",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,10 +35,11 @@
     "command-line-args": "^5.2.0",
     "command-line-usage": "^6.1.1",
     "find-root": "^1.1.0",
+    "handlebars": "^4.7.7",
     "node-jq": "^2.3.5",
     "open": "^8.4.0",
     "senml-js": "^1.0.0",
-    "soya-js": "^0.5.16",
+    "soya-js": "^0.5.17",
     "winston": "^3.3.3"
   }
 }
