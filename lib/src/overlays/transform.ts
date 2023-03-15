@@ -1,5 +1,5 @@
 import proc from 'child_process';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import * as jq from 'node-jq';
 import { Overlays, SoyaDocument } from 'soya-js';
 import { escapeFilename, makeTempDir } from '../utils/core';
