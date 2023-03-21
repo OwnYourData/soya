@@ -28,12 +28,17 @@ const allRenderers = [
   ...materialRenderers,
 ];
 
-const postMessage = (data: any) => {
+const postMessage = (data: any | (() => any)) => {
   setTimeout(() => {
-    if (window.parent)
+    if (window.parent) {
+      // if necessary, execute function
+      if (typeof data === 'function')
+        data = data();
+
       window.parent.postMessage(data, '*');
-    // setTimeout with 0 to inform the parent window
-    // always after the last window repaint
+      // setTimeout with 0 to inform the parent window
+      // always after the last window repaint
+    }
   }, 0);
 }
 
@@ -239,11 +244,15 @@ function App() {
       </Card>
     </>;
 
-  postMessage({
+  // we use a function here as we want to the function
+  // right before posting the message
+  // this way we also catch layout/height changes
+  // as every postMessage is executed with a setTimeout(0)
+  postMessage(() => ({
     type: 'update',
     isInitialized,
     documentHeight: document.documentElement.scrollHeight,
-  });
+  }));
 
   return (
     <div className={isEmbedded ? '' : 'App'}>
