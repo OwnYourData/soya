@@ -4,7 +4,7 @@ import {
   materialRenderers,
   materialCells,
 } from '@jsonforms/material-renderers';
-import { Soya, SoyaForm, SoyaFormOptions } from 'soya-js'
+import { Soya, SoyaFormResponse, SoyaFormOptions } from 'soya-js'
 import './App.css';
 import { Vaultifier, VaultifierWeb } from 'vaultifier/dist/main';
 import Button from '@material-ui/core/Button';
@@ -14,11 +14,21 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TextArea from '@material-ui/core/TextareaAutosize';
 import { customRenderers } from './components';
+import { InputLabel, MenuItem, Select, FormControl } from '@mui/material';
 
 const allRenderers = [
   ...customRenderers,
   ...materialRenderers,
 ];
+
+const postMessage = (data: any) => {
+  setTimeout(() => {
+    if (window.parent)
+      window.parent.postMessage(data, '*');
+    // setTimeout with 0 to inform the parent window
+    // always after the last window repaint
+  }, 0);
+}
 
 function App() {
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
@@ -27,8 +37,11 @@ function App() {
   const [schemaDri, setSchemaDri] = useState<string>('');
   const [tag, setTag] = useState<string>('');
   const [language, setLanguage] = useState<string>('');
+  const [viewMode, setViewMode] = useState<string>('');
 
-  const [form, setForm] = useState<SoyaForm | undefined>(undefined);
+  const isEmbedded = viewMode === 'embedded';
+
+  const [form, setForm] = useState<SoyaFormResponse | undefined>(undefined);
   const [data, setData] = useState<any>({});
   const [textData, setTextData] = useState<string>('');
 
@@ -62,6 +75,26 @@ function App() {
   }, [fetchForm, isInitialized]);
 
   useEffect(() => {
+    fetchForm();
+    // this dependency array is correct!
+  }, [tag, language]);
+
+  useEffect(() => {
+    const { searchParams } = new URL(window.location.href);
+
+    const data = searchParams.get('data');
+    if (data)
+      try {
+        setData(JSON.parse(decodeURIComponent(data)));
+      } catch { }
+
+    setSchemaDri(searchParams.get('schemaDri') ?? '');
+    setTag(searchParams.get('tag') ?? '');
+    setLanguage(searchParams.get('language') ?? '');
+    setViewMode(searchParams.get('viewMode') ?? '');
+  }, []);
+
+  useEffect(() => {
     (async () => {
       const vaultifierWeb = await VaultifierWeb.create();
       await vaultifierWeb.initialize();
@@ -70,19 +103,6 @@ function App() {
         throw new Error('Vaultifier could not be initialized');
 
       setVaultifier(vaultifierWeb.vaultifier);
-
-      const { searchParams } = new URL(window.location.href);
-
-      const data = searchParams.get('data');
-      if (data)
-        try {
-          setData(JSON.parse(decodeURIComponent(data)));
-        } catch { }
-
-      setSchemaDri(searchParams.get('schemaDri') ?? '');
-      setTag(searchParams.get('tag') ?? '');
-      setLanguage(searchParams.get('language') ?? '');
-
       setIsInitialized(true);
     })();
   }, []);
@@ -98,11 +118,9 @@ function App() {
   if (data)
     searchParams.set('data', JSON.stringify(data));
 
-  let content: JSX.Element;
-  if (isLoading)
-    content = <CircularProgress />;
-  else
-    content = <>
+  let header1: JSX.Element | undefined = undefined;
+  if (!isEmbedded)
+    header1 = <div>
       <TextField
         label="SOyA Schema DRI"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,67 +128,115 @@ function App() {
         }}
         value={schemaDri}
       />
-      <TextField
-        label="Tag"
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setTag(event.target.value);
-        }}
-        value={tag}
-      />
-      <TextField
-        label="Language"
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setLanguage(event.target.value);
-        }}
-        value={language}
-      />
       <Button className="Button" variant="contained" color="primary" onClick={() => fetchForm()}>Load Form</Button>
-    </>;
+    </div>;
 
-  return (
-    <div className="App">
-      <h1>OwnYourData SOyA-Forms</h1>
-      {content}
-      {
-        form ?
-          <>
-            <JsonForms
-              schema={form.schema}
-              uischema={form.ui}
-              data={data}
-              renderers={allRenderers}
-              cells={materialCells}
-              onChange={({ errors, data }) => {
+  const withEmpty = (values: (string | undefined)[] | undefined) => {
+    if (!values)
+      return undefined;
+
+    const distinct = (values.filter((x, idx) => !!x && values.indexOf(x) === idx) as string[])
+
+    return [
+      { value: '', text: 'Default' },
+      ...distinct.map((x: string) => ({
+        value: x,
+        text: x,
+      })),
+    ];
+  }
+
+  const tagOptions = withEmpty(form?.options.map(x => x.tag));
+  const languageOptions = withEmpty(form?.options.map(x => x.language));
+
+  let header2: JSX.Element | undefined = undefined;
+  if (!isLoading)
+    header2 = <div>
+      {tagOptions ? <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel>Tag</InputLabel>
+        <Select
+          id="demo-simple-select-helper"
+          value={tag}
+          label="Tag"
+          onChange={(event) => {
+            setTag(event.target.value);
+          }}
+        >
+          {tagOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
+        </Select></FormControl> : undefined}
+      {languageOptions ? <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel>Language</InputLabel>
+        <Select
+          id="demo-simple-select-helper1"
+          value={language}
+          label="Language"
+          onChange={(event) => {
+            setLanguage(event.target.value);
+          }}
+        >
+          {languageOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
+        </Select></FormControl> : undefined}
+    </div>;
+
+  let content: JSX.Element | undefined = undefined;
+  if (isLoading || !isInitialized)
+    content = <div><CircularProgress /></div>;
+  else if (form)
+    content = <JsonForms
+      schema={form.schema}
+      uischema={form.ui}
+      data={data}
+      renderers={allRenderers}
+      cells={materialCells}
+      onChange={(evt) => {
+        const { data } = evt;
+        setData(data);
+        setTextData(JSON.stringify(data, null, 2));
+        postMessage({ type: 'data', evt });
+      }}
+    />;
+
+  let footer: JSX.Element | undefined = undefined;
+  if (!isLoading && !isEmbedded)
+    footer = <>
+      <h2>Data</h2>
+      <Card>
+        <CardContent>
+          <TextArea
+            value={textData}
+            style={{ 'width': '100%' }}
+            onChange={(e) => {
+              const text = e.target.value;
+              setTextData(text);
+
+              try {
+                const data = JSON.parse(text);
                 setData(data);
-                setTextData(JSON.stringify(data, null, 2))
-              }}
-            />
-            <h2>Data</h2>
-            <Card>
-              <CardContent>
-                <TextArea
-                  value={textData}
-                  style={{ 'width': '100%' }}
-                  onChange={(e) => {
-                    const text = e.target.value;
-                    setTextData(text);
-
-                    try {
-                      const data = JSON.parse(text);
-                      setData(data);
-                    } catch { }
-                  }} />
-              </CardContent>
-            </Card>
-          </>
-          : undefined
-      }
+              } catch { }
+            }} />
+        </CardContent>
+      </Card>
       <h2>Permalink</h2>
       <Card>
         <CardContent>
           {permalink.toString()}
         </CardContent>
       </Card>
+    </>;
+
+  postMessage({
+    type: 'update',
+    isInitialized,
+    documentHeight: document.documentElement.scrollHeight,
+  });
+
+  return (
+    <div className={isEmbedded ? '' : 'App'}>
+      {isInitialized ? (isEmbedded ? undefined : <h1>OwnYourData SOyA-Forms</h1>) : undefined}
+      {isInitialized ? header1 : undefined}
+      {isInitialized ? header2 : undefined}
+      {content}
+      {isInitialized ? footer : undefined}
     </div>
   );
 }
