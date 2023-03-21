@@ -1,17 +1,34 @@
 import { ControlProps } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import { FormControl, InputLabel, Select, MenuItem, Chip, Input, FormHelperText, Checkbox, ListItemText } from '@material-ui/core';
 import { useCallback } from 'react';
 import { sort } from '../utils';
+
+import { makeStyles } from '@material-ui/core/styles';
 
 interface SelectItem {
   value: string;
   text: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    width: '100%',
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
+  },
+}));
+
 const MultiSelect = (props: ControlProps) => {
+  const classes = useStyles();
+
   let {
     id,
     schema,
@@ -36,30 +53,36 @@ const MultiSelect = (props: ControlProps) => {
   }, [schema.enum, schema.oneOf]);
 
   const items = getItems();
-  // data needs to be converted to SelectItem
-  data = data
-    .map((val: string) => items.find(it => it.value === val))
-    .filter((x: SelectItem) => x !== undefined);
 
-  return <Autocomplete
-    multiple
+  return <FormControl
     id={id}
-    options={items}
-    isOptionEqualToValue={(option, value) => {
-      return option.value === value.value;
-    }}
-    getOptionLabel={(option) => option?.text ?? option}
-    onChange={(_event, value) => handleChange(path, value.map(x => x.value))}
-    value={data}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        variant="standard"
-        label={label}
-        placeholder={description}
-      />
-    )}
-  />
+    className={classes.formControl}>
+    <InputLabel >{label}</InputLabel>
+    <Select
+      multiple
+      value={data}
+      onChange={(event) => {
+        handleChange(path, event.target.value);
+      }}
+      input={<Input id="select-multiple-chip" />}
+      renderValue={(selected) => (
+        <div className={classes.chips}>
+          {(selected as string[]).map((val) => {
+            const { value, text } = items.find(x => x.value === val) as SelectItem;
+            return <Chip key={value} label={text} className={classes.chip} />
+          })}
+        </div>
+      )}
+    >
+      {items.map(({ value, text }) => (
+        <MenuItem key={value} value={value}>
+          <Checkbox checked={data.indexOf(value) !== -1} />
+          <ListItemText primary={text} />
+        </MenuItem>
+      ))}
+    </Select>
+    {description ? <FormHelperText>{description}</FormHelperText> : undefined}
+  </FormControl>;
 }
 
 export default withJsonFormsControlProps(MultiSelect);

@@ -7,14 +7,21 @@ import {
 import { Soya, SoyaFormResponse, SoyaFormOptions } from 'soya-js'
 import './App.css';
 import { Vaultifier, VaultifierWeb } from 'vaultifier/dist/main';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import TextArea from '@material-ui/core/TextareaAutosize';
 import { customRenderers } from './components';
-import { InputLabel, MenuItem, Select, FormControl } from '@mui/material';
+
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+  CircularProgress,
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  TextareaAutosize as TextArea,
+} from '@material-ui/core';
 
 const allRenderers = [
   ...customRenderers,
@@ -30,7 +37,16 @@ const postMessage = (data: any) => {
   }, 0);
 }
 
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 150,
+  },
+}));
+
 function App() {
+  const classes = useStyles();
+
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const [vaultifier, setVaultifier] = useState<Vaultifier>();
 
@@ -77,6 +93,7 @@ function App() {
   useEffect(() => {
     fetchForm();
     // this dependency array is correct!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tag, language]);
 
   useEffect(() => {
@@ -152,26 +169,24 @@ function App() {
   let header2: JSX.Element | undefined = undefined;
   if (!isLoading)
     header2 = <div>
-      {tagOptions ? <FormControl sx={{ m: 1, minWidth: 120 }}>
+      {tagOptions ? <FormControl className={classes.formControl}>
         <InputLabel>Tag</InputLabel>
         <Select
-          id="demo-simple-select-helper"
           value={tag}
           label="Tag"
           onChange={(event) => {
-            setTag(event.target.value);
+            setTag(event.target.value as string);
           }}
         >
           {tagOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
         </Select></FormControl> : undefined}
-      {languageOptions ? <FormControl sx={{ m: 1, minWidth: 120 }}>
+      {languageOptions ? <FormControl className={classes.formControl}>
         <InputLabel>Language</InputLabel>
         <Select
-          id="demo-simple-select-helper1"
           value={language}
           label="Language"
           onChange={(event) => {
-            setLanguage(event.target.value);
+            setLanguage(event.target.value as string);
           }}
         >
           {languageOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
