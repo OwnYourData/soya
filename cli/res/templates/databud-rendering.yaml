@@ -1,0 +1,17 @@
+meta:
+  name: UserFriendlyPerson
+
+content:
+  bases: 
+    - name: Person
+      attributes:
+        firstName: String
+        lastName: String
+        dateOfBirth: Date
+        sex: String
+
+  overlays: 
+    - type: OverlayDataBudRendering
+      base: Person
+      name: PersonRendering
+      label: '{{firstName}} {{lastName}}'
