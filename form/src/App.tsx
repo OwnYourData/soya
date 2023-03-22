@@ -28,7 +28,7 @@ const allRenderers = [
   ...materialRenderers,
 ];
 
-const postMessage = (data: any | (() => any)) => {
+const postMessage = (data: any | (() => any), timeout: number = 0) => {
   setTimeout(() => {
     if (window.parent) {
       // if necessary, execute function
@@ -39,7 +39,7 @@ const postMessage = (data: any | (() => any)) => {
       // setTimeout with 0 to inform the parent window
       // always after the last window repaint
     }
-  }, 0);
+  }, timeout);
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +88,14 @@ function App() {
     }
   }, [vaultifier, schemaDri, language, tag]);
 
+  const sendUpdate = useCallback((timeout: number = 0) => {
+    postMessage(() => ({
+      type: 'update',
+      isInitialized,
+      documentHeight: document.documentElement.scrollHeight,
+    }), timeout);
+  }, [isInitialized]);
+
   useEffect(() => {
     if (isInitialized)
       return;
@@ -128,6 +136,15 @@ function App() {
       setIsInitialized(true);
     })();
   }, []);
+
+  useEffect(() => {
+    const handleClick = () => {
+      sendUpdate(400);
+    }
+
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, [sendUpdate]);
 
   const permalink = new URL(window.location.href);
   const { searchParams } = permalink;
@@ -248,11 +265,7 @@ function App() {
   // right before posting the message
   // this way we also catch layout/height changes
   // as every postMessage is executed with a setTimeout(0)
-  postMessage(() => ({
-    type: 'update',
-    isInitialized,
-    documentHeight: document.documentElement.scrollHeight,
-  }));
+  sendUpdate();
 
   return (
     <div className={isEmbedded ? '' : 'App'}>
