@@ -148,6 +148,10 @@ function App() {
 
   useEffect(() => {
     const handleMessage = (evt: MessageEvent) => {
+      // ignore all messages that are created from this window
+      if (evt.source === window)
+        return;
+
       switch (evt.data?.type) {
         case 'data':
           const { data: newData } = evt.data;
