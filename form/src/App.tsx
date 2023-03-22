@@ -146,6 +146,24 @@ function App() {
     return () => window.removeEventListener('click', handleClick);
   }, [sendUpdate]);
 
+  useEffect(() => {
+    const handleMessage = (evt: MessageEvent) => {
+      switch (evt.data?.type) {
+        case 'data':
+          const { data: newData } = evt.data;
+          // only set data, if it differs to our internal data
+          // this is important to avoid nasty infinite loops
+          if (JSON.stringify(newData) !== JSON.stringify(data))
+            setData(newData);
+          break;
+      }
+    }
+
+    // parent apps can also update data via message
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [data]);
+
   const permalink = new URL(window.location.href);
   const { searchParams } = permalink;
   if (schemaDri)
