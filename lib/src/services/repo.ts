@@ -35,7 +35,8 @@ export class RepoService {
   private _cache = new Cache();
 
   constructor(
-    public repo: string = DEFAULT_REPO,
+    // repo must not be changed after RepoService instance has been created
+    public readonly repo: string = DEFAULT_REPO,
   ) { }
 
   private static INSTANCE = new RepoService();
@@ -43,12 +44,15 @@ export class RepoService {
   static getInstance = () => RepoService.INSTANCE;
   static initialize = (instance: RepoService) => RepoService.INSTANCE = instance;
 
-  // TODO: implement caching
-
+  private _vaultifier: Vaultifier | undefined = undefined;
   getVaultifier = async (): Promise<Vaultifier> => {
-    logger.debug(`Initializing vaultifier: ${this.repo}`);
-    const v = new Vaultifier(this.repo);
-    await v.initialize();
+    let v = this._vaultifier;
+
+    if (!v) {
+      logger.debug(`Initializing vaultifier: ${this.repo}`);
+      this._vaultifier = v = new Vaultifier(this.repo);
+      await v.initialize();
+    }
 
     return v;
   }
