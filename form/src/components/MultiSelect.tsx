@@ -3,7 +3,6 @@ import { withJsonFormsControlProps } from '@jsonforms/react';
 
 import { FormControl, InputLabel, Select, MenuItem, Chip, Input, FormHelperText, Checkbox, ListItemText } from '@material-ui/core';
 import { useCallback } from 'react';
-import { sort } from '../utils';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -79,6 +78,10 @@ const MultiSelect = (props: ControlProps) => {
           })}
         </div>
       )}
+      MenuProps={{
+        // https://stackoverflow.com/a/59790471/1517969
+        getContentAnchorEl: null,
+      }}
     >
       {items.map(({ value, text }) => (
         <MenuItem key={value} value={value}>
