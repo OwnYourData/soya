@@ -46,10 +46,16 @@ const MultiSelect = (props: ControlProps) => {
     if (!items)
       return [];
 
-    return sort(items, x => x.title ?? x).map(x => ({
+    return items.map(x => ({
       text: x.title ?? x,
       value: x.const ?? x,
     }));
+
+    // TODO: re-enable sorting once it's specified how to correctly sort the items
+    // return sort(items, x => x.title ?? x).map(x => ({
+    //   text: x.title ?? x,
+    //   value: x.const ?? x,
+    // }));
   }, [schema.enum, schema.oneOf]);
 
   const items = getItems();
