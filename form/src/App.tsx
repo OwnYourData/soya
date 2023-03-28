@@ -256,9 +256,9 @@ function App() {
       }}
     />;
 
-  let footer: JSX.Element | undefined = undefined;
+  let footer1: JSX.Element | undefined = undefined;
   if (!isLoading && !isEmbedded)
-    footer = <>
+    footer1 = <>
       <h2>Data</h2>
       <Card>
         <CardContent>
@@ -296,7 +296,7 @@ function App() {
       {isInitialized ? header1 : undefined}
       {isInitialized ? header2 : undefined}
       {content}
-      {isInitialized ? footer : undefined}
+      {isInitialized ? footer1 : undefined}
     </div>
   );
 }
