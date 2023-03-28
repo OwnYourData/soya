@@ -8,6 +8,7 @@ import { Soya, SoyaFormResponse, SoyaFormOptions } from 'soya-js'
 import './App.css';
 import { Vaultifier, VaultifierWeb } from 'vaultifier/dist/main';
 import { customRenderers } from './components';
+import packageJson from '../package.json';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -23,6 +24,9 @@ import {
   TextareaAutosize as TextArea,
 } from '@material-ui/core';
 import { debounce } from 'debounce';
+
+// print version to browser console
+console.log(packageJson.name, packageJson.version);
 
 const allRenderers = [
   ...customRenderers,
