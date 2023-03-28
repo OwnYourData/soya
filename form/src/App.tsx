@@ -22,13 +22,14 @@ import {
   CardContent,
   TextareaAutosize as TextArea,
 } from '@material-ui/core';
+import { debounce } from 'debounce';
 
 const allRenderers = [
   ...customRenderers,
   ...materialRenderers,
 ];
 
-const postMessage = (data: any | (() => any), timeout: number = 0) => {
+const postMessage = debounce((data: any | (() => any), timeout: number = 0) => {
   setTimeout(() => {
     if (window.parent) {
       // if necessary, execute function
@@ -40,7 +41,7 @@ const postMessage = (data: any | (() => any), timeout: number = 0) => {
       // always after the last window repaint
     }
   }, timeout);
-}
+}, 250);
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
