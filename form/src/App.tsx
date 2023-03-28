@@ -33,19 +33,19 @@ const allRenderers = [
   ...materialRenderers,
 ];
 
-const postMessage = debounce((data: any | (() => any), timeout: number = 0) => {
-  setTimeout(() => {
-    if (window.parent) {
-      // if necessary, execute function
-      if (typeof data === 'function')
-        data = data();
+const postMessage = (data: any | (() => any)) => {
+  if (window.parent) {
+    // if necessary, execute function
+    if (typeof data === 'function')
+      data = data();
 
-      window.parent.postMessage(data, '*');
-      // setTimeout with 0 to inform the parent window
-      // always after the last window repaint
-    }
-  }, timeout);
-}, 250);
+    window.parent.postMessage(data, '*');
+    // setTimeout with 0 to inform the parent window
+    // always after the last window repaint
+  }
+}
+const postData = debounce((data: any) => { postMessage(data) }, 250);
+const postUpdate = debounce((data: any) => { postMessage(data) }, 400);
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -93,12 +93,12 @@ function App() {
     }
   }, [vaultifier, schemaDri, language, tag]);
 
-  const sendUpdate = useCallback((timeout: number = 0) => {
-    postMessage(() => ({
+  const sendUpdate = useCallback(() => {
+    postUpdate({
       type: 'update',
       isInitialized,
       documentHeight: document.documentElement.scrollHeight,
-    }), timeout);
+    });
   }, [isInitialized]);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ function App() {
 
   useEffect(() => {
     const handleClick = () => {
-      sendUpdate(400);
+      sendUpdate();
     }
 
     window.addEventListener('click', handleClick);
@@ -256,7 +256,7 @@ function App() {
         const { data } = evt;
         setData(data);
         setTextData(JSON.stringify(data, null, 2));
-        postMessage({ type: 'data', evt });
+        postData({ type: 'data', evt });
       }}
     />;
 
