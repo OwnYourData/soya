@@ -38,7 +38,6 @@ export const init = async () => {
   });
 
   router.post('/validate/jsonld', async (req, res) => {
-    console.log("asd");
     const content = req.body;
     if (!content)
       return res.status(400).send();
