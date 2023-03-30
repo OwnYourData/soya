@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { getFileRoot } from './utils/fs';
+import { lint } from "jsonld-lint";
 
 export const init = async () => {
   const app = express();
@@ -33,6 +34,20 @@ export const init = async () => {
       return res.status(200).send(form);
     } catch (e: any) {
       return res.status(500).send(e.toString());
+    }
+  });
+
+  router.post('/validate/jsonld', async (req, res) => {
+    console.log("asd");
+    const content = req.body;
+    if (!content)
+      return res.status(400).send();
+
+    try {
+      const resVal = await lint(JSON.stringify(content));
+      return res.status(200).send(resVal); 
+    } catch (e: any) {
+      return res.status(400).send(e);
     }
   });
 

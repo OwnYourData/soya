@@ -1,0 +1,32 @@
+meta:
+  name: OYD_Organisation
+  namespace:
+    schema: "https://schema.org/"
+    oyd_company: "https://soya.ownyourdata.eu/OYD_Company/"
+
+content:
+  bases:
+    - name: Organisation 
+      attributes:
+        name: string
+        address: string
+        phone: string
+
+  overlays: 
+    - type: OverlayAlignment
+      base: Organisation
+      name: OrganisationOverlayAligment
+      attributes:
+        name: 
+          - schema:legalName
+        address:
+          - oyd_company:location
+
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: OYD_Company
+      engine: handlebars
+      value:
+        name: "{{registered_name}}" 
+        address: "{{location}}"
+        phone: "{{contact.number}}"

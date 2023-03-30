@@ -255,3 +255,111 @@ soya pull AustrianDriversLicence | soya map DriversLicence
 {"name":[[{{$.vorname}} {{$.nachname}}]]}
 
 --> SPARQL auf Instanz von SOyA Structure
+
+
+SPARQL
+======
+
+Can SPARQL be used to map data models?
+Use transitivity for data model alignment to create Handlebars templates
+
+4 Options:
+a) source & target use same reference
+b) source references attribute in target structure
+c) target references attribute in source structure
+d) all / a combination of the above
+
+
+Examples:
+
+a) same reference:
+"name" & "registered_name": schema:legalName
+
+soya pull OYD_Organisation | soya map OYD_Company
+{"registered_name":"{{name}}"}
+
+
+b) source references target
+"address" references OYD_Company "location"
+
+Question: how to reference an attribute in a SOyA structure?
+
+soya pull OYD_Organisation | soya map OYD_Company
+{"address":"{{location}}"}
+
+
+c) target references source
+"number" references OYD_Company "phone"
+
+soya pull OYD_Organisation | soya map OYD_Company
+{"contact":{"number": "{{phone}}"}}
+
+
+d) all together
+
+soya pull OYD_Organisation | soya map OYD_Company
+{
+  "registered_name": "{{name}}", 
+  "address": "{{location}}",
+  "contact": {
+    "number": {{phone}}"
+  }
+}
+
+
+
+
+
+
+meta:
+  name: OYD_Organisation
+  namespace:
+    schema: "https://schema.org/"
+    oyd_company: "https://soya.ownyourdata.eu/OYD_Company/Phonebook"
+
+content:
+  bases:
+    - name: Organisation 
+      attributes:
+        name: string
+        address: string
+        phone: string
+  overlays: 
+    - type: OverlayAligment
+      base: Organisation
+      name: OrganisationOverlayAligment
+      attributes:
+        name: 
+          - schema:legalName
+        address:
+          - oyd_company:location
+--
+meta:
+  name: OYD_Company
+  namespace:
+    schema: "https://schema.org/"
+
+content:    
+  bases:
+    - name: Company
+      attributes:
+        registered_name: string
+        location: string
+        contact: Phonebook
+    - name: Phonebook
+      attributes:
+        number: string
+
+  overlays: 
+    - type: OverlayAlignment
+      base: Company
+      name: CompanyAlignmentOverlay
+      attributes:
+        registered_name: 
+          - schema:legalName
+    - type: OverlayAlignment
+      base: Phonebook
+      name: PhonebookAlignmentOverlay
+      attributes:
+        number:
+          - OYD_Organisation:Organisation.phone

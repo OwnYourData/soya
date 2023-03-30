@@ -1,0 +1,415 @@
+meta:
+  name: SCM_UsagePolicy
+
+content:
+  bases:
+    - name: UsagePolicy
+      attributes:
+        name: string
+        description: string
+        created_by: string
+        created_at: Date
+        dataCategory: set<String>
+        processing: set<String>
+        purpose: set<String>
+        storageLocation: set<String>
+        recipient: set<String>
+        storageDuration: Integer
+        storageDurationUnit: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: UsagePolicy
+      name: UsagePolicyValidationOverlay
+      attributes:
+        dataCategory: 
+          valueOption:
+            - personalData
+            - financialData
+            - agriculturalData
+        processing: 
+          valueOption:
+            - Acquire
+            - Adapt
+            - Align
+            - Alter
+            - Analyse
+            - Anonymise
+            - AutomatedDecisionMaking
+            - Collect
+            - Combine
+            - Consult
+            - Copy
+            - DataSource
+            - Derive
+            - Destruct
+            - Disclose
+            - DiscloseByTransmission
+            - Disseminate
+            - Erase
+            - EvaluationScoring
+            - InnovativeUseOfNewTechnologies
+            - LargeScaleProcessing
+            - MakeAvailable
+            - MatchingCombining
+            - Move
+            - Obtain
+            - Organise
+            - Profiling
+            - PseudoAnonymise
+            - Record
+            - Remove
+            - Restrict
+            - Retrieve
+            - Share
+            - Store
+            - Structure
+            - SystematicMonitoring
+            - Transfer
+            - Transform
+            - Transmit
+            - Use
+        purpose: 
+          valueOption:
+            - AcademicResearch
+            - AccessControl
+            - Advertising
+            - CommercialInterest
+            - CommercialResearch
+            - CommunicationForCustomerCare
+            - Context
+            - CreateEventRecommendations
+            - CreatePersonalizedRecommendations
+            - CreateProductRecommendations
+            - CustomerCare
+            - DeliveryOfGoods
+            - DirectMarketing
+            - FraudPreventionAndDetection
+            - IdentityVerification
+            - ImproveExistingProductsAndServices
+            - ImproveInternalCRMProcesses
+            - IncreaseServiceRobustness
+            - InternalResourceOptimisation
+            - LegalCompliance
+            - Marketing
+            - NonCommercialResearch
+            - OptimisationForConsumer
+            - OptimisationForController
+            - OptimiseUserInterface
+            - Payment
+            - PersonalisedAdvertising
+            - PersonalisedBenefits
+            - RegistrationAuthentication
+            - ResearchAndDevelopment
+            - Sector
+            - Security
+            - SellDataToThirdParties
+            - SellInsightsFromData
+            - SellProductsToDataSubject
+            - SellTargettedAdvertisements
+            - ServiceOptimization
+            - ServicePersonalization
+            - ServiceProvision
+            - SocialMediaMarketing
+            - UsageAnalytics
+            - UserInterfacePersonalisation
+        storageLocation: 
+          valueOption:
+            - ourServers
+            - thirdParty
+            - EU
+            - EUlike
+            - thirdCountries
+        recipient:
+          valueOption:
+            - ours
+            - delivery
+            - same
+            - otherRecipient
+            - unrelated
+            - public
+        storageDurationUnit:
+          valueOption:
+            - hours
+            - days
+            - weeks
+            - months
+            - years
+
+    - type: OverlayForm
+      base: UsagePolicy
+      name: UsagePolicyFormOverlay
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          created_by:
+            type: string
+          created_at:
+            type: string
+            format: date
+          dataCategory:
+            type: string
+            oneOf:
+            - const: personalData
+              title: personalData
+            - const: financialData
+              title: financialData
+            - const: agriculturalData
+              title: agriculturalData
+          processing:
+            type: string
+            oneOf:
+            - const: Acquire
+              title: Acquire
+            - const: Adapt
+              title: Adapt
+            - const: Align
+              title: Align
+            - const: Alter
+              title: Alter
+            - const: Analyse
+              title: Analyse
+            - const: Anonymise
+              title: Anonymise
+            - const: AutomatedDecisionMaking
+              title: AutomatedDecisionMaking
+            - const: Collect
+              title: Collect
+            - const: Combine
+              title: Combine
+            - const: Consult
+              title: Consult
+            - const: Copy
+              title: Copy
+            - const: DataSource
+              title: DataSource
+            - const: Derive
+              title: Derive
+            - const: Destruct
+              title: Destruct
+            - const: Disclose
+              title: Disclose
+            - const: DiscloseByTransmission
+              title: DiscloseByTransmission
+            - const: Disseminate
+              title: Disseminate
+            - const: Erase
+              title: Erase
+            - const: EvaluationScoring
+              title: EvaluationScoring
+            - const: InnovativeUseOfNewTechnologies
+              title: InnovativeUseOfNewTechnologies
+            - const: LargeScaleProcessing
+              title: LargeScaleProcessing
+            - const: MakeAvailable
+              title: MakeAvailable
+            - const: MatchingCombining
+              title: MatchingCombining
+            - const: Move
+              title: Move
+            - const: Obtain
+              title: Obtain
+            - const: Organise
+              title: Organise
+            - const: Profiling
+              title: Profiling
+            - const: PseudoAnonymise
+              title: PseudoAnonymise
+            - const: Record
+              title: Record
+            - const: Remove
+              title: Remove
+            - const: Restrict
+              title: Restrict
+            - const: Retrieve
+              title: Retrieve
+            - const: Share
+              title: Share
+            - const: Store
+              title: Store
+            - const: Structure
+              title: Structure
+            - const: SystematicMonitoring
+              title: SystematicMonitoring
+            - const: Transfer
+              title: Transfer
+            - const: Transform
+              title: Transform
+            - const: Transmit
+              title: Transmit
+            - const: Use
+              title: Use
+          purpose:
+            type: string
+            oneOf:
+            - const: AcademicResearch
+              title: AcademicResearch
+            - const: AccessControl
+              title: AccessControl
+            - const: Advertising
+              title: Advertising
+            - const: CommercialInterest
+              title: CommercialInterest
+            - const: CommercialResearch
+              title: CommercialResearch
+            - const: CommunicationForCustomerCare
+              title: CommunicationForCustomerCare
+            - const: Context
+              title: Context
+            - const: CreateEventRecommendations
+              title: CreateEventRecommendations
+            - const: CreatePersonalizedRecommendations
+              title: CreatePersonalizedRecommendations
+            - const: CreateProductRecommendations
+              title: CreateProductRecommendations
+            - const: CustomerCare
+              title: CustomerCare
+            - const: DeliveryOfGoods
+              title: DeliveryOfGoods
+            - const: DirectMarketing
+              title: DirectMarketing
+            - const: FraudPreventionAndDetection
+              title: FraudPreventionAndDetection
+            - const: IdentityVerification
+              title: IdentityVerification
+            - const: ImproveExistingProductsAndServices
+              title: ImproveExistingProductsAndServices
+            - const: ImproveInternalCRMProcesses
+              title: ImproveInternalCRMProcesses
+            - const: IncreaseServiceRobustness
+              title: IncreaseServiceRobustness
+            - const: InternalResourceOptimisation
+              title: InternalResourceOptimisation
+            - const: LegalCompliance
+              title: LegalCompliance
+            - const: Marketing
+              title: Marketing
+            - const: NonCommercialResearch
+              title: NonCommercialResearch
+            - const: OptimisationForConsumer
+              title: OptimisationForConsumer
+            - const: OptimisationForController
+              title: OptimisationForController
+            - const: OptimiseUserInterface
+              title: OptimiseUserInterface
+            - const: Payment
+              title: Payment
+            - const: PersonalisedAdvertising
+              title: PersonalisedAdvertising
+            - const: PersonalisedBenefits
+              title: PersonalisedBenefits
+            - const: RegistrationAuthentication
+              title: RegistrationAuthentication
+            - const: ResearchAndDevelopment
+              title: ResearchAndDevelopment
+            - const: Sector
+              title: Sector
+            - const: Security
+              title: Security
+            - const: SellDataToThirdParties
+              title: SellDataToThirdParties
+            - const: SellInsightsFromData
+              title: SellInsightsFromData
+            - const: SellProductsToDataSubject
+              title: SellProductsToDataSubject
+            - const: SellTargettedAdvertisements
+              title: SellTargettedAdvertisements
+            - const: ServiceOptimization
+              title: ServiceOptimization
+            - const: ServicePersonalization
+              title: ServicePersonalization
+            - const: ServiceProvision
+              title: ServiceProvision
+            - const: SocialMediaMarketing
+              title: SocialMediaMarketing
+            - const: UsageAnalytics
+              title: UsageAnalytics
+            - const: UserInterfacePersonalisation
+              title: UserInterfacePersonalisation
+          storageLocation:
+            type: string
+            oneOf:
+            - const: ourServers
+              title: ourServers
+            - const: thirdParty
+              title: thirdParty
+            - const: EU
+              title: EU
+            - const: EUlike
+              title: EUlike
+            - const: thirdCountries
+              title: thirdCountries
+          recipient:
+            type: string
+            oneOf:
+            - const: ours
+              title: ours
+            - const: delivery
+              title: delivery
+            - const: same
+              title: same
+            - const: otherRecipient
+              title: otherRecipient
+            - const: unrelated
+              title: unrelated
+            - const: public
+              title: public
+          storageDuration:
+            type: string
+          storageDurationUnit:
+            type: string
+            oneOf:
+            - const: hours
+              title: hours
+            - const: days
+              title: days
+            - const: weeks
+              title: weeks
+            - const: months
+              title: months
+            - const: years
+              title: years
+        required: []
+      ui:
+        type: VerticalLayout
+        elements:
+        - type: Group
+          label: About
+          elements:
+            - type: VerticalLayout
+              elements:
+              - type: Control
+                scope: "#/properties/name"
+              - type: Control
+                scope: "#/properties/description"
+                options:
+                  multi: true
+              - type: HorizontalLayout
+                elements:
+                - type: Control
+                  scope: "#/properties/created_by"
+                - type: Control
+                  scope: "#/properties/created_at"
+        - type: Group
+          label: UsagePolicy
+          elements:
+          - type: Control
+            scope: "#/properties/dataCategory"
+          - type: Control
+            scope: "#/properties/processing"
+          - type: Control
+            scope: "#/properties/purpose"
+          - type: Control
+            scope: "#/properties/recipient"
+          - type: Control
+            scope: "#/properties/storageLocation"
+          - type: HorizontalLayout
+            elements:
+            - type: Control
+              scope: "#/properties/storageDuration"
+            - type: Control
+              scope: "#/properties/storageDurationUnit"

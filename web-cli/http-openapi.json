@@ -49,6 +49,34 @@
         }
       }
     },
+    "/validate/jsonld": {
+      "post": {
+        "summary": "Validates data against JSON-LD v1.1",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to validate",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenericObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
     "/validate/{schemaDri}": {
       "post": {
         "summary": "Validates data against a schema",

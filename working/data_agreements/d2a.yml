@@ -43,3 +43,108 @@ content:
           valueOption:
             - csi
             - none
+    - type: OverlayForm
+      base: DataAgreement
+      name: DataAgreementFormOverlay
+      schema:
+        type: object
+        properties:
+          purposes:
+            type: array
+            items:
+              type: object
+              properties:
+                purpose_description:
+                  type: string
+                purpose_type:
+                  type: string
+                service:
+                  type: string
+                cii_information:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      attribute_id:
+                        type: string
+                        title: Attribute
+                      attribute_type:
+                        type: string
+                        title: Type
+                      sensitivity:
+                        type: string
+                        enum:
+                          - csi
+                          - none
+                      data_optional:
+                        type: boolean
+                        title: optional
+                jurisdiction:
+                  type: string
+                data_controllers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      organization_id:
+                        type: string
+                        title: Identifier
+                      name:
+                        type: string
+                      address:
+                        type: string
+                      party_type:
+                        type: string
+                        title: Type
+                data_owners:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      organization_id:
+                        type: string
+                        title: Identifier
+                      name:
+                        type: string
+                      address:
+                        type: string
+                      party_type:
+                        type: string
+                        title: Type
+      ui:
+        type: VerticalLayout
+        elements:
+        - type: Control
+          scope: "#/properties/purposes"
+          label: "Purposes (click + to add a new purpose)"
+          options:
+            showSortButtons: true
+            elementLabelProp: purpose_type
+            detail:
+              type: VerticalLayout
+              elements:
+              - type: HorizontalLayout
+                elements:
+                  - type: Control
+                    scope: "#/properties/purpose_type"
+                    label: Type
+                  - type: Control
+                    scope: "#/properties/service"
+                    label: "Service"
+              - type: Control
+                scope: "#/properties/purpose_description"
+                label: Description
+                options:
+                  multi: true
+              - type: Control
+                scope: "#/properties/jurisdiction"
+                label: Jurisdiction
+              - type: Control
+                scope: "#/properties/cii_information"
+                label: "Commercial Information (click + to add an entry)"
+              - type: Control
+                scope: "#/properties/data_controllers"
+                label: "Data Contoller (click + to add an entry)"
+              - type: Control
+                scope: "#/properties/data_owners"
+                label: "Data Owner (click + to add an entry)"
