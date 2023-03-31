@@ -4,7 +4,6 @@ import swaggerUi from 'swagger-ui-express';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { getFileRoot } from './utils/fs';
-import { lint } from "jsonld-lint";
 
 export const init = async () => {
   const app = express();
@@ -43,10 +42,11 @@ export const init = async () => {
       return res.status(400).send();
 
     try {
-      const resVal = await lint(JSON.stringify(content));
-      return res.status(200).send(resVal); 
+      await soya.toCanonical(content);
+      return res.status(200).send({ message: 'Validation success' });
     } catch (e: any) {
-      return res.status(400).send(e);
+      console.dir(e);
+      return res.status(400).send({ message: e.toString(), error: e });
     }
   });
 

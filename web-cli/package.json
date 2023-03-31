@@ -23,7 +23,6 @@
     "node-jq": "^2.3.5",
     "senml-js": "^1.0.0",
     "soya-js": "^0.5.18",
-    "jsonld-lint": "^0.3.0",
     "swagger-ui-express": "^4.6.2"
   }
 }
