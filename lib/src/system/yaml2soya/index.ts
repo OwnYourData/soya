@@ -41,7 +41,7 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
 
     if (containerType)
       // lowercase, because most container types in json-ld are lowercase
-      graphItem['@container'] = `@${containerType.toLowerCase()}`;
+      graphItem['soya:container_type'] = containerType.toLowerCase();
 
     graph.push(graphItem);
   }
