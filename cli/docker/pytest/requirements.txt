@@ -1,6 +1,3 @@
-# required versions
-# Python 3.10.8, pytest-7.2.1, pluggy-1.0.0
-
-# install
-pip install pytest-subprocess
-pip install --upgrade pluggy
+pytest==7.2.1
+pytest-subprocess==1.5.0
+pluggy==1.0.0
