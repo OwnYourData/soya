@@ -8,6 +8,7 @@ import { SoyaQuery, SoyaQueryResult, SoyaInfo } from "./services/repo";
 import { DEFAULT_SOYA_NAMESPACE, DEFAULT_XSD, RepoService } from "./services/repo";
 import { flat2ld } from "./system/flat2ld";
 import { SoyaFormOptions, getSoyaForm, SoyaFormResponse } from "./system/form";
+import { map } from "./system/map";
 import { yaml2soya } from "./system/yaml2soya";
 import { calculateBaseUri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
@@ -191,4 +192,6 @@ export class Soya {
   getForm = async (soyaDoc: SoyaDocument, options?: SoyaFormOptions): Promise<SoyaFormResponse> => {
     return getSoyaForm(soyaDoc, options);
   }
+
+  map = map;
 }

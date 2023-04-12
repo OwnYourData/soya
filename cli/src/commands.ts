@@ -8,11 +8,16 @@ import open from "open";
 import { CmdArgs } from "./utils/cmd";
 
 type ParamObject = Omit<CmdArgs, 'default'> & {
-  default?: string;
+  // essentially we are redefining this property here
+  // but it has a different meaning, as it only contains
+  // parameters without the command
+  default?: string[];
+  // this is the first param, if it exists
+  param1?: string;
 };
 
 const acquire = async (params: ParamObject, soya: Soya): Promise<void> => {
-  const param1 = params.default;
+  const param1 = params.param1;
   if (!param1)
     return exitWithError('No soya structure specified!');
 
@@ -36,7 +41,7 @@ const acquire = async (params: ParamObject, soya: Soya): Promise<void> => {
   }
 }
 const template = async (params: ParamObject): Promise<void> => {
-  const param1 = params.default;
+  const param1 = params.param1;
   if (!param1)
     return exitWithError('No template name specified!');
 
@@ -51,7 +56,7 @@ const init = async (_: ParamObject, soya: Soya): Promise<void> => {
   logNiceConsole(await soya.init(yamlContent));
 }
 const pull = async (params: ParamObject, soya: Soya): Promise<void> => {
-  const param1 = params.default;
+  const param1 = params.param1;
   if (!param1)
     return exitWithError('No path specified!');
 
@@ -169,7 +174,7 @@ const playground = async (): Promise<void> => {
   console.log(url);
 }
 const query = async (params: ParamObject, soya: Soya): Promise<void> => {
-  const param1 = params.default;
+  const param1 = params.param1;
 
   if (!param1)
     return exitWithError('No path specified!');
@@ -196,6 +201,29 @@ const canonical = async (_: ParamObject, soya: Soya): Promise<void> => {
     return exitWithError('Could not get canonical form!');
   }
 }
+const map = async (params: ParamObject, soya: Soya): Promise<void> => {
+  const nameFrom = params.default?.[0];
+  const nameTo = params.default?.[1];
+
+  if (!nameFrom || !nameTo)
+    return exitWithError('Map requirs exactly two arguments!');
+
+  let docFrom, docTo: SoyaDocument;
+
+  try {
+    docFrom = await soya.pull(nameFrom);
+  } catch {
+    return exitWithError(`Could not fetch SOyA document ${nameFrom}!`);
+  }
+
+  try {
+    docTo = await soya.pull(nameTo);
+  } catch {
+    return exitWithError(`Could not fetch SOyA document ${nameTo}!`);
+  }
+
+  logNiceConsole(await soya.map(docFrom, docTo));
+}
 
 export const systemCommands: {
   [key: string]: (params: ParamObject, soya: Soya) => Promise<void>,
@@ -213,4 +241,5 @@ export const systemCommands: {
   'calculate-dri': calculateDri,
   query,
   canonical,
+  map,
 };

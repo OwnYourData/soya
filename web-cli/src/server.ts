@@ -99,6 +99,24 @@ export const init = async () => {
     }
   });
 
+  router.get('/map/:from/:to', async (req, res) => {
+    const from = req.params['from'];
+    const to = req.params['to'];
+
+    if (!from || !to)
+      return res.status(400).send();
+
+    try {
+      const fromDoc = await soya.pull(from);
+      const toDoc = await soya.pull(to);
+
+      const doc = await soya.map(fromDoc, toDoc);
+      return res.status(200).send(doc);
+    } catch (e: any) {
+      return res.status(500).send(e.toString());
+    }
+  });
+
   const port = 8080;
   app.listen(port, () => {
     console.log(`Webserver running on port ${port}`);

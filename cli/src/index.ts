@@ -34,8 +34,9 @@ export const logNiceConsole = (value: any) => {
 
   const {
     repo,
-    default: [command, param1],
+    default: [command, ...rest],
   } = cmdArgs;
+  const [param1] = rest;
 
   if (command && cmdArgs.help)
     return printCliHelp(command);
@@ -60,7 +61,8 @@ export const logNiceConsole = (value: any) => {
     if (func) {
       func({
         ...cmdArgs,
-        default: param1,
+        default: rest,
+        param1: param1,
       }, soya);
       return;
     }

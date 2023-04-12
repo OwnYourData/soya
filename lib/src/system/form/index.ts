@@ -1,23 +1,11 @@
 import { UISchemaElement } from "@jsonforms/core";
 import { FormRenderError } from "../../errors";
 import { SoyaDocument } from "../../interfaces";
-import { isIRI, parseJsonLd } from "../../utils/rdf";
+import { getLastUriPart, isIRI, parseJsonLd } from "../../utils/rdf";
 import { SparqlQueryBuilder } from "../../utils/sparql";
 import { JsonSchema, Layout, SoyaFormOptions, SoyaFormResponse, StaticForm } from "./interfaces";
 
 export * from './interfaces';
-
-const splitLast = (value: string | undefined, split: string): string | undefined => {
-  if (!value)
-    return value;
-
-  const arr = value.split(split);
-  return arr[arr.length - 1];
-}
-
-const getLastUriPart = (uri: string): string | undefined => {
-  return splitLast(splitLast(uri, '/'), '#');
-}
 
 class FormBuilder {
   private _ui: Layout;

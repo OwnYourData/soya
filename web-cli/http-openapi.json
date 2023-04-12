@@ -181,6 +181,39 @@
           }
         }
       }
+    },
+    "/map/{from}/{to}": {
+      "get": {
+        "summary": "Maps from one SOyA schema to another one",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "path",
+            "description": "Schema DRI of a SOyA structure",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "path",
+            "description": "Schema DRI of a SOyA structure",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
     }
   },
   "definitions": {

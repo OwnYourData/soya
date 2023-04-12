@@ -55,7 +55,7 @@ const getCommands = (): string[] => {
     ...Object.keys(systemCommands),
     'validate',
     'transform',
-  ]
+  ].sort();
 }
 
 const getGeneralOptions = (): commandLineUsage.Section => {
@@ -325,6 +325,26 @@ const printFormHelp = () => {
   ]))
 }
 
+const printMapHelp = () => {
+  console.log(commandLineUsage([
+    {
+      header: 'Description',
+      content: [
+        'Aligns two SOyA structures and provides a Handlebars template for transforming one structure into another.',
+        'The first argument specifies the structure that should be used as data input.',
+        'The second argument specifies the structure that should be used as data output.',
+      ],
+    },
+    {
+      header: 'Usage',
+      content: [
+        '$ soya map OYD_Company OYD_Organisation',
+      ]
+    },
+    getGeneralOptions(),
+  ]))
+}
+
 export const printCliHelp = async (command?: string): Promise<never> => {
   if (!command)
     printGeneralHelp();
@@ -362,6 +382,9 @@ export const printCliHelp = async (command?: string): Promise<never> => {
         break;
       case 'form':
         printFormHelp();
+        break;
+      case 'map':
+        printMapHelp();
         break;
       default:
         if (getCommands().indexOf(command) !== -1)

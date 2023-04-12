@@ -65,4 +65,16 @@ export const isIRI = (value?: string) => {
   return value?.startsWith('http');
 }
 
+const splitLast = (value: string | undefined, split: string): string | undefined => {
+  if (!value)
+    return value;
+
+  const arr = value.split(split);
+  return arr[arr.length - 1];
+}
+
+export const getLastUriPart = (uri: string): string | undefined => {
+  return splitLast(splitLast(uri, '/'), '#');
+}
+
 export { factory };
