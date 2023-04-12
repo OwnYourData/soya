@@ -20,6 +20,17 @@ export const init = async () => {
 
   const soya = new Soya();
 
+  router.get('/version', async (_, res) => {
+    const content = await fs.readFile(path.join(getFileRoot(), 'package.json'), { encoding: 'utf-8' });
+    const packageJson: any = JSON.parse(content);
+
+    return res.status(200).send({
+      name: packageJson.name,
+      version: packageJson.version,
+      dependencies: packageJson.dependencies,
+    });
+  });
+
   router.get('/form/:schemaDri', async (req, res) => {
     const schemaDri = req.params['schemaDri'];
 
