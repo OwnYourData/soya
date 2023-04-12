@@ -1,0 +1,1 @@
+soya info Did | jq '.history | length > 40'
