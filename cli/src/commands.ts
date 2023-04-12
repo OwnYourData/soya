@@ -127,7 +127,7 @@ const similar = async (_: ParamObject, soya: Soya): Promise<void> => {
   }
 }
 const info = async (params: ParamObject, soya: Soya): Promise<void> => {
-  const param1 = params.default;
+  const param1 = params.param1;
   if (!param1)
     return exitWithError('No path specified!');
 
