@@ -1,6 +1,6 @@
 {
   "name": "soya-web-cli",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
@@ -22,7 +22,7 @@
     "find-root": "^1.1.0",
     "node-jq": "^2.3.5",
     "senml-js": "^1.0.0",
-    "soya-js": "^0.5.20",
+    "soya-js": "^0.5.22",
     "swagger-ui-express": "^4.6.2"
   }
 }
