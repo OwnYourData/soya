@@ -6,9 +6,9 @@
   <meta content="w3c/CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version d9bd89757, updated Thu Mar 23 10:06:53 2023 -0700" name="generator">
+  <meta content="Bikeshed version 3383f409d, updated Fri Apr 28 15:49:22 2023 -0700" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
-  <meta content="f8780b6689011c5f6bd743862c20d00c3d099127" name="document-revision">
+  <meta content="97fd387537dcf162ad79054520c9d34f5800d5d6" name="document-revision">
 <style>
 /* Style the tab */
 .tab {
@@ -257,8 +257,7 @@ figcaption:not(.no-marker)::before {
     position: absolute;
     z-index: 35;
     width: 20em;
-    min-width: min-content;
-    max-width: 300px;
+    width: 300px;
     height: auto;
     max-height: 500px;
     overflow: auto;
@@ -275,8 +274,15 @@ figcaption:not(.no-marker)::before {
 .dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
-.dfn-panel ul { padding: 0; }
-.dfn-panel li { list-style: inside; }
+.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
+.dfn-panel li a {
+    white-space: pre;
+    display: inline-block;
+    max-width: calc(300px - 1.5em - 1em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .dfn-panel.activated {
     display: inline-block;
     position: fixed;
@@ -287,7 +293,7 @@ figcaption:not(.no-marker)::before {
     max-height: 30vh;
 }
 
-.dfn-paneled { cursor: pointer; }
+.dfn-paneled[role="button"] { cursor: pointer; }
 </style>
 <style>/* style-issues */
 a[href].issue-return {
@@ -616,7 +622,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-04-12">12 April 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-05-10">10 May 2023</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1845,63 +1851,68 @@ function openTab(evt, cityName) {
    <dt id="biblio-multihash">[MULTIHASH]
    <dd><a href="https://github.com/multiformats/multihash"><cite>Multihash - protocol for differentiating outputs from various well-established cryptographic hash functions</cite></a>. URL: <a href="https://github.com/multiformats/multihash">https://github.com/multiformats/multihash</a>
   </dl>
-  <aside aria-labelledby="infopaneltitle-for-terms-attributes" class="dfn-panel" data-for="terms-attributes" id="infopanel-for-terms-attributes">
-   <span id="infopaneltitle-for-terms-attributes" style="display:none">Info about the 'Attribute' definition.</span><b><a href="#terms-attributes">#terms-attributes</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-terms-attributes">1.1. Terminology</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-terms-base" class="dfn-panel" data-for="terms-base" id="infopanel-for-terms-base">
-   <span id="infopaneltitle-for-terms-base" style="display:none">Info about the 'Base' definition.</span><b><a href="#terms-base">#terms-base</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-terms-base">1.1. Terminology</a> <a href="#ref-for-terms-base①">(2)</a> <a href="#ref-for-terms-base②">(3)</a> <a href="#ref-for-terms-base③">(4)</a>
-    <li><a href="#ref-for-terms-base④">1.3. Motivation</a>
-    <li><a href="#ref-for-terms-base⑤">2.1. Structures</a>
-    <li><a href="#ref-for-terms-base⑥">2.1.2. Base</a>
-    <li><a href="#ref-for-terms-base⑦">3.1. Authoring</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-terms-dris" class="dfn-panel" data-for="terms-dris" id="infopanel-for-terms-dris">
-   <span id="infopaneltitle-for-terms-dris" style="display:none">Info about the 'DRI' definition.</span><b><a href="#terms-dris">#terms-dris</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-terms-dris">1.2. Design Goals and Rationale</a>
-    <li><a href="#ref-for-terms-dris①">3.2. Publishing</a>
-    <li><a href="#ref-for-terms-dris②">4.2. Command Line Tool</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-terms-overlay" class="dfn-panel" data-for="terms-overlay" id="infopanel-for-terms-overlay">
-   <span id="infopaneltitle-for-terms-overlay" style="display:none">Info about the 'Overlay' definition.</span><b><a href="#terms-overlay">#terms-overlay</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-terms-overlay">1.1. Terminology</a>
-    <li><a href="#ref-for-terms-overlay①">1.3. Motivation</a>
-    <li><a href="#ref-for-terms-overlay②">2.1. Structures</a>
-    <li><a href="#ref-for-terms-overlay③">3.1. Authoring</a> <a href="#ref-for-terms-overlay④">(2)</a>
-    <li><a href="#ref-for-terms-overlay⑤">3.4. Validation</a>
-    <li><a href="#ref-for-terms-overlay⑥">3.5. Transformation</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-terms-structures" class="dfn-panel" data-for="terms-structures" id="infopanel-for-terms-structures">
-   <span id="infopaneltitle-for-terms-structures" style="display:none">Info about the 'Structure' definition.</span><b><a href="#terms-structures">#terms-structures</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-terms-structures">1.1. Terminology</a> <a href="#ref-for-terms-structures①">(2)</a>
-    <li><a href="#ref-for-terms-structures②">2.1. Structures</a>
-   </ul>
-  </aside>
 <script>/* script-dfn-panel */
 "use strict";
 {
-    function queryAll(sel) {
-        return [].slice.call(document.querySelectorAll(sel));
+    const dfnsJson = window.dfnsJson || {};
+
+    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
+        return mk.aside({
+            class: "dfn-panel",
+            id: `infopanel-for-${dfnID}`,
+            "data-for": dfnID,
+            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+            },
+            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+                `Info about the '${dfnText}' ${external?"external":""} reference.`),
+            mk.a({href:url}, url),
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({
+                                    href: `#${ref.id}`
+                                    },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
-    // Add popup behavior to all dfns to show the corresponding dfn-panel.
-    var dfns = document.querySelectorAll('.dfn-paneled');
-    for (let dfn of dfns) { insertDfnPopupAction(dfn); }
+    function genAllDfnPanels() {
+        for(const panelData of Object.values(window.dfnpanelData)) {
+            const dfnID = panelData.dfnID;
+            const dfn = document.getElementById(dfnID);
+            if(!dfn) {
+                console.log(`Can't find dfn#${dfnID}.`, panelData);
+            } else {
+                const panel = genDfnPanel(panelData);
+                append(document.body, panel);
+                insertDfnPopupAction(dfn, panel)
+            }
+        }
+    }
 
-    document.body.addEventListener("click", (e) => {
-        // If not handled already, just hide all dfn panels.
-        hideAllDfnPanels();
-    });
+    document.addEventListener("DOMContentLoaded", ()=>{
+        genAllDfnPanels();
+
+        // Add popup behavior to all dfns to show the corresponding dfn-panel.
+        var dfns = queryAll('.dfn-paneled');
+        for(let dfn of dfns) { ; }
+
+        document.body.addEventListener("click", (e) => {
+            // If not handled already, just hide all dfn panels.
+            hideAllDfnPanels();
+        });
+    })
+
 
     function hideAllDfnPanels() {
         // Turn off any currently "on" or "activated" panels.
@@ -1951,49 +1962,247 @@ function openTab(evt, cityName) {
         }
     }
 
-    function insertDfnPopupAction(dfn) {
+    function insertDfnPopupAction(dfn, dfnPanel) {
         // Find dfn panel
-        const dfnPanel = document.querySelector(`.dfn-panel[data-for='${dfn.id}']`);
-        if (dfnPanel) {
-            const panelWrapper = document.createElement('span');
-            panelWrapper.appendChild(dfnPanel);
-            panelWrapper.style.position = "relative";
-            panelWrapper.style.height = "0px";
-            dfn.insertAdjacentElement("afterend", panelWrapper);
-            dfn.setAttribute('role', 'button');
-            dfn.setAttribute('aria-expanded', 'false')
-            dfn.tabIndex = 0;
-            dfn.classList.add('has-dfn-panel');
-            dfn.addEventListener('click', (event) => {
-                showDfnPanel(dfnPanel, dfn);
+        const panelWrapper = document.createElement('span');
+        panelWrapper.appendChild(dfnPanel);
+        panelWrapper.style.position = "relative";
+        panelWrapper.style.height = "0px";
+        dfn.insertAdjacentElement("afterend", panelWrapper);
+        dfn.setAttribute('role', 'button');
+        dfn.setAttribute('aria-expanded', 'false')
+        dfn.tabIndex = 0;
+        dfn.classList.add('has-dfn-panel');
+        dfn.addEventListener('click', (event) => {
+            showDfnPanel(dfnPanel, dfn);
+            event.stopPropagation();
+        });
+        dfn.addEventListener('keypress', (event) => {
+            const kc = event.keyCode;
+            // 32->Space, 13->Enter
+            if(kc == 32 || kc == 13) {
+                toggleDfnPanel(dfnPanel, dfn);
                 event.stopPropagation();
-            });
-            dfn.addEventListener('keypress', (event) => {
-                const kc = event.keyCode;
-                // 32->Space, 13->Enter
-                if(kc == 32 || kc == 13) {
-                    toggleDfnPanel(dfnPanel, dfn);
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            });
+                event.preventDefault();
+            }
+        });
 
-            dfnPanel.addEventListener('click', (event) => {
+        dfnPanel.addEventListener('click', (event) => {
+            if (event.target.nodeName == 'A') {
                 pinDfnPanel(dfnPanel);
+            }
+            event.stopPropagation();
+        });
+
+        dfnPanel.addEventListener('keydown', (event) => {
+            if(event.keyCode == 27) { // Escape key
+                hideDfnPanel(dfnPanel, dfn);
                 event.stopPropagation();
-            });
-
-            dfnPanel.addEventListener('keydown', (event) => {
-                if(event.keyCode == 27) { // Escape key
-                    hideDfnPanel(dfnPanel, dfn);
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            })
-
-        } else {
-            console.log("Couldn't find .dfn-panel[data-for='" + dfn.id + "']");
-        }
+                event.preventDefault();
+            }
+        })
     }
 }
 </script>
+<script>/* script-dfn-panel-json */
+window.dfnpanelData = {};
+window.dfnpanelData['terms-attributes'] = {"dfnID": "terms-attributes", "url": "#terms-attributes", "dfnText": "Attribute", "refSections": [{"refs": [{"id": "ref-for-terms-attributes"}], "title": "1.1. Terminology"}], "external": false};
+window.dfnpanelData['terms-base'] = {"dfnID": "terms-base", "url": "#terms-base", "dfnText": "Base", "refSections": [{"refs": [{"id": "ref-for-terms-base"}, {"id": "ref-for-terms-base\u2460"}, {"id": "ref-for-terms-base\u2461"}, {"id": "ref-for-terms-base\u2462"}], "title": "1.1. Terminology"}, {"refs": [{"id": "ref-for-terms-base\u2463"}], "title": "1.3. Motivation"}, {"refs": [{"id": "ref-for-terms-base\u2464"}], "title": "2.1. Structures"}, {"refs": [{"id": "ref-for-terms-base\u2465"}], "title": "2.1.2. Base"}, {"refs": [{"id": "ref-for-terms-base\u2466"}], "title": "3.1. Authoring"}], "external": false};
+window.dfnpanelData['terms-dris'] = {"dfnID": "terms-dris", "url": "#terms-dris", "dfnText": "DRI", "refSections": [{"refs": [{"id": "ref-for-terms-dris"}], "title": "1.2. Design Goals and Rationale"}, {"refs": [{"id": "ref-for-terms-dris\u2460"}], "title": "3.2. Publishing"}, {"refs": [{"id": "ref-for-terms-dris\u2461"}], "title": "4.2. Command Line Tool"}], "external": false};
+window.dfnpanelData['terms-overlay'] = {"dfnID": "terms-overlay", "url": "#terms-overlay", "dfnText": "Overlay", "refSections": [{"refs": [{"id": "ref-for-terms-overlay"}], "title": "1.1. Terminology"}, {"refs": [{"id": "ref-for-terms-overlay\u2460"}], "title": "1.3. Motivation"}, {"refs": [{"id": "ref-for-terms-overlay\u2461"}], "title": "2.1. Structures"}, {"refs": [{"id": "ref-for-terms-overlay\u2462"}, {"id": "ref-for-terms-overlay\u2463"}], "title": "3.1. Authoring"}, {"refs": [{"id": "ref-for-terms-overlay\u2464"}], "title": "3.4. Validation"}, {"refs": [{"id": "ref-for-terms-overlay\u2465"}], "title": "3.5. Transformation"}], "external": false};
+window.dfnpanelData['terms-structures'] = {"dfnID": "terms-structures", "url": "#terms-structures", "dfnText": "Structure", "refSections": [{"refs": [{"id": "ref-for-terms-structures"}, {"id": "ref-for-terms-structures\u2460"}], "title": "1.1. Terminology"}, {"refs": [{"id": "ref-for-terms-structures\u2461"}], "title": "2.1. Structures"}], "external": false};</script>
+<script>/* script-dom-helper */
+function query(sel) { return document.querySelector(sel); }
+
+function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+function iter(obj) {
+	if(!obj) return [];
+	var it = obj[Symbol.iterator];
+	if(it) return it;
+	return Object.entries(obj);
+}
+
+function mk(tagname, attrs, ...children) {
+	const el = document.createElement(tagname);
+	for(const [k,v] of iter(attrs)) {
+		if(k.slice(0,3) == "_on") {
+			const eventName = k.slice(3);
+			el.addEventListener(eventName, v);
+		} else if(k[0] == "_") {
+			// property, not attribute
+			el[k.slice(1)] = v;
+		} else {
+			if(v === false || v == null) {
+        continue;
+      } else if(v === true) {
+        el.setAttribute(k, "");
+        continue;
+      } else {
+  			el.setAttribute(k, v);
+      }
+		}
+	}
+	append(el, children);
+	return el;
+}
+
+/* Create shortcuts for every known HTML element */
+[
+  "a",
+  "abbr",
+  "acronym",
+  "address",
+  "applet",
+  "area",
+  "article",
+  "aside",
+  "audio",
+  "b",
+  "base",
+  "basefont",
+  "bdo",
+  "big",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "center",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "datalist",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "embed",
+  "fieldset",
+  "figcaption",
+  "figure",
+  "font",
+  "footer",
+  "form",
+  "frame",
+  "frameset",
+  "head",
+  "header",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "link",
+  "main",
+  "map",
+  "mark",
+  "meta",
+  "meter",
+  "nav",
+  "nobr",
+  "noscript",
+  "object",
+  "ol",
+  "optgroup",
+  "option",
+  "output",
+  "p",
+  "param",
+  "pre",
+  "progress",
+  "q",
+  "s",
+  "samp",
+  "script",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strike",
+  "strong",
+  "style",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "time",
+  "title",
+  "tr",
+  "u",
+  "ul",
+  "var",
+  "video",
+  "wbr",
+  "xmp",
+].forEach(tagname=>{
+	mk[tagname] = (...args) => mk(tagname, ...args);
+});
+
+function* nodesFromChildList(children) {
+	for(const child of children.flat(Infinity)) {
+		if(child instanceof Node) {
+			yield child;
+		} else {
+			yield new Text(child);
+		}
+	}
+}
+function append(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		if(el instanceof Node) el.appendChild(child);
+		else el.push(child);
+	}
+	return el;
+}
+
+function insertAfter(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		el.parentNode.insertBefore(child, el.nextSibling);
+	}
+	return el;
+}
+
+function clearContents(el) {
+	el.innerHTML = "";
+	return el;
+}
+
+function parseHTML(markup) {
+	if(markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+		const doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = markup;
+		return doc;
+	} else {
+		const el = mk.template({});
+		el.innerHTML = markup;
+		return el.content;
+	}
+}</script>
