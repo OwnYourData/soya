@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: soya-tls
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  secretName: soya-tls
+  issuerRef:
+    group: cert-manager.io
+    name: letsencrypt-prod
+    kind: Issuer
+  dnsNames:
+  - 'soya.ownyourdata.eu'
