@@ -1,0 +1,9 @@
+# start containers
+docker run -d --name soya_web_cli -p 3100:8080 oydeu/soya-web-cli
+docker run -d --name didlint -p 3200:3000 -e SOYA_WEB_CLI="http://192.168.45.39:3100" oydeu/didlint
+
+# test jsonld validation
+echo '{}' | curl -H 'Content-Type: application/json' -d @- -X POST http://localhost:3100/api/v1/validate/jsonld
+
+# test local soya-web-cli
+curl http://localhost:3200/api/validate/did%3Aoyd%3AzQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
