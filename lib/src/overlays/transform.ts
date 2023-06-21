@@ -5,7 +5,7 @@ import { Overlays, SoyaDocument } from 'soya-js';
 import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
-import { Normalize, Pack } from 'senml-js';
+import { Normalize, NormalizedRecord, Pack } from '@gebsl/senml-js';
 import Handlebars from 'handlebars';
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
@@ -74,7 +74,7 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     if (res.name && res.message) {
       throw new Error(JSON.stringify(res));
     } else {
-      const _res = res as Pack;
+      const _res = res as Pack<NormalizedRecord>;
       return { data: _res.Records };
     }
   }
