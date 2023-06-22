@@ -72,7 +72,7 @@ export class RepoService {
   }
 
   pull = async (path: string): Promise<any> => {
-    return this._cache.get(path, () => this.get(`/${path}`, false));
+    return (await this._cache.get(path, () => this.get(`/${path}`, false))).data;
   }
 
   private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
