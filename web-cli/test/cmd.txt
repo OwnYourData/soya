@@ -16,8 +16,8 @@ cd lib
 npm i
 npm run build
 cd ../cli
-npm link soya-js
 npm i
+npm link soya-js
 npm run build
 cd ../web-cli
 npm link soya-js
