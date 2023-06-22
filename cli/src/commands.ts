@@ -197,8 +197,8 @@ const canonical = async (_: ParamObject, soya: Soya): Promise<void> => {
     const jsonLd = JSON.parse(input) as SoyaDocument;
 
     logNiceConsole(await soya.toCanonical(jsonLd));
-  } catch {
-    return exitWithError('Could not get canonical form!');
+  } catch (e: any) {
+    return exitWithError(`Could not get canonical form: ${JSON.stringify(e, null, 2)}`);
   }
 }
 const map = async (params: ParamObject, soya: Soya): Promise<void> => {
