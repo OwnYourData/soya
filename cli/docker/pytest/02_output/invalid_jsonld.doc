@@ -1,0 +1,1 @@
+{"message":"jsonld.ValidationError: Safe mode validation error.","error":{"name":"jsonld.ValidationError","details":{"event":{"type":["JsonLdEvent"],"code":"empty object","level":"warning","message":"Dropping empty object.","details":{"value":{}}}}}}
