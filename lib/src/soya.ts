@@ -159,7 +159,10 @@ export class Soya {
       // fetch, which is experimental on node.js
       documentLoader: async (url) => {
         const cacheItem = await this._documentCache.get(url, async () => (await axios.get(url)).data);
-        return cacheItem.data;
+        return {
+          document: cacheItem.data,
+          documentUrl: url,
+        };
       },
     });
   }
