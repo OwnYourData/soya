@@ -14,6 +14,8 @@ import { calculateBaseUri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
 import { SparqlQueryBuilder } from "./utils/sparql";
 import { canonize } from 'jsonld';
+import axios from 'axios';
+import { Cache } from "./services/cache";
 
 const asStringInput = (input: unknown): string => {
   if (typeof input === 'object')
@@ -150,8 +152,16 @@ export class Soya {
     return new SparqlQueryBuilder(layerSet);
   }
 
+  private _documentCache = new Cache();
   toCanonical = async (soyaDoc: SoyaDocument): Promise<string> => {
-    return canonize(soyaDoc as any);
+    return canonize(soyaDoc as any, {
+      // overwriting document loader here, as default implementation is
+      // fetch, which is experimental on node.js
+      documentLoader: async (url) => {
+        const cacheItem = await this._documentCache.get(url, async () => (await axios.get(url)).data);
+        return cacheItem.data;
+      },
+    });
   }
 
   async info(path: string[]): Promise<SoyaInfo[]>;

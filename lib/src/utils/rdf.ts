@@ -16,7 +16,10 @@ export const parseJsonLd = (input: any) => {
     documentLoader: {
       // overwriting document loader here, as default implementation is
       // fetch, which is experimental on node.js
-      load: async (url: string) => documentCache.get(url, async () => (await axios.get(url)).data),
+      load: async (url: string) => {
+        const cacheItem = await documentCache.get(url, async () => (await axios.get(url)).data);
+        return cacheItem.data;
+      },
     }
   });
 

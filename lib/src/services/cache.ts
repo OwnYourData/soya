@@ -32,6 +32,6 @@ export class Cache {
       log.debug('Using cached result');
     }
 
-    return item.data;
+    return item;
   }
 }
