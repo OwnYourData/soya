@@ -18,12 +18,6 @@
       "range": "xsd:string"
     },
     {
-      "@id": "dateOfBirth",
-      "@type": "owl:DatatypeProperty",
-      "domain": "Employee",
-      "range": "xsd:date"
-    },
-    {
       "@id": "management",
       "@type": "owl:DatatypeProperty",
       "domain": "Employee",
@@ -39,23 +33,29 @@
       "@id": "employer",
       "@type": "owl:ObjectProperty",
       "domain": "Employee",
-      "range": "Company"
+      "range": "Organisation"
     },
     {
-      "@id": "Company",
+      "@id": "Organisation",
       "@type": "owl:Class",
       "subClassOf": "soya:Base"
     },
     {
-      "@id": "company",
+      "@id": "name",
       "@type": "owl:DatatypeProperty",
-      "domain": "Company",
+      "domain": "Organisation",
       "range": "xsd:string"
+    },
+    {
+      "@id": "founded",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Organisation",
+      "range": "xsd:date"
     },
     {
       "@id": "staff_count",
       "@type": "owl:DatatypeProperty",
-      "domain": "Company",
+      "domain": "Organisation",
       "range": "xsd:integer"
     }
   ]

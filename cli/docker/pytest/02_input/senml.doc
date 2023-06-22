@@ -1,0 +1,8 @@
+[    
+  { "bn": "urn:dev:mac:d6ea13fffff5113b:", "bt": 1677102089.0,
+    "bv": 10, "n": "batt", "u": "%EL", "v": 100 },
+  { "n": "label", "vs": "DEC112 PuckJS" },
+  { "n": "temp", "u": "Cel", "v": 21 },
+  { "n": "move", "vb": false },
+  { "n": "button", "vb": false }
+]

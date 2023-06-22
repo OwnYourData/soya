@@ -1,0 +1,29 @@
+[
+  {
+    "n": "urn:dev:mac:d6ea13fffff5113b:batt",
+    "u": "%EL",
+    "v": 110,
+    "t": 1677102089
+  },
+  {
+    "n": "urn:dev:mac:d6ea13fffff5113b:label",
+    "vs": "DEC112 PuckJS",
+    "t": 1677102089
+  },
+  {
+    "n": "urn:dev:mac:d6ea13fffff5113b:temp",
+    "u": "Cel",
+    "v": 21,
+    "t": 1677102089
+  },
+  {
+    "n": "urn:dev:mac:d6ea13fffff5113b:move",
+    "vb": false,
+    "t": 1677102089
+  },
+  {
+    "n": "urn:dev:mac:d6ea13fffff5113b:button",
+    "vb": false,
+    "t": 1677102089
+  }
+]
