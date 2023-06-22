@@ -13,6 +13,7 @@ import { yaml2soya } from "./system/yaml2soya";
 import { calculateBaseUri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
 import { SparqlQueryBuilder } from "./utils/sparql";
+import { canonize } from 'jsonld';
 
 const asStringInput = (input: unknown): string => {
   if (typeof input === 'object')
@@ -150,8 +151,7 @@ export class Soya {
   }
 
   toCanonical = async (soyaDoc: SoyaDocument): Promise<string> => {
-    const dataset = await parseJsonLd(soyaDoc);
-    return dataset.toCanonical();
+    return canonize(soyaDoc as any);
   }
 
   async info(path: string[]): Promise<SoyaInfo[]>;
