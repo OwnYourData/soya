@@ -7,3 +7,21 @@ echo '{}' | curl -H 'Content-Type: application/json' -d @- -X POST http://localh
 
 # test local soya-web-cli
 curl http://localhost:3200/api/validate/did%3Aoyd%3AzQmaBZTghndXTgxNwfbdpVLWdFf6faYE4oeuN2zzXdQt1kh
+
+## Steps for deploying new version
+
+cd ~/dev/soya
+git pull
+cd lib
+npm i
+npm run build
+cd ../cli
+npm link soya-js
+npm i
+npm run build
+cd ../web-cli
+npm link soya-js
+npm i
+npm run build
+./build.sh --dockerhub
+docker tag 
