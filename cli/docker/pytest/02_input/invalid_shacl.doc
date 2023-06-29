@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "did": "https://soya.ownyourdata.eu/Did/",
+    "@vocab": "https://soya.ownyourdata.eu/Did/"
+  },
+  "@graph": [
+    {
+      "@type": "Did",
+      "id": "did:oyd:zQmZZbVygmbsxWXhP2BH5nW2RMNXSQA3eRqnzfkFXzH3fg1",
+      "verificationMethod": [
+        {
+          "id": "did:oyd:zQmZZbVygmbsxWXhP2BH5nW2RMNXSQA3eRqnzfkFXzH3fg1#key-doc",
+          "type": "JsonWebKey2020",
+          "controller": "did:oyd:zQmZZbVygmbsxWXhP2BH5nW2RMNXSQA3eRqnzfkFXzH3fg1",
+          "publicKeyMultibase": "z6MuxZoTqKn4fuv3FWPpKzkPGSEoMdR6CfhuujnNaftic26E"
+        }
+      ]
+    }
+  ]
+}
