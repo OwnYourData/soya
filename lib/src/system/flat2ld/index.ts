@@ -5,8 +5,13 @@ import { SparqlQueryBuilder } from "../../utils/sparql";
 const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson: any, base: string) => {
   for (const prop in flatJson) {
     const val = flatJson[prop];
+    const firstChar = prop[0];
 
-    if (typeof val === 'object') {
+    // test if first character is an alpha character 
+    // and no number or special character
+    // if input json is already jsonld it contains properties like "@context"
+    // which we don't want to use in our SPARQL query
+    if (firstChar && /\w/i.test(firstChar) && typeof val === 'object') {
       const refClasses = await builder.query(`
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX base: <${base}>
@@ -20,7 +25,12 @@ const iterateItemProps = async (builder: SparqlQueryBuilder, item: any, flatJson
         if (refClass) {
           const type = refClass.replace(base, '');
 
-          if (Array.isArray(val))
+          if (type === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#List') {
+            item[prop] = {
+              '@list': val,
+            };
+          }
+          else if (Array.isArray(val))
             item[prop] = val.map(x => {
               x['@type'] = type;
               return x;

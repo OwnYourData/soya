@@ -12,11 +12,12 @@ import { Soya } from ".";
 
 (async () => {
   // read test file from tmp directory
-  const filePath = path.join(__dirname, '..', 'tmp', 'test.yaml');
-  const docRaw = await fs.readFile(filePath, { encoding: 'utf-8' });
+  const filePath = path.join(__dirname, '..', 'tmp', 'input.json');
+  const docRaw = JSON.parse(await fs.readFile(filePath, { encoding: 'utf-8' }));
 
   const soya = new Soya();
-  const doc = await soya.init(docRaw);
+  // const doc = await soya.init(docRaw);
+  const doc = await soya.acquire("DidLight", docRaw);
 
   // format and output
   console.log(JSON.stringify(doc, null, 2));
