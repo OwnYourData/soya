@@ -1,0 +1,36 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/ex1/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "@graph": [
+    {
+      "@id": "ex1",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "elements",
+      "@type": "owl:ObjectProperty",
+      "domain": "ex1",
+      "range": "rdf:List"
+    },
+    {
+      "@id": "ex1OverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "ex1",
+      "label": "ex1ValidationOverlay",
+      "sh:targetClass": "ex1",
+      "sh:property": [
+        {
+          "sh:path": "elements",
+          "sh:nodeKind": "sh:BlankNodeOrIRI"
+        }
+      ]
+    }
+  ]
+}

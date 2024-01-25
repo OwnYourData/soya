@@ -1,0 +1,46 @@
+meta:
+  name: DidTmp
+  namespace:
+    did: "https://www.w3.org/ns/did#"
+
+content:
+  bases: 
+    - name: DidTmp #from: https://www.w3.org/TR/did-core/
+      subClassOf: "did:DIDSubject"
+      attributes: 
+        id: String
+        verificationMethod: set<VerificationMethod>
+    - name: VerificationMethod
+      subClassOf: "did:VerificationMethod"
+      attributes:
+        id: String
+        controller: String
+        type: String
+        publicKeyMultibase: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: DidTmp
+      name: DidValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"
+          pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%]+$"
+          message: "there must be one valid 'id' in a DID document"
+        verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
+          attributes:
+            "@list":
+              cardinality: "1..1"
+              attributes:
+                id:
+                  cardinality: "1..1"
+                  pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
+                type:
+                  cardinality: "1..1"
+                  valueOption:
+                    - EcdsaSecp256k1VerificationKey2019
+                    - Ed25519VerificationKey2020
+                controller:
+                  cardinality: "1..1"
+                publicKeyMultibase:
+                  cardinality: "1..1"

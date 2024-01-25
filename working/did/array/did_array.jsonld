@@ -28,38 +28,37 @@
       "@id": "verificationMethod",
       "@type": "owl:ObjectProperty",
       "domain": "Did",
-      "range": "VerificationMethod",
-      "@container": "@set"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "assertionMethod",
       "@type": "owl:DatatypeProperty",
       "domain": "Did",
-      "range": "xsd:string"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "authentication",
       "@type": "owl:DatatypeProperty",
       "domain": "Did",
-      "range": "xsd:string"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "capabilityDelegation",
       "@type": "owl:DatatypeProperty",
       "domain": "Did",
-      "range": "xsd:string"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "capabilityInvocation",
       "@type": "owl:DatatypeProperty",
       "domain": "Did",
-      "range": "xsd:string"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "keyAgreement",
       "@type": "owl:DatatypeProperty",
       "domain": "Did",
-      "range": "xsd:string"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "controller",
@@ -71,8 +70,7 @@
       "@id": "service",
       "@type": "owl:ObjectProperty",
       "domain": "Did",
-      "range": "Service",
-      "@container": "@set"
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
     },
     {
       "@id": "VerificationMethod",
@@ -173,7 +171,8 @@
           "sh:path": "id",
           "sh:minCount": 1,
           "sh:maxCount": 1,
-          "sh:message": "there must be one 'id' in 'verificationMethod'"
+          "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%]+$",
+          "sh:message": "there must be one valid 'id' in a DID document"
         },
         {
           "sh:path": "verificationMethod",
@@ -185,7 +184,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -218,7 +218,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -253,7 +254,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -283,7 +285,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -312,7 +315,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -341,7 +345,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -370,7 +375,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -412,7 +418,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -445,7 +452,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -480,7 +488,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -510,7 +519,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -539,7 +549,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -568,7 +579,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -597,7 +609,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -639,7 +652,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -672,7 +686,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -707,7 +722,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -737,7 +753,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -766,7 +783,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -795,7 +813,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -824,7 +843,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -866,7 +886,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -899,7 +920,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -934,7 +956,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -964,7 +987,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -993,7 +1017,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1022,7 +1047,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1051,7 +1077,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1093,7 +1120,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1126,7 +1154,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1161,7 +1190,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1191,7 +1221,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1220,7 +1251,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1249,7 +1281,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1278,7 +1311,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1320,7 +1354,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1353,7 +1388,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1388,7 +1424,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1418,7 +1455,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1447,7 +1485,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1476,7 +1515,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1505,7 +1545,8 @@
                   {
                     "sh:path": "id",
                     "sh:minCount": 1,
-                    "sh:maxCount": 1
+                    "sh:maxCount": 1,
+                    "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                   },
                   {
                     "sh:path": "type",
@@ -1534,27 +1575,28 @@
         },
         {
           "sh:path": "service",
-          "sh:message": "invalid 'service'",
           "sh:property": [
             {
               "sh:path": "id",
               "sh:minCount": 1,
-              "sh:maxCount": 1
+              "sh:maxCount": 1,
+              "sh:message": "there must be one 'id' in 'service'"
             },
             {
               "sh:path": "type",
               "sh:minCount": 1,
-              "sh:maxCount": 1
+              "sh:maxCount": 1,
+              "sh:message": "there must be one 'type' in 'service'"
             },
             {
               "sh:path": "serviceEndpoint",
               "sh:minCount": 1,
-              "sh:maxCount": 1
+              "sh:maxCount": 1,
+              "sh:message": "there must be one 'serviceEndpoint' in 'service'"
             }
           ]
         },
         {
-          "sh:message": "invalid 'verification Relationships'",
           "sh:or": {
             "@list": [
               {
@@ -1566,7 +1608,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
@@ -1581,7 +1624,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
@@ -1596,7 +1640,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
@@ -1611,7 +1656,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
@@ -1626,7 +1672,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
@@ -1641,7 +1688,8 @@
                       {
                         "sh:path": "id",
                         "sh:minCount": 1,
-                        "sh:maxCount": 1
+                        "sh:maxCount": 1,
+                        "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                       }
                     ]
                   }
