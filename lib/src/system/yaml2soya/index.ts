@@ -30,37 +30,40 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
 
     let { dataType, isXsd } = tryUseXsdDataType(specifiedDataType);
 
-    // currently we don't care about the specific container type
-    // and treat everything like a list
-    // here we also see that the contained data type is basically
-    // lost, just rdf:List remains
-    // this is due to the limitation of rdf not knowing about the 
-    // datatype that's used inside the list. rdf just does not care
-    // This COULD be properly solved by adding some SHACL statements
-    // to restrict what data types are allowed to be used inside the list
-
-    // conclusion: this is a current limitation of SOyA in a way
-    // that information about the contained data type is just lost
-    // at this point (because of the limitation of rdf)
-    if (containerType)
-      dataType = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#List';
-
     const graphItem: any = {
       '@id': attrName,
       // use DataTypeProperty if our datatype could be identified as xsd datatype
       // use ObjectProperty otherwise -> more general
       '@type': `owl:${isXsd ? 'Datatype' : 'Object'}Property`,
       'domain': base.name,
-      'range': dataType,
+      'range': containerType ?
+        // currently we don't care about the specific container type
+        // and treat everything like a list
+        // here we also see that the contained data type is basically
+        // lost, just rdf:List remains
+        // this is due to the limitation of rdf not knowing about the 
+        // datatype that's used inside the list. rdf just does not care
+        // This COULD be properly solved by adding some SHACL statements
+        // to restrict what data types are allowed to be used inside the list
+        'http://www.w3.org/1999/02/22-rdf-syntax-ns#List'
+        : dataType,
     };
 
-    // This is some legacy code where we introduced a proprietary property
-    // which we anyway didn't use. However this could be interesting
-    // if in the furture we want to bring container types to life again.
-
-    // if (containerType)
-    //   // lowercase, because most container types in json-ld are lowercase
-    //   graphItem['soya:container_type'] = containerType.toLowerCase();
+    if (containerType) {
+      // lowercase, because most container types in json-ld are lowercase
+      graphItem['soya:containerType'] = containerType.toLowerCase();
+      graphItem['soya:containerElementTypes'] = dataType
+        // within list<...> or set<...> there could be mutliple types specified, like
+        // list<number | string>
+        // therefore we split all items here
+        .split('|')
+        .map(
+          // here we use the fully qualified name, as "containerElementTypes" is a custom property
+          x => doc['@context']['@base'] + x
+            // and then trim any leading/trailing whitespace
+            .trim()
+        );
+    }
 
     graph.push(graphItem);
   }
