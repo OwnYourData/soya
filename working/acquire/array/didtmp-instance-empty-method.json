@@ -1,0 +1,14 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "did": "https://soya.ownyourdata.eu/DidTmp/",
+    "@vocab": "https://soya.ownyourdata.eu/DidTmp/"
+  },
+  "@graph": [{
+    "@type": "DidTmp",
+    "id": "did:oyd:zQmaaUbj3kfbFk2LjE9PPnXy8sbuMBbMWvh6pm4Vr2wVkzr",
+    "verificationMethod": {
+      "@list": []
+    }
+  }]
+}

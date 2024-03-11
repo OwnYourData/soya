@@ -1,0 +1,117 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/DidTmp/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "did": "https://www.w3.org/ns/did#"
+  },
+  "@graph": [{
+      "@id": "DidTmp",
+      "@type": "owl:Class",
+      "subClassOf": "did:DIDSubject"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "DidTmp",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "verificationMethod",
+      "@type": "owl:ObjectProperty",
+      "domain": "DidTmp",
+      "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
+    },
+    {
+      "@id": "VerificationMethod",
+      "@type": "owl:Class",
+      "subClassOf": "did:VerificationMethod"
+    },
+    {
+      "@id": "id",
+      "@type": "owl:DatatypeProperty",
+      "domain": "VerificationMethod",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "DidTmpOverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "DidTmp",
+      "name": "DidValidationOverlay",
+      "sh:targetClass": "DidTmp",
+      "sh:property": [{
+          "sh:path": "id",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:pattern": "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%]+$",
+          "sh:message": "there must be one valid 'id' in a DID document"
+        },
+        {
+          "sh:path": "verificationMethod",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:property": [{
+            "sh:path": {
+              "sh:zeroOrMorePath": {
+                "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"
+              }
+            },
+            "sh:minCount": 2,
+            "sh:node": {
+              "sh:or": {
+                "@list": [{
+                    "sh:hasValue": {
+                      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
+                    }
+                  },
+                  {
+                    "sh:not": {
+                      "sh:hasValue": {
+                        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
+                      }
+                    },
+                    "sh:property": [{
+                        "sh:path": {
+                          "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#first"
+                        },
+                        "sh:minCount": 1,
+                        "sh:maxCount": 1,
+                        "sh:property": [{
+                            "sh:path": "id",
+                            "sh:minCount": 1,
+                            "sh:maxCount": 1
+                          },{
+                            "sh:path": "type",
+                            "sh:minCount": 1,
+                            "sh:maxCount": 1
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "sh:not": {
+                      "sh:hasValue": {
+                        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
+                      }
+                    },
+                    "sh:property": [{
+                        "sh:path": {
+                          "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#first"
+                        },
+                        "sh:datatype": {
+                            "@id": "xsd:string"
+                        }
+                    }]
+                  }
+                ]
+              }
+            },
+            "sh:message": "there is an error with verificationMethod data entry"
+          }]
+        }
+      ]
+    }
+  ]
+}

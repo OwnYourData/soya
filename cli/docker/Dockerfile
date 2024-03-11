@@ -21,12 +21,12 @@ WORKDIR /app
 
 #########################################
 
-FROM ruby:3.1.3-alpine
+FROM ruby:3.2.2-alpine
 MAINTAINER "Christoph Fabianek" christoph@ownyourdata.eu
 
 RUN addgroup -S user && \
     adduser -S user -G user && \
-    apk add --no-cache libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
+    apk add --no-cache vim libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
     gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri oydid && \
     gem install securerandom -v 0.1.1 && \
     apk del make gcc musl-dev && \
