@@ -84,7 +84,7 @@ class FormBuilder {
       ?prop a ?type .
       ?prop rdfs:range ?range .
       OPTIONAL {
-        ?prop soya:containerElementTypes ?containerElementTypes .
+        ?prop soya:containerElementTypes ?containerElementType .
       }
 
       FILTER(?type IN (owl:DatatypeProperty, owl:ObjectProperty))
@@ -101,10 +101,16 @@ class FormBuilder {
       const isList = elementType === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#List';
       if (isList)
         // || range to ensure it is not null
-        elementType = prop.get('?containerElementTypes') || elementType;
+        elementType = prop.get('?containerElementType') || elementType;
 
       const propName = getLastUriPart(propUri);
-      if (!propName)
+      if (
+        !propName
+        // if property has already been processed
+        // this can happen, if there are multiple container element types
+        // as the result set will contain an entry for each container element type
+        || !!schema.properties[propName]
+      )
         continue;
 
       const propSchema: JsonSchema = schema.properties[propName] = {};
