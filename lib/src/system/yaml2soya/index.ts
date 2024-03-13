@@ -58,10 +58,16 @@ const handleBase = (doc: IntSoyaDocument, base: any) => {
         // therefore we split all items here
         .split('|')
         .map(
-          // here we use the fully qualified name, as "containerElementTypes" is a custom property
-          x => doc['@context']['@base'] + x
+          dt => {
             // and then trim any leading/trailing whitespace
-            .trim()
+            let { dataType, isXsd } = tryUseXsdDataType(dt.trim());
+
+            if (!isXsd)
+              // here we use the fully qualified name, as "containerElementTypes" is a custom property
+              dataType = doc['@context']['@base'] + dataType
+
+            return dataType;
+          }
         );
     }
 
