@@ -113,7 +113,7 @@ class FormBuilder {
       )
         continue;
 
-      const propSchema: JsonSchema = schema.properties[propName] = {};
+      let propSchema: JsonSchema = schema.properties[propName] = {};
       const scope = `#/properties/${layoutSubPath}${propName}`;
 
       // we don't check URIs from w3.org for linked classes
@@ -128,8 +128,9 @@ class FormBuilder {
 
         // it's a graph object
         // start recursion
+        let subForm: SoyaForm | undefined = undefined
         if (refRange.length !== 0) {
-          const subForm = await this._handleClass(
+          subForm = await this._handleClass(
             propName,
             elementType,
             // if it is a list, we must not specify a layout sub path
@@ -141,13 +142,19 @@ class FormBuilder {
             // therefore we disble it here with this argument
             !isList,
           );
+        }
 
-          // @ts-expect-error FIXME: something is wrong with the type if it is a list, probably an error in official types
-          schema.properties[propName] = isList ? {
-            type: 'array',
-            items: subForm.schema,
-          } : subForm.schema;
+        if (subForm) {
+          propSchema = subForm.schema;
+        }
 
+        // @ts-expect-error FIXME: something is wrong with the type if it is a list, probably an error in official types
+        schema.properties[propName] = isList ? {
+          type: 'array',
+          items: propSchema,
+        } : propSchema;
+
+        if (subForm) {
           layout.elements.push(isList ? {
             type: 'Control',
             // @ts-expect-error FIXME: scope is not recognized in conjunction with options, probably an error in official types
