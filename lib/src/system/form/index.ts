@@ -4,6 +4,7 @@ import { SoyaDocument } from "../../interfaces";
 import { getLastUriPart, isIRI, parseJsonLd } from "../../utils/rdf";
 import { SparqlQueryBuilder } from "../../utils/sparql";
 import { JsonSchema, Layout, SoyaForm, SoyaFormOptions, SoyaFormResponse, StaticForm } from "./interfaces";
+import { XS_FLOATING_TYPES, XS_INTEGRAL_TYPES } from "../../utils/xsd";
 
 export * from './interfaces';
 
@@ -171,19 +172,30 @@ class FormBuilder {
       }
 
       // it's something else (e.g. XML schema)
-      // try to get hash from XML schema string
       propSchema.type = 'string';
 
-      switch (elementType.split('#')[1]) {
-        case 'date':
-          propSchema.format = 'date';
-          break;
-        case 'time':
-          propSchema.format = 'time';
-          break;
-        case 'dateTime':
-          propSchema.format = 'date-time';
-          break;
+      // try to get hash from XML schema string
+      const xsHash = elementType.split('#')[1];
+      if (xsHash) {
+        if (XS_FLOATING_TYPES.indexOf(xsHash) !== -1)
+          propSchema.type = 'number';
+        else if (XS_INTEGRAL_TYPES.indexOf(xsHash) !== -1)
+          propSchema.type = 'integer';
+        else
+          switch (xsHash) {
+            case 'date':
+              propSchema.format = 'date';
+              break;
+            case 'time':
+              propSchema.format = 'time';
+              break;
+            case 'dateTime':
+              propSchema.format = 'date-time';
+              break;
+            case 'boolean':
+              propSchema.type = 'boolean';
+              break;
+          }
       }
 
       // see if we can get some information out of a SHACL shape
