@@ -6,7 +6,6 @@ import {
 } from '@jsonforms/material-renderers';
 import { Soya, SoyaFormResponse, SoyaFormOptions } from 'soya-js'
 import './App.css';
-import { Vaultifier, VaultifierWeb } from 'vaultifier/dist/main';
 import { customRenderers } from './components';
 import packageJson from '../package.json';
 
@@ -57,8 +56,10 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
 
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  const [vaultifier, setVaultifier] = useState<Vaultifier>();
+  // Previously, we had some async initialization, which is not necessary anymore
+  // therefore we have this isInitialized variable here
+  // however, we keep it, just in case we need some async initialization in the future :-)
+  const [isInitialized] = useState<boolean>(true);
 
   const [schemaDri, setSchemaDri] = useState<string>('');
   const [tag, setTag] = useState<string>('');
@@ -74,7 +75,7 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchForm = useCallback(async () => {
-    if (vaultifier && schemaDri) {
+    if (schemaDri) {
       setIsLoading(true);
 
       try {
@@ -93,7 +94,7 @@ function App() {
 
       setIsLoading(false);
     }
-  }, [vaultifier, schemaDri, language, tag]);
+  }, [schemaDri, language, tag]);
 
   const sendUpdate = useCallback(() => {
     postUpdate({
@@ -129,19 +130,6 @@ function App() {
     setTag(searchParams.get('tag') ?? '');
     setLanguage(searchParams.get('language') ?? '');
     setViewMode(searchParams.get('viewMode') ?? '');
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const vaultifierWeb = await VaultifierWeb.create();
-      await vaultifierWeb.initialize();
-
-      if (!vaultifierWeb.vaultifier)
-        throw new Error('Vaultifier could not be initialized');
-
-      setVaultifier(vaultifierWeb.vaultifier);
-      setIsInitialized(true);
-    })();
   }, []);
 
   useEffect(() => {
