@@ -56,10 +56,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
 
-  // Previously, we had some async initialization, which is not necessary anymore
-  // therefore we have this isInitialized variable here
-  // however, we keep it, just in case we need some async initialization in the future :-)
-  const [isInitialized] = useState<boolean>(true);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   const [schemaDri, setSchemaDri] = useState<string>('');
   const [tag, setTag] = useState<string>('');
@@ -104,12 +101,13 @@ function App() {
     });
   }, [isInitialized]);
 
+  // initialization of the app
   useEffect(() => {
-    if (isInitialized)
-      return;
-
-    fetchForm();
-  }, [fetchForm, isInitialized]);
+    (async () => {
+      await fetchForm();
+      setIsInitialized(true);
+    })();
+  }, [setIsInitialized, fetchForm]);
 
   useEffect(() => {
     fetchForm();
