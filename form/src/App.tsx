@@ -103,11 +103,14 @@ function App() {
 
   // initialization of the app
   useEffect(() => {
+    if (isInitialized)
+      return;
+
     (async () => {
       await fetchForm();
       setIsInitialized(true);
     })();
-  }, [setIsInitialized, fetchForm]);
+  }, [setIsInitialized, isInitialized, fetchForm]);
 
   useEffect(() => {
     fetchForm();
