@@ -182,6 +182,11 @@ function App() {
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setSchemaDri(event.target.value);
         }}
+        // FIXME: This onKeyUp is ugly and should be achieved by a form submit
+        onKeyUp={(evt) => {
+          if (evt.key === 'Enter')
+            fetchForm();
+        }}
         value={schemaDri}
       />
       <Button className="Button" variant="contained" color="primary" onClick={() => fetchForm()}>Load Form</Button>
