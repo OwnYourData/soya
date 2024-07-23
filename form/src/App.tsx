@@ -79,10 +79,12 @@ function App() {
 
       try {
         const soya = new Soya();
-        const formOptions: SoyaFormOptions | undefined = language || tag ? {
-          language,
-          tag,
-        } : undefined;
+        const formOptions: SoyaFormOptions | undefined = {
+          // if language is nullish, just pass undefined
+          language: language || undefined,
+          // if tag is nullish, just pass undefined
+          tag: tag || undefined,
+        };
 
         const soyaForm = await soya.getForm(await soya.pull(schemaDri), formOptions);
 
