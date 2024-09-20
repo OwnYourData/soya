@@ -1,6 +1,6 @@
 {
   "name": "soya-js",
-  "version": "0.5.32",
+  "version": "0.6.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
