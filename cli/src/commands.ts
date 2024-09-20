@@ -1,4 +1,4 @@
-import { Soya, Errors, SoyaDocument, PullOptions } from "soya-js";
+import { Soya, Errors, SoyaDocument, PullOptions, SoyaQuery } from "soya-js";
 import { logNiceConsole } from ".";
 import { logger } from "./services/logger";
 import { tryPrintTemplate } from "./system/template";
@@ -175,14 +175,14 @@ const playground = async (): Promise<void> => {
 }
 const query = async (params: ParamObject, soya: Soya): Promise<void> => {
   const param1 = params.param1;
+  let query: SoyaQuery | undefined = undefined;
 
-  if (!param1)
-    return exitWithError('No path specified!');
+  if (param1) {
+    query = { name: param1 };
+  }
 
   try {
-    logNiceConsole(await soya.query({
-      name: param1,
-    }));
+    logNiceConsole(await soya.query(query));
   } catch {
     return exitWithError('Could not query repo!');
   }
