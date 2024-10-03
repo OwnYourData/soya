@@ -19,20 +19,24 @@ export interface SoyaQuery {
 export interface SoyaInfo {
   name: string;
   dri: string;
-  history: {
-    schema: string;
-    name: string;
-    date: string;
-    dri: string;
-    yaml: boolean;
-    tag?: string;
-  }[];
+  history: SoyaInfoHistory[];
   bases: string[];
   overlays: {
     type: string;
     name: string;
     base: string;
   };
+}
+
+export interface SoyaInfoHistory {
+  // this is the data vault's id
+  id: number;
+  schema: string;
+  name: string;
+  date: string;
+  dri: string;
+  yaml: boolean;
+  tag?: string;
 }
 
 export class RepoService {
