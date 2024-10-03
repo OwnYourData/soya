@@ -21,7 +21,11 @@ export interface SoyaInfo {
   dri: string;
   history: {
     schema: string;
+    name: string;
     date: string;
+    dri: string;
+    yaml: boolean;
+    tag?: string;
   }[];
   bases: string[];
   overlays: {
