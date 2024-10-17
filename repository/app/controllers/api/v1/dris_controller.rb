@@ -23,12 +23,14 @@ module Api
                 qry = params[:_json]
                 retVal = []
                 qry.each do |el|
+                  if !el.nil?
                     soya_name = Store.find_by_soya_dri(el.to_s).soya_name rescue ""
                     if soya_name == ""
                         retVal << {"dri": el, "name": el}
                     else
                         retVal << {"dri": el, "name": soya_name}
                     end
+                  end
                 end
                 render json: retVal,
                        status: 200
@@ -37,11 +39,15 @@ module Api
             def query
                 retVal = []
                 name_query = params[:name].to_s
-                if name_query != ""
+                if name_query == ""
+                    items = Store.all.pluck(:soya_name).uniq
+                else
                     items = Store.where('lower(soya_name) LIKE ?', "%" + name_query.downcase + "%").all.pluck(:soya_name).uniq
-                    items.each do |item|
-                        retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
-                    end
+                end
+                items.each do |item|
+                  if !item.nil?
+                    retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
+                  end
                 end
 
                 render json: retVal,

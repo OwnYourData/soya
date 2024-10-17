@@ -1,47 +1,41 @@
-{
-  "@context": {
-    "@version": 1.1,
-    "@vocab": "https://soya.ownyourdata.eu/Employee/"
+[
+  {
+    "@type": "Employee",
+    "name": "Christoph Fabianek",
+    "dateOfBirth": "1977-07-21",
+    "gender": "male",
+    "employer": [
+      {
+        "@type": "Organisation",
+        "Company": "OwnYourdata",
+        "country": "Austria"
+      }
+    ]
   },
-  "@graph": [
-    {
-      "@type": "Employee",
-      "name": "Christoph Fabianek",
-      "dateOfBirth": "1977-07-21",
-      "gender": "male",
-      "employer": [
-        {
-          "@type": "Organisation",
-          "Company": "OwnYourdata",
-          "country": "Austria"
-        }
-      ]
-    },
-    {
-      "@type": "Employee",
-      "name": "Gabriel Unterholzer",
-      "dateOfBirth": "1995-11-19",
-      "gender": "male",
-      "employer": [
-        {
-          "@type": "Organisation",
-          "Company": "DEC112",
-          "country": "Austria"
-        }
-      ]
-    },
-    {
-      "@type": "Employee",
-      "name": "Christoph Fabianek",
-      "dateOfBirth": "1984-06-28",
-      "gender": "male",
-      "employer": [
-        {
-          "@type": "Organisation",
-          "Company": "TU Wien",
-          "country": "Austria"
-        }
-      ]
-    }
-  ]
-}
+  {
+    "@type": "Employee",
+    "name": "Gabriel Unterholzer",
+    "dateOfBirth": "1995-11-19",
+    "gender": "male",
+    "employer": [
+      {
+        "@type": "Organisation",
+        "Company": "DEC112",
+        "country": "Austria"
+      }
+    ]
+  },
+  {
+    "@type": "Employee",
+    "name": "Christoph Fabianek",
+    "dateOfBirth": "1984-06-28",
+    "gender": "male",
+    "employer": [
+      {
+        "@type": "Organisation",
+        "Company": "TU Wien",
+        "country": "Austria"
+      }
+    ]
+  }
+]

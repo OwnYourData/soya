@@ -1,1 +1,1 @@
-soya acquire Employee
+soya acquire Employee --repo $REPO | jq '."@graph"'

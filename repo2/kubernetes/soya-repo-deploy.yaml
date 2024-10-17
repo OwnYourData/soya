@@ -17,6 +17,8 @@ spec:
       - name: soya-repo
         image: oydeu/soya-repo:latest
         env:
+          - name: CONTAINER_NAME
+            value: "SOyA Repository"
           - name: LANG
             value: C.UTF-8
           - name: RAILS_LOG_TO_STDOUT
@@ -27,8 +29,6 @@ spec:
             value: "TRUE"
           - name: RAILS_ENV
             value: production
-          - name: AUTH
-            value: "TRUE"
           - name: DC_DB
             value: kubernetes
           - name: DB2_HOST
@@ -68,7 +68,7 @@ spec:
   tls:
   - hosts:
     - soya-beta.ownyourdata.eu
-    secretName: signing-demo-tls
+    secretName: soya-repo-tls
   rules:
   - host: soya-beta.ownyourdata.eu
     http:

@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-	mount Rswag::Ui::Engine => '/api-docs'
-	mount Rswag::Api::Engine => '/api-docs'
 	match '/oauth/revoke'           => 'application#revoke_token',        via: 'post'
 	use_doorkeeper do
 		skip_controllers :applications

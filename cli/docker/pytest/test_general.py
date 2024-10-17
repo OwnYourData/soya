@@ -7,7 +7,9 @@ import subprocess
 from pathlib import Path
 import re
 
-repo = "https://soya.ownyourdata.eu"
+
+repo = os.getenv('REPO') or "https://soya.ownyourdata.eu"
+os.environ["REPO"] = repo
 
 def test_repo():
     response = requests.get(repo + "/api/active")
@@ -15,7 +17,7 @@ def test_repo():
 
 # doc: https://pypi.org/project/pytest-subprocess/
 cwd = os.getcwd()
-@pytest.mark.parametrize('input',  glob.glob(cwd+'/01_input/*.doc'))
+@pytest.mark.parametrize('input',  sorted(glob.glob(cwd+'/01_input/*.doc')))
 def test_01_simple(fp, input):    
     fp.allow_unregistered(True)
     with open(input) as f:

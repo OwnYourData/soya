@@ -1,1 +1,1 @@
-soya acquire Employee | soya push --repo https://playground.data-container.net | jq '.["responses"]'
+soya acquire Employee --repo $REPO | soya push --repo https://playground.data-container.net | jq '.["responses"][0]["status"]'

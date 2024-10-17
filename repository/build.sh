@@ -2,6 +2,7 @@
 
 CONTAINER="soya-base"
 REPOSITORY="oydeu"
+TAG="latest"
 
 # read commandline options
 BUILD_CLEAN=false

@@ -1,1 +1,1 @@
-curl -k -s https://playground.data-container.net/PersonAinstance | soya transform PersonBjolt | soya validate PersonB
+curl -k -s https://playground.data-container.net/PersonAinstance | soya transform PersonBjolt --repo $REPO | soya validate PersonB --repo $REPO
