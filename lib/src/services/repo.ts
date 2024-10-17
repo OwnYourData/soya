@@ -19,16 +19,24 @@ export interface SoyaQuery {
 export interface SoyaInfo {
   name: string;
   dri: string;
-  history: {
-    schema: string;
-    date: string;
-  }[];
+  history: SoyaInfoHistory[];
   bases: string[];
   overlays: {
     type: string;
     name: string;
     base: string;
   };
+}
+
+export interface SoyaInfoHistory {
+  // this is the data vault's id
+  id: number;
+  schema: string;
+  name: string;
+  date: string;
+  dri: string;
+  yaml: boolean;
+  tag?: string;
 }
 
 export class RepoService {
@@ -109,9 +117,22 @@ export class RepoService {
     return this.post(`/api/soya/similar`, false, data);
   }
 
-  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {
-    // @ts-expect-error TypeScript is not happy with this, i know...
-    return this.get(`/api/soya/query?${Object.keys(query).map(x => `${x}=${(query[x])}`).join('&')}`, false) as Promise<SoyaQueryResult[]>
+  query = async (query?: SoyaQuery): Promise<SoyaQueryResult[]> => {
+    let path = `/api/soya/query`;
+    if (query) {
+      path += '?' + Object.keys(query)
+        .map(x => {
+          const val = (query as { [key: string]: string })[x];
+          if (val)
+            return `${x}=${val}`;
+
+          return undefined;
+        })
+        .filter(x => !!x)
+        .join('&');
+    }
+
+    return this.get(path, false) as Promise<SoyaQueryResult[]>
   }
 
   // TODO: check if interface is still applicable (SoyaInfo)

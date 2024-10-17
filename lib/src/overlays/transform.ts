@@ -1,7 +1,7 @@
 import proc from 'child_process';
 import { promises as fs } from 'fs';
 import * as jq from 'node-jq';
-import { Overlays, SoyaDocument } from 'soya-js';
+import { Overlays, SoyaDocument } from '..';
 import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';

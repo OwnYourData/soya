@@ -138,7 +138,7 @@ export class Soya {
     return this.service.similar(asStringInput(input));
   }
 
-  query = async (query: SoyaQuery): Promise<SoyaQueryResult[]> => {
+  query = async (query?: SoyaQuery): Promise<SoyaQueryResult[]> => {
     return this.service.query(query);
   }
 
