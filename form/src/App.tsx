@@ -4,7 +4,7 @@ import {
   materialRenderers,
   materialCells,
 } from '@jsonforms/material-renderers';
-import { Soya, SoyaFormResponse, SoyaFormOptions } from 'soya-js'
+import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult } from 'soya-js'
 import './App.css';
 import { customRenderers } from './components';
 import packageJson from '../package.json';
@@ -21,6 +21,9 @@ import {
   Card,
   CardContent,
   TextareaAutosize as TextArea,
+  List,
+  ListItem,
+  ListItemText
 } from '@material-ui/core';
 import { debounce } from 'debounce';
 
@@ -59,6 +62,7 @@ function App() {
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   const [schemaDri, setSchemaDri] = useState<string>('');
+  const [schemaList, setSchemaList] = useState<SoyaQueryResult[]>([]);
   const [tag, setTag] = useState<string>('');
   const [language, setLanguage] = useState<string>('');
   const [viewMode, setViewMode] = useState<string>('');
@@ -100,6 +104,12 @@ function App() {
       documentHeight: document.documentElement.scrollHeight,
     });
   }, [isInitialized]);
+
+  const fetchSchemas = useCallback(() => {
+    (async () => {
+      setSchemaList(await new Soya().query({ name: schemaDri }));
+    })();
+  }, [schemaDri]);
 
   // initialization of the app
   useEffect(() => {
@@ -178,19 +188,35 @@ function App() {
   let header1: JSX.Element | undefined = undefined;
   if (!isEmbedded)
     header1 = <div>
-      <TextField
-        label="SOyA Schema DRI"
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setSchemaDri(event.target.value);
-        }}
-        // FIXME: This onKeyUp is ugly and should be achieved by a form submit
-        onKeyUp={(evt) => {
-          if (evt.key === 'Enter')
-            fetchForm();
-        }}
-        value={schemaDri}
-      />
-      <Button className="Button" variant="contained" color="primary" onClick={() => fetchForm()}>Load Form</Button>
+      <div>
+        <TextField
+          label="SOyA Schema DRI"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setSchemaDri(event.target.value);
+          }}
+          // FIXME: This onKeyUp is ugly and should be achieved by a form submit
+          onKeyUp={(evt) => {
+            if (evt.key === 'Enter')
+              fetchForm();
+            else if (schemaDri.length >= 3)
+              fetchSchemas();
+            else
+              setSchemaList([]);
+          }}
+          value={schemaDri}
+        />
+        <Button className="Button" variant="contained" color="primary" onClick={() => fetchForm()}>Load Form</Button>
+      </div>
+      <List component="nav" >
+        {schemaList.map((x) => (
+          <ListItem button key={`${x.dri}-${x.name}`} onClick={() => {
+            setSchemaDri(x.name);
+            setSchemaList([]);
+          }}>
+            <ListItemText primary={x.name} />
+          </ListItem>
+        ))}
+      </List>
     </div>;
 
   const withEmpty = (values: (string | undefined)[] | undefined) => {
