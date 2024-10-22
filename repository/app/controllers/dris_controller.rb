@@ -40,12 +40,11 @@ class DrisController < ApplicationController
         #     soya_dri = Store.find_by_soya_name(params[:dri].to_s).soya_dri rescue ""
         # end
 
-        history = []
         @store = Store.where(soya_name: params[:dri].to_s)
-        @store.pluck(:dri, :updated_at).sort_by{|i| i[1]}.reverse.each{|i| history << {"schema": i[0], "date": i[1].strftime("%FT%RZ")} }
+        history = @store.select(:dri, :id, :updated_at, "CASE WHEN soya_yaml IS NOT NULL THEN 'true' ELSE 'false' END AS yaml").map{ |r| { schema: r.dri, dri: r.dri, id: r.id, date: r.updated_at, yaml: r.yaml == 'true'}}.sort_by{ |i| i["date"] } rescue []
         if history.length == 0
             @store = Store.where(dri: params[:dri].to_s)
-            @store.pluck(:dri, :updated_at).each{|i| history << {"schema": i[0], "date": i[1].strftime("%FT%RZ")} }
+            history = @store.select(:dri, :id, :updated_at, "CASE WHEN soya_yaml IS NOT NULL THEN 'true' ELSE 'false' END AS yaml").map{ |r| { schema: r.dri, dri: r.dri, id: r.id, date: r.updated_at, yaml: r.yaml == 'true'}}.sort_by{ |i| i["date"] } rescue []
         end
 
         bases = []
@@ -67,6 +66,8 @@ class DrisController < ApplicationController
                     overlays << {"type": "Encoding", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayFormat"
                     overlays << {"type": "Format", "name": item.dri, "base": el["onBase"]}
+                elsif el["@type"] == "OverlayForm"
+                    overlays << {"type": "Form", "name": item.dri, "base": el["onBase"]}
                 elsif el["@type"] == "OverlayTransformation"
                     overlays << {"type": "Transformation", "name": item.dri, "base": el["onBase"]}
                 end
@@ -102,11 +103,15 @@ class DrisController < ApplicationController
     def query
         retVal = []
         name_query = params[:name].to_s
-        if name_query != ""
+        if name_query == ""
+            items = Store.all.pluck(:soya_name).uniq
+        else
             items = Store.where('lower(soya_name) LIKE ?', "%" + name_query.downcase + "%").all.pluck(:soya_name).uniq
-            items.each do |item|
-                retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
-            end
+        end
+        items.each do |item|
+          if !item.nil?
+            retVal << {"name": item, "dri": Store.find_by_dri(item).soya_dri }
+          end
         end
 
         render json: retVal,

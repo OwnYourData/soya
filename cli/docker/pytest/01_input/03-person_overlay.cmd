@@ -1,1 +1,1 @@
-soya pull PersonOverlay_Test
+soya pull PersonOverlay_Test --repo $REPO | jq -S

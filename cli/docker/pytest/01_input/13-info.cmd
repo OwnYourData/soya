@@ -1,1 +1,1 @@
-soya info Did | jq '.history | length > 40'
+soya info Did --repo $REPO | jq '.history | length > 40'

@@ -1,1 +1,1 @@
-soya pull zQmc76XfAkKxjFhHUANsq2yLxvt1FNkwHULChENskd9PJ9T --type=yaml
+soya pull Did --repo $REPO --type=yaml

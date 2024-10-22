@@ -1,1 +1,1 @@
-soya validate Person_Test
+soya validate Person_Test --repo $REPO

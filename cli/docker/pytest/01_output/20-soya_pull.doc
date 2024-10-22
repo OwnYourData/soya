@@ -11,11 +11,11 @@ content:
         id: String
         alsoKnownAs: String
         verificationMethod: set<VerificationMethod>
-        assertionMethod: String
-        authentication: String
-        capabilityDelegation: String
-        capabilityInvocation: String
-        keyAgreement: String
+        assertionMethod: set<String>
+        authentication: set<String>
+        capabilityDelegation: set<String>
+        capabilityInvocation: set<String>
+        keyAgreement: set<String>
         controller: String
         service: set<Service>
     - name: VerificationMethod
@@ -45,26 +45,29 @@ content:
       attributes:
         id: 
           cardinality: "1..1"
-          message: "there must be one 'id' in a DID document"
+          pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%]+$"
+          message: "there must be one valid 'id' in a DID document"
         verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
           message: "invalid 'verificationMethod'"
           attributes:
             or: 
               - &id_jwk
-                id: &cardinality1
+                id: &cardinality1_pattern
                   cardinality: "1..1"
+                  pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
                 type:
-                  <<: *cardinality1
+                  cardinality: "1..1"
                   valueOption:
                     - EcdsaSecp256k1RecoveryMethod2020
                     - EcdsaSecp256k1VerificationKey2019
                     - JsonWebKey2020
                     - JSONWebSignature2020
                     - RsaVerificationKey2018
-                controller: *cardinality1
+                controller: &cardinality1
+                  cardinality: "1..1"
                 publicKeyJwk: *cardinality1
               - &id_base58
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -78,7 +81,7 @@ content:
                 controller: *cardinality1
                 publicKeyBase58: *cardinality1
               - &id_multibase
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -87,7 +90,7 @@ content:
                 controller: *cardinality1
                 publicKeyMultibase:  *cardinality1
               - &id_blockchain_account_id
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -95,7 +98,7 @@ content:
                 controller: *cardinality1
                 blockchainAccountId: *cardinality1
               - &id_public_key_pgp
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -103,7 +106,7 @@ content:
                 controller: *cardinality1
                 publicKeyPgp: *cardinality1
               - &id_public_key_hex
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -111,7 +114,7 @@ content:
                 controller: *cardinality1
                 publicKeyHex: *cardinality1
               - &id_ethereum_address
-                id: *cardinality1
+                id: *cardinality1_pattern
                 type:
                   <<: *cardinality1
                   valueOption:
@@ -147,7 +150,7 @@ content:
               cardinality: "1..n"
               attributes:
                 id: 
-                  cardinality: "1..1"
+                  *cardinality1_pattern
           - authentication: *verification_method_id
           - assertionMethod: *verification_method_id
           - keyAgreement: *verification_method_id
@@ -193,3 +196,7 @@ content:
           context: "https://w3id.org/security/suites/secp256k1recovery-2020"
         - type: VerifiableCondition2021
           context: "https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json"
+
+
+
+

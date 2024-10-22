@@ -1,1 +1,1 @@
-soya init | soya push
+soya init | soya push --repo $REPO

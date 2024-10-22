@@ -1,1 +1,1 @@
-curl -k -s "https://playground.data-container.net/Person2instance_test" | soya validate Person_Test
+curl -k -s "https://playground.data-container.net/Person2instance_test" | soya validate Person_Test --repo $REPO
