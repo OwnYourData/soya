@@ -26,13 +26,12 @@ LABEL org.opencontainers.image.authors="Christoph Fabianek <christoph@ownyourdat
 
 RUN addgroup -S user && \
     adduser -S user -G user && \
-    apk add --no-cache vim libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl && \
+    apk add --no-cache vim libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl py3-pip && \
     gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri oydid && \
     gem install securerandom -v 0.1.1 && \
     apk del make gcc musl-dev && \
     apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && \
-    python3 -m ensurepip && \
-    pip3 install --no-cache --upgrade pip setuptools pytest requests pytest-subprocess && \
+    pip3 install --no-cache --upgrade  pip setuptools pytest requests pytest-subprocess --break-system-packages && \
     wget https://raw.githubusercontent.com/OwnYourData/oydid/main/cli/oydid.rb -O /usr/local/bin/oydid && \
     chmod 755 /usr/local/bin/oydid && \
     mkdir -p /usr/src/app/jolt
