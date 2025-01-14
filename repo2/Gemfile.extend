@@ -1,1 +1,5 @@
-# Storage Provder
+# turtle output
+gem 'rdf'
+gem 'rdf-normalize'
+gem 'rdf-turtle'
+gem 'json-ld'

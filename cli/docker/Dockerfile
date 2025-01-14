@@ -1,4 +1,4 @@
-FROM node:19 as node_builder
+FROM node:19 AS node_builder
 
 WORKDIR /app
 ENV NODE_ENV=development
@@ -10,7 +10,7 @@ RUN npm install && \
 
 #########################################
 
-FROM maven:3-openjdk-8 as java_builder
+FROM maven:3-openjdk-8 AS java_builder
 
 RUN mkdir -p /app && \
     cd /app && \
@@ -22,7 +22,7 @@ WORKDIR /app
 #########################################
 
 FROM ruby:3.2.2-alpine
-MAINTAINER "Christoph Fabianek" christoph@ownyourdata.eu
+LABEL org.opencontainers.image.authors="Christoph Fabianek <christoph@ownyourdata.eu>"
 
 RUN addgroup -S user && \
     adduser -S user -G user && \

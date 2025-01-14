@@ -23,6 +23,20 @@ module Api
                 render json: retval.to_json,
                        status: 200
             end
+
+            def record
+                id = params[:id]
+                @store = Store.find(id)
+                retVal = JSON.parse(@store.to_json)
+                retVal["item"] = JSON.parse(@store.item)
+                render json: retVal,
+                       status: 200
+            end
+
+            def record_list
+                render json: Store.pluck(:id),
+                       status: 200
+            end
         end
     end
 end

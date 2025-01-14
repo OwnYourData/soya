@@ -14,12 +14,21 @@ module Api
                     render json: {"error": "not found"},
                            status: 404
                 else
-                    retval = {
-                      content: @store.item,
-                      "id": @store.id,
-                      "dri": @store.soya_dri,
-                      "soya_name": @store.soya_name,
-                    }
+                    if @store.soya_tag == "current"
+                        retval = {
+                          content: @store.item,
+                          "id": @store.id,
+                          "dri": @store.soya_name,
+                          "soya_name": @store.soya_name,
+                        }
+                    else
+                        retval = {
+                          content: @store.item,
+                          "id": @store.id,
+                          "dri": @store.soya_dri,
+                          "soya_name": @store.soya_name,
+                        }
+                    end                        
                     render json: retval.to_json,
                            status: 200
                 end
@@ -49,7 +58,19 @@ module Api
                         end
                     end
                 end
-                render json: retVal,
+
+                sortedRetVal = retVal.sort_by do |i|
+                  name = i[:name]
+                  
+                  # Check if the name starts with "zQm" (case-sensitive)
+                  if name.start_with?("zQm")
+                    [1, name]  # Group for "zQm", sort alphabetically within this group
+                  else
+                    [0, name.downcase]  # Group for all other names, case-insensitive alphabetical sorting
+                  end
+                end
+
+                render json: sortedRetVal,
                        status: 200
             end
 
@@ -82,7 +103,17 @@ module Api
                     end
                   end
                 end
-                render json: retVal,
+                sortedRetVal = retVal.sort_by do |i|
+                  name = i[:name]
+                  
+                  # Check if the name starts with "zQm" (case-sensitive)
+                  if name.start_with?("zQm")
+                    [1, name]  # Group for "zQm", sort alphabetically within this group
+                  else
+                    [0, name.downcase]  # Group for all other names, case-insensitive alphabetical sorting
+                  end
+                end
+                render json: sortedRetVal,
                        status: 200
             end
 
