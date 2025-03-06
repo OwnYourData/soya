@@ -1,7 +1,6 @@
-import { Vaultifier, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
+import { Vaultifier, VaultMinMeta, VaultPostItem, parsePostResult } from 'vaultifier/dist/main';
 import { Cache } from './cache';
 import { logger } from './logger';
-import { parsePostResult } from 'vaultifier';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
 export const DEFAULT_REPO = 'https://soya.ownyourdata.eu';
@@ -72,7 +71,12 @@ export class RepoService {
     if (!v) {
       logger.debug(`Initializing vaultifier: ${this.repo}`);
       this._vaultifier = v = new Vaultifier(this.repo);
-      await v.initialize();
+      try {
+        await v.initialize();
+        // catch all errors that arise due to authentication issues
+        // currently we don't care about these errors
+        // as most things in soya are not authenticated
+      } catch { }
     }
 
     return v;
