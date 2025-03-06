@@ -1,11 +1,14 @@
 module HooksHelper
     def write_hook(data)
+        puts "write_hook:"
+        puts data.to_json
         data["processed"] = 1
         data["responses"] = [{id: data[:id], status: 200}]
 
     end
 
     def read_hook(data)
+        puts "read_hook:"
         puts data.to_json
         @rh_store = Store.find(data["id"]) rescue nil
         if !@rh_store.nil?

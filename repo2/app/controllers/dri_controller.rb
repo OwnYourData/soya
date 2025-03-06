@@ -24,6 +24,26 @@ class DriController < ApplicationController
                status: 200
     end
 
+    def read_ttl
+        store_id, msg = get_soya(params[:dri])
+        if store_id.nil?
+            render json: {"error": "not found"},
+                   status: 404
+            return
+        end
+        @store = Store.find(store_id) rescue nil
+        if @store.nil?
+            render json: {"error": "not found"},
+                   status: 404
+            return
+        end
+
+        jsonld = @store.item
+        graph = RDF::Graph.new << JSON::LD::Reader.new(@store.item.to_json)
+        render plain: graph.dump(:turtle, standard_prefixes: true),
+               status: 200
+    end
+
     def read_yaml
         store_id, msg = get_soya(params[:dri])
         if store_id.nil?
@@ -116,8 +136,17 @@ class DriController < ApplicationController
                     date: r.updated_at, 
                     yaml: r.yaml == 'true'
                 }
+            end rescue []
+        sorted_history = history.sort_by do |i|
+            name = i[:schema]
+          
+            # Check if the name starts with "zQm" (case-sensitive)
+            if name.start_with?("zQm")
+                [1, name]  # Group for "zQm", sort alphabetically within this group
+            else
+                [0, name.downcase]  # Group for all other names, case-insensitive alphabetical sorting
             end
-            .sort_by{ |i| i["date"] } rescue []
+        end
 
         bases = []
         overlays = []
@@ -150,7 +179,7 @@ class DriController < ApplicationController
                 end
             end unless graph == []
         end
-        render json: {"name": soya_name, "dri": soya_dri, "history": history, "bases": bases.uniq, "overlays": overlays.uniq},
+        render json: {"name": soya_name, "dri": soya_dri, "history": sorted_history, "bases": bases.uniq, "overlays": overlays.uniq},
                status: 200
 
     end

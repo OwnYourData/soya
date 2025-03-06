@@ -71,6 +71,8 @@ Rails.application.routes.draw do
 			match 'soya/similar',      to: 'soyas#similar',       via: 'post'
 			match 'soya/query',        to: 'dris#query', 		  via: 'get'
 			match 'soya/info',         to: 'dris#info',           via: 'post'
+			match 'record/:id',        to: 'soyas#record',        via: 'get'
+			match 'records',           to: 'soyas#record_list',   via: 'get'
 		end
 	end
 

@@ -11,7 +11,12 @@ module SoyaHelper
         found = false
         @gs_store = Store.find_by_soya_dri(input)
         if @gs_store.nil?
-            soya_name,c,soya_tag = input.rpartition(':')
+            if input.include?(':')
+                soya_name,c,soya_tag = input.rpartition(':')
+            else
+                soya_name = input
+                soya_tag = "current"
+            end
             if soya_name != '' && soya_tag != ''
                 @gs_store = Store.where(soya_name: soya_name, soya_tag: soya_tag)
                 if !@gs_store.nil? && @gs_store.length > 0
@@ -68,6 +73,17 @@ module SoyaHelper
         end
         simvec = (simvec << Array.new((vec1.length - vec2.length).abs, 0)).flatten
         return simvec.inject(:+).to_f / simvec.length # average of simvec
+    end
+
+    def deep_transform_keys_to_strings(value)
+        case value
+        when Hash
+            value.transform_keys(&:to_s).transform_values { |v| deep_transform_keys_to_strings(v) }
+        when Array
+            value.map { |v| deep_transform_keys_to_strings(v) }
+        else
+            value
+        end
     end
 
 end

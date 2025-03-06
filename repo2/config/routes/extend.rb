@@ -8,9 +8,11 @@ scope '/' do
             match 'soya/tag',     to: 'soya#tag',     via: 'post'
         end
     end
-    match ':dri/info', to: 'dri#info',      via: 'get',    constraints: {dri: /.*/}
-    match ':dri/yaml', to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
-    match ':dri/yml',  to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
-    match ':dri',      to: 'dri#read',      via: 'get',    constraints: {dri: /.*/}
-    match ':dri',      to: 'dri#delete',    via: 'delete', constraints: {dri: /.*/}
+    match ':dri/info',   to: 'dri#info',      via: 'get',    constraints: {dri: /.*/}
+    match ':dri/yaml',   to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
+    match ':dri/yml',    to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
+    match ':dri/ttl',    to: 'dri#read_ttl',  via: 'get',    constraints: {dri: /.*/}
+    match ':dri/turtle', to: 'dri#read_ttl',  via: 'get',    constraints: {dri: /.*/}
+    match ':dri',        to: 'dri#read',      via: 'get',    constraints: {dri: /.*/}
+    match ':dri',        to: 'dri#delete',    via: 'delete', constraints: {dri: /.*/}
 end
