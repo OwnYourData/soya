@@ -1,5 +1,5 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import { MimeType, VaultMinMeta } from "vaultifier/dist/main";
+import { VaultMinMeta } from "vaultifier";
 import winston from "winston";
 import { JsonParseError } from "./errors";
 import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
@@ -16,6 +16,8 @@ import { SparqlQueryBuilder } from "./utils/sparql";
 import { canonize } from 'jsonld';
 import axios from 'axios';
 import { Cache } from "./services/cache";
+
+const MIME_TYPE_JSON = 'application/json';
 
 const asStringInput = (input: unknown): string => {
   if (typeof input === 'object')
@@ -107,8 +109,8 @@ export class Soya {
       const info = await new RepoService(repo).info(path);
 
       res = await this.service.pushItem({
-        content: data,
-        mimeType: MimeType.JSON,
+        data,
+        mimeType: MIME_TYPE_JSON,
         dri: (await this.calculateDri(data)).dri,
         schemaDri: info.dri,
       });
@@ -117,8 +119,8 @@ export class Soya {
       logger.info('Pushing structure');
 
       res = await this.service.pushItem({
-        content: data,
-        mimeType: MimeType.JSON,
+        data,
+        mimeType: MIME_TYPE_JSON,
         ...additionalProperties,
       });
       const vaultItem = await (await this.service.getVaultifier()).getItem({

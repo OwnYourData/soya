@@ -1,6 +1,7 @@
 import { Vaultifier, VaultMinMeta, VaultPostItem } from 'vaultifier/dist/main';
 import { Cache } from './cache';
 import { logger } from './logger';
+import { parsePostResult } from 'vaultifier';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
 export const DEFAULT_REPO = 'https://soya.ownyourdata.eu';
@@ -99,7 +100,7 @@ export class RepoService {
     return this._push((v) => {
       logger.debug('Pushing value');
       logger.debug(JSON.stringify(data));
-      return v.postValue(data);
+      return v.postData(data);
     });
   }
 
@@ -109,7 +110,7 @@ export class RepoService {
     return this._push(async (v) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));
-      return v.parsePostResult(await v.post('/api/data', false, item));
+      return parsePostResult(await v.post('/api/data', false, item));
     });
   }
 
