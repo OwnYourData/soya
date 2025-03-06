@@ -53,6 +53,18 @@ export class RepoService {
   static getInstance = () => RepoService.INSTANCE;
   static initialize = (instance: RepoService) => RepoService.INSTANCE = instance;
 
+  /**
+   * Create a new RepoService from an already existing vaultifier.
+   * 
+   * @param vaultifier Vaultifier to be used (needs to be initialized already!)
+   * @returns new RepoService
+   */
+  static fromVaultifier = (vaultifier: Vaultifier) => {
+    const service = new RepoService();
+    service._vaultifier = vaultifier;
+    return service;
+  }
+
   private _vaultifier: Vaultifier | undefined = undefined;
   getVaultifier = async (): Promise<Vaultifier> => {
     let v = this._vaultifier;
