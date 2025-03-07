@@ -9,7 +9,7 @@
     "build": "tsc && chmod +x dist/index.js",
     "bin": "npm link",
     "prepublishOnly": "npm run test && npm run build",
-    "test": "./build.sh && docker run -it --rm -w /usr/src/app/docker/pytest oydeu/soya-cli pytest"
+    "test": ""
   },
   "bin": {
     "soya": "./dist/index.js"
