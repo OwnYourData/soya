@@ -136,6 +136,10 @@ export class Soya {
     };
   }
 
+  delete = async (path: string): Promise<any> => {
+    return await this.service.delete(path);
+  }
+
   similar = async (input: unknown): Promise<any> => {
     return this.service.similar(asStringInput(input));
   }
