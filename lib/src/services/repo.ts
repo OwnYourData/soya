@@ -1,6 +1,7 @@
 import { Vaultifier, VaultMinMeta, VaultPostItem, parsePostResult } from 'vaultifier/dist/main';
 import { Cache } from './cache';
 import { logger } from './logger';
+import { MaybeAuthenticated } from 'vaultifier/dist/module/communicator';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
 export const DEFAULT_REPO = 'https://soya.ownyourdata.eu';
@@ -82,14 +83,14 @@ export class RepoService {
     return v;
   }
 
-  get = async (url: string, usesAuth: boolean): Promise<any> => {
+  get = async (url: string, usesAuth: MaybeAuthenticated): Promise<any> => {
     logger.debug(`GETting ${url}`);
     const { data: res } = await (await this.getVaultifier()).get(url, usesAuth);
 
     return res;
   }
 
-  post = async (url: string, usesAuth: boolean, data?: any): Promise<any> => {
+  post = async (url: string, usesAuth: MaybeAuthenticated, data?: any): Promise<any> => {
     logger.debug(`POSTing ${url}`);
     const { data: res } = await (await this.getVaultifier()).post(url, usesAuth, data);
 
@@ -116,7 +117,7 @@ export class RepoService {
     return this._push((v) => {
       logger.debug('Pushing value');
       logger.debug(JSON.stringify(data));
-      return v.postData(data);
+      return v.postData(data, 'optional');
     });
   }
 
@@ -126,8 +127,12 @@ export class RepoService {
     return this._push(async (v) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));
-      return parsePostResult(await v.post('/api/data', false, item));
+      return parsePostResult(await v.post('/api/data', 'optional', item));
     });
+  }
+
+  delete = async (path: string) => {
+    return (await this.getVaultifier()).delete(`/${path}`, 'optional')
   }
 
   similar = async (data: any): Promise<any> => {
