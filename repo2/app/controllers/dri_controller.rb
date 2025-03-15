@@ -67,6 +67,19 @@ class DriController < ApplicationController
     end
 
     def delete
+        # only logged-in users can delete
+        @at = Doorkeeper::AccessToken.find_by_token(doorkeeper_token.token) rescue nil
+        if @at.nil?
+            render json: {"error": "not authorized"},
+                   status: 401
+            return
+        end
+        case ENV['AUTH'].to_s.downcase
+        when "optional", "delete"
+            # only users of the same organisation can delete
+        else
+            # only admin users can delete
+        end
         store_id, msg = get_soya(params[:dri])
         if store_id.nil?
             render json: {"error": "not found"},

@@ -15,20 +15,18 @@ module Api
                            status: 404
                 else
                     if @store.soya_tag == "current"
-                        retval = {
-                          content: @store.item,
-                          "id": @store.id,
-                          "dri": @store.soya_name,
-                          "soya_name": @store.soya_name,
-                        }
+                        dri = @store.soya_name
                     else
-                        retval = {
-                          content: @store.item,
-                          "id": @store.id,
-                          "dri": @store.soya_dri,
-                          "soya_name": @store.soya_name,
-                        }
-                    end                        
+                        dri = @store.soya_dri
+                    end
+                    retval = {
+                      data: @store.item,
+                      meta: @store.meta,
+                      "id": @store.id,
+                      "dri": dri,
+                      "soya_name": @store.soya_name,
+                      "soya_yaml": @store.soya_yaml
+                    }
                     render json: retval.to_json,
                            status: 200
                 end

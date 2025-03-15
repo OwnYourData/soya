@@ -8,6 +8,8 @@ scope '/' do
             match 'soya/tag',     to: 'soya#tag',     via: 'post'
         end
     end
+    match '/soya/register', to: 'frontend#register', via: 'get'
+    match '/soya/user',     to: 'frontend#user',     via: 'get'
     match ':dri/info',   to: 'dri#info',      via: 'get',    constraints: {dri: /.*/}
     match ':dri/yaml',   to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
     match ':dri/yml',    to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}

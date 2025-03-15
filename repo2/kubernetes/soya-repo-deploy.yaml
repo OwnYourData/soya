@@ -67,20 +67,9 @@ spec:
   ingressClassName: "nginx"
   tls:
   - hosts:
-    - soya-beta.ownyourdata.eu
     - soya.ownyourdata.eu
     secretName: soya-repo-tls
   rules:
-  - host: soya-beta.ownyourdata.eu
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: soya-repo
-            port:
-              number: 80
   - host: soya.ownyourdata.eu
     http:
       paths:
@@ -105,5 +94,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - 'soya-beta.ownyourdata.eu'
   - 'soya.ownyourdata.eu'

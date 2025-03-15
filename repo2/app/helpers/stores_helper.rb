@@ -8,8 +8,8 @@ puts item_data.to_json
 
 puts " - meta_data: " + meta_data.to_json
 
-        soya_json = item_data["content"]
-        soya_yaml = item_data["soya_yaml"]
+        soya_json = item_data
+        soya_yaml = meta_data.delete("soya_yaml")
         soya_name = getSoyaName(soya_json.deep_dup)
         soya_dri_json, soya_dri, msg = createDriVersion(soya_json.deep_dup)
         soya_tag = ""
@@ -23,6 +23,7 @@ puts " - meta_data: " + meta_data.to_json
             meta_data["soya_dri"] = soya_dri
             if !meta_data["soya_tag"].nil?
                 soya_tag = meta_data["soya_tag"].to_s
+puts " - soya_tag: " + soya_tag.to_s
             end
             if !meta_data["id"].nil?
                 provided_id = meta_data["id"].to_i rescue nil
@@ -165,9 +166,18 @@ puts "soya_tag.to_s == ''"
                             @record.save
                             return_id = @record.id
 puts "return_id: " + return_id.to_s
+                            # create DRI version
+                            new_dri = create_soya(soya_name, soya_dri_json, soya_yaml, meta_data, soya_tag, soya_dri, item_dri)
+puts "DRI version: " + new_dri.to_s
                         else
-                            # copy record with new tag
+puts "soya_tag.to_s: " + soya_tag.to_s
+                            # record with new tag
                             return_id = create_soya(soya_name, soya_json, soya_yaml, meta_data, soya_tag, soya_dri, dri)
+puts "return_id: " + return_id.to_s
+                            # create DRI version
+                            new_dri = create_soya(soya_name, soya_dri_json, soya_yaml, meta_data, '', soya_dri, item_dri)
+puts "DRI version: " + new_dri.to_s
+
                         end
                     else
                         # copy record with new tag
