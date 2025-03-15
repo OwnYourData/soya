@@ -1,6 +1,6 @@
-# run in oydid/docs
+# run in soya/docs
 docker run --rm -v $(pwd):/data jplimce/bikeshed:3.2.0 bikeshed spec /data/index.bs
-file:///Users/christoph/semcon/soya/docs/index.html
+file:///Users/christoph/dev/soya/docs/index.html
 
 # test docker image
 docker run -it --rm -w /usr/src/app/docker/pytest oydeu/soya-cli:alpha pytest
