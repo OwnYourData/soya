@@ -97,7 +97,6 @@ SOyA is a data model authoring and publishing platform and also provides functio
   <img src="res/overview.png" width="800"><br>
   <em>Figure 1: Building blocks in SOyA</em>
 </p>
-</div>
 
 
 ## Terminology ## {#terminology}
