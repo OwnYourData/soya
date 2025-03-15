@@ -1,9 +1,4 @@
-# This workflow converts your bikeshed (.bs) file to html and pushes to gh-pages
-
 name: CI
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
 on:
   push:
     branches: [ main ]
@@ -14,7 +9,7 @@ jobs:
     name: Build, Validate and Deploy
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: w3c/spec-prod@v2
         with:
           GH_PAGES_BRANCH: gh-pages
