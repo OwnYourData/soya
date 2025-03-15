@@ -160,7 +160,7 @@ The Semantic Overlay Architecture (SOyA) strategy is intended to simplify the en
   <img src="res/concept.png" width="800"><br>
   <em>Figure 2: Conceptual view of SOyA</em>
 </p>
-</div>
+
 
 A **Knowledge Scientist** is responsible for designing the data model for certain applications. This person has considerable experience in data modeling, however, does not necessarily have the knowledge of Semantic Web technologies. Unlike Data Engineers, the focus is mainly on the data model and does not concern with populating the data model with data instances. The following requirements are identified:
 
@@ -193,7 +193,6 @@ The Semantic Overlay Architecture (SOyA) is built on the following core componen
   <img src="res/components.png" width="800"><br>
   <em>Figure 3: SOyA Components</em>
 </p>
-</div>
 
 
 Structures {#structure_element}
