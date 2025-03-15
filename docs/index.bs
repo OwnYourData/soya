@@ -113,7 +113,7 @@ This document uses the following terms as defined in external specifications and
             *in RDF:* an RDF Class with one or more properties
 
     : <dfn lt=DRIs>DRI</dfn>
-    :: A **D**ecentralized **R**esource **I**dentifier represents a content based address for a [=terms/structure]. Within SOyA Multihash [[MULTIHASH]] (default: `sha2-256`) is used for hashing a JSON object and Multibase [[MULTIBASE]] (default: `base58-btc`) for encoding the hash value.
+    :: A **D**ecentralized **R**esource **I**dentifier represents a content based address for a [=terms/structure=]. Within SOyA Multihash [[MULTIHASH]] (default: `sha2-256`) is used for hashing a JSON object and Multibase [[MULTIBASE]] (default: `base58-btc`) for encoding the hash value.
 
     : <dfn>Instance</dfn>
     :: is a data record (e.g. an data describing an employee) with a set of properties as defined in a [=terms/Base=] or [=terms/Structure=]<br>
