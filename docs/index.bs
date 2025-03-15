@@ -47,7 +47,7 @@ Title: Semantic Overlay Architecture
 Shortname: soya-spec
 Level: 1
 Status: w3c/CG-DRAFT
-Group: W3C
+Group: WD
 URL: https://ownyourdata.github.io/soya/
 
 Editor: Christoph Fabianek, OwnYourData https://OwnYourData.eu, christoph@ownyourdata.eu, https://www.linkedin.com/in/fabianek/
