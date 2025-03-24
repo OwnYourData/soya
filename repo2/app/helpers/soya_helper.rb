@@ -56,7 +56,8 @@ module SoyaHelper
             base_url = input["@context"]["@base"] rescue ""
             input["@context"].delete("@base") rescue nil
             raw = input.to_json_c14n
-            dri = Multibases.pack("base58btc", Multihashes.encode(Digest::SHA256.digest(raw), "sha2-256").unpack('C*')).to_s
+            dri = Multibases.pack('base58btc', RbNaCl::Hash.sha256(raw).unpack('C*')).to_s
+            # dri = Multibases.pack("base58btc", Multihashes.encode(Digest::SHA256.digest(raw), "sha2-256").unpack('C*')).to_s
             raw = JSON.parse(raw)
             raw["@context"]["@base"] = base_url.split('/')[0..-2].join("/") + "/" + dri + "/"
         rescue => error

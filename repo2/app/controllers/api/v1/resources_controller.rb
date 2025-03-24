@@ -70,7 +70,6 @@ module Api
             end
 
             def idaustria
-
                 STDOUT.sync = true
                 logger = Logger.new(STDOUT)
                 level ||= LOGLEVELS.index ENV.fetch("LOG_LEVEL","INFO")

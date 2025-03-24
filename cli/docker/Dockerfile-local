@@ -28,7 +28,7 @@ COPY docker/local-gem/*.gem /tmp/
 
 RUN addgroup -S user && \
     adduser -S user -G user && \
-    apk add --no-cache vim libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl py3-pip && \
+    apk add --no-cache vim libsodium-dev git make gcc musl-dev jq npm openjdk8 bash curl py3-pip openssl openssl-dev build-base ruby-dev && \
     gem install /tmp/*.gem && \
     gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri && \
     gem install securerandom -v 0.1.1 && \
