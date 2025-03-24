@@ -67,7 +67,8 @@ function App() {
   const [language, setLanguage] = useState<string>('');
   const [viewMode, setViewMode] = useState<string>('');
 
-  const isEmbedded = viewMode === 'embedded';
+  const showMetadata = viewMode === 'embedded' || viewMode === 'form-only';
+  const showDropdowns = viewMode !== 'form-only';
 
   const [form, setForm] = useState<SoyaFormResponse | undefined>(undefined);
   const [data, setData] = useState<any>({});
@@ -186,7 +187,7 @@ function App() {
     searchParams.set('data', JSON.stringify(data));
 
   let header1: JSX.Element | undefined = undefined;
-  if (!isEmbedded)
+  if (!showMetadata)
     header1 = <div>
       <div>
         <TextField
@@ -238,7 +239,7 @@ function App() {
   const languageOptions = withEmpty(form?.options.map(x => x.language));
 
   let header2: JSX.Element | undefined = undefined;
-  if (!isLoading)
+  if (!isLoading && showDropdowns)
     header2 = <div>
       {tagOptions ? <FormControl className={classes.formControl}>
         <InputLabel>Tag</InputLabel>
@@ -283,7 +284,7 @@ function App() {
     />;
 
   let footer1: JSX.Element | undefined = undefined;
-  if (!isLoading && !isEmbedded)
+  if (!isLoading && !showMetadata)
     footer1 = <>
       <h2>Data</h2>
       <Card>
@@ -317,8 +318,8 @@ function App() {
   sendUpdate();
 
   return (
-    <div className={isEmbedded ? '' : 'App'}>
-      {isInitialized ? (isEmbedded ? undefined : <h1>OwnYourData SOyA-Forms</h1>) : undefined}
+    <div className={showMetadata ? '' : 'App'}>
+      {isInitialized ? (showMetadata ? undefined : <h1>OwnYourData SOyA-Forms</h1>) : undefined}
       {isInitialized ? header1 : undefined}
       {isInitialized ? header2 : undefined}
       {content}
