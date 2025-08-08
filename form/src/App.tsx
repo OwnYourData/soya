@@ -8,6 +8,7 @@ import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult } from 'soya-j
 import './App.css';
 import { customRenderers } from './components';
 import packageJson from '../package.json';
+import { evaluteDynamicEnum } from './utils/index'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -90,8 +91,7 @@ function App() {
         };
 
         const soyaForm = await soya.getForm(await soya.pull(schemaDri), formOptions);
-
-        setForm(soyaForm);
+        setForm(await evaluteDynamicEnum(soyaForm));
       } catch { }
 
       setIsLoading(false);
