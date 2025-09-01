@@ -23,6 +23,8 @@ spec:
             value: C.UTF-8
           - name: RAILS_LOG_TO_STDOUT
             value: "TRUE"
+          - name: RAILS_CONFIG_HOSTS
+            value: "soya.ownyourdata.eu"
           - name: LOG_LEVEL
             value: "INFO"
           - name: RAILS_SERVE_STATIC_FILES

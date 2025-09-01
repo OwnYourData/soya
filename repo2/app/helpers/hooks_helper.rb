@@ -1,7 +1,16 @@
 module HooksHelper
+    include UsersHelper
+
     def write_hook(data)
         puts "write_hook:"
         puts data.to_json
+        user_name = doorkeeper_name.to_s
+        puts "user: " + user_name
+        if user_name != ""
+            @store = Store.find(data[:id])
+            @store.user_id = doorkeeper_token.application_id
+            @store.save
+        end
         data["processed"] = 1
         data["responses"] = [{id: data[:id], status: 200}]
 

@@ -20,6 +20,26 @@ class DriController < ApplicationController
             return
         end
 
+        if params[:term].present?
+            # term = @store.item["@graph"].find { |x| x["@id"].split("/").last.downcase == params[:term].downcase } rescue nil
+            # if term
+            #     render json: term, 
+            #            status: 200
+            #     return
+            # else
+                # Redirect to ontology
+                my_host = ENV["RAILS_CONFIG_HOSTS"] || 'https://soya.ownyourdata.eu/'
+                unless my_host =~ %r{\Ahttps?://}i
+                    my_host = "https://#{my_host}"
+                end
+                my_host.end_with?("/") ? my_host : "#{my_host}/"
+
+                redirect_to my_host + params[:dri].to_s, 
+                            status: :see_other
+                return
+            # end
+        end
+
         render json: @store.item,
                status: 200
     end
@@ -196,4 +216,44 @@ class DriController < ApplicationController
                status: 200
 
     end
+
+    def context_jsonld
+        store_id, msg = get_soya(params[:dri])
+        if store_id.nil?
+            render json: {"error": "not found"},
+                   status: 404
+            return
+        end
+        @store = Store.find(store_id) rescue nil
+        if @store.nil?
+            render json: {"error": "not found"},
+                   status: 404
+            return
+        end
+        item = @store.item
+        soya_name = getSoyaName(item)
+
+        retVal = {
+            "@context": {
+                "id": "@id",
+                "@version": 1.1,
+                "@protected": true,
+                "type": "@type"
+            }
+        }
+        config_hosts = ENV['RAILS_CONFIG_HOSTS'] || 'https://soya.ownyourdata.eu'
+        if !config_hosts.starts_with?('http')
+            config_hosts = "https://" + config_hosts
+        end
+        retVal[:'@context'][soya_name] = config_hosts + '/' + soya_name + '/context.jsonld#'
+        item['@graph'].each do |el|
+            if ['owl:ObjectProperty', 'owl:DatatypeProperty'].include?(el['@type']) 
+                retVal[:'@context'][el['@id']] = soya_name + ':' + el['@id']
+            end
+        end
+
+        render json: retVal,
+               status: 200
+    end
+
 end

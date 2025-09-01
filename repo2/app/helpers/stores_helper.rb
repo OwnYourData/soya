@@ -229,6 +229,12 @@ puts "branch: full_soya_update w/ tag"
                 @cs_store.soya_tag = soya_tag
             end
             @cs_store.save
+        else
+            @cs_store.soya_name = soya_name
+            @cs_store.soya_dri = soya_dri
+            @cs_store.soya_yaml = soya_yaml
+            @cs_store.soya_tag = soya_tag
+            @cs_store.save
         end
         return @cs_store.id
     end

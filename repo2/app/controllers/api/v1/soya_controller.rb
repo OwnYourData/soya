@@ -1,6 +1,7 @@
 module Api
     module V1
         class SoyaController < ApiController
+            
             # respond only to JSON requests
             respond_to :json
             respond_to :html, only: []
@@ -24,9 +25,22 @@ module Api
                       meta: @store.meta,
                       "id": @store.id,
                       "dri": dri,
+                      "created_at": @store.created_at,
+                      "updated_at": @store.updated_at,
+                      "author": "anonymous",
                       "soya_name": @store.soya_name,
                       "soya_yaml": @store.soya_yaml
                     }
+                    if !@store.user_id.nil?
+                        @user = Doorkeeper::Application.find(@store.user_id) rescue nil
+                        if !@user.nil?
+                            retval["author"] = @user.name
+                            @org = Organization.find(@user.organization_id) rescue nil
+                            if !@org.nil?
+                                retval["organization"] = @org.name
+                            end
+                        end
+                    end
                     render json: retval.to_json,
                            status: 200
                 end

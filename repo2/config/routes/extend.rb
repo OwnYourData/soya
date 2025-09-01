@@ -8,13 +8,20 @@ scope '/' do
             match 'soya/tag',     to: 'soya#tag',     via: 'post'
         end
     end
-    match '/soya/register', to: 'frontend#register', via: 'get'
-    match '/soya/user',     to: 'frontend#user',     via: 'get'
-    match ':dri/info',   to: 'dri#info',      via: 'get',    constraints: {dri: /.*/}
-    match ':dri/yaml',   to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
-    match ':dri/yml',    to: 'dri#read_yaml', via: 'get',    constraints: {dri: /.*/}
-    match ':dri/ttl',    to: 'dri#read_ttl',  via: 'get',    constraints: {dri: /.*/}
-    match ':dri/turtle', to: 'dri#read_ttl',  via: 'get',    constraints: {dri: /.*/}
-    match ':dri',        to: 'dri#read',      via: 'get',    constraints: {dri: /.*/}
-    match ':dri',        to: 'dri#delete',    via: 'delete', constraints: {dri: /.*/}
+
+    # UI ==========================
+    match '/soya/user',     to: 'static_pages#user',     via: 'get'
+    match '/soya/register', to: 'static_pages#register', via: 'get'
+
+    # SOyA ========================
+    match ':dri/info',           to: 'dri#info',           via: 'get',    constraints: {dri: /.*/}
+    match ':dri/yaml',           to: 'dri#read_yaml',      via: 'get',    constraints: {dri: /.*/}
+    match ':dri/yml',            to: 'dri#read_yaml',      via: 'get',    constraints: {dri: /.*/}
+    match ':dri/ttl',            to: 'dri#read_ttl',       via: 'get',    constraints: {dri: /.*/}
+    match ':dri/turtle',         to: 'dri#read_ttl',       via: 'get',    constraints: {dri: /.*/}
+    match ':dri/context.jsonld', to: 'dri#context_jsonld', via: 'get',    constraints: {dri: /.*/}
+    match ':dri/:term',          to: 'dri#read',           via: 'get',    constraints: {dri: /[^\/]+/}
+    match ':dri',                to: 'dri#read',           via: 'get',    constraints: {dri: /.*/}
+    match ':dri',                to: 'dri#delete',         via: 'delete', constraints: {dri: /.*/}
+
 end

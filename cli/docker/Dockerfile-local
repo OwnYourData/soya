@@ -21,7 +21,7 @@ WORKDIR /app
 
 #########################################
 
-FROM ruby:3.2.2-alpine
+FROM ruby:3.2.8-alpine
 LABEL org.opencontainers.image.authors="Christoph Fabianek <christoph@ownyourdata.eu>"
 
 COPY docker/local-gem/*.gem /tmp/

@@ -1,331 +1,323 @@
-import React, { useCallback, useEffect, useState } from 'react';
+// App.tsx — MUI v4 kompatibel
+
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { JsonForms } from '@jsonforms/react';
-import {
-  materialRenderers,
-  materialCells,
-} from '@jsonforms/material-renderers';
-import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult } from 'soya-js'
-import './App.css';
+import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
+
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult } from 'soya-js';
 import { customRenderers } from './components';
+import { evaluteDynamicEnum } from './utils';
 import packageJson from '../package.json';
-import { evaluteDynamicEnum } from './utils/index'
+import './App.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  InputLabel,
-  MenuItem,
-  Select,
-  FormControl,
-  CircularProgress,
-  Button,
-  TextField,
-  Card,
-  CardContent,
-  TextareaAutosize as TextArea,
-  List,
-  ListItem,
-  ListItemText
-} from '@material-ui/core';
-import { debounce } from 'debounce';
-
-// print version to browser console
-console.log(packageJson.name, packageJson.version);
-
-const allRenderers = [
-  ...customRenderers,
-  ...materialRenderers,
-];
-
-const postMessage = (data: any | (() => any)) => {
-  if (window.parent) {
-    // if necessary, execute function
-    if (typeof data === 'function')
-      data = data();
-
-    window.parent.postMessage(data, '*');
-    // setTimeout with 0 to inform the parent window
-    // always after the last window repaint
-  }
+// ----- Theme helpers (v4) -----
+function getInitialTheme(): 'light' | 'dark' {
+  const t = new URLSearchParams(window.location.search).get('theme');
+  return t === 'dark' ? 'dark' : 'light';
 }
-const postData = debounce((data: any) => { postMessage(data) }, 250);
-const postUpdate = debounce((data: any) => { postMessage(data) }, 400);
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 150,
-  },
-}));
+// Kleine Helfer
+const postMessageSafe = (data: any | (() => any)) => {
+  try {
+    if (typeof data === 'function') data = data();
+    window.parent?.postMessage(data, '*'); // TODO: origin einschränken
+  } catch {}
+};
 
-function App() {
-  const classes = useStyles();
+const distinctNonEmpty = (values?: (string | undefined)[]) =>
+  values
+    ?.filter((x): x is string => !!x)
+    .filter((x, i, arr) => arr.indexOf(x) === i);
 
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+// --------------------------------
 
-  const [schemaDri, setSchemaDri] = useState<string>('');
+export default function App() {
+  // THEME
+  const [type, setType] = useState<'light' | 'dark'>(getInitialTheme());
+
+  useEffect(() => {
+    // vom Parent per postMessage steuerbar machen
+    (window as any).setMuiMode = (t: string) => setType(t === 'dark' ? 'dark' : 'light');
+  }, []);
+
+  // auf postMessage reagieren (live toggeln)
+  useEffect(() => {
+    const onMsg = (evt: MessageEvent) => {
+      const { type: msgType, theme } = (evt.data || {}) as { type?: string; theme?: string };
+      if (msgType === 'jsonforms-theme') (window as any).setMuiMode?.(theme);
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  // v4: palette.type (nicht mode)
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: { type }, // 'light' | 'dark'
+      }),
+    [type]
+  );
+
+  // JSONForms Renderers
+  const allRenderers = useMemo(() => [...customRenderers, ...materialRenderers], []);
+
+  // SOyA / Form-State
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [schemaDri, setSchemaDri] = useState('');
   const [schemaList, setSchemaList] = useState<SoyaQueryResult[]>([]);
-  const [tag, setTag] = useState<string>('');
-  const [language, setLanguage] = useState<string>('');
-  const [viewMode, setViewMode] = useState<string>('');
+  const [tag, setTag] = useState('');
+  const [language, setLanguage] = useState('');
+  const [viewMode, setViewMode] = useState<'embedded' | 'form-only' | string>('');
 
   const showMetadata = viewMode === 'embedded' || viewMode === 'form-only';
   const showDropdowns = viewMode !== 'form-only';
 
   const [form, setForm] = useState<SoyaFormResponse | undefined>(undefined);
   const [data, setData] = useState<any>({});
-  const [textData, setTextData] = useState<string>('');
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [textData, setTextData] = useState('');
 
   const fetchForm = useCallback(async () => {
-    if (schemaDri) {
-      setIsLoading(true);
-
-      try {
-        const soya = new Soya();
-        const formOptions: SoyaFormOptions | undefined = {
-          // if language is nullish, just pass undefined
-          language: language || undefined,
-          // if tag is nullish, just pass undefined
-          tag: tag || undefined,
-        };
-
-        const soyaForm = await soya.getForm(await soya.pull(schemaDri), formOptions);
-        setForm(await evaluteDynamicEnum(soyaForm));
-      } catch { }
-
+    if (!schemaDri) return;
+    setIsLoading(true);
+    try {
+      const soya = new Soya();
+      const formOptions: SoyaFormOptions = {
+        language: language || undefined,
+        tag: tag || undefined,
+      };
+      const soyaForm = await soya.getForm(await soya.pull(schemaDri), formOptions);
+      setForm(await evaluteDynamicEnum(soyaForm));
+    } catch (e) {
+      // optional: console.error(e);
+    } finally {
       setIsLoading(false);
     }
   }, [schemaDri, language, tag]);
 
-  const sendUpdate = useCallback(() => {
-    postUpdate({
-      type: 'update',
-      isInitialized,
-      documentHeight: document.documentElement.scrollHeight,
-    });
-  }, [isInitialized]);
-
   const fetchSchemas = useCallback(() => {
     (async () => {
-      setSchemaList(await new Soya().query({ name: schemaDri }));
+      const list = await new Soya().query({ name: schemaDri });
+      setSchemaList(list);
     })();
   }, [schemaDri]);
 
-  // initialization of the app
-  useEffect(() => {
-    if (isInitialized)
-      return;
-
-    (async () => {
-      await fetchForm();
-      setIsInitialized(true);
-    })();
-  }, [setIsInitialized, isInitialized, fetchForm]);
-
-  useEffect(() => {
-    fetchForm();
-    // this dependency array is correct!
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tag, language]);
-
+  // initiale URL-Parameter laden
   useEffect(() => {
     const { searchParams } = new URL(window.location.href);
-
-    const data = searchParams.get('data');
-    if (data)
-      try {
-        setData(JSON.parse(decodeURIComponent(data)));
-      } catch { }
-
+    const dataParam = searchParams.get('data');
+    if (dataParam) {
+      try { setData(JSON.parse(decodeURIComponent(dataParam))); } catch {}
+    }
     setSchemaDri(searchParams.get('schemaDri') ?? '');
     setTag(searchParams.get('tag') ?? '');
     setLanguage(searchParams.get('language') ?? '');
     setViewMode(searchParams.get('viewMode') ?? '');
   }, []);
 
+  // initial: Form ziehen
   useEffect(() => {
-    const handleClick = () => {
-      sendUpdate();
-    }
+    if (isInitialized) return;
+    (async () => {
+      await fetchForm();
+      setIsInitialized(true);
+    })();
+  }, [isInitialized, fetchForm]);
 
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
-  }, [sendUpdate]);
-
+  // bei Tag/Language neu laden
   useEffect(() => {
-    const handleMessage = (evt: MessageEvent) => {
-      // ignore all messages that are created from this window
-      if (evt.source === window)
-        return;
+    if (!isInitialized) return;
+    fetchForm();
+  }, [tag, language, isInitialized, fetchForm]);
 
-      switch (evt.data?.type) {
-        case 'data':
-          const { data: newData } = evt.data;
-          // only set data, if it differs to our internal data
-          // this is important to avoid nasty infinite loops
-          if (JSON.stringify(newData) !== JSON.stringify(data))
-            setData(newData);
-          break;
-      }
-    }
+  // Parent über Höhe/Init informieren (minimal)
+  useEffect(() => {
+    const sendUpdate = () =>
+      postMessageSafe({
+        type: 'update',
+        isInitialized,
+        documentHeight: document.documentElement.scrollHeight,
+      });
+    sendUpdate();
+    const onClick = () => sendUpdate();
+    window.addEventListener('click', onClick);
+    return () => window.removeEventListener('click', onClick);
+  }, [isInitialized]);
 
-    // parent apps can also update data via message
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [data]);
-
+  // Permalink (optional)
   const permalink = new URL(window.location.href);
-  const { searchParams } = permalink;
-  if (schemaDri)
-    searchParams.set('schemaDri', schemaDri);
-  if (tag)
-    searchParams.set('tag', tag);
-  if (language)
-    searchParams.set('language', language);
-  if (data)
-    searchParams.set('data', JSON.stringify(data));
+  const sp = permalink.searchParams;
+  if (schemaDri) sp.set('schemaDri', schemaDri);
+  if (tag) sp.set('tag', tag);
+  if (language) sp.set('language', language);
+  if (data) sp.set('data', JSON.stringify(data));
 
-  let header1: JSX.Element | undefined = undefined;
-  if (!showMetadata)
-    header1 = <div>
-      <div>
+  const tagOptions = distinctNonEmpty(form?.options.map((x) => x.tag));
+  const languageOptions = distinctNonEmpty(form?.options.map((x) => x.language));
+
+  // UI-Bausteine
+  const Header1 = !showMetadata ? (
+    <Box mb={2}>
+      <Box display="flex" alignItems="center" gridGap={16}>
         <TextField
           label="SOyA Schema DRI"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setSchemaDri(event.target.value);
-          }}
-          // FIXME: This onKeyUp is ugly and should be achieved by a form submit
-          onKeyUp={(evt) => {
-            if (evt.key === 'Enter')
-              fetchForm();
-            else if (schemaDri.length >= 3)
-              fetchSchemas();
-            else
-              setSchemaList([]);
-          }}
           value={schemaDri}
+          onChange={(e) => setSchemaDri(e.target.value)}
+          onKeyUp={(evt) => {
+            if (evt.key === 'Enter') fetchForm();
+            else if (schemaDri.length >= 3) fetchSchemas();
+            else setSchemaList([]);
+          }}
         />
-        <Button className="Button" variant="contained" color="primary" onClick={() => fetchForm()}>Load Form</Button>
-      </div>
-      <List component="nav" >
+        <Button variant="contained" color="primary" onClick={fetchForm}>
+          Load Form
+        </Button>
+      </Box>
+
+      <List>
         {schemaList.map((x) => (
-          <ListItem button key={`${x.dri}-${x.name}`} onClick={() => {
-            setSchemaDri(x.name);
-            setSchemaList([]);
-          }}>
+          <ListItem
+            key={`${x.dri}-${x.name}`}
+            button
+            onClick={() => {
+              setSchemaDri(x.name);
+              setSchemaList([]);
+            }}
+          >
             <ListItemText primary={x.name} />
           </ListItem>
         ))}
       </List>
-    </div>;
+    </Box>
+  ) : null;
 
-  const withEmpty = (values: (string | undefined)[] | undefined) => {
-    if (!values)
-      return undefined;
+  const Header2 = !isLoading && showDropdowns ? (
+    <Box mb={2} display="flex" gridGap={16} flexWrap="wrap">
+      {tagOptions && (
+        <FormControl style={{ minWidth: 150 }}>
+          <InputLabel>Tag</InputLabel>
+          <Select
+            value={tag}
+            onChange={(e) => setTag(e.target.value as string)}
+          >
+            <MenuItem value="">Default</MenuItem>
+            {tagOptions.map((v) => (
+              <MenuItem key={`tag-${v}`} value={v}>
+                {v}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+      {languageOptions && (
+        <FormControl style={{ minWidth: 150 }}>
+          <InputLabel>Language</InputLabel>
+          <Select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as string)}
+          >
+            <MenuItem value="">Default</MenuItem>
+            {languageOptions.map((v) => (
+              <MenuItem key={`lang-${v}`} value={v}>
+                {v}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+    </Box>
+  ) : null;
 
-    const distinct = (values.filter((x, idx) => !!x && values.indexOf(x) === idx) as string[])
-
-    return [
-      { value: '', text: 'Default' },
-      ...distinct.map((x: string) => ({
-        value: x,
-        text: x,
-      })),
-    ];
-  }
-
-  const tagOptions = withEmpty(form?.options.map(x => x.tag));
-  const languageOptions = withEmpty(form?.options.map(x => x.language));
-
-  let header2: JSX.Element | undefined = undefined;
-  if (!isLoading && showDropdowns)
-    header2 = <div>
-      {tagOptions ? <FormControl className={classes.formControl}>
-        <InputLabel>Tag</InputLabel>
-        <Select
-          value={tag}
-          label="Tag"
-          onChange={(event) => {
-            setTag(event.target.value as string);
-          }}
-        >
-          {tagOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
-        </Select></FormControl> : undefined}
-      {languageOptions ? <FormControl className={classes.formControl}>
-        <InputLabel>Language</InputLabel>
-        <Select
-          value={language}
-          label="Language"
-          onChange={(event) => {
-            setLanguage(event.target.value as string);
-          }}
-        >
-          {languageOptions.map(({ value, text }) => <MenuItem key={`tag-${value}`} value={value}>{text}</MenuItem>)}
-        </Select></FormControl> : undefined}
-    </div>;
-
-  let content: JSX.Element | undefined = undefined;
-  if (isLoading || !isInitialized)
-    content = <div><CircularProgress /></div>;
-  else if (form)
-    content = <JsonForms
+  const Content = isLoading || !isInitialized ? (
+    <Box my={4} display="flex" justifyContent="center">
+      <CircularProgress />
+    </Box>
+  ) : form ? (
+    <JsonForms
       schema={form.schema}
       uischema={form.ui}
       data={data}
       renderers={allRenderers}
       cells={materialCells}
-      onChange={(evt) => {
-        const { data } = evt;
-        setData(data);
-        setTextData(JSON.stringify(data, null, 2));
-        postData({ type: 'data', evt });
+      onChange={({ data: newData }) => {
+        setData(newData);
+        // optional: postMessageSafe({ type: 'data', data: newData });
       }}
-    />;
+    />
+  ) : null;
 
-  let footer1: JSX.Element | undefined = undefined;
-  if (!isLoading && !showMetadata)
-    footer1 = <>
-      <h2>Data</h2>
-      <Card>
-        <CardContent>
-          <TextArea
-            value={textData}
-            style={{ 'width': '100%' }}
-            onChange={(e) => {
-              const text = e.target.value;
-              setTextData(text);
+  const [textOpenSynced, setTextOpenSynced] = useState(false);
+  useEffect(() => {
+    if (!textOpenSynced) setTextData(JSON.stringify(data, null, 2));
+  }, [data, textOpenSynced]);
 
-              try {
-                const data = JSON.parse(text);
-                setData(data);
-              } catch { }
-            }} />
-        </CardContent>
-      </Card>
-      <h2>Permalink</h2>
-      <Card>
-        <CardContent>
-          {permalink.toString()}
-        </CardContent>
-      </Card>
-    </>;
+  const Footer1 = !isLoading && !showMetadata ? (
+    <>
+      <Box mt={4}>
+        <h2>Data</h2>
+        <Card>
+          <CardContent>
+            <textarea
+              value={textData}
+              style={{ width: '100%', minHeight: 160 }}
+              onChange={(e) => {
+                setTextOpenSynced(true);
+                setTextData(e.target.value);
+                try {
+                  const parsed = JSON.parse(e.target.value);
+                  setData(parsed);
+                } catch {}
+              }}
+              onBlur={() => {
+                setTextOpenSynced(false);
+                setTextData(JSON.stringify(data, null, 2));
+              }}
+            />
+          </CardContent>
+        </Card>
+      </Box>
 
-  // we use a function here as we want to the function
-  // right before posting the message
-  // this way we also catch layout/height changes
-  // as every postMessage is executed with a setTimeout(0)
-  sendUpdate();
+      <Box mt={4}>
+        <h2>Permalink</h2>
+        <Card>
+          <CardContent>{permalink.toString()}</CardContent>
+        </Card>
+      </Box>
+    </>
+  ) : null;
 
   return (
-    <div className={showMetadata ? '' : 'App'}>
-      {isInitialized ? (showMetadata ? undefined : <h1>OwnYourData SOyA-Forms</h1>) : undefined}
-      {isInitialized ? header1 : undefined}
-      {isInitialized ? header2 : undefined}
-      {content}
-      {isInitialized ? footer1 : undefined}
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box className={showMetadata ? '' : 'App'} p={showMetadata ? 0 : 2}>
+        {isInitialized && !showMetadata && <h1>OwnYourData SOyA-Forms</h1>}
+        {isInitialized && Header1}
+        {isInitialized && Header2}
+        {Content}
+        {isInitialized && Footer1}
+      </Box>
+    </ThemeProvider>
   );
 }
 
-export default App;
+// Version ins Console-Log
+console.log(packageJson.name, packageJson.version);

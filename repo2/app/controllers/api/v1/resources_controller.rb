@@ -29,7 +29,13 @@ module Api
                     retVal["auth_method"] = {mode: "optional"}
                 end
                 if !doorkeeper_name.nil?
-                    retVal["user"] = {user_name: doorkeeper_name, full_name: "Administrator", organization: "OwnYourData"}
+                    @oauth = Doorkeeper::Application.find(doorkeeper_token.application_id) rescue nil
+                    @user = User.find_by_name(@oauth.name) rescue nil
+                    @org = Organization.find(@oaut.organization_id) rescue nil
+                    user_name = @oauth.name rescue ""
+                    full_name = @user.full_name rescue ""
+                    org_name = @org.name rescue ""
+                    retVal["user"] = {user_name: user_name, full_name: full_name, organization: org_name}
                 end
                 if env_auth.start_with?("idaustria")
                     uid = SecureRandom.uuid

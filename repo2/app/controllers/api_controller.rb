@@ -1,4 +1,6 @@
 class ApiController < ApplicationController
+    protect_from_forgery with: :null_session
+    
     def doorkeeper_unauthorized_render_options(error: nil)
         { json: { error: "Not authorized" } }
     end
