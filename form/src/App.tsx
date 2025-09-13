@@ -260,7 +260,7 @@ export default function App() {
       cells={materialCells}
       onChange={({ data: newData }) => {
         setData(newData);
-        // optional: postMessageSafe({ type: 'data', data: newData });
+        postMessageSafe({ type: 'data', data: newData });
       }}
     />
   ) : null;
