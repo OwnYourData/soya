@@ -153,10 +153,10 @@ const validationProcessAttributes = (attributes: any): any[] => {
             const range = parseRange(value);
 
             if (range instanceof NumberRange) {
-              if (range.min)
-                constraints['sh:minRange'] = range.min;
-              if (range.max)
-                constraints['sh:maxRange'] = range.max;
+              if (range.min != null)
+                constraints['sh:minInclusive'] = range.min;
+              if (range.max != null)
+                constraints['sh:maxInclusive'] = range.max;
             } else if (range instanceof DateRange) {
               if (range.min)
                 constraints['sh:minRange'] = {

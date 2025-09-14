@@ -1,0 +1,7 @@
+<h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Profile</h1>
+
+<p><strong>user:</strong> <%= @user.name.to_s rescue "" %></p>
+<p><strong>name:</strong> <%= @user.full_name.to_s rescue "" %></p>
+<p><strong>org:</strong> <%= @org.name.to_s rescue "" %></p>
+
+<a href="/">back</a>
