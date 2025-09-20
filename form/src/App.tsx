@@ -1,4 +1,4 @@
-// App.tsx — MUI v4 kompatibel
+  // App.tsx — MUI v4 kompatibel
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
