@@ -16,18 +16,27 @@ export async function evaluteDynamicEnum(object: any): Promise<any> {
   const schemaProperties = object["schema"]["properties"];
   const props: Array<string> = Object.keys(schemaProperties);
 
+  const url = new URL(window.location.href);
+
   for(const propName of props) {
     if(!Object.keys(schemaProperties[propName]).includes("enumApi"))
       continue;
+
+    const headers: { [key: string]: string; } = {
+      "Accept": "application/json"
+    };
+
+    if(Object.keys(schemaProperties[propName]).includes("auth_token")) {
+      console.log(`Schema requests OAuth2 Token for Dynamic Enum Endpoint!`);
+      headers["Authorization"] = `Bearer ${url.searchParams.get(schemaProperties[propName]["auth_token"])}`
+    }
 
     console.log(`Schema has '${propName}' as DynamicEnum property.`);
     const prop = schemaProperties[propName];
     
     console.log(`Fetching: ${prop["enumApi"]}`);
     const res = await fetch(prop["enumApi"], {
-      headers: {
-        "Accept": "application/json"
-      }
+      headers: headers
     });
     const json = await res.json();
 
