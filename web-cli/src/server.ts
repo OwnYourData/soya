@@ -1,5 +1,5 @@
 import express from 'express';
-import { Soya, Overlays } from "soya-js";
+import { Soya, Overlays, RepoService } from "soya-js";
 import swaggerUi from 'swagger-ui-express';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -18,7 +18,8 @@ export const init = async () => {
   const router = express.Router();
   app.use('/api/v1', router);
 
-  const soya = new Soya();
+  const repoService = new RepoService(process.env['SOYA_REPO'] ?? "https://soya.ownyourdata.eu");
+  const soya = new Soya({ service: repoService });
 
   router.get('/version', async (_, res) => {
     const content = await fs.readFile(path.join(getFileRoot(), 'package.json'), { encoding: 'utf-8' });
