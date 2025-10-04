@@ -21,7 +21,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult } from 'soya-js';
+import { Soya, SoyaFormResponse, SoyaFormOptions, SoyaQueryResult, RepoService } from 'soya-js';
 import { customRenderers } from './components';
 import { evaluteDynamicEnum } from './utils';
 import packageJson from '../package.json';
@@ -88,6 +88,7 @@ export default function App() {
   const [tag, setTag] = useState('');
   const [language, setLanguage] = useState('');
   const [viewMode, setViewMode] = useState<'embedded' | 'form-only' | string>('');
+  const [customRepo, setCustomRepo] = useState('');
 
   const showMetadata = viewMode === 'embedded' || viewMode === 'form-only';
   const showDropdowns = viewMode !== 'form-only';
@@ -100,7 +101,8 @@ export default function App() {
     if (!schemaDri) return;
     setIsLoading(true);
     try {
-      const soya = new Soya();
+      const repoService = new RepoService(customRepo)
+      const soya = new Soya({ service: repoService });
       const formOptions: SoyaFormOptions = {
         language: language || undefined,
         tag: tag || undefined,
@@ -112,7 +114,7 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [schemaDri, language, tag]);
+  }, [schemaDri, language, tag, customRepo]);
 
   const fetchSchemas = useCallback(() => {
     (async () => {
@@ -132,6 +134,7 @@ export default function App() {
     setTag(searchParams.get('tag') ?? '');
     setLanguage(searchParams.get('language') ?? '');
     setViewMode(searchParams.get('viewMode') ?? '');
+    setCustomRepo(searchParams.get('repo') ?? 'https://soya.ownyourdata.eu');
   }, []);
 
   // initial: Form ziehen
