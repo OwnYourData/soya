@@ -1,10 +1,18 @@
 import { ControlProps } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import {
-  FormControl, InputLabel, Select, MenuItem, Chip, Input,
-  FormHelperText, Checkbox, ListItemText
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  Input,
+  FormHelperText,
+  Checkbox,
+  ListItemText,
+  Divider
 } from '@material-ui/core';
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface SelectItem {
@@ -16,10 +24,12 @@ const useStyles = makeStyles((theme) => ({
   formControl: { margin: theme.spacing(1), width: '100%' },
   chips: { display: 'flex', flexWrap: 'wrap' },
   chip: { margin: 2 },
+  closeItem: { justifyContent: 'center', fontWeight: 600 }
 }));
 
 const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
 
   const {
     id,
@@ -32,23 +42,17 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
     data = [],
     enabled = true,
     visible = true,
-    readonly: roProp,
+    readonly: roProp
   } = props as any;
 
   const getItems = useCallback((): SelectItem[] => {
     // support both `enum` and `oneOf`
-    const items: any[] | undefined = (schema as any).enum || (schema as any).oneOf;
-    if (!items) return [];
-    return items.map((x: any) => ({
+    const raw: any[] | undefined = (schema as any)?.enum || (schema as any)?.oneOf;
+    if (!raw) return [];
+    return raw.map((x: any) => ({
       text: x?.title ?? x,
-      value: x?.const ?? x,
+      value: x?.const ?? x
     }));
-
-    // TODO: re-enable sorting once it's specified how to correctly sort the items
-    // return sort(items, x => x.title ?? x).map(x => ({
-    //   text: x.title ?? x,
-    //   value: x.const ?? x,
-    // }));
   }, [schema]);
 
   const items = getItems();
@@ -61,13 +65,26 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
 
   const disabled = !enabled || isReadOnly;
 
-  if (!visible) {
-    return null;
-  }
+  if (!visible) return null;
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  // onChange robust: ignoriert das Close-Item
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+    child?: React.ReactNode
+  ) => {
+    if ((child as any)?.props?.['data-close'] === true) {
+      // Klick auf "Close" -> keine Wertänderung
+      return;
+    }
     if (disabled) return;
     handleChange(path, event.target.value);
+  };
+
+  const handleCloseClick = (e: React.MouseEvent) => {
+    // verhindert, dass der Select das Item als Auswahl interpretiert
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
   };
 
   return (
@@ -75,23 +92,28 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
       <InputLabel>{label}</InputLabel>
       <Select
         multiple
-        value={data}
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        value={Array.isArray(data) ? data : []}
         onChange={handleSelectChange}
         input={<Input id={`${id}-select-multiple-chip`} />}
         renderValue={(selected) => (
           <div className={classes.chips}>
             {(selected as string[]).map((val) => {
-              const { value, text } = items.find((x) => x.value === val) as SelectItem;
-              return <Chip key={value} label={text} className={classes.chip} />;
+              const item = items.find((x) => x.value === val);
+              const label = item ? item.text : String(val);
+              return <Chip key={String(val)} label={label} className={classes.chip} />;
             })}
           </div>
         )}
+        // Hinweis: in MUI v5 getContentAnchorEl entfernen
         MenuProps={{ getContentAnchorEl: null }}
         disabled={disabled}
         aria-disabled={disabled}
       >
         {items.map(({ value, text }) => (
-          <MenuItem key={value} value={value} disabled={disabled}>
+          <MenuItem key={String(value)} value={value} disabled={disabled}>
             <Checkbox
               checked={Array.isArray(data) && data.indexOf(value) !== -1}
               disabled={disabled}
@@ -99,7 +121,23 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
             <ListItemText primary={text} />
           </MenuItem>
         ))}
+
+        <Divider />
+
+        {/* Close-Eintrag: kein value setzen! */}
+        <MenuItem
+          data-close
+          onClick={handleCloseClick}
+          onMouseDown={(e) => e.preventDefault()} // verhindert Fokus-/Auswahl-Seitenwirkung
+          className={classes.closeItem}
+          dense
+          role="button"
+          aria-label="Close menu"
+        >
+          Close
+        </MenuItem>
       </Select>
+
       {description ? <FormHelperText>{description}</FormHelperText> : null}
     </FormControl>
   );
