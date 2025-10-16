@@ -1,0 +1,11 @@
+.App {
+  padding: 2em;
+}
+
+.Button-Bar {
+  display: flex;
+}
+
+.Button-Bar .Button {
+  margin-right: 1em;
+}

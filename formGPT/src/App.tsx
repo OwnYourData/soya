@@ -96,8 +96,6 @@ export default function App() {
   const [form, setForm] = useState<SoyaFormResponse | undefined>(undefined);
   const [data, setData] = useState<any>({});
   const [textData, setTextData] = useState('');
-  const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
-  const [authToken, setAuthToken] = useState<string | undefined>(undefined);
 
   const fetchForm = useCallback(async () => {
     if (!schemaDri) return;
@@ -128,56 +126,16 @@ export default function App() {
   // initiale URL-Parameter laden
   useEffect(() => {
     const { searchParams } = new URL(window.location.href);
-
-    // 1) data= (hat Vorrang)
     const dataParam = searchParams.get('data');
     if (dataParam) {
       try { setData(JSON.parse(decodeURIComponent(dataParam))); } catch {}
     }
-
-    // 2) url= (Alternative, wird nur verwendet, wenn data nicht gesetzt ist)
-    const urlParam = searchParams.get('url');
-    if (!dataParam && urlParam) {
-      setDataUrl(urlParam);
-    }
-    const tokenParam = searchParams.get('token');
-    if (tokenParam) setAuthToken(tokenParam);
-
     setSchemaDri(searchParams.get('schemaDri') ?? '');
     setTag(searchParams.get('tag') ?? '');
     setLanguage(searchParams.get('language') ?? '');
     setViewMode(searchParams.get('viewMode') ?? '');
     setCustomRepo(searchParams.get('repo') ?? 'https://soya.ownyourdata.eu');
   }, []);
-
-  // Daten vom REST-Endpoint laden (Alternative zu data=)
-  useEffect(() => {
-    if (!dataUrl) return;
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch(dataUrl, {
-          headers: {
-            ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-            'Accept': 'application/json'
-          },
-          // optional: credentials: 'include',
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (!cancelled) {
-          setData(json);
-          postMessageSafe({ type: 'data', data: json });
-        }
-      } catch (err) {
-        // Fehler nicht hart eskalieren, damit die App weiter nutzbar bleibt
-        console.warn('Failed to fetch data from url=', dataUrl, err);
-      }
-    })();
-
-    return () => { cancelled = true; };
-  }, [dataUrl]);
 
   // initial: Form ziehen
   useEffect(() => {

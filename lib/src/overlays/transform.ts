@@ -6,7 +6,7 @@ import { escapeFilename, makeTempDir } from '../utils/core';
 import path from 'path';
 import { logger } from '../services/logger';
 import { Normalize, NormalizedRecord, Pack } from '@gebsl/senml-js';
-import Handlebars from 'handlebars';
+import Handlebars, { TemplateDelegate } from "handlebars";
 
 export class SoyaTransform implements Overlays.OverlayPlugin {
   private runJolt = async (spec: any[], data: any, executable: string = 'jolt'): Promise<Overlays.OverlayResult> => {
@@ -79,19 +79,64 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
     }
   }
 
-  private runHandlebars = (templateObj: any, data: any): any => {
-    for (const prop in templateObj) {
-      const val = templateObj[prop];
+  private hbCache = new Map<string, TemplateDelegate>();
 
-      if (val && typeof val === 'object')
-        // recurse!
-        templateObj[prop] = this.runHandlebars(val, data);
-      else if (typeof val === 'string' && /^{{.+}}$/g.test(val))
-        templateObj[prop] = Handlebars.compile(val)(data);
+  private compileOnce(tpl: string): TemplateDelegate {
+    let fn = this.hbCache.get(tpl);
+    if (!fn) {
+      fn = Handlebars.compile(tpl);
+      this.hbCache.set(tpl, fn);
+    }
+    return fn;
+  }
+  
+  /**
+   * Rendert beliebige JSON-ähnliche Strukturen mit Handlebars:
+   * - Strings mit Inline-Templates ("prefix {{val}} suffix") werden unterstützt
+   * - Mehrzeilige Templates funktionieren
+   * - Arrays & verschachtelte Objekte werden rekursiv verarbeitet
+   * - Optional: Schlüssel (Property-Namen) werden ebenfalls gerendert, falls sie {{...}} enthalten
+   * - Mutiert das Eingabeobjekt NICHT (liefert eine Kopie zurück)
+   */
+  private runHandlebars = (input: unknown, data: any): any => {
+    if (input == null) return input;
+
+    // Arrays
+    if (Array.isArray(input)) {
+      return input.map(item => this.runHandlebars(item, data));
     }
 
-    return templateObj;
-  }
+    // Objekte
+    if (typeof input === "object") {
+      const out: Record<string, any> = {};
+      for (const [rawKey, rawVal] of Object.entries(input as Record<string, any>)) {
+        const key = rawKey.includes("{{")
+          ? this.compileOnce(rawKey)(data)
+          : rawKey;
+
+        out[key] = this.runHandlebars(rawVal, data);
+      }
+      return out;
+    }
+
+    // Strings (inkl. Inline + mehrzeilig)
+    if (typeof input === "string") {
+      // Schneller Check: enthält überhaupt ein Mustache?
+      if (input.includes("{{")) {
+        try {
+          // Handlebars unterstützt Zeilenumbrüche out of the box; kein RegEx nötig
+          return this.compileOnce(input)(data);
+        } catch {
+          // Fallback: Unverändert zurückgeben, wenn ein Template fehlschlägt
+          return input;
+        }
+      }
+      return input;
+    }
+
+    // Alle anderen Typen (number, boolean, etc.) bleiben wie sie sind
+    return input;
+  };
 
   run = async (soyaDoc: SoyaDocument, data: any): Promise<Overlays.OverlayResult> => {
     for (const item of soyaDoc['@graph']) {
