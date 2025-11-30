@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soya
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soya-web-cli
+  namespace: soya
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soya-web-cli
+  template:
+    metadata:
+      name: soya-web-cli
+      labels:
+        app: soya-web-cli
+    spec:
+      containers:
+      - name: soya-web-cli
+        image: oydeu/soya-web-cli:latest
+        ports:
+        - containerPort: 8080
+        env:
+          - name: LANG
+            value: C.UTF-8
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: soya-web-cli
+  namespace: soya
+spec:
+  selector:
+    app: soya-web-cli
+  type: NodePort
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: soya-web-cli
+  namespace: soya
+  annotations:
+    certmanager.io/issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - soya-web-cli.ownyourdata.eu
+    secretName: soya-web-cli-tls
+  rules:
+  - host: soya-web-cli.ownyourdata.eu
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: soya-web-cli
+            port:
+              number: 80
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: soya-web-cli-tls
+  namespace: soya
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  secretName: soya-web-cli-tls
+  issuerRef:
+    group: cert-manager.io
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - 'soya-web-cli.ownyourdata.eu'
+  privateKey:
+    rotationPolicy: Always

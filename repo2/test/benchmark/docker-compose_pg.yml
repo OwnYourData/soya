@@ -1,0 +1,43 @@
+services:
+  pod:
+    image: oydeu/soya-repo:arm64v8
+    container_name: soya
+    environment:
+      RAILS_ENV: "production"
+      RAILS_LOG_TO_STDOUT: "TRUE"
+      RAILS_SERVE_STATIC_FILES: "TRUE"
+      DC_DB: "postgres"
+      DB_HOST: "db"
+      DB_NAME: "dc"
+      RAILS_CONFIG_HOSTS: 'localhost:3600'
+
+    networks:
+      - local-net
+    ports:
+      - "3200:3000"
+    depends_on:
+      - "db"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+  db:
+    image: arm64v8/postgres:17-alpine
+    container_name: db
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - local-net
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+volumes:
+  data:
+networks:
+  local-net:
+

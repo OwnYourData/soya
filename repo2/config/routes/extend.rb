@@ -1,4 +1,6 @@
 scope '/' do
+    match '/version',   to: 'application#version', via: 'get'
+
     namespace :api, defaults: { format: :json } do
         scope "(:version)", :version => /v1/, module: :v1 do
             match 'data/:id',     to: 'soya#read',    via: 'get'

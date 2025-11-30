@@ -1,0 +1,76 @@
+# start Repo
+docker run -d --name soya -p 3200:3000 -e RAILS_ENV=production -e AUTH=optional oydeu/soya-repo:arm64v8
+
+# start Pod with persistent DB
+docker-compose -f test/benchmark/docker-compose_pg.yml up -d
+docker-compose -f test/benchmark/docker-compose_pg.yml down
+
+docker volume rm benchmark_data
+
+=== Ablauf
+
+docker-compose -f test/benchmark/docker-compose_pg.yml down 
+docker volume rm benchmark_data
+docker-compose -f test/benchmark/docker-compose_pg.yml up -d
+docker logs -f pod
+
+===
+
+
+HOST="http://localhost:3600"
+APP_KEY=$(docker logs pod | grep "APP_KEY:" | head -n1 | cut -d' ' -f2)
+APP_SEC=$(docker logs pod | grep "APP_SEC:" | head -n1 | cut -d' ' -f2)
+TOKEN=`curl -s -d grant_type=client_credentials -d client_id=$APP_KEY -d client_secret=$APP_SEC -d scope=write -X POST ${HOST}/oauth/token | jq -r '.access_token'`
+
+# create collection
+# echo '{"name": "Collection"}' | curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @- \
+-X POST ${HOST}/collection/
+
+# Benchmark 
+
+MEASUREMENTS=100
+PER_MEASUREMENT=10
+
+min_ms=0
+max_ms=0
+sum_ms=0
+
+for j in $(seq 1 $MEASUREMENTS); do
+  start_ns=$(date +%s%N)
+
+  # pro Messung 10 Datensätze anlegen + schreiben
+  for k in $(seq 1 $PER_MEASUREMENT); do
+    OID=$(echo "{\"name\":\"dataset ${j}-${k}\", \"collection-id\":1}" | \
+    curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @- \
+    -X POST ${HOST}/object/ | jq -r '.["object-id"]')
+
+    N=10
+    { printf '{'; for i in $(seq 1 $N); do printf '"key%i":"value%i"' "$i" "$i"; [ "$i" -lt "$N" ] && printf ','; done; printf '}\n'; } | \
+    curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @- \
+    -X PUT ${HOST}/object/$OID/write
+  done
+
+  end_ns=$(date +%s%N)
+  duration_ms=$(( (end_ns - start_ns) / 1000000 ))
+  echo "Messung $j: ${duration_ms} ms (10 Datensätze)"
+
+  # min/max/summe aktualisieren
+  if [ "$j" -eq 1 ] || [ "$duration_ms" -lt "$min_ms" ]; then
+    min_ms=$duration_ms
+  fi
+
+  if [ "$duration_ms" -gt "$max_ms" ]; then
+    max_ms=$duration_ms
+  fi
+
+  sum_ms=$(( sum_ms + duration_ms ))
+done
+
+avg_ms=$(( sum_ms / MEASUREMENTS ))
+
+echo "----------------------------------------"
+echo "Anzahl Messungen: $MEASUREMENTS"
+echo "Datensätze gesamt: $(( MEASUREMENTS * PER_MEASUREMENT ))"
+echo "Minimale Zeit   : ${min_ms} ms"
+echo "Maximale Zeit   : ${max_ms} ms"
+echo "Durchschnitt    : ${avg_ms} ms"

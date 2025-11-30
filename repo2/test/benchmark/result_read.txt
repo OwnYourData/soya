@@ -1,0 +1,34 @@
+SOyA Read-Benchmark
+Repository URL        : http://localhost:3200
+Measurements          : 20
+Reads per measurement : 10
+----------------------------------------
+Read available SOyA records...
+Found records: 6
+----------------------------------------
+Measurement 1: 3595 ms (10 reads)
+Measurement 2: 3560 ms (10 reads)
+Measurement 3: 3609 ms (10 reads)
+Measurement 4: 3808 ms (10 reads)
+Measurement 5: 3591 ms (10 reads)
+Measurement 6: 3545 ms (10 reads)
+Measurement 7: 3544 ms (10 reads)
+Measurement 8: 3589 ms (10 reads)
+Measurement 9: 3543 ms (10 reads)
+Measurement 10: 3556 ms (10 reads)
+Measurement 11: 3527 ms (10 reads)
+Measurement 12: 3785 ms (10 reads)
+Measurement 13: 3563 ms (10 reads)
+Measurement 14: 3554 ms (10 reads)
+Measurement 15: 3524 ms (10 reads)
+Measurement 16: 3524 ms (10 reads)
+Measurement 17: 3522 ms (10 reads)
+Measurement 18: 3552 ms (10 reads)
+Measurement 19: 3543 ms (10 reads)
+Measurement 20: 3544 ms (10 reads)
+----------------------------------------
+Number of measurements : 20
+Total reads performed  : 200
+Minimum duration       : 3522 ms
+Maximum duration       : 3808 ms
+Average duration       : 3578 ms

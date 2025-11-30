@@ -1,0 +1,80 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/Person_Test/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "Person",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "name",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "dateOfBirth",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:date"
+    },
+    {
+      "@id": "age",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "sex",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Person",
+      "range": "xsd:string"
+    },
+    {
+      "@id": "PersonOverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "Person",
+      "sh:targetClass": "Person",
+      "sh:property": [
+        {
+          "sh:path": "name",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:maxLength": 19,
+          "sh:pattern": "^[a-zA-Z ,.'-]+$"
+        },
+        {
+          "sh:path": "dateOfBirth",
+          "sh:minCount": 1,
+          "sh:maxCount": 1,
+          "sh:minRange": {
+            "@type": "xsd:date",
+            "@value": "1900-01-01"
+          }
+        },
+        {
+          "sh:path": "age",
+          "sh:maxCount": 1
+        },
+        {
+          "sh:path": "sex",
+          "sh:maxCount": 1,
+          "sh:in": {
+            "@list": [
+              "male",
+              "female"
+            ]
+          }
+        },
+        {
+          "sh:path": "employer"
+        }
+      ]
+    }
+  ]
+}

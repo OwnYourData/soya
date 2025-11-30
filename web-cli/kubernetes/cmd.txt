@@ -1,0 +1,1 @@
+pace set image deployment.v1.apps/soya-web-cli  -n soya soya-web-cli=oydeu/soya-web-cli:251016

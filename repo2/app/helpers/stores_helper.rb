@@ -9,7 +9,7 @@ puts item_data.to_json
 puts " - meta_data: " + meta_data.to_json
 
         soya_json = item_data
-        soya_yaml = meta_data.delete("soya_yaml")
+        soya_yaml = meta_data.delete("soya_yaml") rescue nil
         soya_name = getSoyaName(soya_json.deep_dup)
         soya_dri_json, soya_dri, msg = createDriVersion(soya_json.deep_dup)
         soya_tag = ""

@@ -1,0 +1,31 @@
+Benchmark Write-Performance SOyA
+Mode:        yaml
+Repository:  http://localhost:3200
+Files used:  6
+----------------------------------------
+Measurement 1: 3726 ms (10 documents)
+Measurement 2: 3737 ms (10 documents)
+Measurement 3: 3696 ms (10 documents)
+Measurement 4: 3684 ms (10 documents)
+Measurement 5: 3711 ms (10 documents)
+Measurement 6: 3840 ms (10 documents)
+Measurement 7: 3729 ms (10 documents)
+Measurement 8: 3721 ms (10 documents)
+Measurement 9: 3710 ms (10 documents)
+Measurement 10: 4593 ms (10 documents)
+Measurement 11: 4139 ms (10 documents)
+Measurement 12: 3960 ms (10 documents)
+Measurement 13: 4112 ms (10 documents)
+Measurement 14: 3996 ms (10 documents)
+Measurement 15: 3732 ms (10 documents)
+Measurement 16: 3679 ms (10 documents)
+Measurement 17: 3846 ms (10 documents)
+Measurement 18: 3895 ms (10 documents)
+Measurement 19: 3636 ms (10 documents)
+Measurement 20: 3681 ms (10 documents)
+----------------------------------------
+Number of measurements : 20
+Total documents written: 200
+Minimum duration       : 3636 ms
+Maximum duration       : 4593 ms
+Average duration       : 3841 ms
