@@ -5,10 +5,10 @@
   <title>Semantic Overlay Architecture</title>
   <meta content="CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 3f621ba99, updated Mon Jul 28 15:38:36 2025 -0700" name="generator">
+  <meta content="Bikeshed version 3c53a5b02, updated Thu Nov 27 17:03:30 2025 +0000" name="generator">
   <link href="https://ownyourdata.github.io/soya/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="8db54521b32eab033510b7b32e73143e801b49d2" name="revision">
+  <meta content="0280f7db0268f2ebf67c85167528b556ebccc6c7" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>
@@ -359,7 +359,7 @@ body {
 }
 .invalid.example:not(.no-marker)::before,
 .illegal.example:not(.no-marker)::before {
-    content: "Invalid Example" counter(example);
+    content: "Invalid Example " counter(example);
 }
 
 figcaption {
@@ -731,9 +731,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72">
 </a>
 </p>
-   <h1 class="p-name no-ref" id="title">Semantic Overlay Architecture</h1>
+   <h1 class="no-ref p-name" id="title">Semantic Overlay Architecture</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2025-10-16">16 October 2025</time></p>
+    <time class="dt-updated" datetime="2025-11-30">30 November 2025</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -743,9 +743,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <dt>Issue Tracking:
       <dd><a href="https://github.com/OwnYourData/soya/issues/">GitHub</a>
       <dt class="editor">Editors:
-      <dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="https://www.linkedin.com/in/fabianek/">Christoph Fabianek</a> (<a class="p-org org" href="https://OwnYourData.eu">OwnYourData</a>) <a class="u-email email" href="mailto:christoph@ownyourdata.eu">christoph@ownyourdata.eu</a>
-      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:fajar.ekaputra@tuwien.ac.at">Fajar J. Ekaputra</a> (<a class="p-org org" href="https://OwnYourData.eu">OwnYourData</a>)
-      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:gabriel.unterholzer@dec112.at">Gabriel Unterholzer</a> (<a class="p-org org" href="https://OwnYourData.eu">OwnYourData</a>)
+      <dd class="editor h-card p-author vcard"><a class="fn p-name u-url url" href="https://www.linkedin.com/in/fabianek/">Christoph Fabianek</a> (<a class="org p-org" href="https://OwnYourData.eu">OwnYourData</a>) <a class="email u-email" href="mailto:christoph@ownyourdata.eu">christoph@ownyourdata.eu</a>
+      <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:fajar.ekaputra@tuwien.ac.at">Fajar J. Ekaputra</a> (<a class="org p-org" href="https://OwnYourData.eu">OwnYourData</a>)
+      <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:gabriel.unterholzer@dec112.at">Gabriel Unterholzer</a> (<a class="org p-org" href="https://OwnYourData.eu">OwnYourData</a>)
      </dl>
     </div>
    </details>
@@ -755,17 +755,17 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
-   <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
+   <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
    <p>Draft recommendations for data model authoring and publishing platform</p>
   </div>
-  <h2 class="no-num no-toc no-ref heading settled" id="sotd"><span class="content">Status of this document</span></h2>
+  <h2 class="heading no-num no-ref no-toc settled" id="sotd"><span class="content">Status of this document</span></h2>
   <div data-fill-with="status">
    <p></p>
   </div>
   <div data-fill-with="at-risk"></div>
   <nav data-fill-with="table-of-contents" id="toc">
-   <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
-   <ol class="toc" role="directory">
+   <h2 class="no-num no-ref no-toc" id="contents">Table of Contents</h2>
+   <ol class="toc">
     <li>
      <a href="#intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
      <ol class="toc">
@@ -979,7 +979,7 @@ An example structure.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> Foaf
   <c- f>namespace</c-><c- p>:</c->
     <c- f>foaf</c-><c- p>:</c-> <c- s>"http://xmlns.com/foaf/0.1/"</c->
@@ -1052,7 +1052,7 @@ An example structure.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1243,7 +1243,7 @@ An example base.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> Person
 
 <c- f>content</c-><c- p>:</c->
@@ -1262,7 +1262,7 @@ An example base.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1353,7 +1353,7 @@ An overlay example.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> PersonAnnotation
 
 <c- f>content</c-><c- p>:</c->
@@ -1393,7 +1393,7 @@ An overlay example.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1502,7 +1502,7 @@ A validation overlay example with SHACL notation.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> PersonValidation
 
 <c- f>content</c-><c- p>:</c->
@@ -1535,7 +1535,7 @@ A validation overlay example with SHACL notation.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1611,7 +1611,7 @@ A transformation overlay example using jq.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> PersonA_jq_transformation
 
 <c- f>content</c-><c- p>:</c->
@@ -1643,7 +1643,7 @@ A transformation overlay example using jq.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1686,7 +1686,7 @@ A transformation overlay example using Jolt.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> PersonA_jolt_Transformation
 
 <c- f>content</c-><c- p>:</c->
@@ -1717,7 +1717,7 @@ A transformation overlay example using Jolt.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@import"</c-><c- p>:</c-> <c- u>"https://ns.ownyourdata.eu/ns/soya-context.json"</c-><c- p>,</c->
@@ -1811,7 +1811,7 @@ An acquisition example.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json highlight"><c- p>{</c->
+<pre class="highlight language-json"><c- p>{</c->
     <c- f>"name"</c-><c- p>:</c-> <c- u>"Christoph Fabianek"</c-><c- p>,</c->
     <c- f>"dateOfBirth"</c-><c- p>:</c-> <c- u>"1977-07-21"</c-><c- p>,</c->
     <c- f>"gender"</c-><c- p>:</c-> <c- u>"male"</c-><c- p>,</c->
@@ -1828,7 +1828,7 @@ An acquisition example.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-yaml highlight"><c- f>meta</c-><c- p>:</c->
+<pre class="highlight language-yaml"><c- f>meta</c-><c- p>:</c->
   <c- f>name</c-><c- p>:</c-> Employee
 
 <c- f>content</c-><c- p>:</c->
@@ -1851,7 +1851,7 @@ An acquisition example.
      
 <span onclick="this.parentElement.style.display=&apos;none&apos;" style="float: right;">❌</span>
 
-<pre class="language-json-ld highlight"><c- p>{</c->
+<pre class="highlight language-json-ld"><c- p>{</c->
   <c- f>"@context"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"@version"</c-><c- p>:</c-> <c- mf>1.1</c-><c- p>,</c->
     <c- f>"@vocab"</c-><c- p>:</c-> <c- u>"https://soya.data-container.net/Employee/"</c->
@@ -1991,8 +1991,8 @@ function openTab(evt, cityName) {
 </script>
   </main>
   <div data-fill-with="conformance">
-   <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
-   <h3 class="no-ref no-num heading settled" id="w3c-conventions"><span class="content">Document conventions</span><a class="self-link" href="#w3c-conventions"></a></h3>
+   <h2 class="heading no-num no-ref settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
+   <h3 class="heading no-num no-ref settled" id="w3c-conventions"><span class="content">Document conventions</span><a class="self-link" href="#w3c-conventions"></a></h3>
    <p>Conformance requirements are expressed
     with a combination of descriptive assertions
     and RFC 2119 terminology.
@@ -2028,8 +2028,8 @@ function openTab(evt, cityName) {
    <p class="note" role="note">Note, this is an informative note.</p>
   </div>
   <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
-  <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
-  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <h2 class="heading no-num no-ref settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="heading no-num no-ref settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#terms-attributes">Attributes</a><span>, in § 1.1</span>
    <li><a href="#terms-base">base</a><span>, in § 1.1</span>
@@ -2044,13 +2044,13 @@ function openTab(evt, cityName) {
    <li><a href="#terms-structures">structure</a><span>, in § 1.1</span>
    <li><a href="#terms-structures">Structures</a><span>, in § 1.1</span>
   </ul>
-  <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
-  <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
+  <h2 class="heading no-num no-ref settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+  <h3 class="heading no-num no-ref settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
   </dl>
-  <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <h3 class="heading no-num no-ref settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-json-ld">[JSON-LD]
    <dd>Gregg Kellogg; Pierre-Antoine Champin; Dave Longley. <a href="https://www.w3.org/TR/json-ld/"><cite>JSON-LD 1.1</cite></a>. W3C Recommendation. URL: <a href="https://www.w3.org/TR/json-ld/">https://www.w3.org/TR/json-ld/</a>
