@@ -1,0 +1,1 @@
+pace set image deployment.v1.apps/soya-form -n soya soya-form=oydeu/soya-forms:251007a

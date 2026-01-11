@@ -1,4 +1,4 @@
-export function getInitialTheme(): 'light' | 'dark' {
-  const t = new URLSearchParams(location.search).get('theme');
-  return t === 'dark' ? 'dark' : 'light';
+export function getInitialTheme() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('theme') === 'dark' ? 'dark' : 'light';
 }

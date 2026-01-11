@@ -54,7 +54,7 @@ content:
               - &id_jwk
                 id: &cardinality1_pattern
                   cardinality: "1..1"
-                  pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+$"
+                  pattern: "^(did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+|#[A-Za-z0-9.:\\-_%?]+)$"
                 type:
                   cardinality: "1..1"
                   valueOption:
@@ -87,6 +87,7 @@ content:
                   valueOption:
                     - EcdsaSecp256k1VerificationKey2019
                     - Ed25519VerificationKey2020
+                    - Multikey
                 controller: *cardinality1
                 publicKeyMultibase:  *cardinality1
               - &id_blockchain_account_id
@@ -165,8 +166,8 @@ content:
               cardinality: "1..1"
               message: "there must be one 'type' in 'service'"
             serviceEndpoint:
-              cardinality: "1..1"
-              message: "there must be one 'serviceEndpoint' in 'service'"
+              cardinality: "1..n"
+              message: "invalid 'serviceEndpoint' in 'service'"
 
     - type: OverlayDidContextValidation
       base: Did
@@ -196,7 +197,5 @@ content:
           context: "https://w3id.org/security/suites/secp256k1recovery-2020"
         - type: VerifiableCondition2021
           context: "https://w3c-ccg.github.io/verifiable-conditions/contexts/verifiable-conditions-2021-v1.json"
-
-
-
-
+        - type: Multikey
+          context: "https://w3id.org/security/multikey/v1"

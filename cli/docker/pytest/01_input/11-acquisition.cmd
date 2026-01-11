@@ -1,1 +1,0 @@
-curl -k -s https://playground.data-container.net/cfa | soya acquire Employee --repo $REPO | jq '."@graph"'
