@@ -80,10 +80,19 @@ export class SoyaTransform implements Overlays.OverlayPlugin {
   }
 
   private hbCache = new Map<string, TemplateDelegate>();
+  private hbHelpersRegistered = false;
+  private ensureHbHelpers(): void {
+    if (this.hbHelpersRegistered) return;
+    if (!Handlebars.helpers || !(Handlebars.helpers as any).eq) {
+      Handlebars.registerHelper("eq", (a: unknown, b: unknown) => a === b);
+    }
+    this.hbHelpersRegistered = true;
+  }
 
   private compileOnce(tpl: string): TemplateDelegate {
     let fn = this.hbCache.get(tpl);
     if (!fn) {
+      this.ensureHbHelpers();
       fn = Handlebars.compile(tpl);
       this.hbCache.set(tpl, fn);
     }
