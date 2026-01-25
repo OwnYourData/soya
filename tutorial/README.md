@@ -1247,4 +1247,4 @@ If you want to contribute, please follow these steps:
 
 ## Lizenz
 
-[MIT License 2022 - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)
+[Apache 2.0 License - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)

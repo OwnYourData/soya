@@ -1,1 +1,3 @@
 pace set image deployment.v1.apps/soya-web-cli  -n soya soya-web-cli=oydeu/soya-web-cli:251016
+
+docker run -d --name soya-web-cli -p 8080:8080 oydeu/soya-web-cli

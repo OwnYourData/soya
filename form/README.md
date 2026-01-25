@@ -12,4 +12,4 @@ Supported by the Federal Ministry for Climate Protection, Environment, Energy, M
 
 ## License
 
-[MIT License 2022 - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/oyd-form/main/LICENSE)
+[Apache 2.0 License - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)

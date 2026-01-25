@@ -63,3 +63,7 @@ Use `soya --help` or `soya -h` to get more information about soya-cli.
 This project is a prototype, therefore under development. \
 `soya-cli` may not behave as expected and should not be used in production! \
 Also code does surely not satisfy most of best practices in coding :-)
+
+## License
+
+[Apache 2.0 License - OwnYourData.eu](https://raw.githubusercontent.com/OwnYourData/soya/main/LICENSE)
