@@ -129,6 +129,21 @@ export const init = async () => {
     }
   });
 
+  router.post('/canonical', async (req, res) => {
+    const doc = req.body;
+
+    try {
+      const canonical = await soya.toCanonical(doc);
+      return res
+        .status(200)
+        .setHeader('Content-Type', 'text/turtle')
+        .send(canonical);
+    } catch (e: any) {
+      console.error(e);
+      return res.status(500).send(e.toString());
+    }
+  });
+
   const port = 8080;
   app.listen(port, () => {
     console.log(`Webserver running on port ${port}`);

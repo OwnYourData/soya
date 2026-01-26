@@ -215,6 +215,34 @@
         }
       }
     },
+    "/canonical": {
+      "post": {
+        "summary": "Transforms a SOyA structure into its canonical turtle format",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/turtle"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Content to transform",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenericObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
     "/version": {
       "get": {
         "summary": "Returns version information",
