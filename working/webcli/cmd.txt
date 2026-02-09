@@ -1,0 +1,1 @@
+cat large.json | soya canonical
