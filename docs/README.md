@@ -18,7 +18,7 @@ SOyA (Semantic Overlay Architecture) provides a structured way to:
 
 - describe **semantic constraints and extensions** over existing data models
 - validate data against those constraints (e.g. via SHACL)
-- transform data between representations (e.g. using jq or JOLT)
+- transform data between representations (e.g. using jq or handlebars)
 - define **forms and user-facing representations** derived from semantic models
 - publish and version these specifications in a reusable repository
 
