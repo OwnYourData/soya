@@ -84,8 +84,8 @@ Convert the YAML into a repository-ready JSON-LD structure representation:
 cat person_simple.yml | soya init > Person.jsonld
 ```
 
-### Step 4 — Publish to the repository
-Push the structure to the repository by clicking "Push" in the online-editor ([show screenshot](../res/push_soya_online.png)) or run the following command:
+### Step 4 — Push to the repository
+Publish the structure in the repository by clicking "Push" in the online-editor ([show screenshot](../res/push_soya_online.png)) or run the following command:
 
 ```bash
 cat Person.jsonld | soya push
@@ -95,7 +95,7 @@ Publishing will:
 - store an **immutable version** addressable by its **DRI**, and
 - update the **human-readable name** (and typically the `current` tag) to the newest version.
 
-### Step 5 — Retrieve and inspect
+### Step 5 — Retrieve and inspect (CLI only)
 
 Pull the latest version (implicitly `current`) on the command line:
 
