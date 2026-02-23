@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>OwnYourData Anonymiser – DSGVO-konforme Datenanonymisierung (JSON / JSON-LD)</title>
+  <meta name="description" content="Anonymisiere personenbezogene Daten in JSON/JSON-LD mit einer konfigurierbaren, semantik-/ontology-basierten Pipeline. Schnell testen. Open Source. Fokus: DSGVO-konforme Datenweitergabe & KI-Training." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="OwnYourData Anonymiser – DSGVO-konforme Datenanonymisierung" />
+  <meta property="og:description" content="Konfigurierbare, ontology-basierte Anonymisierung für JSON/JSON-LD. Jetzt testen und Feedback geben." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://anonymiser.ownyourdata.eu/" />
+
+  <!-- Optional: preload a system font stack only (no external dependencies) -->
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.14);
+      --cta: #7c4dff;
+      --cta2: #29d3ff;
+      --ok: #3ddc97;
+      --warn: #ffcf5c;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 10% 15%, rgba(124,77,255,.35), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(41,211,255,.28), transparent 55%),
+        radial-gradient(900px 700px at 50% 100%, rgba(61,220,151,.16), transparent 55%),
+        linear-gradient(180deg, #060912 0%, #0b1020 45%, #070a12 100%);
+      line-height:1.45;
+    }
+
+    a{color:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 20px}
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: rgba(6,9,18,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; text-decoration:none;
+      min-width: 240px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(124,77,255,.95), rgba(41,211,255,.9));
+      box-shadow: 0 10px 30px rgba(124,77,255,.22);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .brand strong{font-size:14px; letter-spacing:.2px}
+    .brand span{display:block; font-size:12px; color:var(--muted2); margin-top:2px}
+    .nav-links{
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-links a{
+      text-decoration:none;
+      color:var(--muted);
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid transparent;
+    }
+    .nav-links a:hover{border-color:var(--line); color:var(--text); background: rgba(255,255,255,.04)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow: none;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22)}
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{
+      border-color: rgba(124,77,255,.55);
+      background: linear-gradient(135deg, rgba(124,77,255,.92), rgba(41,211,255,.75));
+      box-shadow: 0 16px 45px rgba(124,77,255,.18);
+    }
+    .btn-primary:hover{filter:saturate(1.05) brightness(1.02)}
+    .btn-outline{
+      background: rgba(255,255,255,.04);
+    }
+
+    .hero{
+      padding:54px 0 22px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr; }
+      .brand{min-width: unset;}
+    }
+
+    .badge-row{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+      margin-bottom:14px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      font-size:12px;
+    }
+    .dot{width:8px; height:8px; border-radius:50%}
+    .dot.ok{background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.cta{background:var(--cta2)}
+
+    h1{
+      margin:0 0 12px;
+      font-size:44px;
+      line-height:1.05;
+      letter-spacing:-.8px;
+    }
+    @media (max-width: 520px){
+      h1{font-size:34px}
+    }
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+      max-width: 64ch;
+    }
+    .cta-row{
+      display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+      margin:18px 0 10px;
+    }
+    .micro{
+      color:var(--muted2);
+      font-size:12px;
+      margin-top:10px;
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+    }
+
+    .try-card{
+      padding:18px;
+      display:flex; flex-direction:column; justify-content:space-between;
+      gap:14px;
+      position:relative;
+      overflow:hidden;
+      min-height: 340px;
+    }
+    .try-card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(700px 320px at 0% 0%, rgba(124,77,255,.28), transparent 60%),
+        radial-gradient(700px 320px at 100% 0%, rgba(41,211,255,.22), transparent 58%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .try-card > *{position:relative}
+    .try-title{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .try-title h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .kpi .box{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding:12px;
+    }
+    .kpi strong{display:block; font-size:13px}
+    .kpi span{display:block; font-size:12px; color:var(--muted2); margin-top:4px}
+
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding:12px;
+      overflow:auto;
+      max-height: 180px;
+    }
+
+    .section{
+      padding:26px 0;
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-size:24px;
+      letter-spacing:-.3px;
+    }
+    .section p{margin:0 0 12px; color:var(--muted)}
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 980px){ .grid3{grid-template-columns:1fr} }
+
+    .feature{
+      padding:16px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .feature h3{
+      margin:0 0 6px;
+      font-size:15px;
+      letter-spacing:-.1px;
+    }
+    .feature p{margin:0; font-size:13px; color:var(--muted2)}
+    .feature .tagrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      font-size:12px;
+      color:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding:6px 8px;
+      border-radius: 999px;
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 980px){ .steps{grid-template-columns:1fr} }
+
+    .step{
+      padding:14px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .step .n{
+      width:28px; height:28px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(124,77,255,.22);
+      border:1px solid rgba(124,77,255,.35);
+      font-weight:700;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+    .step h3{margin:0 0 6px; font-size:14px}
+    .step p{margin:0; font-size:13px; color:var(--muted2)}
+
+    .faq{
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      overflow:hidden;
+    }
+    details{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:14px 16px;
+    }
+    details:first-child{border-top:none}
+    summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight:700;
+      font-size:14px;
+      color: rgba(255,255,255,.90);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    summary::-webkit-details-marker{display:none}
+    .ans{
+      margin-top:10px;
+      color: var(--muted);
+      font-size:13px;
+      max-width: 92ch;
+    }
+    .ans a{color: rgba(41,211,255,.95)}
+
+    .final-cta{
+      padding:22px;
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(700px 320px at 0% 0%, rgba(61,220,151,.18), transparent 60%),
+        radial-gradient(700px 320px at 100% 0%, rgba(41,211,255,.16), transparent 58%),
+        rgba(255,255,255,.05);
+      box-shadow: var(--shadow);
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .final-cta h3{margin:0; font-size:18px}
+    .final-cta p{margin:6px 0 0; color:var(--muted2); font-size:13px; max-width: 80ch}
+
+    footer{
+      padding:26px 0 40px;
+      color: var(--muted2);
+      font-size:12px;
+    }
+    footer .footgrid{
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; align-items:start;
+    }
+    @media (max-width: 980px){ footer .footgrid{grid-template-columns:1fr} }
+    .footlinks a{
+      color: var(--muted);
+      text-decoration:none;
+      margin-right:12px;
+      display:inline-block;
+      padding:6px 0;
+    }
+    .footlinks a:hover{color:var(--text); text-decoration:underline}
+    .hr{
+      height:1px; background: rgba(255,255,255,.10);
+      margin: 16px 0;
+    }
+  </style>
+
+  <!--
+    Tracking placeholders (add in your deployment pipeline):
+    - Google tag (gtag.js) for Google Ads + GA4
+    - Conversion event after "Try now" click or after successful anonymisation in the app
+  -->
+</head>
+
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="OwnYourData Anonymiser Landing Page">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>OwnYourData Anonymiser</strong>
+            <span>Konfigurierbare Anonymisierung für JSON / JSON-LD</span>
+          </div>
+        </a>
+
+        <div class="nav-links" aria-label="Navigation">
+          <a href="#features">Vorteile</a>
+          <a href="#how">So funktioniert’s</a>
+          <a href="#faq">FAQ</a>
+          <a class="btn btn-primary" id="navTry" href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">Jetzt ausprobieren →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge-row">
+            <div class="badge"><span class="dot ok"></span> DSGVO-orientiert • Privacy-by-Design</div>
+            <div class="badge"><span class="dot cta"></span> JSON & JSON-LD</div>
+            <div class="badge"><span class="dot warn"></span> Konfigurierbar via Knowledge Graph / Ontologie</div>
+          </div>
+
+          <h1>Anonymisiere Daten, bevor du sie teilst – schnell, nachvollziehbar, konfigurierbar.</h1>
+          <p class="lead">
+            Der OwnYourData Anonymiser transformiert personenbezogene Daten in <b>JSON</b> oder <b>JSON-LD</b> mit einer
+            <b>konfigurierbaren, semantik-/ontology-basierten</b> Pipeline (z. B. Maskierung, Generalisierung, Randomisierung).
+            Ideal, wenn du Daten für <b>Analytik</b>, <b>Forschung</b> oder <b>KI-Training</b> weitergeben willst – mit reduziertem Re-Identifikationsrisiko.
+          </p>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" id="ctaTryTop" href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">
+              Jetzt anonymisieren →
+            </a>
+            <a class="btn btn-outline" href="#how">Ablauf in 60 Sekunden</a>
+            <a class="btn btn-outline" href="https://github.com/OwnYourData/anonymisation-service" rel="noopener">
+              Open Source (GitHub)
+            </a>
+          </div>
+
+          <div class="micro">
+            Kein Login nötig zum Testen (je nach Deployment). Bitte keine sensiblen Echtdaten hochladen – nutze Testdaten.
+            <span style="display:block;margin-top:6px;color:rgba(255,255,255,.52)">
+              Hinweis: Diese Seite ist eine Landing Page für Google Ads. Fachliche Details: konfigurationsgetriebener Ansatz mit JSON-LD-Konfiguration aus einem Knowledge Graph. 
+              (siehe auch Repo & Beschreibung) 
+            </span>
+          </div>
+        </div>
+
+        <aside class="card try-card" aria-label="Schnellstart Karte">
+          <div class="try-title">
+            <h2>Quick Start</h2>
+            <div class="pill">Ziel: Feedback sammeln</div>
+          </div>
+
+          <div class="kpi" aria-label="Vorteile auf einen Blick">
+            <div class="box">
+              <strong>Konfigurierbar</strong>
+              <span>Regeln pro Attribut (Typ & Datentyp aus Ontologie/Config)</span>
+            </div>
+            <div class="box">
+              <strong>Nachvollziehbar</strong>
+              <span>Deterministischer Ablauf pro Attribut (Operatoren wie Mask/Generalize/Randomize)</span>
+            </div>
+            <div class="box">
+              <strong>Linked Data ready</strong>
+              <span>JSON-LD rein → JSON-LD raus (Struktur bleibt erhalten)</span>
+            </div>
+            <div class="box">
+              <strong>Open Source</strong>
+              <span>Transparenz, Reviewbarkeit, Weiterentwicklung durch Community</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="micro" style="margin:8px 0 10px">
+              Beispiel-Input (synthetisch):
+            </div>
+            <pre class="code" aria-label="Beispiel JSON">
+{
+  "name": "Alice Example",
+  "email": "alice@example.org",
+  "age": 34,
+  "city": "Wien",
+  "timestamp": "2026-02-22T12:00:00Z"
+}
+            </pre>
+
+            <div class="cta-row" style="margin-top:12px">
+              <a class="btn btn-primary" id="ctaTryCard" href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">
+                Im Anonymiser öffnen →
+              </a>
+              <a class="btn btn-outline" id="ctaFeedbackCard" href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">
+                Feedback geben
+              </a>
+            </div>
+
+            <div class="micro">
+              Feedback bevorzugt als GitHub Issue (Problem + Beispiel + Erwartung).
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Warum diese Landing Page „funktioniert“ (für deine Ads)</h2>
+      <p>
+        Google Ads belohnt Relevanz. Diese Seite ist bewusst <b>fokussiert</b>: klare Value Proposition, minimaler Ablenkungsfaktor,
+        ein primärer CTA („Jetzt ausprobieren“) und Trust-Elemente (Open Source, technische Transparenz).
+      </p>
+
+      <div class="grid3" role="list">
+        <div class="feature" role="listitem">
+          <h3>Message Match</h3>
+          <p>Anzeige → Landing Page → App: gleiche Sprache („Anonymisierung“, „DSGVO“, „JSON/JSON-LD“, „konfigurierbar“).</p>
+          <div class="tagrow">
+            <span class="tag">Quality Score</span><span class="tag">Relevanz</span><span class="tag">Intent-Fit</span>
+          </div>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Low Friction</h3>
+          <p>Kein Overload, kein Menü, kein Marketing-Fülltext. 1 Ziel: Testen → Feedback.</p>
+          <div class="tagrow">
+            <span class="tag">1 Primary CTA</span><span class="tag">Mobile-first</span><span class="tag">Schnell</span>
+          </div>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Risk Reduction</h3>
+          <p>Hinweise zu Testdaten + Open Source + klare Erwartung (Feedback/Iterationen). Das reduziert Absprünge.</p>
+          <div class="tagrow">
+            <span class="tag">Trust</span><span class="tag">Transparenz</span><span class="tag">Compliance-Fokus</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <h2>So funktioniert’s in der Praxis</h2>
+      <p>
+        Der Service nutzt einen <b>konfigurationsgetriebenen Ansatz</b>: Regeln pro Attribut werden aus einer
+        <b>JSON-LD Konfiguration</b> abgeleitet, die typischerweise aus einem <b>Knowledge Graph</b> kommt; pro Attribut wird ein
+        passender Anonymisierer instanziiert (z. B. Maskierung, Generalisierung, Randomisierung) und dann auf die Daten angewandt. 
+      </p>
+
+      <div class="steps" aria-label="Schritte">
+        <div class="step">
+          <div class="n">1</div>
+          <h3>Testdaten vorbereiten</h3>
+          <p>Nutze synthetische Daten oder entpersonalisierte Samples (keine sensiblen Echtdaten zum Test).</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h3>Konfiguration wählen</h3>
+          <p>Konfig definiert pro Attribut: Datentyp + erlaubte Operation(en) (aus Ontologie/Knowledge Graph).</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h3>Anonymisieren</h3>
+          <p>Pro Attribut wird die passende Methode angewandt (z. B. Maskierung, Generalisierung, Randomisierung).</p>
+        </div>
+        <div class="step">
+          <div class="n">4</div>
+          <h3>Ergebnis prüfen & Feedback</h3>
+          <p>Passt die Datenqualität? Fehlt eine Methode? Poste ein Issue mit Beispiel & Erwartung.</p>
+        </div>
+      </div>
+
+      <div class="final-cta" style="margin-top:16px">
+        <div>
+          <h3>Bereit zum Test?</h3>
+          <p>
+            Öffne den Anonymiser, probiere einen realistischen Workflow mit Testdaten und gib Feedback, was fehlt
+            (z. B. neue Anonymisierungsoperatoren, bessere Defaults, bessere UX, Validierung, Risikoindikatoren).
+          </p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" id="ctaTryMid" href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">Jetzt ausprobieren →</a>
+          <a class="btn btn-outline" id="ctaIssuesMid" href="https://github.com/OwnYourData/anonymisation-service/issues" rel="noopener">Issues ansehen</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2>FAQ (Einwandbehandlung)</h2>
+      <div class="faq" role="region" aria-label="FAQ">
+        <details>
+          <summary>Ist das „wirklich anonym“ – oder nur Pseudonymisierung?</summary>
+          <div class="ans">
+            Das hängt von Konfiguration, Datenlage und Kontext ab. Der Service ist ein Werkzeug zur
+            <b>Risikoreduktion</b> (z. B. über Generalisierung/Randomisierung). Für echte Anonymität braucht es
+            immer eine Bewertung der Re-Identifikationsrisiken im konkreten Use Case.
+            Nutze den Service als Baustein in einem Privacy-by-Design Prozess (keine Rechtsberatung).
+          </div>
+        </details>
+
+        <details>
+          <summary>Welche Datenformate werden unterstützt?</summary>
+          <div class="ans">
+            Fokus liegt auf <b>JSON</b> und <b>JSON-LD</b>. Bei JSON-LD bleibt die Struktur erhalten:
+            JSON-LD rein → JSON-LD raus.  [oai_citation:0‡GitHub](https://github.com/OwnYourData/Anonymization?utm_source=chatgpt.com)
+          </div>
+        </details>
+
+        <details>
+          <summary>Wie wird gesteuert, welche Operation pro Attribut erlaubt ist?</summary>
+          <div class="ans">
+            Über eine <b>Konfiguration</b>, typischerweise als <b>JSON-LD</b>, abgeleitet aus einem Knowledge Graph:
+            per Attribut werden Anonymisierungstyp und Datentyp definiert (z. B. via SPARQL), und dann passende
+            Anonymisierer instanziiert.  [oai_citation:1‡OwnYourData Anonymizer](https://anonymiser.ownyourdata.eu/?utm_source=chatgpt.com)
+          </div>
+        </details>
+
+        <details>
+          <summary>Welche Methoden sind implementiert?</summary>
+          <div class="ans">
+            Typische Operatoren sind z. B. <b>Maskierung</b>, <b>Generalisierung</b> und <b>Randomisierung</b> (abhängig von Datentyp & Konfiguration).
+             [oai_citation:2‡OwnYourData Anonymizer](https://anonymiser.ownyourdata.eu/?utm_source=chatgpt.com)
+          </div>
+        </details>
+
+        <details>
+          <summary>Wie kann ich am besten Feedback geben?</summary>
+          <div class="ans">
+            Am hilfreichsten: ein GitHub Issue mit (1) anonymisiertem Beispiel oder synthetischem Sample, (2) gewünschtem Ergebnis,
+            (3) relevanter Konfiguration, (4) Screenshots/Steps. Starte hier:
+            <a href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">Issue erstellen</a>.
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Final CTA">
+      <div class="final-cta">
+        <div>
+          <h3>Teste den Anonymiser – hilf uns, ihn besser zu machen.</h3>
+          <p>
+            Unser Ziel: möglichst viele echte Nutzungsrückmeldungen aus Google Ads Traffic.
+            Wenn du 5 Minuten investierst, lernen wir, welche Features/Defaults/UX als Nächstes priorisiert werden sollten.
+          </p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" id="ctaTryBottom" href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">Jetzt ausprobieren →</a>
+          <a class="btn btn-outline" id="ctaFeedbackBottom" href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">Feedback geben</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="hr"></div>
+      <div class="footgrid">
+        <div>
+          <div><b>OwnYourData</b> – Privacy-Preserving Data Transformation</div>
+          <div style="margin-top:6px">
+            Technischer Hintergrund: konfigurierbare Anonymisierung (JSON/JSON-LD), ontologie-/knowledge-graph-getrieben,
+            pro Attribut passende Operatoren.  [oai_citation:3‡OwnYourData Anonymizer](https://anonymiser.ownyourdata.eu/?utm_source=chatgpt.com)
+          </div>
+          <div style="margin-top:10px; color:rgba(255,255,255,.52)">
+            Disclaimer: Diese Landing Page liefert Produktinformation und ist keine Rechtsberatung.
+            Bitte keine sensiblen Echtdaten zum Testen verwenden.
+          </div>
+        </div>
+
+        <div class="footlinks" aria-label="Footer Links">
+          <div style="margin-bottom:6px; color:rgba(255,255,255,.70)"><b>Links</b></div>
+          <a href="https://anonymiser.ownyourdata.eu/?src=google-ads" rel="noopener">Anonymiser öffnen</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service" rel="noopener">Backend Repository</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service/issues" rel="noopener">Issues</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">Feedback erstellen</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Minimal JS: smooth anchor scrolling + lightweight click instrumentation placeholder.
+    (function(){
+      // Smooth internal anchor scroll
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href^="#"]');
+        if(!a) return;
+        const id = a.getAttribute('href');
+        const el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null, '', id);
+      });
+
+      // Click instrumentation placeholder (wire to gtag/GA4/Ads conversion later)
+      const trackIds = [
+        'navTry','ctaTryTop','ctaTryCard','ctaTryMid','ctaTryBottom',
+        'ctaFeedbackCard','ctaIssuesMid','ctaFeedbackBottom'
+      ];
+      trackIds.forEach(function(id){
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('click', function(){
+          // Example (to be added later):
+          // gtag('event', 'click', { event_category: 'cta', event_label: id });
+          // For Google Ads conversion, consider firing conversion only after successful "anonymise" action in the app.
+          // console.log('[track]', id);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

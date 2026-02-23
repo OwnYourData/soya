@@ -35,8 +35,8 @@ product passports, verifiable credentials, and research infrastructures.
 If you want to **use SOyA specifications** to describe data, validate inputs,
 or build forms and transformations, start here:
 
-- **Overview** – What SOyA is and when to use it
-- **Getting Started** – Installation and first steps
+- [**Overview**](users/overview.md) – What SOyA is and when to use it
+- [**Getting Started**](users/getting-started.md) – Available infrastructure and first steps
 - **Authoring YAML** – Writing semantic overlays
 - **Validation** – SHACL, ValidationOverlay, and constraints
 - **Transformation** – jq, JOLT, and common transformation patterns
@@ -82,7 +82,10 @@ governance**, these documents define the rules and processes:
 - **Examples**  
   Minimal and advanced SOyA overlays and configurations are available under
   [`examples/`](examples/).
-
+- **Use Cases**. 
+  Documented use cases illustrate how SOyA is applied in concrete domains and
+  project contexts, highlighting typical integration patterns and adoption
+  scenarios: [`use-cases/`](use-cases/).
 - **Academic Publications**  
   SOyA has been developed and evaluated in several research and innovation
   projects. Relevant publications and background material are collected in

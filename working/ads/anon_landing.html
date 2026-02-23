@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>OwnYourData Anonymiser — Privacy-preserving anonymisation for JSON / JSON-LD</title>
+  <meta name="description" content="Anonymise sensitive fields in JSON / JSON-LD using a configurable, schema/knowledge-graph driven pipeline. Try it now and help us improve it with feedback." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="OwnYourData Anonymiser — Anonymisation for JSON / JSON-LD" />
+  <meta property="og:description" content="Configurable anonymisation (masking, generalisation, randomisation). Try it now and send feedback." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://anonymiser.ownyourdata.eu/" />
+
+  <style>
+    :root{
+      --bg0:#070a12;
+      --bg1:#0b1020;
+      --surface:#10172a;     /* solid surfaces to avoid “gradient seams” */
+      --surface2:#0e1526;
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --muted2:rgba(255,255,255,.58);
+      --line:rgba(255,255,255,.12);
+      --line2:rgba(255,255,255,.18);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:26px;
+      --max:1200px;
+      --cta1:#7c4dff;
+      --cta2:#29d3ff;
+      --ok:#3ddc97;
+      --warn:#ffcf5c;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 55%, var(--bg0) 100%);
+      line-height:1.45;
+    }
+
+    /* Smooth, fixed background lights without hard edges across content surfaces */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      z-index:-1;
+      background:
+        radial-gradient(900px 650px at 12% 18%, rgba(124,77,255,.28), transparent 62%),
+        radial-gradient(850px 600px at 88% 12%, rgba(41,211,255,.22), transparent 60%),
+        radial-gradient(900px 700px at 50% 110%, rgba(61,220,151,.12), transparent 60%),
+        radial-gradient(700px 500px at 50% 45%, rgba(255,255,255,.04), transparent 70%);
+      filter: blur(0px);
+      opacity:1;
+      pointer-events:none;
+      transform: translateZ(0);
+    }
+
+    a{color:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 20px}
+
+    /* Minimal header: brand + primary CTA only (landing-page best practice: reduce exits) */
+    .header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background: rgba(7,10,18,.72);
+      border-bottom:1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      text-decoration:none;
+      min-width: 220px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(124,77,255,.95), rgba(41,211,255,.9));
+      box-shadow: 0 12px 34px rgba(124,77,255,.18);
+      border:1px solid rgba(255,255,255,.14);
+      flex:0 0 auto;
+    }
+    .brand strong{display:block; font-size:14px; letter-spacing:.2px}
+    .brand span{display:block; font-size:12px; color:var(--muted2); margin-top:2px}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      text-decoration:none;
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease, filter .15s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22)}
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{
+      border-color: rgba(124,77,255,.55);
+      background: linear-gradient(135deg, rgba(124,77,255,.92), rgba(41,211,255,.75));
+      box-shadow: 0 18px 50px rgba(124,77,255,.16);
+    }
+    .btn-primary:hover{filter:saturate(1.05) brightness(1.02)}
+    .btn-ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.14);
+    }
+
+    .hero{padding:54px 0 18px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){ .hero-grid{grid-template-columns:1fr} }
+
+    .badges{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      font-size:12px;
+    }
+    .dot{width:8px; height:8px; border-radius:50%}
+    .dot.ok{background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.cta{background:var(--cta2)}
+
+    h1{
+      margin:0 0 12px;
+      font-size:44px;
+      line-height:1.06;
+      letter-spacing:-.8px;
+    }
+    @media (max-width: 520px){ h1{font-size:34px} }
+
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+      max-width: 70ch;
+    }
+
+    .cta-row{
+      display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+      margin:18px 0 10px;
+    }
+
+    .micro{
+      color:var(--muted2);
+      font-size:12px;
+      margin-top:10px;
+      max-width: 78ch;
+    }
+
+    /* Solid cards (avoid background gradients “cutting through” translucent panels) */
+    .card{
+      background: linear-gradient(180deg, rgba(16,23,42,.96), rgba(14,21,38,.96));
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+    }
+    .panel{padding:18px}
+
+    .quick{
+      display:flex; flex-direction:column; gap:14px;
+      min-height: 330px;
+    }
+    .panel-title{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .panel-title h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 520px){ .kpi{grid-template-columns:1fr} }
+
+    .kpi .box{
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding:12px;
+    }
+    .kpi strong{display:block; font-size:13px}
+    .kpi span{display:block; font-size:12px; color:var(--muted2); margin-top:4px}
+
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding:12px;
+      overflow:auto;
+      max-height: 180px;
+      margin:0;
+    }
+
+    .section{padding:24px 0}
+    .section h2{
+      margin:0 0 10px;
+      font-size:24px;
+      letter-spacing:-.3px;
+    }
+    .section p{margin:0 0 12px; color:var(--muted)}
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 980px){ .grid3{grid-template-columns:1fr} }
+
+    .feature{
+      background: linear-gradient(180deg, rgba(16,23,42,.96), rgba(14,21,38,.96));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    }
+    .feature h3{
+      margin:0 0 6px;
+      font-size:15px;
+      letter-spacing:-.1px;
+    }
+    .feature p{margin:0; font-size:13px; color:var(--muted2)}
+    .tagrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      font-size:12px;
+      color:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding:6px 8px;
+      border-radius: 999px;
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 980px){ .steps{grid-template-columns:1fr} }
+
+    .step{
+      background: linear-gradient(180deg, rgba(16,23,42,.96), rgba(14,21,38,.96));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding:14px;
+    }
+    .step .n{
+      width:28px; height:28px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(124,77,255,.18);
+      border:1px solid rgba(124,77,255,.32);
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+    .step h3{margin:0 0 6px; font-size:14px}
+    .step p{margin:0; font-size:13px; color:var(--muted2)}
+
+    .faq{
+      background: linear-gradient(180deg, rgba(16,23,42,.96), rgba(14,21,38,.96));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius2);
+      overflow:hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    }
+    details{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:14px 16px;
+    }
+    details:first-child{border-top:none}
+    summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight:800;
+      font-size:14px;
+      color: rgba(255,255,255,.90);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    summary::-webkit-details-marker{display:none}
+    .ans{
+      margin-top:10px;
+      color: var(--muted);
+      font-size:13px;
+      max-width: 92ch;
+    }
+    .ans a{color: rgba(41,211,255,.95)}
+    .ans code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px}
+
+    .final-cta{
+      padding:22px;
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(16,23,42,.96), rgba(14,21,38,.96));
+      box-shadow: var(--shadow);
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .final-cta h3{margin:0; font-size:18px}
+    .final-cta p{margin:6px 0 0; color:var(--muted2); font-size:13px; max-width: 84ch}
+
+    footer{
+      padding:26px 0 40px;
+      color: var(--muted2);
+      font-size:12px;
+    }
+    .hr{height:1px; background: rgba(255,255,255,.10); margin: 16px 0;}
+    .footgrid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .footgrid{grid-template-columns:1fr} }
+    .footlinks a{
+      color: var(--muted);
+      text-decoration:none;
+      margin-right:12px;
+      display:inline-block;
+      padding:6px 0;
+    }
+    .footlinks a:hover{color:var(--text); text-decoration:underline}
+
+    /* Small helper for anchor scrolling */
+    .anchor{scroll-margin-top: 90px;}
+    .logo-img{
+      width:48px;
+      height:48px;
+      padding:3px;                 /* weniger “Rand” im Badge */
+      border-radius:12px;          /* optional */
+      background: rgba(255,255,255,.06); /* optional: nur falls du den Badge-Look willst */
+      border:1px solid rgba(255,255,255,.14); /* optional */
+      object-fit: contain;
+      display:block;
+    }
+  </style>
+
+  <!-- Tracking placeholders:
+       - Add Google tag (gtag.js) for Google Ads + GA4
+       - Trigger conversion ideally after a successful anonymisation action in the app (not just on click).
+  -->
+</head>
+
+<body>
+  <header class="header" aria-label="Header">
+    <div class="container">
+      <div class="header-inner">
+        <span class="brand" aria-label="OwnYourData Anonymiser">
+          <img class="logo-img" src="https://anonymiser.ownyourdata.eu/assets/images/oyd.png" alt="OwnYourData" />
+          <div>
+            <strong>OwnYourData Anonymiser</strong>
+            <span>Configurable anonymisation for JSON / JSON-LD</span>
+          </div>
+        </span>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <a class="btn btn-ghost" href="#faq">FAQ</a>
+          <a class="btn btn-primary" id="navTry" href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">
+            Try it now →
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badges" aria-label="Highlights">
+            <div class="badge"><span class="dot ok"></span> Privacy-by-design</div>
+            <div class="badge"><span class="dot cta"></span> JSON & JSON-LD</div>
+            <div class="badge"><span class="dot warn"></span> Configurable rules</div>
+          </div>
+
+          <h1>Anonymise data before you share it — fast, configurable, and auditable.</h1>
+          <p class="lead">
+            The OwnYourData Anonymiser helps you reduce privacy risk when sharing data for
+            <b>analytics</b>, <b>research</b>, or <b>AI/ML</b>.
+            Apply attribute-level transformations such as <b>masking</b>, <b>generalisation</b>, and <b>randomisation</b>
+            — while keeping your JSON / JSON-LD structure intact.
+          </p>
+
+          <div class="cta-row" aria-label="Primary actions">
+            <a class="btn btn-primary" id="ctaTryTop" href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">
+              Start anonymising →
+            </a>
+            <a class="btn" href="#how">How it works</a>
+            <a class="btn" href="https://github.com/OwnYourData/anonymisation-service" rel="noopener">View on GitHub</a>
+          </div>
+
+          <p class="micro">
+            Please use <b>synthetic</b> or <b>non-sensitive</b> sample data for testing.
+            Effective anonymisation is context-dependent; if you’re unsure, treat output as <i>risk-reduced</i> rather than “guaranteed anonymous”.
+          </p>
+        </div>
+
+        <aside class="card panel quick" aria-label="Quick start panel">
+          <div class="panel-title">
+            <h2>Quick start</h2>
+            <div class="pill">We want your feedback</div>
+          </div>
+
+          <div class="kpi" aria-label="Key benefits">
+            <div class="box">
+              <strong>Config-driven</strong>
+              <span>Rules per attribute (type + operation) from your model / config</span>
+            </div>
+            <div class="box">
+              <strong>Traceable</strong>
+              <span>Predictable pipeline with explicit operators</span>
+            </div>
+            <div class="box">
+              <strong>Linked Data ready</strong>
+              <span>JSON-LD in → JSON-LD out (structure preserved)</span>
+            </div>
+            <div class="box">
+              <strong>Open Source</strong>
+              <span>Transparent implementation and community iteration</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="micro" style="margin:8px 0 10px">
+              Sample input (synthetic):
+            </div>
+            <pre class="code" aria-label="Sample JSON">
+{
+  "name": "Alice Example",
+  "email": "alice@example.org",
+  "age": 34,
+  "city": "Vienna",
+  "timestamp": "2026-02-22T12:00:00Z"
+}
+            </pre>
+
+            <div class="cta-row" style="margin-top:12px">
+              <a class="btn btn-primary" id="ctaTryCard" href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">
+                Open the app →
+              </a>
+              <a class="btn" id="ctaFeedbackCard" href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">
+                Send feedback
+              </a>
+            </div>
+
+            <div class="micro">
+              Best feedback: a short repro (sample + steps + expected output).
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section anchor" id="value">
+      <h2>Designed for practical data sharing</h2>
+      <p>
+        Use the Anonymiser when you need to share datasets but want to minimise exposure of personal or sensitive attributes.
+        It’s especially useful when your payloads are <b>structured</b> (JSON) or <b>semantically modelled</b> (JSON-LD).
+      </p>
+
+      <div class="grid3" role="list">
+        <div class="feature" role="listitem">
+          <h3>Reduce re-identification risk</h3>
+          <p>Transform direct identifiers and quasi-identifiers with configurable operators.</p>
+          <div class="tagrow"><span class="tag">mask</span><span class="tag">generalise</span><span class="tag">randomise</span></div>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Keep utility for analytics / ML</h3>
+          <p>Preserve structure and meaning where possible while removing sensitive detail.</p>
+          <div class="tagrow"><span class="tag">data utility</span><span class="tag">structure preserved</span><span class="tag">repeatable</span></div>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Fit into governance workflows</h3>
+          <p>Explicit configuration supports review, iteration, and documentation of transformations.</p>
+          <div class="tagrow"><span class="tag">policy-friendly</span><span class="tag">auditable</span><span class="tag">iterative</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section anchor" id="how">
+      <h2>How it works</h2>
+      <p>
+        The service follows a <b>configuration-driven</b> approach: you define how each attribute should be treated
+        (based on datatype and your data model). The anonymisation pipeline then applies the selected operators consistently.
+      </p>
+
+      <div class="steps" aria-label="Steps">
+        <div class="step">
+          <div class="n">1</div>
+          <h3>Provide sample data</h3>
+          <p>Start with non-sensitive test data in JSON or JSON-LD.</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h3>Select / provide configuration</h3>
+          <p>Define attribute types and allowed transformations (e.g., for identifiers vs. measures).</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h3>Run anonymisation</h3>
+          <p>The pipeline applies masking/generalisation/randomisation according to your config.</p>
+        </div>
+        <div class="step">
+          <div class="n">4</div>
+          <h3>Review output</h3>
+          <p>Check privacy and utility, then iterate on configuration and operators.</p>
+        </div>
+      </div>
+
+      <div class="final-cta" style="margin-top:16px">
+        <div>
+          <h3>Try it in 2 minutes</h3>
+          <p>
+            Open the app, paste the sample JSON, anonymise it, and tell us what’s missing
+            (operators, defaults, UX, validation, risk hints, JSON-LD handling, export formats).
+          </p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" id="ctaTryMid" href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">
+            Start anonymising →
+          </a>
+          <a class="btn" id="ctaIssuesMid" href="https://github.com/OwnYourData/anonymisation-service/issues" rel="noopener">
+            Browse issues
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section anchor" id="faq">
+      <h2>FAQ</h2>
+
+      <div class="faq" role="region" aria-label="FAQ">
+        <details>
+          <summary>Is the output truly “anonymous”?</summary>
+          <div class="ans">
+            Anonymisation is <b>context-dependent</b>. This tool applies transformations that can materially reduce privacy risk,
+            but whether a dataset is anonymous depends on the broader context (available auxiliary data, threat model, and use case).
+            If you need strict assurance, pair this with a formal risk assessment and governance process.
+          </div>
+        </details>
+
+        <details>
+          <summary>What formats are supported?</summary>
+          <div class="ans">
+            The focus is <b>JSON</b> and <b>JSON-LD</b>. JSON-LD support aims to preserve structure so that linked data workflows remain usable.
+          </div>
+        </details>
+
+        <details>
+          <summary>How do I provide good feedback?</summary>
+          <div class="ans">
+            The fastest way: open an issue with <b>(1)</b> a synthetic sample,
+            <b>(2)</b> the steps you took, <b>(3)</b> expected output,
+            and <b>(4)</b> the config you used (or a description of it).
+            Create one here: <a href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">new issue template</a>.
+          </div>
+        </details>
+
+        <details>
+          <summary>Can I run this in my own environment?</summary>
+          <div class="ans">
+            Yes — the service is open source. Start from the repository:
+            <a href="https://github.com/OwnYourData/anonymisation-service" rel="noopener">github.com/OwnYourData/anonymisation-service</a>.
+          </div>
+        </details>
+
+        <details>
+          <summary>What data should I avoid uploading?</summary>
+          <div class="ans">
+            For testing this public instance, avoid secrets, health data, credentials, and any sensitive production payloads.
+            Use synthetic samples whenever possible.
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Final call to action">
+      <div class="final-cta">
+        <div>
+          <h3>Help us improve the Anonymiser</h3>
+          <p>
+            Your real-world feedback guides what we build next. If you try one dataset + configuration and report what worked (or broke),
+            you’ll directly influence the roadmap.
+          </p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" id="ctaTryBottom" href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">
+            Try it now →
+          </a>
+          <a class="btn" id="ctaFeedbackBottom" href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">
+            Send feedback
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="hr"></div>
+      <div class="footgrid">
+        <div>
+          <div><b>OwnYourData</b> — Privacy-preserving data transformation</div>
+          <div style="margin-top:6px">
+            Disclaimer: This page provides product information and is not legal advice.
+            Use synthetic data for testing and treat anonymisation as a risk-management process.
+          </div>
+        </div>
+        <div class="footlinks" aria-label="Footer links">
+          <div style="margin-bottom:6px; color:rgba(255,255,255,.70)"><b>Links</b></div>
+          <a href="https://anonymiser.ownyourdata.eu/?utm_source=google_ads&utm_medium=cpc&utm_campaign=anonymiser" rel="noopener">Open app</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service" rel="noopener">GitHub</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service/issues" rel="noopener">Issues</a>
+          <a href="https://github.com/OwnYourData/anonymisation-service/issues/new/choose" rel="noopener">New feedback</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Minimal JS: smooth anchor scrolling + lightweight click instrumentation placeholders.
+    (function(){
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href^="#"]');
+        if(!a) return;
+        const id = a.getAttribute('href');
+        const el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null, '', id);
+      });
+
+      // Instrument CTA clicks later with gtag / GA4:
+      // - prefer measuring conversion on the app side (successful anonymisation), not on click.
+      const ids = ['navTry','ctaTryTop','ctaTryCard','ctaTryMid','ctaTryBottom','ctaFeedbackCard','ctaIssuesMid','ctaFeedbackBottom'];
+      ids.forEach(function(id){
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('click', function(){
+          // Example:
+          // gtag('event', 'click', { event_category: 'cta', event_label: id });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
