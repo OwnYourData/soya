@@ -116,9 +116,9 @@ You may not need SOyA if:
 
 ## Next Steps
 
-- **Getting Started**: Available services and first steps with SOyA
-- **Authoring YAML**: How to write semantic overlays
-- **Validation**: Applying constraints and quality rules
+- [**Getting Started**](getting-started.md): Available services and first steps with SOyA
+- [**Authoring YAML**](authoring-yaml.md): How to write semantic overlays
+- [**Validation**](validation.md): Applying constraints and quality rules
 - **Transformation**: Mapping and deriving data representations
 
 → Continue with [`Getting Started`](getting-started.md) or go back to the [`Overview`](../README.md)
