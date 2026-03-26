@@ -1,0 +1,15 @@
+{
+  "endpoint": {
+    "url": null,
+    "clientId": "dev.unterholzer.ownyourdata.databud.view",
+    "credentials": {
+      "appKey": "hJ8fWeDRnkvNmQD5XqUv2Ge_plX2nBTZeV7vtSJ2dog",
+      "appSecret": "ZS8AGjUSnr0zhilQf8Hu510cGJYIZeZibf9bUOIbtPM"
+    }
+  },
+  "settings": {
+    "actions": {
+
+    }
+  }
+}

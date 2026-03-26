@@ -1,5 +1,3 @@
-// App.tsx — MUI v4 kompatibel
-
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { JsonForms } from '@jsonforms/react';
@@ -28,147 +26,28 @@ import Paper from '@material-ui/core/Paper';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 
-import yaml from 'js-yaml';
-
 import { customRenderers } from './components';
 import { evaluteDynamicEnum } from './utils';
+import { loadRuntimeConfig, RuntimeConfig } from './config';
+import {
+  fetchFormFromRepo,
+  querySoya,
+  SoyaFormResponse,
+  SoyaQueryResult,
+} from './services/soyaRepo';
+
 import packageJson from '../package.json';
 import './App.css';
 
-// --------------------
-// Minimal SOyA repo client (no soya-js dependency)
-// --------------------
-
-type SoyaFormOption = {
-  tag?: string;
-  language?: string;
-};
-
-type SoyaFormResponse = {
-  schema: any;
-  ui: any;
-  options: SoyaFormOption[];
-};
-
-type SoyaQueryResult = {
-  name: string;
-  dri?: string;
-};
-
-function normalizeRepoBase(repo: string): string {
-  const r = (repo || '').trim();
-  return r.endsWith('/') ? r.slice(0, -1) : r;
-}
-
-function asArray<T = any>(x: any): T[] {
-  return Array.isArray(x) ? (x as T[]) : [];
-}
-
-function extractOverlayForm(
-  doc: any,
-  tag?: string,
-  language?: string
-): { overlay: any; options: SoyaFormOption[] } {
-  const overlays = asArray(doc?.content?.overlays ?? doc?.overlays);
-  const formOverlays = overlays.filter((o) => String(o?.type ?? '').toLowerCase().includes('overlayform'));
-
-  if (formOverlays.length === 0) {
-    throw new Error('No OverlayForm found in SOyA structure');
-  }
-
-  const options: SoyaFormOption[] = formOverlays.map((o) => ({
-    tag: o?.tag ? String(o.tag) : undefined,
-    language: o?.language ? String(o.language) : undefined,
-  }));
-
-  let candidates = formOverlays;
-  if (tag) candidates = candidates.filter((o) => String(o?.tag ?? '') === tag);
-  if (language) candidates = candidates.filter((o) => String(o?.language ?? '') === language);
-
-  if (candidates.length === 0) {
-    // fallback: no exact match (keep first form overlay)
-    candidates = formOverlays;
-  }
-
-  return { overlay: candidates[0], options };
-}
-
-async function fetchSoyaYaml(repo: string, name: string): Promise<string> {
-  const base = normalizeRepoBase(repo);
-  const url = `${base}/${encodeURIComponent(name)}/yaml`;
-
-  const res = await fetch(url, { headers: { Accept: 'text/plain' } });
-  if (!res.ok) throw new Error(`Failed to fetch SOyA YAML (HTTP ${res.status})`);
-
-  // normalize line breaks just in case
-  return (await res.text()).replace(/\r\n?/g, '\n');
-}
-
-async function getFormFromRepo(repo: string, name: string, tag?: string, language?: string): Promise<SoyaFormResponse> {
-  const yamlText = await fetchSoyaYaml(repo, name);
-  let doc: any;
-  try {
-    doc = yaml.load(yamlText);
-  } catch (e: any) {
-    throw new Error(`Failed to parse SOyA YAML: ${String(e?.message ?? e)}`);
-  }
-
-  const { overlay, options } = extractOverlayForm(doc, tag, language);
-
-  if (!overlay?.schema || !overlay?.ui) {
-    throw new Error('OverlayForm is missing schema/ui');
-  }
-
-  return {
-    schema: overlay.schema,
-    ui: overlay.ui,
-    options,
-  };
-}
-
-async function querySchemas(repo: string, name: string): Promise<SoyaQueryResult[]> {
-  const base = normalizeRepoBase(repo);
-  const url = `${base}/api/soya/query?name=${encodeURIComponent(name)}`;
-
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!res.ok) return [];
-
-  const raw = await res.json();
-  if (!Array.isArray(raw)) return [];
-
-  // Null-frei (TS-sicher) + name/dri sauber trennen
-  const out: SoyaQueryResult[] = [];
-  for (const x of raw) {
-    if (typeof x === 'string') {
-      const v = x.trim();
-      if (v) out.push({ name: v, dri: v });
-      continue;
-    }
-    if (x && typeof x === 'object') {
-      const driRaw = (x as any).dri ?? (x as any).DRI ?? (x as any).id ?? (x as any).identifier;
-      const labelRaw = (x as any).name ?? (x as any).title ?? (x as any).label ?? undefined;
-
-      const dri = driRaw ? String(driRaw).trim() : undefined;
-      const label = labelRaw ? String(labelRaw).trim() : '';
-
-      if (!label && !dri) continue;
-      out.push({ name: label || (dri as string), dri });
-    }
-  }
-  return out;
-}
-
-// ----- Theme helpers (v4) -----
 function getInitialTheme(): 'light' | 'dark' {
   const t = new URLSearchParams(window.location.search).get('theme');
   return t === 'dark' ? 'dark' : 'light';
 }
 
-// Kleine Helfer
 const postMessageSafe = (data: any | (() => any)) => {
   try {
     if (typeof data === 'function') data = data();
-    window.parent?.postMessage(data, '*'); // TODO: origin einschränken
+    window.parent?.postMessage(data, '*');
   } catch {}
 };
 
@@ -177,66 +56,69 @@ const distinctNonEmpty = (values?: (string | undefined)[]) =>
     ?.filter((x): x is string => !!x)
     .filter((x, i, arr) => arr.indexOf(x) === i);
 
-// URL Helper: hält bestehende Parameter, überschreibt nur übergebene Keys
 function updateUrl(params: Record<string, string | undefined>) {
   const sp = new URLSearchParams(window.location.search);
+
   Object.entries(params).forEach(([k, v]) => {
-    if (v === undefined || v === null || String(v).trim() === '') sp.delete(k);
-    else sp.set(k, String(v));
+    if (v === undefined || v === null || String(v).trim() === '') {
+      sp.delete(k);
+    } else {
+      sp.set(k, String(v));
+    }
   });
+
+  // repo darf nicht mehr von außen gesteuert werden
+  sp.delete('repo');
+
   const next = `${window.location.pathname}?${sp.toString()}`;
   window.history.replaceState({}, '', next);
 }
 
-// --------------------------------
-
 export default function App() {
-  // THEME
   const [type, setType] = useState<'light' | 'dark'>(getInitialTheme());
 
   useEffect(() => {
-    // vom Parent per postMessage steuerbar machen
     (window as any).setMuiMode = (t: string) => setType(t === 'dark' ? 'dark' : 'light');
   }, []);
 
-  // auf postMessage reagieren (live toggeln)
   useEffect(() => {
     const onMsg = (evt: MessageEvent) => {
-      const { type: msgType, theme } = (evt.data || {}) as { type?: string; theme?: string };
-      if (msgType === 'jsonforms-theme') (window as any).setMuiMode?.(theme);
+      const { type: msgType, theme } = (evt.data || {}) as {
+        type?: string;
+        theme?: string;
+      };
+      if (msgType === 'jsonforms-theme') {
+        (window as any).setMuiMode?.(theme);
+      }
     };
+
     window.addEventListener('message', onMsg);
     return () => window.removeEventListener('message', onMsg);
   }, []);
 
-  // v4: palette.type (nicht mode)
   const theme = useMemo(
     () =>
       createMuiTheme({
-        palette: { type }, // 'light' | 'dark'
+        palette: { type },
       }),
     [type]
   );
 
-  // JSONForms Renderers
   const allRenderers = useMemo(() => [...customRenderers, ...materialRenderers], []);
 
-  // SOyA / Form-State
+  const [runtimeConfig, setRuntimeConfig] = useState<RuntimeConfig | undefined>(undefined);
+  const [runtimeConfigError, setRuntimeConfigError] = useState<string>('');
+
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [autoLoadDone, setAutoLoadDone] = useState(false);
 
-  // Anzeige-Name (soll im Feld & in schemaDri= in der URL bleiben)
   const [schemaDri, setSchemaDri] = useState('');
-
-  // Fetch-Key (nur intern; optional als schemaKey= in der URL)
   const [schemaKey, setSchemaKey] = useState<string>('');
-
   const [schemaList, setSchemaList] = useState<SoyaQueryResult[]>([]);
   const [tag, setTag] = useState('');
   const [language, setLanguage] = useState('');
   const [viewMode, setViewMode] = useState<'embedded' | 'form-only' | string>('');
-  const [customRepo, setCustomRepo] = useState('');
 
   const showMetadata = viewMode === 'embedded' || viewMode === 'form-only';
   const showDropdowns = viewMode !== 'form-only';
@@ -256,13 +138,20 @@ export default function App() {
   const fetchForm = useCallback(async () => {
     const key = (schemaKey || schemaDri).trim();
     setLastLoadKey(key);
+
     if (!key) return;
 
     setIsLoading(true);
     setSchemaList([]);
     setLoadError('');
+
     try {
-      const soyaForm = await getFormFromRepo(customRepo, key, tag || undefined, language || undefined);
+      const soyaForm = await fetchFormFromRepo({
+        soyaName: key,
+        tag: tag || undefined,
+        language: language || undefined,
+      });
+
       const evaluated = await evaluteDynamicEnum(soyaForm);
       setForm(evaluated);
       setLastLoadErrorKey('');
@@ -274,7 +163,6 @@ export default function App() {
         tag: tag || undefined,
         language: language || undefined,
         viewMode: viewMode || undefined,
-        repo: customRepo || undefined,
       });
     } catch (e: any) {
       const msg = e?.message ? String(e.message) : String(e);
@@ -284,76 +172,82 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [schemaDri, schemaKey, language, tag, customRepo, viewMode]);
+  }, [schemaDri, schemaKey, language, tag, viewMode]);
 
-  const fetchSchemas = useCallback(
-    async (qRaw: string) => {
-      const q = qRaw.trim();
-      if (q.length < 2) {
-        setSchemaList([]);
-        return;
-      }
-      const list = await querySchemas(customRepo, q);
-      setSchemaList(list);
-    },
-    [customRepo]
-  );
-
-  useEffect(() => {
-    const { searchParams } = new URL(window.location.href);
-
-    // 1) data= (hat Vorrang)
-    const dataParam = searchParams.get('data');
-    if (dataParam) {
-      const tryParse = (s: string) => {
-        try { return JSON.parse(s); } catch { return undefined; }
-      };
-
-      // 1) direkt JSON?
-      let parsed = tryParse(dataParam);
-
-      // 2) einmal decodeURIComponent?
-      if (parsed === undefined) parsed = tryParse(decodeURIComponent(dataParam));
-
-      // 3) zweimal decodeURIComponent? (für alte Permalinks mit doppelt encoding)
-      if (parsed === undefined) {
-        try {
-          parsed = tryParse(decodeURIComponent(decodeURIComponent(dataParam)));
-        } catch {
-          // ignore
-        }
-      }
-
-      if (parsed !== undefined) setData(parsed);
+  const fetchSchemas = useCallback(async (qRaw: string) => {
+    const q = qRaw.trim();
+    if (q.length < 2) {
+      setSchemaList([]);
+      return;
     }
-    // 2) url= (Alternative, wird nur verwendet, wenn data nicht gesetzt ist)
-    const urlParam = searchParams.get('url');
-    if (!dataParam && urlParam) {
-      setDataUrl(urlParam);
-    }
-    const tokenParam = searchParams.get('token');
-    if (tokenParam) setAuthToken(tokenParam);
 
-    const nameParam = (searchParams.get('schemaDri') ?? '').trim();
-    const keyParam = (searchParams.get('schemaKey') ?? '').trim();
-
-    setSchemaDri(nameParam);
-    setSchemaKey(keyParam); // kann leer sein
-    setTag(searchParams.get('tag') ?? '');
-    setLanguage(searchParams.get('language') ?? '');
-    setViewMode(searchParams.get('viewMode') ?? '');
-    setCustomRepo(searchParams.get('repo') ?? 'https://soya.ownyourdata.eu');
-
-    // Mark init done (separat vom Auto-Load)
-    setIsInitialized(true);
+    const list = await querySoya(q);
+    setSchemaList(list);
   }, []);
 
-  // ---- Auto-load once after init (fixes init race) ----
+  useEffect(() => {
+    (async () => {
+      try {
+        const cfg = await loadRuntimeConfig();
+        setRuntimeConfig(cfg);
+
+        const { searchParams } = new URL(window.location.href);
+
+        const dataParam = searchParams.get('data');
+        if (dataParam) {
+          const tryParse = (s: string) => {
+            try {
+              return JSON.parse(s);
+            } catch {
+              return undefined;
+            }
+          };
+
+          let parsed = tryParse(dataParam);
+          if (parsed === undefined) parsed = tryParse(decodeURIComponent(dataParam));
+
+          if (parsed === undefined) {
+            try {
+              parsed = tryParse(decodeURIComponent(decodeURIComponent(dataParam)));
+            } catch {
+              // ignore
+            }
+          }
+
+          if (parsed !== undefined) setData(parsed);
+        }
+
+        const urlParam = searchParams.get('url');
+        if (!dataParam && urlParam) {
+          setDataUrl(urlParam);
+        }
+
+        const tokenParam = searchParams.get('token');
+        if (tokenParam) setAuthToken(tokenParam);
+
+        const nameParam = (searchParams.get('schemaDri') ?? '').trim();
+        const keyParam = (searchParams.get('schemaKey') ?? '').trim();
+
+        setSchemaDri(nameParam);
+        setSchemaKey(keyParam);
+        setTag(searchParams.get('tag') ?? '');
+        setLanguage(searchParams.get('language') ?? '');
+        setViewMode(searchParams.get('viewMode') ?? '');
+
+        // repo aus alter URL entfernen, falls vorhanden
+        updateUrl({});
+
+        setIsInitialized(true);
+      } catch (e: any) {
+        setRuntimeConfigError(String(e?.message ?? e));
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     if (!isInitialized) return;
     if (autoLoadDone) return;
 
-    // Only autoload if we actually have something to load
     const nameOrKey = (schemaKey || schemaDri).trim();
     if (!nameOrKey) {
       setAutoLoadDone(true);
@@ -366,11 +260,11 @@ export default function App() {
     })();
   }, [isInitialized, autoLoadDone, schemaDri, schemaKey, fetchForm]);
 
-  // Daten vom REST-Endpoint laden (Alternative zu data=)
   useEffect(() => {
     if (!dataUrl) return;
 
     let cancelled = false;
+
     (async () => {
       try {
         const res = await fetch(dataUrl, {
@@ -379,7 +273,9 @@ export default function App() {
             Accept: 'application/json',
           },
         });
+
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
         const jsonData = await res.json();
         if (!cancelled) {
           setData(jsonData);
@@ -401,7 +297,6 @@ export default function App() {
     fetchForm();
   }, [tag, language, isInitialized, autoLoadDone, fetchForm]);
 
-  // Parent über Höhe/Init informieren (minimal)
   useEffect(() => {
     const sendUpdate = () =>
       postMessageSafe({
@@ -409,7 +304,9 @@ export default function App() {
         isInitialized,
         documentHeight: document.documentElement.scrollHeight,
       });
+
     sendUpdate();
+
     const onClick = () => sendUpdate();
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
@@ -434,19 +331,17 @@ export default function App() {
     if (viewMode) sp.set('viewMode', viewMode);
     else sp.delete('viewMode');
 
-    if (customRepo) sp.set('repo', customRepo);
-    else sp.delete('repo');
+    sp.delete('repo');
 
     if (data !== undefined) sp.set('data', JSON.stringify(data));
     else sp.delete('data');
 
     return u.toString();
-  }, [schemaDri, schemaKey, tag, language, viewMode, customRepo, data]);
+  }, [schemaDri, schemaKey, tag, language, viewMode, data]);
 
   const tagOptions = distinctNonEmpty(form?.options.map((x) => x.tag));
   const languageOptions = distinctNonEmpty(form?.options.map((x) => x.language));
 
-  // UI-Bausteine
   const Header1 = !showMetadata ? (
     <Box mb={2}>
       <AppBar position="static" color="default" elevation={1}>
@@ -463,6 +358,12 @@ export default function App() {
 
           <Box style={{ flexGrow: 1 }} />
 
+          {runtimeConfig ? (
+            <Typography variant="body2" color="textSecondary">
+              Repo: {runtimeConfig.repoBaseUrl}
+            </Typography>
+          ) : null}
+
           <Typography variant="body2" color="textSecondary">
             {packageJson.version}
           </Typography>
@@ -476,7 +377,6 @@ export default function App() {
         </Toolbar>
       </AppBar>
 
-      {/* Suchzeile (full width) */}
       <Box mt={2} display="flex" alignItems="flex-start" style={{ gap: 12 }}>
         <Box style={{ flexGrow: 1, position: 'relative' }}>
           <TextField
@@ -487,36 +387,30 @@ export default function App() {
               const v = e.target.value;
 
               setSchemaDri(v);
-              setSchemaKey(''); // freies Tippen => name==key
+              setSchemaKey('');
               setLoadError('');
               setLastLoadErrorKey('');
 
-              // Debounce: vorherigen Timer abbrechen
               if (schemaSearchTimer.current) {
                 window.clearTimeout(schemaSearchTimer.current);
                 schemaSearchTimer.current = null;
               }
 
-              // Wenn zu kurz: Liste leeren und fertig
               if (v.trim().length < 2) {
                 setSchemaList([]);
                 return;
               }
 
-              // nach kurzer Pause suchen
               schemaSearchTimer.current = window.setTimeout(() => {
                 fetchSchemas(v);
               }, 300);
             }}
-
             onKeyUp={(evt) => {
               if (evt.key === 'Enter') fetchForm();
               if (evt.key === 'Escape') setSchemaList([]);
             }}
-
           />
 
-          {/* Dropdown als Overlay (schiebt nichts nach unten) */}
           {schemaList.length > 0 ? (
             <Paper
               elevation={3}
@@ -537,8 +431,8 @@ export default function App() {
                     key={`${x.dri ?? ''}-${x.name}`}
                     button
                     onClick={() => {
-                      setSchemaDri(x.name);                 // Anzeige bleibt Name
-                      setSchemaKey((x.dri ?? x.name).trim()); // Fetch-Key
+                      setSchemaDri(x.name);
+                      setSchemaKey((x.dri ?? x.name).trim());
                       setSchemaList([]);
                       setLoadError('');
                       setLastLoadErrorKey('');
@@ -608,7 +502,15 @@ export default function App() {
   const currentKey = (schemaKey || schemaDri).trim();
   const showLoadError = !!loadError && !!lastLoadErrorKey && lastLoadErrorKey === currentKey;
 
-  const Content = isLoading ? (
+  const Content = runtimeConfigError ? (
+    <Box my={2} color="error.main">
+      {runtimeConfigError}
+    </Box>
+  ) : !isInitialized ? (
+    <Box my={4} display="flex" justifyContent="center">
+      <CircularProgress />
+    </Box>
+  ) : isLoading ? (
     <Box my={4} display="flex" justifyContent="center">
       <CircularProgress />
     </Box>
@@ -687,5 +589,4 @@ export default function App() {
   );
 }
 
-// Version ins Console-Log
 console.log(packageJson.name, packageJson.version);

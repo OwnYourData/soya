@@ -16,119 +16,150 @@ export type SoyaQueryResult = {
   dri?: string;
 };
 
-const normalizeRepoBase = (repoBase: string): string => repoBase.replace(/\/+$/, '');
+const REPO_API_BASE = '/api/repo';
 
-const getOverlays = (doc: any): any[] => {
-  // In repository YAML, overlays usually live under `content.overlays`.
-  // Some older exports may put it at the root.
-  return (doc?.content?.overlays ?? doc?.overlays ?? []) as any[];
-};
-
-const isOverlayForm = (overlay: any): boolean =>
-  String(overlay?.type ?? '').toLowerCase() === 'overlayform';
-
-const getOverlayTag = (overlay: any): string | undefined =>
-  overlay?.tag ?? overlay?.soya_tag ?? overlay?.meta?.tag;
-
-const getOverlayLanguage = (overlay: any): string | undefined =>
-  overlay?.language ?? overlay?.lang ?? overlay?.meta?.language;
-
-export async function fetchSoyaYaml(repoBase: string, soyaName: string): Promise<any> {
-  const base = normalizeRepoBase(repoBase);
-  const url = `${base}/${encodeURIComponent(soyaName)}/yaml`;
-
-  const res = await fetch(url, { headers: { Accept: 'text/plain' } });
-  if (!res.ok) throw new Error(`SOyA pull failed (HTTP ${res.status})`);
-  const text = await res.text();
-  const doc = yaml.load(text);
-  if (!doc || typeof doc !== 'object') throw new Error('Invalid SOyA YAML');
-  return doc;
+function asArray<T = any>(x: any): T[] {
+  return Array.isArray(x) ? (x as T[]) : [];
 }
 
-function pickOverlay(
-  overlays: any[],
-  opts: { tag?: string; language?: string }
-): any | undefined {
-  const candidates = overlays.filter(isOverlayForm);
-  if (candidates.length === 0) return undefined;
+function extractOverlayForm(
+  doc: any,
+  tag?: string,
+  language?: string
+): { overlay: any; options: SoyaFormOption[] } {
+  const overlays = asArray(doc?.content?.overlays ?? doc?.overlays);
+  const formOverlays = overlays.filter((o) =>
+    String(o?.type ?? '').toLowerCase().includes('overlayform')
+  );
 
-  const tag = (opts.tag ?? '').trim();
-  const language = (opts.language ?? '').trim();
-
-  if (tag && language) {
-    const exact = candidates.find(
-      (o) => getOverlayTag(o) === tag && getOverlayLanguage(o) === language
-    );
-    if (exact) return exact;
+  if (formOverlays.length === 0) {
+    throw new Error('No OverlayForm found in SOyA structure');
   }
 
+  const options: SoyaFormOption[] = formOverlays.map((o) => ({
+    tag: o?.tag ? String(o.tag) : undefined,
+    language: o?.language ? String(o.language) : undefined,
+  }));
+
+  let candidates = formOverlays;
+
   if (tag) {
-    const byTag = candidates.find((o) => getOverlayTag(o) === tag);
-    if (byTag) return byTag;
+    candidates = candidates.filter((o) => String(o?.tag ?? '') === tag);
   }
 
   if (language) {
-    const byLang = candidates.find((o) => getOverlayLanguage(o) === language);
-    if (byLang) return byLang;
+    candidates = candidates.filter(
+      (o) => String(o?.language ?? '') === language
+    );
   }
 
-  return candidates[0];
+  if (candidates.length === 0) {
+    candidates = formOverlays;
+  }
+
+  return { overlay: candidates[0], options };
+}
+
+export async function fetchSoyaYaml(soyaName: string): Promise<string> {
+  const url = `${REPO_API_BASE}/${encodeURIComponent(soyaName)}/yaml`;
+
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'text/plain',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch SOyA YAML (HTTP ${res.status})`);
+  }
+
+  return (await res.text()).replace(/\r\n?/g, '\n');
 }
 
 export async function fetchFormFromRepo(args: {
-  repoBase: string;
   soyaName: string;
   tag?: string;
   language?: string;
 }): Promise<SoyaFormResponse> {
-  const doc = await fetchSoyaYaml(args.repoBase, args.soyaName);
-  const overlays = getOverlays(doc).filter(isOverlayForm);
+  const yamlText = await fetchSoyaYaml(args.soyaName);
 
-  const options: SoyaFormOption[] = overlays.map((o) => ({
-    tag: getOverlayTag(o),
-    language: getOverlayLanguage(o),
-  }));
+  let doc: any;
+  try {
+    doc = yaml.load(yamlText);
+  } catch (e: any) {
+    throw new Error(`Failed to parse SOyA YAML: ${String(e?.message ?? e)}`);
+  }
 
-  const selected = pickOverlay(overlays, { tag: args.tag, language: args.language });
-  if (!selected) {
-    throw new Error(`No OverlayForm found in SOyA structure '${args.soyaName}'`);
+  const { overlay, options } = extractOverlayForm(
+    doc,
+    args.tag,
+    args.language
+  );
+
+  if (!overlay?.schema || !overlay?.ui) {
+    throw new Error('OverlayForm is missing schema/ui');
   }
 
   return {
-    schema: selected?.schema ?? {},
-    ui: selected?.ui ?? {},
+    schema: overlay.schema,
+    ui: overlay.ui,
     options,
   };
 }
 
-export async function querySoya(repoBase: string, name: string): Promise<SoyaQueryResult[]> {
-  const base = normalizeRepoBase(repoBase);
-  const url = `${base}/api/soya/query?name=${encodeURIComponent(name)}`;
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error(`SOyA query failed (HTTP ${res.status})`);
+export async function querySoya(name: string): Promise<SoyaQueryResult[]> {
+  const url = `${REPO_API_BASE}/query?name=${encodeURIComponent(name)}`;
 
-  const json: any = await res.json();
-  if (!Array.isArray(json)) return [];
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+    },
+  });
 
-  return json
-    .map((item: any): SoyaQueryResult | null => {
-      if (typeof item === 'string') return { name: item };
-      if (!item || typeof item !== 'object') return null;
+  if (!res.ok) {
+    return [];
+  }
 
-      const n =
-        item.name ??
-        item.soya_name ??
-        item.soya_dri ??
-        item.dri ??
-        item.id ??
-        undefined;
+  const raw = await res.json();
 
-      if (!n) return null;
+  if (!Array.isArray(raw)) {
+    return [];
+  }
 
-      return {
-        name: String(n),
-        dri: item.dri ? String(item.dri) : item.soya_dri ? String(item.soya_dri) : undefined,
-      };
-    })
-    .filter(Boolean) as SoyaQueryResult[];
+  const out: SoyaQueryResult[] = [];
+
+  for (const x of raw) {
+    if (typeof x === 'string') {
+      const v = x.trim();
+      if (v) out.push({ name: v, dri: v });
+      continue;
+    }
+
+    if (x && typeof x === 'object') {
+      const driRaw =
+        (x as any).dri ??
+        (x as any).DRI ??
+        (x as any).id ??
+        (x as any).identifier ??
+        (x as any).soya_dri;
+
+      const labelRaw =
+        (x as any).name ??
+        (x as any).title ??
+        (x as any).label ??
+        (x as any).soya_name;
+
+      const dri = driRaw ? String(driRaw).trim() : undefined;
+      const label = labelRaw ? String(labelRaw).trim() : '';
+
+      if (!label && !dri) continue;
+
+      out.push({
+        name: label || (dri as string),
+        dri,
+      });
+    }
+  }
+
+  return out;
 }
