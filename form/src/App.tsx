@@ -120,8 +120,12 @@ export default function App() {
   const [language, setLanguage] = useState('');
   const [viewMode, setViewMode] = useState<'embedded' | 'form-only' | string>('');
 
-  const showMetadata = viewMode === 'embedded' || viewMode === 'form-only';
-  const showDropdowns = viewMode !== 'form-only';
+  const isPrivateRepo = runtimeConfig?.repoMode === 'private';
+  const effectiveViewMode = isPrivateRepo ? 'form-only' : viewMode;
+
+  const showMetadata =
+    effectiveViewMode === 'embedded' || effectiveViewMode === 'form-only';
+  const showDropdowns = effectiveViewMode !== 'form-only';
 
   const [form, setForm] = useState<SoyaFormResponse | undefined>(undefined);
   const [loadError, setLoadError] = useState<string>('');
@@ -162,7 +166,7 @@ export default function App() {
         schemaKey: schemaKey && schemaKey !== schemaDri ? schemaKey : undefined,
         tag: tag || undefined,
         language: language || undefined,
-        viewMode: viewMode || undefined,
+        viewMode: effectiveViewMode || undefined,
       });
     } catch (e: any) {
       const msg = e?.message ? String(e.message) : String(e);
@@ -172,7 +176,7 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [schemaDri, schemaKey, language, tag, viewMode]);
+  }, [schemaDri, schemaKey, language, tag, effectiveViewMode]);
 
   const fetchSchemas = useCallback(async (qRaw: string) => {
     const q = qRaw.trim();
@@ -232,10 +236,16 @@ export default function App() {
         setSchemaKey(keyParam);
         setTag(searchParams.get('tag') ?? '');
         setLanguage(searchParams.get('language') ?? '');
-        setViewMode(searchParams.get('viewMode') ?? '');
 
-        // repo aus alter URL entfernen, falls vorhanden
-        updateUrl({});
+        const requestedViewMode = searchParams.get('viewMode') ?? '';
+        const initialViewMode = cfg.repoMode === 'private' ? 'form-only' : requestedViewMode;
+        setViewMode(initialViewMode);
+
+        // repo aus alter URL entfernen, falls vorhanden;
+        // im privaten Repo viewMode auf form-only festsetzen
+        updateUrl({
+          viewMode: cfg.repoMode === 'private' ? 'form-only' : initialViewMode || undefined,
+        });
 
         setIsInitialized(true);
       } catch (e: any) {
@@ -328,7 +338,7 @@ export default function App() {
     if (language) sp.set('language', language);
     else sp.delete('language');
 
-    if (viewMode) sp.set('viewMode', viewMode);
+    if (effectiveViewMode) sp.set('viewMode', effectiveViewMode);
     else sp.delete('viewMode');
 
     sp.delete('repo');
@@ -337,7 +347,7 @@ export default function App() {
     else sp.delete('data');
 
     return u.toString();
-  }, [schemaDri, schemaKey, tag, language, viewMode, data]);
+  }, [schemaDri, schemaKey, tag, language, effectiveViewMode, data]);
 
   const tagOptions = distinctNonEmpty(form?.options.map((x) => x.tag));
   const languageOptions = distinctNonEmpty(form?.options.map((x) => x.language));
@@ -440,6 +450,7 @@ export default function App() {
                       updateUrl({
                         schemaDri: x.name,
                         schemaKey: x.dri && x.dri !== x.name ? x.dri : undefined,
+                        viewMode: effectiveViewMode || undefined,
                       });
                     }}
                   >
