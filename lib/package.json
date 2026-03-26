@@ -13,7 +13,7 @@
     "prepublishOnly": "npm run build"
   },
   "author": "Gabriel Unterholzer",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@jsonforms/core": "^2.5.2",
     "@types/find-root": "^1.1.2",
