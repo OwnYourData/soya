@@ -1,1 +1,3 @@
 docker run -d -p 3080:80 --name forms oydeu/soya-forms:latest
+
+docker run -d -p 3080:80 --name forms -e REPO_BASE_URL="https://soya.ownyourdata.eu" -e REPO_AUTH_MODE="public" oydeu/soya-forms:latest

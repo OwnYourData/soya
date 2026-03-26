@@ -5,7 +5,6 @@ COPY Gemfile.extend .
 RUN bundle install && bundle update
 
 COPY . .
-COPY docker/private_soya_config.json public/config/oyd-databud.config.json
 
 CMD ["./script/init.sh"]
 
