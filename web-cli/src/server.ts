@@ -295,13 +295,13 @@ const createMainApp = async (config: AppConfig): Promise<Express> => {
     const packageJson = JSON.parse(content) as {
       name: string;
       version: string;
-      dependencies: Record<string, string>;
+      dependencies?: Record<string, string>;
     };
 
     return res.status(200).send({
       name: packageJson.name,
       version: packageJson.version,
-      dependencies: packageJson.dependencies,
+      soyaJsVersion: packageJson.dependencies?.['soya-js'] ?? null,
       repo: {
         baseUrl: config.repoBaseUrl,
         mode: config.repoMode,
