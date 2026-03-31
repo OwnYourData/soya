@@ -73,8 +73,10 @@ content:
   bases:
     - name: Person
       attributes:
-        firstname: String
-        lastname: String
+        name: String
+        dateOfBirth: String
+        age: Integer
+        sex: String
 ```
 
 ### Step 3 — Initialize / compile the structure locally (CLI only)

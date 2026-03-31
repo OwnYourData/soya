@@ -1,6 +1,6 @@
 {
   "name": "soya-cli",
-  "version": "0.17.4",
+  "version": "0.17.5",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "res"
   ],
   "author": "Gabriel Unterholzer",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@types/command-line-args": "^5.0.1",
     "@types/command-line-usage": "^5.0.2",
@@ -36,7 +36,7 @@
     "handlebars": "^4.7.7",
     "node-jq": "^2.3.5",
     "open": "^8.4.0",
-    "soya-js": "^0.8.3",
+    "soya-js": "^0.8.4",
     "winston": "^3.3.3"
   }
 }

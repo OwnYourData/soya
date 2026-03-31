@@ -106,7 +106,17 @@ export class Soya {
       logger.debug(`Path: ${path}`);
       logger.debug(`Repo: ${repo}`);
 
-      const info = await new RepoService(repo).info(path);
+      const normalizedCurrentRepo = this.service.repo.replace(/\/+$/, '');
+      const normalizedTargetRepo = repo.replace(/\/+$/, '');
+
+      const infoService =
+        normalizedCurrentRepo === normalizedTargetRepo
+          ? this.service
+          : new RepoService(repo, {
+              defaultAuth: this.service.defaultAuth,
+            });
+
+      const info = await infoService.info(path);
 
       res = await this.service.pushItem({
         data,
