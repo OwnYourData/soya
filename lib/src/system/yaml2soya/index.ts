@@ -97,7 +97,9 @@ export const yaml2soya = async (yamlContent: string, contextUrl: string, baseUrl
     "@context": {
       "@version": 1.1,
       "@import": contextUrl,
-      "@base": `${baseUrl}/${meta.name}/`,
+      // if present, @base can be set by property `soyaBase`
+      // if not present, we provide a default value based on the structure's name
+      "@base": meta.soyaBase ?? `${baseUrl}/${meta.name}/`,
       "xsd": xsdUrl,
     },
     graph: [],
