@@ -160,7 +160,7 @@ export class RepoService {
     return this._push((v) => {
       logger.debug('Pushing value');
       logger.debug(JSON.stringify(data));
-      return v.postData(data, 'optional');
+      return v.postData(data, this._defaultAuth);
     });
   }
 
@@ -170,12 +170,12 @@ export class RepoService {
     return this._push(async (v) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));
-      return parsePostResult(await v.post('/api/data', 'optional', item));
+      return parsePostResult(await v.post('/api/data', this._defaultAuth, item));
     });
   }
 
   delete = async (path: string) => {
-    return (await this.getVaultifier()).delete(`/${path}`, 'optional');
+    return (await this.getVaultifier()).delete(`/${path}`, this._defaultAuth);
   }
 
   similar = async (data: any): Promise<any> => {

@@ -70,6 +70,7 @@ services, this section explains the internal architecture and APIs:
 If you are responsible for **releases, documentation consistency, or
 governance**, these documents define the rules and processes:
 
+- **Deployment** - How to configure and operate a SOyA environment
 - **Documentation Playbook** – Structure, sources of truth, conventions
 - **Release Process** – Versioning, changelogs, and publication
 

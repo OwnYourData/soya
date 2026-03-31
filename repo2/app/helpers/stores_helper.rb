@@ -10,7 +10,11 @@ puts " - meta_data: " + meta_data.to_json
 
         soya_json = item_data
         soya_yaml = meta_data.delete("soya_yaml") rescue nil
-        soya_name = getSoyaName(soya_json.deep_dup)
+        my_yaml = YAML.safe_load(soya_yaml, permitted_classes: [], aliases: true) rescue nil
+        soya_name = my_yaml["meta"]["name"] rescue nil
+        if soya_name.nil?
+            soya_name = getSoyaName(soya_json.deep_dup)
+        end
         soya_dri_json, soya_dri, msg = createDriVersion(soya_json.deep_dup)
         soya_tag = ""
         provided_id = nil
