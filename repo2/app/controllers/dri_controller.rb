@@ -1,4 +1,6 @@
 class DriController < ApplicationController
+    skip_before_action :verify_authenticity_token
+
     # respond only to JSON requests
     respond_to :json
     respond_to :html, only: []
@@ -94,23 +96,50 @@ class DriController < ApplicationController
                    status: 401
             return
         end
-        case ENV['AUTH'].to_s.downcase
-        when "optional", "delete"
-            # only users of the same organisation can delete
-        else
-            # only admin users can delete
-        end
         store_id, msg = get_soya(params[:dri])
         if store_id.nil?
-            render json: {"error": "not found"},
-                   status: 404
-            return
+            # its possible that the "current" version should be deleted
+            @rec = Store.where("meta ->> 'soya_dri' = ?", params[:dri])
+            if @rec.count == 1
+                store_id = @rec.first.id
+            else
+                render json: {"error": "not found"},
+                       status: 404
+                return
+            end
         end
         @store = Store.find(store_id) rescue nil
         if @store.nil?
             render json: {"error": "not found"},
                    status: 404
             return
+        end
+        case ENV['AUTH'].to_s.downcase
+        when "optional", "delete", "true"
+            # only users of the same organisation can delete
+            @app = Doorkeeper::Application.find(@at.application_id) rescue nil
+            @usr = User.find(@store.user_id) rescue nil
+            if @app.nil? || !@app.scopes.to_s.split.include?("admin")
+                if @app.nil? || @usr.nil?
+                    render json: {"error": "not authorized"},
+                           status: :forbidden
+                    return
+                else
+                    if @app.organization_id != @usr.organization_id
+                        render json: {"error": "not authorized"},
+                               status: :forbidden
+                        return
+                    end
+                end
+            end
+        else
+            # only admin users can delete
+            @app = Doorkeeper::Application.find(@at.application_id) rescue nil
+            if !@app.scopes.to_s.split.include?("admin")
+                render json: {"error": "not authorized"},
+                       status: :forbidden
+                return
+            end
         end
         if @store.destroy
             render json: {"soya": params[:dri], "message": "SOyA structure '#{params[:dri].to_s}' successfully deleted"},

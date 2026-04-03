@@ -1,0 +1,18 @@
+meta:
+  name: simple
+
+content:
+  bases: 
+    - name: Simple
+      attributes:
+        id: String
+
+  overlays: 
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        id: 
+          cardinality: "1..1"
+          pattern: "^[a-zA-Z ,.'-]+$"
+          message: "there must be one 'id' in 'verificationMethod'"
