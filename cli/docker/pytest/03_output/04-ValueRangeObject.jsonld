@@ -1,0 +1,50 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/ValueRangeSet/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "Simple",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "group",
+      "@type": "owl:ObjectProperty",
+      "domain": "Simple",
+      "range": "Group"
+    },
+    {
+      "@id": "Group",
+      "@type": "owl:Class",
+      "subClassOf": "soya:Base"
+    },
+    {
+      "@id": "val",
+      "@type": "owl:DatatypeProperty",
+      "domain": "Group",
+      "range": "xsd:integer"
+    },
+    {
+      "@id": "SimpleOverlayValidation",
+      "@type": "OverlayValidation",
+      "onBase": "Simple",
+      "name": "ValidationOverlay",
+      "sh:targetClass": "Simple",
+      "sh:property": [
+        {
+          "sh:path": "group",
+          "sh:property": [
+            {
+              "sh:path": "val",
+              "sh:minInclusive": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

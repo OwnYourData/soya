@@ -1,0 +1,8 @@
+meta:
+  name: Simpel
+
+content:
+  bases: 
+    - name: Simple
+      attributes:
+        key: String

@@ -1,6 +1,5 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
 import { VaultMinMeta } from "vaultifier";
-import winston from "winston";
 import { JsonParseError } from "./errors";
 import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
@@ -24,18 +23,27 @@ const asStringInput = (input: unknown): string => {
     return JSON.stringify(input);
   else
     return input as string;
-}
+};
 
 const asObjectInput = (input: unknown): any => {
   if (typeof input === 'string')
     return JSON.parse(input);
   else
     return input as any;
+};
+
+export interface LoggerLike {
+  error: (...args: any[]) => any;
+  warn: (...args: any[]) => any;
+  info: (...args: any[]) => any;
+  debug: (...args: any[]) => any;
+  log: (...args: any[]) => any;
+  child: (...args: any[]) => LoggerLike;
 }
 
 export interface SoyaConfig {
   service?: RepoService;
-  logger?: winston.Logger;
+  logger?: LoggerLike;
 }
 
 export interface PushResponse {
@@ -59,14 +67,14 @@ export class Soya {
 
   init = async (yaml: string): Promise<SoyaDocument | undefined> => {
     return yaml2soya(yaml, DEFAULT_SOYA_NAMESPACE, this.service.repo, DEFAULT_XSD);
-  }
+  };
 
   pull = async (path: string, options: PullOptions = {
     pullType: 'json-ld',
   }): Promise<SoyaDocument> => {
     const subPath = options.pullType === 'yaml' ? '/yaml' : '';
     return this.service.pull(`${path}${subPath}`);
-  }
+  };
 
   push = async (input: unknown, additionalProperties: { [key: string]: any } = {}): Promise<PushResponse> => {
     const data = asObjectInput(input);
@@ -74,7 +82,7 @@ export class Soya {
     let value: string | undefined;
 
     if (isInstance(data)) {
-      logger.info('Pushing instance');
+      logger.info?.('Pushing instance');
 
       let path: string | undefined;
       let repo: string | undefined;
@@ -87,7 +95,7 @@ export class Soya {
         // kill empty items (can happen if there is a trailing slash) at the end
         const firstNonempty = splitParts.findIndex(x => !!x);
         if (firstNonempty !== -1)
-          splitParts = splitParts.slice(firstNonempty)
+          splitParts = splitParts.slice(firstNonempty);
 
         // bring it into correct order
         splitParts = splitParts.reverse();
@@ -103,8 +111,8 @@ export class Soya {
         throw new Error('Could not extract name of structure from @vocab');
       }
 
-      logger.debug(`Path: ${path}`);
-      logger.debug(`Repo: ${repo}`);
+      logger.debug?.(`Path: ${path}`);
+      logger.debug?.(`Repo: ${repo}`);
 
       const normalizedCurrentRepo = this.service.repo.replace(/\/+$/, '');
       const normalizedTargetRepo = repo.replace(/\/+$/, '');
@@ -126,7 +134,7 @@ export class Soya {
       });
       value = res.raw;
     } else {
-      logger.info('Pushing structure');
+      logger.info?.('Pushing structure');
 
       res = await this.service.pushItem({
         data,
@@ -144,19 +152,19 @@ export class Soya {
       value: value,
       item: res,
     };
-  }
+  };
 
   delete = async (path: string): Promise<any> => {
     return await this.service.delete(path);
-  }
+  };
 
   similar = async (input: unknown): Promise<any> => {
     return this.service.similar(asStringInput(input));
-  }
+  };
 
   query = async (query?: SoyaQuery): Promise<SoyaQueryResult[]> => {
     return this.service.query(query);
-  }
+  };
 
   getSparqlBuilder = async (soyaDoc: SoyaDocument): Promise<SparqlQueryBuilder> => {
     const dataSet = await parseJsonLd(soyaDoc);
@@ -166,9 +174,10 @@ export class Soya {
 
     const layerSet = await parseJsonLd(soyaDoc);
     return new SparqlQueryBuilder(layerSet);
-  }
+  };
 
   private _documentCache = new Cache();
+
   toCanonical = async (soyaDoc: SoyaDocument): Promise<string> => {
     return canonize(soyaDoc as any, {
       // overwriting document loader here, as default implementation is
@@ -181,7 +190,7 @@ export class Soya {
         };
       },
     });
-  }
+  };
 
   async info(path: string[]): Promise<SoyaInfo[]>;
   async info(path: string): Promise<SoyaInfo>;
@@ -202,8 +211,8 @@ export class Soya {
     else
       json = content;
 
-    logger.debug('Raw input:');
-    logger.debug(JSON.stringify(json));
+    logger.debug?.('Raw input:');
+    logger.debug?.(JSON.stringify(json));
 
     let quads: DatasetExt = await parseJsonLd(json);
 
@@ -211,16 +220,16 @@ export class Soya {
       json,
       quads,
     });
-  }
+  };
 
   acquire = async (path: string, flatJson: any): Promise<SoyaInstance> => {
     let soyaStructure: SoyaDocument = await this.service.pull(path);
     return flat2ld(flatJson, soyaStructure);
-  }
+  };
 
   getForm = async (soyaDoc: SoyaDocument, options?: SoyaFormOptions): Promise<SoyaFormResponse> => {
     return getSoyaForm(soyaDoc, options);
-  }
+  };
 
   map = map;
 }

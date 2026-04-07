@@ -4,6 +4,5 @@ Welcome to SOyA 🌱 (Semantic Overlay Architecture)
 Installed components:
 * soya-cli - version: ${soya}
 * jq - version: ${jq}
-* jolt - version: 0.1.5
 
 More information: https://www.ownyourdata.eu/soya/

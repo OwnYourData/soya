@@ -1,0 +1,21 @@
+meta:
+  name: ValueRangeSet
+
+content:
+  bases: 
+    - name: Simple
+      attributes:
+        group: set<Group>
+    - name: Group
+      attributes:
+        val: Integer
+
+  overlays: 
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        group:
+          attributes:
+            val:
+              valueRange: "[0..*]"

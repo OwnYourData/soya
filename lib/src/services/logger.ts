@@ -1,17 +1,19 @@
+import { createLogger, format, transports } from 'winston';
+import type { LoggerLike } from '../soya';
 
-import { createLogger, format, Logger, transports, } from 'winston';
+export let logger: LoggerLike = createLogger({
+    level: 'debug', // TODO:
+    format: format.json(),
+    transports: [
+        new transports.Console({
+            format: format.combine(
+                format.colorize(),
+                format.simple(),
+            )
+        })
+    ]
+}) as unknown as LoggerLike;
 
-export let logger = createLogger({
-  level: 'debug', // TODO:
-  format: format.json(),
-  transports: [
-    new transports.Console({
-      format: format.combine(
-        format.colorize(),
-        format.simple(),
-      )
-    })
-  ]
-});
-
-export const setLogger = (instance: Logger) => logger = instance;
+export const setLogger = (instance: LoggerLike): void => {
+    logger = instance;
+};
