@@ -23,17 +23,11 @@ The following validation overlay expresses SHACL-based constraints for the data 
 
 ```yaml
 meta:
-  name: Person
-content:
-  bases:
-    - name: Person
-      attributes:
-        name: String
-        dateOfBirth: String
-        age: Integer
+  name: PersonValidation
+
   overlays:
     - type: OverlayValidation
-      base: Person
+      base: https://soya.ownyourdata.eu/Person/Person
       name: SampleValidationOverlay
       attributes:
         name:
@@ -61,6 +55,7 @@ This example shows the kinds of constraints that can be defined in a validation 
 - **valueRange** for dates or numbers
 - **valueOption** for enumerated values
 
+Also note the reference to the base class to use HOST/Ontology/Class.
 
 ## How SOyA Uses SHACL
 
