@@ -1,0 +1,21 @@
+meta:
+  name: StringLengthSet
+  
+content:
+  bases:
+    - name: Simple
+      attributes:
+        group: set<Group>
+    - name: Group
+      attributes:
+        val: String
+
+  overlays:
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        group:
+          attributes:
+            val:
+              length: "[0..5)"

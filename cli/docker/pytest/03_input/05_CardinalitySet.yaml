@@ -1,0 +1,25 @@
+meta:
+  name: CardinalitySet
+  
+content:
+  bases:
+    - name: Simple
+      attributes:
+        group: set<Group>
+    - name: Group
+      attributes:
+        val: String
+
+  overlays:
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        group:
+          cardinality: "1..*"
+          attributes:
+            val:
+              cardinality: "1..1"
+              valueOption: 
+                - "option1"
+                - "option2"

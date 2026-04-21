@@ -2,7 +2,7 @@
   "@context": {
     "@version": 1.1,
     "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.ownyourdata.eu/ValueRangeSet/",
+    "@base": "https://soya.ownyourdata.eu/StringLengthSet/",
     "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "@graph": [
@@ -18,7 +18,7 @@
       "range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List",
       "soya:containerType": "set",
       "soya:containerElementTypes": [
-        "https://soya.ownyourdata.eu/ValueRangeSet/Group"
+        "https://soya.ownyourdata.eu/StringLengthSet/Group"
       ]
     },
     {
@@ -30,7 +30,7 @@
       "@id": "val",
       "@type": "owl:DatatypeProperty",
       "domain": "Group",
-      "range": "xsd:integer"
+      "range": "xsd:string"
     },
     {
       "@id": "SimpleOverlayValidation",
@@ -59,7 +59,8 @@
                 ]
               },
               "@type": "sh:PropertyShape",
-              "sh:minInclusive": 0
+              "sh:minLength": 0,
+              "sh:maxLength": 4
             }
           ]
         }

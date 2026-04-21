@@ -1,0 +1,6 @@
+echo '{"market_partner_id":"RC107602","electrical_connection":[{"grid_operator":"Wiener Netze"}]}' | soya acquire Ti2 | soya validate Ti2
+
+echo '{"market_partner_id":"RC107602","electrical_connection":[{"grid_operator":"Wiener Netze2"}]}' | soya acquire Ti2 | soya validate Ti2
+
+echo '{"group": [{"val": 2}]}' | soya acquire ValueRangeSet | soya validate ValueRangeSet
+echo '{"group": [{"val": -2}]}' | soya acquire ValueRangeSet | soya validate ValueRangeSet

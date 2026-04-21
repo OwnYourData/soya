@@ -186,18 +186,38 @@ const resolveBaseEntryName = (overlayBase: string, baseIndex: BaseIndex): string
     return overlayBase;
 };
 
-const buildValueRangePath = (attrName: string, insideSet: boolean): any => {
+const buildConstraintPath = (attrName: string, insideSet: boolean): any => {
     if (!insideSet) {
         return attrName;
     }
 
-    return [
-        {
-            "sh:zeroOrMorePath": "rdf:rest",
-        },
-        "rdf:first",
-        attrName,
-    ];
+    return {
+        "@list": [
+            {
+                "sh:zeroOrMorePath": {
+                    "@id": "rdf:rest",
+                },
+            },
+            {
+                "@id": "rdf:first",
+            },
+            {
+                "@id": attrName,
+            },
+        ],
+    };
+};
+
+const applySetAwareConstraintPath = (
+    constraints: { [key: string]: any },
+    attrName: string,
+    insideSet: boolean,
+): void => {
+    if (insideSet) {
+        constraints["@type"] = "sh:PropertyShape";
+    }
+
+    constraints["sh:path"] = buildConstraintPath(attrName, insideSet);
 };
 
 const validationProcessOr = (
@@ -287,9 +307,12 @@ const validationProcessAttributes = (
                     }
                 } else {
                     if (constraintKey === "pattern") {
+                        applySetAwareConstraintPath(constraints, attrName, insideSet);
                         constraints["sh:pattern"] = value;
                     } else if (constraintKey === "cardinality") {
                         const range = parseRange(value);
+
+                        applySetAwareConstraintPath(constraints, attrName, insideSet);
 
                         if (range instanceof NumberRange) {
                             if (range.min != null) constraints["sh:minCount"] = range.min;
@@ -298,6 +321,8 @@ const validationProcessAttributes = (
                     } else if (constraintKey === "length") {
                         const range = parseRange(value);
 
+                        applySetAwareConstraintPath(constraints, attrName, insideSet);
+
                         if (range instanceof NumberRange) {
                             if (range.min != null) constraints["sh:minLength"] = range.min;
                             if (range.max != null) constraints["sh:maxLength"] = range.max;
@@ -305,7 +330,7 @@ const validationProcessAttributes = (
                     } else if (constraintKey === "valueRange") {
                         const range = parseRange(value);
 
-                        constraints["sh:path"] = buildValueRangePath(attrName, insideSet);
+                        applySetAwareConstraintPath(constraints, attrName, insideSet);
 
                         if (range instanceof NumberRange) {
                             if (range.min != null) constraints["sh:minInclusive"] = range.min;
@@ -325,6 +350,8 @@ const validationProcessAttributes = (
                             }
                         }
                     } else if (constraintKey === "valueOption") {
+                        applySetAwareConstraintPath(constraints, attrName, insideSet);
+
                         if (Array.isArray(value)) {
                             constraints["sh:in"] = {
                                 "@list": value.map((x) => {
@@ -555,14 +582,15 @@ const handleAlignment = (doc: IntSoyaDocument, overlay: any): undefined => {
     for (const attrName in overlay.attributes) {
         let relations = overlay.attributes[attrName];
 
-    if (!Array.isArray(relations))
-      relations = [relations];
+        if (!Array.isArray(relations)) {
+            relations = [relations];
+        }
 
-    graph.push({
-      '@id': `${attrName}`,
-      'rdfs:subPropertyOf': relations,
-    });
-  }
+        graph.push({
+            "@id": `${attrName}`,
+            "rdfs:subPropertyOf": relations,
+        });
+    }
 
-  return undefined;
+    return undefined;
 };

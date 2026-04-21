@@ -1,0 +1,28 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "id": {
+        "termType": "BlankNode",
+        "value": "df_2_1",
+        "listHead": true
+      },
+      "message": [
+        {
+          "value": "Value is not in Blank node df_3_1",
+          "datatype": {
+            "value": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          "language": ""
+        }
+      ],
+      "termType": "BlankNode",
+      "value": "df_3_5",
+      "listHead": true,
+      "severity": {
+        "value": "http://www.w3.org/ns/shacl#Violation"
+      }
+    }
+  ],
+  "classChecks": []
+}
