@@ -16,7 +16,7 @@
         }
       ],
       "termType": "BlankNode",
-      "value": "df_3_5",
+      "value": "df_3_7",
       "listHead": true,
       "severity": {
         "value": "http://www.w3.org/ns/shacl#Violation"

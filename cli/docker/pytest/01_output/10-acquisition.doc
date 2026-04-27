@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.ownyourdata.eu/TIDE_Infrastructure3/"
+  },
+  "@graph": [
+    {
+      "@type": "Infrastructure",
+      "pv_system": {
+        "@list": [
+          {
+            "pv_control_interfaces": {
+              "@list": [
+                "REST-API",
+                "Test"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

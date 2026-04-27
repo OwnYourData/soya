@@ -9,7 +9,7 @@
       },
       "message": [
         {
-          "value": "Value is not in Blank node df_3_1",
+          "value": "Value does not have shape Blank node df_3_5",
           "datatype": {
             "value": "http://www.w3.org/2001/XMLSchema#string"
           },
@@ -17,7 +17,7 @@
         }
       ],
       "termType": "BlankNode",
-      "value": "df_3_5",
+      "value": "df_3_7",
       "listHead": true,
       "severity": {
         "value": "http://www.w3.org/ns/shacl#Violation"

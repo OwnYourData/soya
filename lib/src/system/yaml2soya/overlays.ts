@@ -186,11 +186,27 @@ const resolveBaseEntryName = (overlayBase: string, baseIndex: BaseIndex): string
     return overlayBase;
 };
 
-const buildConstraintPath = (attrName: string, insideSet: boolean): any => {
-    if (!insideSet) {
-        return attrName;
-    }
+const getAttrInfo = (
+    baseIndex: BaseIndex,
+    currentBase: string,
+    attrName: string,
+): BaseAttributeInfo | undefined => {
+    return baseIndex[currentBase]?.[attrName];
+};
 
+const isSetAttribute = (attrInfo?: BaseAttributeInfo): boolean => {
+    return attrInfo?.containerType === "set" || attrInfo?.range === RDF_LIST;
+};
+
+const isComplexAttribute = (
+    attrInfo: BaseAttributeInfo | undefined,
+    baseIndex: BaseIndex,
+): boolean => {
+    if (!attrInfo?.elementType) return false;
+    return !!baseIndex[attrInfo.elementType];
+};
+
+const buildListElementPath = (): any => {
     return {
         "@list": [
             {
@@ -201,46 +217,82 @@ const buildConstraintPath = (attrName: string, insideSet: boolean): any => {
             {
                 "@id": "rdf:first",
             },
+        ],
+    };
+};
+
+const buildSetValuePath = (attrName: string): any => {
+    return {
+        "@list": [
             {
                 "@id": attrName,
+            },
+            {
+                "sh:zeroOrMorePath": {
+                    "@id": "rdf:rest",
+                },
+            },
+            {
+                "@id": "rdf:first",
             },
         ],
     };
 };
 
-const applySetAwareConstraintPath = (
-    constraints: { [key: string]: any },
-    attrName: string,
-    insideSet: boolean,
+const applyCardinalityRange = (
+    target: { [key: string]: any },
+    value: string,
 ): void => {
-    if (insideSet) {
-        constraints["@type"] = "sh:PropertyShape";
+    const range = parseRange(value);
+
+    if (range instanceof NumberRange) {
+        if (range.min != null) target["sh:minCount"] = range.min;
+        if (range.max != null) target["sh:maxCount"] = range.max;
+    }
+};
+
+const buildNodeShapeFromAttributes = (
+    attributes: any,
+    currentBase: string,
+    baseIndex: BaseIndex,
+): any => {
+    const propertyConstraints = validationProcessAttributes(attributes, currentBase, baseIndex);
+    const orConstraints = validationProcessOr(attributes, currentBase, baseIndex);
+
+    const nodeShape: { [key: string]: any } = {
+        "@type": "sh:NodeShape",
+    };
+
+    if (propertyConstraints.length > 0) {
+        nodeShape["sh:property"] = propertyConstraints;
     }
 
-    constraints["sh:path"] = buildConstraintPath(attrName, insideSet);
+    if (orConstraints.length > 0) {
+        nodeShape["sh:or"] = {
+            "@list": orConstraints,
+        };
+    }
+
+    return nodeShape;
 };
 
 const validationProcessOr = (
     elements: any,
     currentBase: string,
     baseIndex: BaseIndex,
-    insideSet: boolean = false,
 ): any[] => {
     const constraintsArray: any[] = [];
 
     for (const attrName in elements) {
         if (attrName === "or") {
             for (const orGroup in elements[attrName]) {
-                const attribConstraints = validationProcessAttributes(
+                const nodeShape = buildNodeShapeFromAttributes(
                     elements[attrName][orGroup],
                     currentBase,
                     baseIndex,
-                    insideSet,
                 );
 
-                if (attribConstraints.length > 0) {
-                    constraintsArray.push({ "sh:property": attribConstraints });
-                }
+                constraintsArray.push(nodeShape);
 
                 for (const val in elements[attrName][orGroup]) {
                     if (val === "datatype") {
@@ -262,116 +314,140 @@ const validationProcessAttributes = (
     attributes: any,
     currentBase: string,
     baseIndex: BaseIndex,
-    insideSet: boolean = false,
 ): any[] => {
     const constraintsArray: any[] = [];
 
     for (const attrName in attributes) {
-        const constraints: { [key: string]: any } = {};
         const attr = attributes[attrName];
 
-        if (!(attrName === "or" || attrName === "datatype")) {
-            constraints["sh:path"] = attrName;
+        if (attrName === "or" || attrName === "datatype") {
+            continue;
+        }
 
-            for (const constraintKey in attr) {
-                const value = attr[constraintKey];
+        const attrInfo = getAttrInfo(baseIndex, currentBase, attrName);
+        const attrIsSet = isSetAttribute(attrInfo);
+        const attrIsComplex = isComplexAttribute(attrInfo, baseIndex);
 
-                if (constraintKey === "attributes") {
-                    const attrInfo = baseIndex[currentBase]?.[attrName];
-                    const childInsideSet =
-                        attrInfo?.containerType === "set" ||
-                        attrInfo?.range === RDF_LIST;
+        const constraints: { [key: string]: any } = {
+            "sh:path": attrName,
+        };
 
-                    const childBase = attrInfo?.elementType || currentBase;
+        let hasNestedAttributes = false;
+        let hasScalarConstraints = false;
+        let pendingCardinality: string | undefined;
 
-                    const attrConstraints = validationProcessAttributes(
-                        value,
-                        childBase,
-                        baseIndex,
-                        childInsideSet,
-                    );
+        for (const constraintKey in attr) {
+            const value = attr[constraintKey];
 
-                    if (attrConstraints.length > 0) {
-                        constraints["sh:property"] = attrConstraints;
+            if (constraintKey === "attributes") {
+                hasNestedAttributes = true;
+
+                const childBase = attrInfo?.elementType || currentBase;
+
+                if (attrIsSet) {
+                    const listElementShape: { [key: string]: any } = {
+                        "@type": "sh:PropertyShape",
+                        "sh:path": buildListElementPath(),
+                        "sh:node": buildNodeShapeFromAttributes(value, childBase, baseIndex),
+                    };
+
+                    if (pendingCardinality) {
+                        applyCardinalityRange(listElementShape, pendingCardinality);
                     }
 
-                    const constraintsOr = validationProcessOr(
-                        value,
-                        childBase,
-                        baseIndex,
-                        childInsideSet,
-                    );
-
-                    if (constraintsOr.length > 0) {
-                        constraints["sh:or"] = { "@list": constraintsOr };
-                    }
+                    constraints["sh:property"] = [listElementShape];
                 } else {
-                    if (constraintKey === "pattern") {
-                        applySetAwareConstraintPath(constraints, attrName, insideSet);
-                        constraints["sh:pattern"] = value;
-                    } else if (constraintKey === "cardinality") {
-                        const range = parseRange(value);
+                    const childConstraints = validationProcessAttributes(value, childBase, baseIndex);
+                    const childOrConstraints = validationProcessOr(value, childBase, baseIndex);
 
-                        applySetAwareConstraintPath(constraints, attrName, insideSet);
+                    if (childConstraints.length > 0) {
+                        constraints["sh:property"] = childConstraints;
+                    }
 
-                        if (range instanceof NumberRange) {
-                            if (range.min != null) constraints["sh:minCount"] = range.min;
-                            if (range.max != null) constraints["sh:maxCount"] = range.max;
-                        }
-                    } else if (constraintKey === "length") {
-                        const range = parseRange(value);
-
-                        applySetAwareConstraintPath(constraints, attrName, insideSet);
-
-                        if (range instanceof NumberRange) {
-                            if (range.min != null) constraints["sh:minLength"] = range.min;
-                            if (range.max != null) constraints["sh:maxLength"] = range.max;
-                        }
-                    } else if (constraintKey === "valueRange") {
-                        const range = parseRange(value);
-
-                        applySetAwareConstraintPath(constraints, attrName, insideSet);
-
-                        if (range instanceof NumberRange) {
-                            if (range.min != null) constraints["sh:minInclusive"] = range.min;
-                            if (range.max != null) constraints["sh:maxInclusive"] = range.max;
-                        } else if (range instanceof DateRange) {
-                            if (range.min) {
-                                constraints["sh:minRange"] = {
-                                    "@type": "xsd:date",
-                                    "@value": range.min,
-                                };
-                            }
-                            if (range.max) {
-                                constraints["sh:maxRange"] = {
-                                    "@type": "xsd:date",
-                                    "@value": range.max,
-                                };
-                            }
-                        }
-                    } else if (constraintKey === "valueOption") {
-                        applySetAwareConstraintPath(constraints, attrName, insideSet);
-
-                        if (Array.isArray(value)) {
-                            constraints["sh:in"] = {
-                                "@list": value.map((x) => {
-                                    if (x && x.id) {
-                                        x["@id"] = x.id;
-                                        delete x.id;
-                                    }
-
-                                    return x;
-                                }),
-                            };
-                        }
-                    } else if (constraintKey === "message") {
-                        constraints["sh:message"] = value;
+                    if (childOrConstraints.length > 0) {
+                        constraints["sh:or"] = {
+                            "@list": childOrConstraints,
+                        };
                     }
                 }
+
+                continue;
             }
 
-            constraintsArray.push(constraints);
+            hasScalarConstraints = true;
+
+            if (constraintKey === "pattern") {
+                constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
+                constraints["sh:pattern"] = value;
+            } else if (constraintKey === "cardinality") {
+                pendingCardinality = value;
+
+                if (attrIsSet && attrIsComplex) {
+                    constraints["sh:path"] = attrName;
+                    applyCardinalityRange(constraints, value);
+                } else {
+                    constraints["sh:path"] = attrIsSet && !hasNestedAttributes && !attrIsComplex
+                        ? buildSetValuePath(attrName)
+                        : attrName;
+
+                    applyCardinalityRange(constraints, value);
+                }
+            } else if (constraintKey === "length") {
+                constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
+
+                const range = parseRange(value);
+
+                if (range instanceof NumberRange) {
+                    if (range.min != null) constraints["sh:minLength"] = range.min;
+                    if (range.max != null) constraints["sh:maxLength"] = range.max;
+                }
+            } else if (constraintKey === "valueRange") {
+                constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
+
+                const range = parseRange(value);
+
+                if (range instanceof NumberRange) {
+                    if (range.min != null) constraints["sh:minInclusive"] = range.min;
+                    if (range.max != null) constraints["sh:maxInclusive"] = range.max;
+                } else if (range instanceof DateRange) {
+                    if (range.min) {
+                        constraints["sh:minRange"] = {
+                            "@type": "xsd:date",
+                            "@value": range.min,
+                        };
+                    }
+                    if (range.max) {
+                        constraints["sh:maxRange"] = {
+                            "@type": "xsd:date",
+                            "@value": range.max,
+                        };
+                    }
+                }
+            } else if (constraintKey === "valueOption") {
+                constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
+
+                if (Array.isArray(value)) {
+                    constraints["sh:in"] = {
+                        "@list": value.map((x) => {
+                            if (x && x.id) {
+                                x["@id"] = x.id;
+                                delete x.id;
+                            }
+
+                            return x;
+                        }),
+                    };
+                }
+            } else if (constraintKey === "message") {
+                constraints["sh:message"] = value;
+            }
         }
+
+        if (attrIsSet && hasScalarConstraints && !hasNestedAttributes) {
+            constraints["@type"] = "sh:PropertyShape";
+        }
+
+        constraintsArray.push(constraints);
     }
 
     return constraintsArray;
@@ -391,14 +467,12 @@ const handleValidation = async (
         overlay.attributes,
         rootBase,
         baseIndex,
-        false,
     );
 
     const orConstraints = validationProcessOr(
         overlay.attributes,
         rootBase,
         baseIndex,
-        false,
     );
 
     if (orConstraints.length > 0) {

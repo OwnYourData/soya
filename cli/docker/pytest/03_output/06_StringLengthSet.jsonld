@@ -43,6 +43,7 @@
           "sh:path": "group",
           "sh:property": [
             {
+              "@type": "sh:PropertyShape",
               "sh:path": {
                 "@list": [
                   {
@@ -52,15 +53,19 @@
                   },
                   {
                     "@id": "rdf:first"
-                  },
-                  {
-                    "@id": "val"
                   }
                 ]
               },
-              "@type": "sh:PropertyShape",
-              "sh:minLength": 0,
-              "sh:maxLength": 4
+              "sh:node": {
+                "@type": "sh:NodeShape",
+                "sh:property": [
+                  {
+                    "sh:path": "val",
+                    "sh:minLength": 0,
+                    "sh:maxLength": 4
+                  }
+                ]
+              }
             }
           ]
         }

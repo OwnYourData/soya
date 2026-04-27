@@ -16,6 +16,7 @@
           "sh:maxCount": 1,
           "sh:maxLength": 19,
           "sh:minCount": 1,
+          "sh:minLength": 0,
           "sh:path": "name",
           "sh:pattern": "^[a-z ,.'-]+$"
         },
@@ -30,6 +31,8 @@
         },
         {
           "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "sh:minInclusive": 0,
           "sh:path": "age"
         },
         {
@@ -40,9 +43,11 @@
             ]
           },
           "sh:maxCount": 1,
+          "sh:minCount": 0,
           "sh:path": "sex"
         },
         {
+          "sh:minCount": 0,
           "sh:path": "employer"
         }
       ],
