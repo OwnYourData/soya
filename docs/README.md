@@ -39,9 +39,9 @@ or build forms and transformations, start here:
 - [**Getting Started**](users/getting-started.md) – Available infrastructure and first steps
 - [**Authoring YAML**](users/authoring-yaml.md) – Writing semantic overlays
 - [**Validation**](users/validation.md) – SHACL, ValidationOverlay, and constraints
-- **Transformation** – jq, handlebars, and common transformation patterns
+- [**Transformation**](users/transformation.md) – jq, handlebars, and common transformation patterns
 - **Forms** – Form concepts and rendering
-- **Repository Usage** – Publishing, retrieving, and versioning overlays
+- **Repository Usage** – Publishing, retrieving, and versioning SOyA structures
 - **FAQ** – Common questions and pitfalls
 
 → See [`docs/users/`](users/overview.md)
