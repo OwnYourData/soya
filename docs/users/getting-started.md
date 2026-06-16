@@ -121,4 +121,7 @@ Once the basic publish/pull loop works, the usual next steps are:
 - **Add overlays** (e.g., validation, transformation, presentation/form behavior)
 - **Use tags** for team workflows (`dev`, `staging`, `v1.0`, …) while keeping `current` as the default
 
+For a deeper reference on publishing, retrieving, and versioning structures in
+the repository, see [`Repository Usage`](repository.md).
+
 → Continue with [`Authoring YAML`](authoring-yaml.md) or go back to the [`Overview`](../README.md)

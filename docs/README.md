@@ -41,8 +41,8 @@ or build forms and transformations, start here:
 - [**Validation**](users/validation.md) – SHACL, ValidationOverlay, and constraints
 - [**Transformation**](users/transformation.md) – jq, handlebars, and common transformation patterns
 - [**Forms**](users/forms.md) – Form concepts, rendering, and the SOyA-Form web tool
-- **Repository Usage** – Publishing, retrieving, and versioning SOyA structures
-- **FAQ** – Common questions and pitfalls
+- [**Repository Usage**](users/repository.md) – Publishing, retrieving, and versioning SOyA structures
+- [**FAQ**](users/faq.md) – Common questions and pitfalls
 
 → See [`docs/users/`](users/overview.md)
 
