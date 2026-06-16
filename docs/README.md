@@ -40,7 +40,7 @@ or build forms and transformations, start here:
 - [**Authoring YAML**](users/authoring-yaml.md) – Writing semantic overlays
 - [**Validation**](users/validation.md) – SHACL, ValidationOverlay, and constraints
 - [**Transformation**](users/transformation.md) – jq, handlebars, and common transformation patterns
-- **Forms** – Form concepts and rendering
+- [**Forms**](users/forms.md) – Form concepts, rendering, and the SOyA-Form web tool
 - **Repository Usage** – Publishing, retrieving, and versioning SOyA structures
 - **FAQ** – Common questions and pitfalls
 

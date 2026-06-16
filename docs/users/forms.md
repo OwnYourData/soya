@@ -211,11 +211,37 @@ As you fill in the rendered form, the entered values are validated and collected
 
 The panel is **bidirectional**: editing the JSON in the Data panel updates the form fields as well, which makes it convenient to pre-fill a form, correct a value quickly, or start from an existing record.
 
-### Sharing and embedding
+### Sharing via permalink
 
-The tool also produces a **Permalink** that encodes the selected structure, the chosen tag and language, and the current data. Sharing this link reopens the form in the same state, including any data already entered — useful for handing a pre-filled form to someone else or for bookmarking a frequently used form.
+The tool produces a **Permalink** that encodes the selected structure, the chosen tag and language, and the current data. Sharing this link reopens the form in the same state, including any data already entered — useful for handing a pre-filled form to someone else or for bookmarking a frequently used form.
 
-SOyA-Form can additionally be embedded into other web applications (for example via an `iframe`), and supports a light and a dark theme. Structure, tag, language, and initial data can all be passed as URL parameters, so a host application can open the tool pre-configured for a particular use case.
+### Embedding the form in an application
+
+Because SOyA-Form is driven entirely by URL parameters, it can be dropped into any web application via an `iframe` and configured to show just the form, with the surrounding application supplying the structure and reading back the data. The relevant parameters are:
+
+- `schemaDri` — the name of the SOyA structure to load (the DRI can be given in `schemaKey`)
+- `tag` — selects a specific form variant for the structure
+- `language` — selects the form language (two-character ISO code, e.g. `en`, `de`)
+- `viewMode` — controls how much of the UI is shown:
+  - *(omitted)* — full standalone app: search field, variant selectors, form, the JSON **Data** panel, and the permalink
+  - `embedded` — the form plus the tag/language selectors only; the search field and the data/permalink panels are hidden
+  - `form-only` — just the rendered form, with no selectors or panels around it
+- `theme` — `light` (default) or `dark`
+- `data` — initial data to pre-fill the form, as a JSON string
+- `url` — a URL the tool fetches the initial data from (with an optional bearer `token`) instead of passing it inline
+
+A minimal embed that shows only the form for the `Person` structure in German, in dark mode, looks like this:
+
+```html
+<iframe
+  src="https://soya-form.ownyourdata.eu/?schemaDri=Person&viewMode=form-only&language=de&theme=dark"
+  width="100%"
+  height="600"
+  style="border: 0;">
+</iframe>
+```
+
+When the form is embedded, the JSON **Data** panel is hidden, so the host application receives the entered data through the browser's `postMessage` channel instead: on every change the embedded form posts a `{ type: 'data', data: … }` message to the parent window, which the surrounding application can listen for. The host can also switch the form between light and dark mode at runtime by posting a `{ type: 'jsonforms-theme', theme: 'dark' }` message back to the `iframe`.
 
 ---
 
