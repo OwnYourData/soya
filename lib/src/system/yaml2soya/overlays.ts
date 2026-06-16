@@ -191,11 +191,41 @@ const getAttrInfo = (
     currentBase: string,
     attrName: string,
 ): BaseAttributeInfo | undefined => {
-    return baseIndex[currentBase]?.[attrName];
+    const direct = baseIndex[currentBase]?.[attrName];
+
+    if (direct) return direct;
+
+    const strippedCurrentBase = stripBaseIri(currentBase);
+    const strippedAttrName = stripBaseIri(attrName);
+
+    if (strippedCurrentBase && strippedAttrName) {
+        const stripped = baseIndex[strippedCurrentBase]?.[strippedAttrName];
+
+        if (stripped) return stripped;
+    }
+
+    for (const baseName of Object.keys(baseIndex)) {
+        const candidate = baseIndex[baseName]?.[attrName];
+
+        if (candidate) return candidate;
+
+        if (strippedAttrName) {
+            const strippedCandidate = baseIndex[baseName]?.[strippedAttrName];
+
+            if (strippedCandidate) return strippedCandidate;
+        }
+    }
+
+    return undefined;
 };
 
 const isSetAttribute = (attrInfo?: BaseAttributeInfo): boolean => {
-    return attrInfo?.containerType === "set" || attrInfo?.range === RDF_LIST;
+    if (!attrInfo) return false;
+
+    if (attrInfo.containerType === "set") return true;
+    if (attrInfo.range === RDF_LIST) return true;
+
+    return typeof attrInfo.rawType === "string" && /^set<.+>$/.test(attrInfo.rawType.trim());
 };
 
 const isComplexAttribute = (
@@ -203,7 +233,16 @@ const isComplexAttribute = (
     baseIndex: BaseIndex,
 ): boolean => {
     if (!attrInfo?.elementType) return false;
-    return !!baseIndex[attrInfo.elementType];
+
+    const elementBase = baseIndex[attrInfo.elementType];
+
+    if (!elementBase) return false;
+
+    return Object.keys(elementBase).length > 0;
+};
+
+const isStringLikeValueOption = (values: any[]): boolean => {
+    return values.every((x) => typeof x === "string");
 };
 
 const buildListElementPath = (): any => {
@@ -327,7 +366,6 @@ const validationProcessAttributes = (
         const attrInfo = getAttrInfo(baseIndex, currentBase, attrName);
         const attrIsSet = isSetAttribute(attrInfo);
         const attrIsComplex = isComplexAttribute(attrInfo, baseIndex);
-
         const constraints: { [key: string]: any } = {
             "sh:path": attrName,
         };
@@ -382,16 +420,11 @@ const validationProcessAttributes = (
             } else if (constraintKey === "cardinality") {
                 pendingCardinality = value;
 
-                if (attrIsSet && attrIsComplex) {
-                    constraints["sh:path"] = attrName;
-                    applyCardinalityRange(constraints, value);
-                } else {
-                    constraints["sh:path"] = attrIsSet && !hasNestedAttributes && !attrIsComplex
-                        ? buildSetValuePath(attrName)
-                        : attrName;
+                constraints["sh:path"] = attrIsSet && !hasNestedAttributes
+                    ? buildSetValuePath(attrName)
+                    : attrName;
 
-                    applyCardinalityRange(constraints, value);
-                }
+                applyCardinalityRange(constraints, value);
             } else if (constraintKey === "length") {
                 constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
 
@@ -424,9 +457,15 @@ const validationProcessAttributes = (
                     }
                 }
             } else if (constraintKey === "valueOption") {
-                constraints["sh:path"] = attrIsSet && !attrIsComplex ? buildSetValuePath(attrName) : attrName;
+                constraints["sh:path"] = attrIsSet ? buildSetValuePath(attrName) : attrName;
 
                 if (Array.isArray(value)) {
+                    if (attrIsSet && isStringLikeValueOption(value)) {
+                        constraints["sh:datatype"] = {
+                            "@id": "xsd:string",
+                        };
+                    }
+
                     constraints["sh:in"] = {
                         "@list": value.map((x) => {
                             if (x && x.id) {

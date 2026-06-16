@@ -12,7 +12,7 @@ RUN npm install && \
     npm prune --omit=dev && \
     npm cache clean --force
 
-FROM ruby:3.2
+FROM ruby:3.2-bullseye
 LABEL org.opencontainers.image.authors="Christoph Fabianek <christoph@ownyourdata.eu>"
 
 COPY docker/local-gem/*.gem /tmp/
@@ -24,12 +24,14 @@ RUN groupadd -r user && \
     apt-get -o Dir::Cache::archives=/tmp/apt-cache install -y --no-install-recommends \
         libsodium-dev \
         jq \
-        python3-pip && \
+        python3-pip \
+        wget \
+        wkhtmltopdf && \
     gem install /tmp/*.gem && \
     gem install httparty ed25519 multibases multihashes multicodecs json-canonicalization optparse rbnacl dag uri && \
     gem install securerandom -v 0.1.1 && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
-    python3 -m pip install --no-cache-dir pytest requests pytest-subprocess --break-system-packages && \
+    python3 -m pip install --no-cache-dir pytest requests pytest-subprocess && \
     wget https://raw.githubusercontent.com/OwnYourData/oydid/main/cli/oydid.rb -O /usr/local/bin/oydid && \
     chmod 755 /usr/local/bin/oydid && \
     apt-get clean && \
