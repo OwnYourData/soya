@@ -1,0 +1,456 @@
+import { UISchemaElement } from "@jsonforms/core";
+import { FormRenderError } from "../../errors";
+import { SoyaDocument } from "../../interfaces";
+import { getLastUriPart, isIRI, parseJsonLd } from "../../utils/rdf";
+import { SparqlQueryBuilder } from "../../utils/sparql";
+import { JsonSchema, Layout, SoyaForm, SoyaFormOptions, SoyaFormResponse, StaticForm } from "./interfaces";
+import { XS_FLOATING_TYPES, XS_INTEGRAL_TYPES } from "../../utils/xsd";
+
+export * from './interfaces';
+
+class FormBuilder {
+  constructor(
+    private _builder: SparqlQueryBuilder,
+    private _mainClassUri: string,
+    public readonly options: SoyaFormOptions,
+  ) { }
+
+  private _getTranslatedProperty = async (propUri: string, predicate: string = 'rdfs:label'): Promise<string | undefined> => {
+    if (!isIRI(propUri))
+      return;
+
+    const language = this.options.language ?? 'en';
+    const query = await this._builder.query(`
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT * WHERE {
+        <${propUri}> ${predicate} ?var .
+        FILTER(lang(?var) = "${language}")
+      }`);
+
+    if (query[0])
+      return query[0].get('?var')
+        // split off language tag
+        ?.split('@')[0]
+        // remove leading and trailing quotes
+        ?.slice(1, -1) || undefined;
+    else
+      return;
+  }
+
+  private _handleClass = async (
+    name: string,
+    classUri: string,
+    layoutSubPath: string = '',
+    wrapInGroup: boolean = true,
+  ): Promise<SoyaForm> => {
+    const schema: JsonSchema = {
+      type: 'object',
+      properties: {},
+      required: [],
+    };
+    const layout: Layout = {
+      type: 'VerticalLayout',
+      elements: [],
+    }
+
+    const form: SoyaForm = {
+      schema,
+      // if specified, form is wrapped into a Group
+      // as it looks very nice :-)
+      // however, this might not be wanted for lists
+      // therefore it can be specified via a function argument
+      ui: wrapInGroup ? {
+        type: 'Group',
+        // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+        // capitalize first letter
+        label: name.charAt(0).toUpperCase() + name.slice(1),
+        elements: [layout],
+      } : layout,
+    };
+
+
+    // this if is just here to please typescript
+    // obviously it does not get that schema.properties is always set
+    // weirdly it thinks it could undefined...
+    if (!schema.properties || !schema.required)
+      return form;
+
+    const query = `
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX soya: <https://w3id.org/soya/ns#>
+
+    SELECT * WHERE {
+      ?prop rdfs:domain <${classUri}> .
+      ?prop a ?type .
+      ?prop rdfs:range ?range .
+      OPTIONAL {
+        ?prop soya:containerElementTypes ?containerElementType .
+      }
+
+      FILTER(?type IN (owl:DatatypeProperty, owl:ObjectProperty))
+    }`
+    const allProps = await this._builder.query(query);
+
+    for (const prop of allProps) {
+      const propUri = prop.get('?prop');
+      let elementType = prop.get('?range');
+
+      if (!elementType || !propUri)
+        continue;
+
+      const isList = elementType === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#List';
+      if (isList)
+        // || range to ensure it is not null
+        elementType = prop.get('?containerElementType') || elementType;
+
+      const propName = getLastUriPart(propUri);
+      if (
+        !propName
+        // if property has already been processed
+        // this can happen, if there are multiple container element types
+        // as the result set will contain an entry for each container element type
+        || !!schema.properties[propName]
+      )
+        continue;
+
+      let propSchema: JsonSchema = schema.properties[propName] = {};
+      const scope = `#/properties/${layoutSubPath}${propName}`;
+
+      // we don't check URIs from w3.org for linked classes
+      // as they can be used as "primitive" data types
+      // e.g. owl:Class with an enumeration of possible classes
+      if (!elementType.startsWith('http://www.w3.org')) {
+        // check if URI exists as a graph object
+        const refRange = await this._builder.query(`
+        SELECT * WHERE {
+          <${elementType}> ?p ?o .
+        }`);
+
+        // it's a graph object
+        // start recursion
+        let subForm: SoyaForm | undefined = undefined
+        if (refRange.length !== 0) {
+          subForm = await this._handleClass(
+            propName,
+            elementType,
+            // if it is a list, we must not specify a layout sub path
+            // apparently JSON-Forms calculates this layout sub path on its own
+            isList ? '' : `${layoutSubPath}${propName}/properties/`,
+            // in case of rendering a list, we do not want to have the Group control as the outermost control
+            // this is generated by default, as it gives a nice heading and some structure
+            // however it looks awful in lists
+            // therefore we disble it here with this argument
+            !isList,
+          );
+        }
+
+        if (subForm) {
+          propSchema = subForm.schema;
+        }
+
+        // @ts-expect-error FIXME: something is wrong with the type if it is a list, probably an error in official types
+        schema.properties[propName] = isList ? {
+          type: 'array',
+          items: propSchema,
+        } : propSchema;
+
+        if (subForm) {
+          layout.elements.push(isList ? {
+            type: 'Control',
+            // @ts-expect-error FIXME: scope is not recognized in conjunction with options, probably an error in official types
+            scope: `#/properties/${propName}`,
+            options: {
+              showSortButtons: true,
+              detail: subForm.ui,
+            }
+          } : subForm.ui);
+
+          // proceed with next property
+          continue;
+        }
+      }
+
+      // it's something else (e.g. XML schema)
+      propSchema.type = 'string';
+
+      // try to get hash from XML schema string
+      const xsHash = elementType.split('#')[1];
+      if (xsHash) {
+        if (XS_FLOATING_TYPES.indexOf(xsHash) !== -1)
+          propSchema.type = 'number';
+        else if (XS_INTEGRAL_TYPES.indexOf(xsHash) !== -1)
+          propSchema.type = 'integer';
+        else
+          switch (xsHash) {
+            case 'date':
+              propSchema.format = 'date';
+              break;
+            case 'time':
+              propSchema.format = 'time';
+              break;
+            case 'dateTime':
+              propSchema.format = 'date-time';
+              break;
+            case 'boolean':
+              propSchema.type = 'boolean';
+              break;
+          }
+      }
+
+      // see if we can get some information out of a SHACL shape
+      const shaclConstraintList = await this._builder.query(`
+          PREFIX sh: <http://www.w3.org/ns/shacl#>
+          SELECT * WHERE {
+            ?shprop sh:path <${propUri}> .
+            OPTIONAL { ?shprop sh:minCount ?minCount . }
+            OPTIONAL { ?shprop sh:maxLength ?maxLength . }
+            OPTIONAL { ?shprop sh:pattern ?pattern . }
+            OPTIONAL { ?shprop sh:in ?in . }
+          }`);
+
+      let minCount: number = 0;
+      if (shaclConstraintList[0]) {
+        const shaclConstraint = shaclConstraintList[0];
+
+        const _minCount = shaclConstraint.get('?minCount');
+
+        if (_minCount && (minCount = parseInt(_minCount)) >= 1)
+          schema.required.push(propName);
+
+        const maxLength = shaclConstraint.get('?maxLength');
+        if (maxLength)
+          propSchema.maxLength = parseInt(maxLength);
+
+        const pattern = shaclConstraint.get('?pattern');
+        if (pattern)
+          propSchema.pattern = pattern;
+      }
+
+      // TODO: unfortunately this query is SUPER SLOW for big graphs
+      // ... I mean, really really slow
+      // ... unlike this one https://www.youtube.com/watch?v=XeD_WB17NBc
+      // most probably this is due to the * operator
+
+      // const multiItems = await this._builder.query(`
+      //   PREFIX sh: <http://www.w3.org/ns/shacl#>
+      //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      //   SELECT * WHERE {
+      //       ?shprop sh:path ?propUri .
+      //       ?shprop sh:in ?in .
+      //       ?in rdf:rest*/rdf:first ?entry .
+      //   }`);
+
+      // BEGIN of ugly rewrite of above SPARQL query
+      const firstItem = await this._builder.query(`
+          PREFIX sh: <http://www.w3.org/ns/shacl#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          SELECT * WHERE {
+            ?shprop sh:path <${propUri}> .
+            ?shprop sh:in ?in .
+            ?in rdf:first ?entry .
+          }`);
+
+      // this enum format is defined by jsonforms
+      // however they don't seem to export an interface
+      const enumList: {
+        const: string,
+        title: string,
+      }[] = [];
+      const addEnumItem = async (valueOrIRI: string) => {
+        const _value = getLastUriPart(valueOrIRI) ?? valueOrIRI;
+
+        enumList.push({
+          const: _value,
+          title: await this._getTranslatedProperty(valueOrIRI) ?? _value,
+        });
+      }
+
+      if (firstItem.length !== 0) {
+        let item = firstItem[0];
+        const firstValue = item?.get('?entry');
+
+        if (item && firstValue) {
+          await addEnumItem(firstValue);
+
+          const subItems = await this._builder.query(`
+              PREFIX sh: <http://www.w3.org/ns/shacl#>
+              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+              SELECT * WHERE {   
+                ?in rdf:rest ?rest .
+                ?rest rdf:first ?first .
+              }`);
+
+          let rest: string | null | undefined = item.get('?in');
+
+          // this resolves the chained list of rest and first
+          while (rest) {
+            const tempItem = subItems.find(x => x.get('?in') === rest);
+            const tempRest = tempItem?.get('?rest');
+            const value = tempItem?.get('?first');
+
+            if (value)
+              await addEnumItem(value);
+
+            rest = tempRest;
+          }
+        }
+      }
+      // END of ugly rewrite of above SPARQL query
+
+      if (enumList.length !== 0) {
+        if (minCount >= 1) {
+          propSchema.type = 'array';
+          propSchema.uniqueItems = true;
+        }
+        propSchema.oneOf = enumList;
+      }
+
+      const element: UISchemaElement = {
+        type: 'Control',
+        // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
+        scope,
+      };
+      layout.elements.push(element);
+
+      // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+      element.label = await this._getTranslatedProperty(propUri);
+
+      // @ts-expect-error FIXME: label is not recognized, probably an error in official types
+      element.description = await this._getTranslatedProperty(
+        propUri,
+        'rdfs:comment',
+      );
+    }
+
+    return form;
+  }
+
+  build = async (): Promise<SoyaFormResponse> => {
+    const name = getLastUriPart(this._mainClassUri);
+    if (!name)
+      throw new FormRenderError('Main class name not found.');
+
+    const form = await this._handleClass(
+      name,
+      this._mainClassUri,
+    );
+
+    const retVal: SoyaFormResponse = {
+      schema: form.schema,
+      ui: form.ui,
+      options: [],
+    };
+
+    // FIXME: This query does unfortunately not work
+    // although it does work within graphDB
+    // Therefore we have to go the manual, programmatic way ...
+
+    // get all available languages
+    // const langQuery = await this._builder.query(`
+    // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    // SELECT DISTINCT (lang(?label) as ?lang) WHERE {
+    //     ?shprop rdfs:label ?label .
+    // }`);
+    const langQuery = await this._builder.query(`
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?label WHERE {
+        ?shprop rdfs:label ?label .
+    }`);
+    if (langQuery.length !== 0)
+      retVal.options = (langQuery
+        .map(x => x.get('?label'))
+        .map(x => {
+          const s = x?.split('@');
+          if (s)
+            return s[s.length - 1];
+
+          return;
+        })
+        .filter((val, index, self) => !!val && self.indexOf(val) === index) as string[])
+        .map(lang => ({
+          language: lang,
+        }));
+
+    return retVal;
+  }
+}
+
+export const getSoyaForm = async (
+  soyaStructure: SoyaDocument,
+  options: SoyaFormOptions = {},
+): Promise<SoyaFormResponse> => {
+  // check if there is a static form available
+  // ui and schema are currently our "fingerprint" for finding form schemas
+
+  const staticForms: StaticForm[] = soyaStructure["@graph"].filter(x => !!x.ui || !!x.schema);
+
+  const dataSet = await parseJsonLd(soyaStructure);
+  const builder = new SparqlQueryBuilder(dataSet);
+
+  const classes = await builder.query(`
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  SELECT ?s WHERE {
+    ?s a owl:Class .
+    # exclude all classes that are nested in a parent class
+    FILTER NOT EXISTS {
+      ?rel rdfs:range ?s .
+    }
+  }`);
+
+  let defaultForm: SoyaFormResponse | undefined = undefined;
+  if (classes[0]) {
+    // we only support one base for now
+    const mainClass = classes[0];
+    const mainClassUri = mainClass.get('?s');
+
+    if (mainClassUri) {
+      defaultForm = await new FormBuilder(
+        builder,
+        mainClassUri,
+        options,
+      ).build();
+    }
+  }
+
+  // check if we can find the requested form in our static forms
+  const requestedForm = staticForms.find(f =>
+    f.language == options.language &&
+    f.tag == options.tag
+    // fallback is of course our computed form
+  ) ?? defaultForm;
+
+  let formOptions: SoyaFormOptions[] = [];
+
+  // add default options, if available
+  if (defaultForm)
+    formOptions = formOptions.concat(defaultForm.options);
+
+  // add static options
+  formOptions = formOptions.concat(staticForms.map<SoyaFormOptions>(f => ({
+    language: f.language,
+    tag: f.tag,
+  })));
+
+  // substitute schema with schema from computed form, if not available
+  const schema = requestedForm?.schema ?? defaultForm?.schema;
+  // substitute ui with ui from computed form, if not available
+  const ui = requestedForm?.ui ?? defaultForm?.ui;
+
+  if (schema && ui)
+    return {
+      schema,
+      ui,
+      // distinct the list of options
+      // so that we do not show an option combination twice
+      options: formOptions.filter((fo, idx, arr) => {
+        return arr.findIndex((val) =>
+          val.language === fo.language &&
+          val.tag === fo.tag
+        ) === idx;
+      })
+    };
+  else
+    throw new FormRenderError('Could not find static forms and could not render default form');
+}
