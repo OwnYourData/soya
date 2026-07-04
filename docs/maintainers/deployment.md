@@ -15,6 +15,10 @@ A typical SOyA setup consists of the following components:
 - **Web-CLI (soya-web-cli)**  
   A browser-accessible command interface to interact with the repository.
 
+- **SOyA-Bud (soya-bud)**  
+  A web UI for browsing and editing SOyA structures in a repository
+  (schema view, YAML editing, form rendering, data visualization).
+
 - **CLI (soya CLI tool)**  
   A local command-line tool enabling authoring, validation, and interaction with repositories directly from the terminal.
 

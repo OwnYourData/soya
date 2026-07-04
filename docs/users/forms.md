@@ -245,6 +245,153 @@ When the form is embedded, the JSON **Data** panel is hidden, so the host applic
 
 ---
 
+## Dynamic Form Fields
+
+Besides static `enum`/`oneOf` value lists, SOyA-Form supports two field types
+whose choices come from an **external API at runtime**. Both are declared as
+custom properties on the field's subschema inside a Form overlay — the rest of
+the schema/ui stays ordinary JSONForms.
+
+Both expect the API to return a JSON array in `oneOf` notation, i.e. entries
+with a stored value (`const`) and a display label (`title`):
+
+```json
+[
+  { "const": "AT", "title": "Austria" },
+  { "const": "DE", "title": "Germany" },
+  { "const": "CH", "title": "Switzerland" }
+]
+```
+
+> **Note:** the API is called directly from the browser, so the endpoint must
+> allow cross-origin requests (CORS) from the SOyA-Form origin.
+
+### Dynamic Dropdown (`enumApi`)
+
+A field with an `enumApi` property is rendered as a dropdown whose values are
+fetched **once when the form loads**. This suits value lists that change over
+time but are small enough to load completely (countries, departments, units).
+
+```yaml
+meta:
+  name: EmployeeOnboarding
+
+content:
+  bases:
+    - name: Employee
+      attributes:
+        name: String
+        department: String
+
+  overlays:
+    - type: OverlayForm
+      base: Employee
+      name: EmployeeFormOverlay
+      language: en
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          department:
+            type: string
+            enumApi: "https://api.example.com/departments"
+        required:
+          - name
+      ui:
+        type: VerticalLayout
+        elements:
+          - type: Control
+            scope: "#/properties/name"
+          - type: Control
+            scope: "#/properties/department"
+```
+
+At load time SOyA-Form fetches `https://api.example.com/departments`
+(`Accept: application/json`), removes the `enumApi` property, and inserts the
+response as the field's `oneOf` — the user sees a regular dropdown with the
+current departments. If the API responds with the example above, selecting
+"Austria" stores `"AT"` in the form data.
+
+> `enumApi` is evaluated for the properties on the top level of the form
+> schema.
+
+### Search-as-you-type (`saytApi`)
+
+For datasets that are too large for a dropdown (customer lists, product
+catalogs, medical terminologies), a field with a `saytApi` property is
+rendered as an **autocomplete**: starting at the second typed character, the
+form queries the API with the current input and shows the matching entries as
+suggestions.
+
+```yaml
+    - type: OverlayForm
+      base: Order
+      name: OrderFormOverlay
+      language: en
+      schema:
+        type: object
+        properties:
+          product:
+            type: string
+            saytApi: "https://api.example.com/products"
+      ui:
+        type: VerticalLayout
+        elements:
+          - type: Control
+            scope: "#/properties/product"
+```
+
+While the user types `lap`, the form issues:
+
+```
+GET https://api.example.com/products?q=lap&q_field=title
+```
+
+The endpoint is expected to filter its entries by the `q` value (matching the
+field named in `q_field`, i.e. the display label) and to answer in the same
+`[{ "const": ..., "title": ... }]` format. Picking the suggestion
+"Laptop 15-inch" stores its `const` value in the form data; the label is
+resolved back automatically when the form is re-opened with existing data.
+Responses are cached per query and stale requests are cancelled while typing.
+
+### Authenticated Endpoints (`auth_token`)
+
+If the API requires authentication, add an `auth_token` property next to
+`enumApi`/`saytApi`. Its value is **not the token itself** but the *name of a
+URL query parameter* of the form URL from which the token is read at runtime —
+tokens therefore never end up inside the (publicly stored) SOyA structure:
+
+```yaml
+          department:
+            type: string
+            enumApi: "https://api.example.com/departments"
+            auth_token: "token"
+```
+
+When the form is opened as
+
+```
+https://soya-form.ownyourdata.eu/?schemaDri=EmployeeOnboarding&token=eyJhbGciOi...
+```
+
+every `enumApi`/`saytApi` request for this field carries the header
+
+```
+Authorization: Bearer eyJhbGciOi...
+```
+
+This plays well with embedding: the host application obtains the token
+(e.g. via its own OAuth flow) and passes it into the `iframe` URL. Two things
+to keep in mind:
+
+- the token is part of the form URL — do **not** include it in shared
+  permalinks, and prefer short-lived tokens;
+- the parameter name is freely choosable (`auth_token: "myToken"` reads
+  `&myToken=...`), so different fields can even use different tokens.
+
+---
+
 ## How Form Overlays Work Internally
 
 When a Form overlay is converted into JSON-LD via `soya init`, the `schema` and `ui` are stored as part of the SOyA structure under the `<base>Form` node, together with the `tag` and `language` selectors. This mirrors how other overlays are handled:

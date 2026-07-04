@@ -26,10 +26,16 @@ Like other overlays in SOyA, transformation overlays are authored in YAML and co
 
 ## Supported Engines
 
-SOyA currently supports two transformation engines:
+SOyA currently supports three transformation engines:
 
 - **jq** – a lightweight and flexible JSON processor. Transformations are written as jq filter expressions and are well suited for restructuring JSON or JSON-LD documents.
 - **Handlebars** – a template engine for generating structured text or document-like output from JSON/JSON-LD input. Transformations are written as templates with placeholders and sections.
+- **SenML** – normalization of [SenML](https://datatracker.ietf.org/doc/html/rfc8428) sensor data records (resolves base fields into fully qualified records). Unlike jq and Handlebars this engine takes no transformation specification; the overlay only selects the engine.
+
+> **Note:** the previously available **JOLT** engine is no longer supported
+> since the Node 24 stack (soya-js ≥ 0.9 / soya-cli ≥ 0.18). Existing
+> `engine: jolt` overlays should be rewritten as `jq` or `handlebars`
+> transformations.
 
 In practice, the difference is straightforward:
 
@@ -216,6 +222,103 @@ For many SOyA workflows, jq is the better fit for model-to-model transformations
 
 ---
 
+## Deriving Transformations from Alignments (`soya map`)
+
+Writing jq filters or Handlebars templates by hand is not always necessary.
+If two SOyA structures are **semantically aligned**, `soya map` can derive a
+Handlebars mapping template automatically.
+
+### Alignment Overlays
+
+An alignment overlay (`OverlayAlignment`) declares that an attribute of a
+structure has the same meaning as a property of another vocabulary or
+structure. Technically this is expressed as `rdfs:subPropertyOf` relations:
+
+```yaml
+meta:
+  name: OYD_Company
+  namespace:
+    schema: "https://schema.org/"
+    oyd_organisation: "https://soya.ownyourdata.eu/OYD_Organisation/"
+
+content:
+  overlays:
+    - type: OverlayAlignment
+      base: Company
+      name: CompanyAlignmentOverlay
+      attributes:
+        # aligned to a shared, external vocabulary
+        registered_name: schema:legalName
+    - type: OverlayAlignment
+      base: Phonebook
+      name: PhonebookAlignmentOverlay
+      attributes:
+        # aligned directly to an attribute of another SOyA structure
+        number: oyd_organisation:phone
+```
+
+The referenced prefixes (`schema:`, `oyd_organisation:`) must be declared in
+`meta.namespace`. Use `soya template alignment` for a ready-made starting point.
+
+### Generating a Mapping
+
+```bash
+$ soya map OYD_Company OYD_Organisation
+{
+  "registered_name": "{{name}}",
+  "contact": {
+    "number": "{{phone}}"
+  },
+  "location": "{{address}}"
+}
+```
+
+The semantics of the two arguments:
+
+- the **keys** of the generated template follow the shape of the **first**
+  structure (`OYD_Company`) — this is the output format
+- the **placeholders** reference attributes of the **second** structure
+  (`OYD_Organisation`) — data of this structure serves as input
+
+The direction can simply be reversed; nested attributes are expressed as
+nested keys or dotted paths (`{{contact.number}}`):
+
+```bash
+$ soya map OYD_Organisation OYD_Company
+{
+  "name": "{{registered_name}}",
+  "address": "{{location}}",
+  "phone": "{{contact.number}}"
+}
+```
+
+### How Matching Works Internally
+
+`soya map` pulls both structures, merges their RDF graphs, and searches for
+attribute pairs that are connected via `rdfs:subPropertyOf` paths. Two
+attributes are considered mappable when
+
+- both are aligned to the **same external property**
+  (e.g. `registered_name` and `name` are both aligned to `schema:legalName`), or
+- one attribute is aligned **directly** to the other
+  (e.g. `number` → `oyd_organisation:phone`).
+
+For every pair, the attribute paths are traced back (via `rdfs:domain` /
+`rdfs:range`) to the structure's base class, which is how nested paths like
+`contact.number` are constructed.
+
+### What to Keep in Mind for Mappings
+
+- both structures need alignment overlays that share a common vocabulary or
+  reference each other — attributes without alignments are not mapped
+- the generated template is a **starting point**: review it and extend it
+  (e.g. formatting helpers) before using it in production
+- the result can be used directly as the `value` of a `handlebars`
+  transformation overlay (see above), turning an alignment into an executable
+  transformation
+
+---
+
 ## What to Keep in Mind
 
 When working with transformation in SOyA, the key points are:
@@ -228,6 +331,7 @@ When working with transformation in SOyA, the key points are:
 - transformation is executed with **`soya transform`** against a SOyA structure identified by name
 - `jq` is best suited for JSON-to-JSON transformations
 - `handlebars` is best suited for text- or view-oriented outputs
+- **`soya map`** derives Handlebars mapping templates automatically from alignment overlays
 
 ---
 

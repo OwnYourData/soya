@@ -17,7 +17,6 @@ To execute commands in the steps below make sure to have the following tools ins
 * `soya`: download and installation instructions [available here](https://github.com/OwnYourData/soya/tree/main/cli)    
     TL;DR: just run `npm i -g soya-cli@latest` or update with `npm update -g soya-cli`
 * `jq`: download and installation instructions [available here](https://stedolan.github.io/jq/download/)    
-* `jolt`: download and installation instructions [available here](https://github.com/bazaarvoice/jolt/)
 
 Alternatively, you can use a ready-to-use Docker image with all tools pre-installed:    
 [https://hub.docker.com/r/oydeu/soya-cli](https://hub.docker.com/r/oydeu/soya-cli) 
@@ -1049,7 +1048,7 @@ soya template validation | soya init
 
 #### Transformation
 
-The *Transformation* overlay define a set of transformation rules for a data record. Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation overlay. Currently, [`jq`](https://stedolan.github.io/jq/) and [`Jolt`](https://github.com/bazaarvoice/jolt/#jolt) are available engines for transformation overlays. 
+The *Transformation* overlay define a set of transformation rules for a data record. Transformations allow to convert a JSON-LD record (or an array of records) with a well-defined data model (based on a SOyA structure) into another data model using information from a tranformation overlay. Currently, [`jq`](https://jqlang.github.io/jq/), [Handlebars](https://handlebarsjs.com/), and [SenML](https://datatracker.ietf.org/doc/html/rfc8428) are available engines for transformation overlays. 
 
 In YAML a transformation overlay for `jq` has the following format:
 
@@ -1113,85 +1112,9 @@ soya template transformation.jq | soya init
 </details>
 
 
-In YAML a transformation overlay for `Jolt` has the following format:
-
-```yaml
-meta:
-  name: Sample_jolt_Transformation
-
-content:
-  overlays: 
-    - type: OverlayTransformation
-      name: SampleJoltTransformationOverlay
-      base: PersonA
-      engine: jolt
-      value:
-        - operation: shift
-          spec: 
-            "\\@context":
-              "\\@version": "\\@context.\\@version"
-              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
-            "\\@graph": 
-              "*": 
-                "#PersonB": "\\@graph[#2].\\@type"
-                "\\@id": "\\@graph[#2].\\@id"
-                "basePerson:firstname": "\\@graph[#2].first_name"
-                "basePerson:lastname": "\\@graph[#2].surname"
-                "basePerson:dateOfBirth": "\\@graph[#2].birthdate"
-                "basePerson:sex": "\\@graph[#2].gender"
-```
-
-*Hint:* use the command `soya template transformation.jolt` to show an example on the command line
-
-<details>
-  <summary>Output</summary>
-
-Use the following command to generate the output:    
-```bash
-soya template transformation.jolt | soya init
-```
-
-```json-ld
-{
-  "@context": {
-    "@version": 1.1,
-    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
-    "@base": "https://soya.data-container.net/PersonA_jolt_Transformation/"
-  },
-  "@graph": [
-    {
-      "@id": "PersonATransformation",
-      "engine": "jolt",
-      "value": [
-        {
-          "operation": "shift",
-          "spec": {
-            "\\@context": {
-              "\\@version": "\\@context.\\@version",
-              "#https://soya.data-container.net/PersonB/": "\\@context.\\@vocab"
-            },
-            "\\@graph": {
-              "*": {
-                "#PersonB": "\\@graph[#2].\\@type",
-                "\\@id": "\\@graph[#2].\\@id",
-                "basePerson:firstname": "\\@graph[#2].first_name",
-                "basePerson:lastname": "\\@graph[#2].surname",
-                "basePerson:dateOfBirth": "\\@graph[#2].birthdate",
-                "basePerson:sex": "\\@graph[#2].gender"
-              }
-            }
-          }
-        }
-      ],
-      "@type": "OverlayTransformation",
-      "onBase": "PersonA",
-      "name": "TransformationOverlay"
-    }
-  ]
-}
-```
-
-</details>
+> **Note:** the former `Jolt` transformation engine is no longer supported
+> since the Node 24 stack (soya-cli ≥ 0.18). Existing `engine: jolt` overlays
+> should be rewritten as `jq` or `handlebars` transformations.
 
 ## 2. Publishing Structures
 

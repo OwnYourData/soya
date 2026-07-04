@@ -68,8 +68,13 @@ The **soya-js** library implements the core logic required to process semantic o
 Responsibilities include:
 - parsing and resolving overlays
 - applying validation logic
-- executing transformations (e.g. jq, JOLT)
+- executing transformations (jq, handlebars, SenML)
 - exposing a stable programmatic API
+
+> Since the migration to the Node 24 stack (soya-js ≥ 0.9), the modernized
+> library lives in [`lib2/`](../../lib2) — see
+> [Migration to the Node 24 Stack](migration-node24.md). Support for JOLT
+> transformations was dropped with this migration.
 
 The library is designed to be:
 - embeddable in services or applications

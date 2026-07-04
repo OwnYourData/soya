@@ -8,20 +8,20 @@ from pathlib import Path
 
 cwd = os.getcwd()
 repo = "https://soya.ownyourdata.eu"
-playgrond = "https://playground.data-container.net"
+playground = "https://playground2.data-container.net"
 
 # ensure SOyA Repo and Playground are available
 def test_repos():
     response = requests.get(repo + "/api/active")
     assert response.status_code == 200
-    response = requests.get(playgrond + "/api/active")
+    response = requests.get(playground + "/api/active")
     assert response.status_code == 200
 
 # Tutorial tests with some input and jsonld output
 @pytest.mark.parametrize('input', ["person_simple", "employee", "foaf_person", "rest_api"])
 def test_tutorial01(fp, input):
     fp.allow_unregistered(True)
-    cmd = "curl -s https://playground.data-container.net/" + input + " | jq -r .yml | soya init"
+    cmd = "curl -s \"" + playground + "/api/data?schema=" + input + "\" | jq -r '.[0].data.yml' | soya init"
     process = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     assert process.returncode == 0
     assert process.stdout.strip() == Path(cwd+"/examples/"+input+".jsonld").read_text().strip()

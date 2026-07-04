@@ -53,13 +53,10 @@ or build forms and transformations, start here:
 If you want to **extend, integrate, or embed SOyA** into applications or
 services, this section explains the internal architecture and APIs:
 
-- **Architecture** – Components and responsibilities
-- **soya-js Library** – API usage and integration
-- **CLI** – Commands, configuration, and examples
-- **Repository Service** – API, Docker setup, deployment
-- **Data Models** – DRI, versioning, and SemVer policy
-- **Contribution Guide** – Development setup, testing, release flow
-- **Security** – Supply chain, signing, and integrity (optional)
+- [**Architecture**](developers/architecture.md) – Components and responsibilities
+- [**soya-js Library**](developers/soya-js.md) – API usage and integration
+- [**CLI**](developers/cli.md) – Commands, testing, and examples
+- [**Node 24 Migration**](developers/migration-node24.md) – Migration of the JS/TS stack from Node 16 to Node 24 (lib2/cli2)
 
 → See [`docs/developers/`](developers/architecture.md)
 
@@ -70,11 +67,12 @@ services, this section explains the internal architecture and APIs:
 If you are responsible for **releases, documentation consistency, or
 governance**, these documents define the rules and processes:
 
-- **Deployment** - How to configure and operate a SOyA environment
-- **Documentation Playbook** – Structure, sources of truth, conventions
-- **Release Process** – Versioning, changelogs, and publication
+- [**Deployment**](maintainers/deployment.md) - How to configure and operate a SOyA environment
+- [**User Management**](maintainers/user-management.md) – Users, organizations, and OAuth credentials of a repository
+- [**Documentation Playbook**](maintainers/documentation.md) – Structure, sources of truth, conventions
+- [**Release Process**](maintainers/releases.md) – Versioning, changelogs, and publication
 
-→ See [`docs/maintainers/`](maintainers/documentation-playbook.md)
+→ See [`docs/maintainers/`](maintainers/deployment.md)
 
 ---
 
@@ -82,11 +80,8 @@ governance**, these documents define the rules and processes:
 
 - **Examples**  
   Minimal and advanced SOyA overlays and configurations are available under
-  [`examples/`](examples/).
-- **Use Cases**. 
-  Documented use cases illustrate how SOyA is applied in concrete domains and
-  project contexts, highlighting typical integration patterns and adoption
-  scenarios: [`use-cases/`](use-cases/).
+  [`examples/`](examples/). A guided tour is provided in the
+  [tutorial](../tutorial/README.md).
 - **Academic Publications**  
   SOyA has been developed and evaluated in several research and innovation
   projects. Relevant publications and background material are collected in
