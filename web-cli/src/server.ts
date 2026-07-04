@@ -226,7 +226,9 @@ const createRepoProxyApp = (config: AppConfig): Express => {
       };
 
       if (rawBody !== null) {
-        fetchInit.body = rawBody;
+        // copy Buffer into a plain Uint8Array, as @types/node >= 22
+        // does not accept Buffer (Uint8Array<ArrayBufferLike>) as fetch BodyInit anymore
+        fetchInit.body = Uint8Array.from(rawBody);
       }
 
       const upstreamResponse = await fetch(upstreamUrl, fetchInit);

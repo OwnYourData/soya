@@ -1,0 +1,16 @@
+# applies to docker builds with the repository root as build context
+# (cli2/docker/Dockerfile, web-cli/Dockerfile*)
+#
+# - node_modules may contain symlinks pointing outside the context
+#   (e.g. lib2/node_modules/semcon-js during local development)
+# - a copied tsconfig.tsbuildinfo makes tsc skip emitting entirely
+#   ("everything up to date") -> empty dist in the image
+**/node_modules
+**/dist
+**/build
+**/tsconfig.tsbuildinfo
+**/.git
+
+# legacy Node 16 components are never part of docker images
+lib
+cli
