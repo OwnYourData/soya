@@ -1,0 +1,24 @@
+meta:
+  name: PersonA_jq_transformation
+
+content:
+  overlays: 
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: PersonA
+      engine: jq
+      value: |
+        .["@graph"] | 
+        {
+          "@context": {
+            "@version":1.1,
+            "@vocab":"https://soya.data-container.net/PersonB/"},
+          "@graph": map( 
+            {"@id":.["@id"], 
+            "@type":"PersonB", 
+            "first_name":.["basePerson:firstname"], 
+            "surname":.["basePerson:lastname"], 
+            "birthdate":.["basePerson:dateOfBirth"], 
+            "gender":.["basePerson:sex"]}
+          )
+        }

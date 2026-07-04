@@ -1,0 +1,14 @@
+meta:
+  name: OYD_Organisation_to_Company_handlebars_transformation
+
+content:
+  overlays: 
+    - type: OverlayTransformation
+      name: TransformationOverlay
+      base: OYD_Organisation
+      engine: handlebars
+      value:
+        registered_name: "{{name}}" 
+        address: "{{location}}"
+        contact:
+          number: "{{phone}}"

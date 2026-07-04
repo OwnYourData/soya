@@ -1,0 +1,31 @@
+meta:
+  name: SenML_Transformation
+
+content:
+  bases:
+    - name: SenML
+      attributes:
+        # unit
+        u: string
+        # timestamp
+        t: integer
+        # value
+        v: float
+        # identifier/name
+        n: String
+        # base timestamp
+        bt: integer
+        # base value
+        bv: float
+        # base unit
+        bu: string
+        # base identifier/base name
+        bn: string
+        # base sum
+        bs : float
+
+  overlays: 
+    - type: OverlayTransformation
+      name: SenMLTransformationOverlay
+      base: SenML
+      engine: senml

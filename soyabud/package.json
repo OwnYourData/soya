@@ -1,0 +1,36 @@
+{
+  "name": "soya-bud",
+  "version": "0.6.0",
+  "license": "Apache-2.0",
+  "private": "true",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "serve": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "dockerize": "docker build -t oydeu/soya-bud ."
+  },
+  "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.4",
+    "bootstrap-vue": "^2.23.1",
+    "expression-eval": "^5.0.0",
+    "handlebars": "^4.7.8",
+    "semcon-js": "^0.4.0",
+    "soya-js": "file:../lib2",
+    "vue": "^2.7.16",
+    "vue-bootstrap-typeahead": "^0.2.6",
+    "vue-router": "^3.6.5",
+    "vuex": "^3.6.2",
+    "zingchart-vue": "^2.0.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue2": "^2.3.3",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.11",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  }
+}
