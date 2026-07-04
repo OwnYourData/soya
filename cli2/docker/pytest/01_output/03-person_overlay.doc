@@ -1,0 +1,57 @@
+{
+  "@context": {
+    "@base": "https://soya.ownyourdata.eu/PersonOverlay_Test/",
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@version": 1.1,
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "https://soya.ownyourdata.eu/Person_Test/PersonOverlayValidation",
+      "@type": "OverlayValidation",
+      "name": "PersonValidationOverlay_Test",
+      "onBase": "https://soya.ownyourdata.eu/Person_Test/Person",
+      "sh:property": [
+        {
+          "sh:maxCount": 1,
+          "sh:maxLength": 19,
+          "sh:minCount": 1,
+          "sh:minLength": 0,
+          "sh:path": "name",
+          "sh:pattern": "^[a-z ,.'-]+$"
+        },
+        {
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "sh:minRange": {
+            "@type": "xsd:date",
+            "@value": "1900-01-01"
+          },
+          "sh:path": "dateOfBirth"
+        },
+        {
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "sh:minInclusive": 0,
+          "sh:path": "age"
+        },
+        {
+          "sh:in": {
+            "@list": [
+              "male",
+              "female"
+            ]
+          },
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "sh:path": "sex"
+        },
+        {
+          "sh:minCount": 0,
+          "sh:path": "employer"
+        }
+      ],
+      "sh:targetClass": "https://soya.ownyourdata.eu/Person_Test/Person"
+    }
+  ]
+}

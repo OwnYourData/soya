@@ -1,0 +1,1 @@
+soya pull Person --repo $REPO | soya similar --repo $REPO | jq 'type == "array" and length > 0 and (.[0] | has("schema") and has("name") and has("similarity")) and .[0].similarity == 1'

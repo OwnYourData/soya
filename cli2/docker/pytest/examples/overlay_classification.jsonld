@@ -1,0 +1,35 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/PersonClassification/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "name",
+      "classification": [
+        "pii"
+      ]
+    },
+    {
+      "@id": "dateOfBirth",
+      "classification": [
+        "pii"
+      ]
+    },
+    {
+      "@id": "sex",
+      "classification": [
+        "pii",
+        "gdpr_sensitive"
+      ]
+    },
+    {
+      "@id": "OverlayClassification",
+      "@type": "OverlayClassification",
+      "onBase": "Person",
+      "name": "PersonClassificationOverlay"
+    }
+  ]
+}

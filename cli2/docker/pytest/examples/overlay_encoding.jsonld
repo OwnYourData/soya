@@ -1,0 +1,32 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@import": "https://ns.ownyourdata.eu/ns/soya-context.json",
+    "@base": "https://soya.ownyourdata.eu/PersonEncoding/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "name",
+      "encoding": "UTF-8"
+    },
+    {
+      "@id": "dateOfBirth",
+      "encoding": "UTF-8"
+    },
+    {
+      "@id": "age",
+      "encoding": "UTF-8"
+    },
+    {
+      "@id": "sex",
+      "encoding": "UTF-8"
+    },
+    {
+      "@id": "OverlayEncoding",
+      "@type": "OverlayEncoding",
+      "onBase": "Person",
+      "name": "PersonEncodingOverlay"
+    }
+  ]
+}

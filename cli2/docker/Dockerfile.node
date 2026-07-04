@@ -1,0 +1,14 @@
+FROM node:24 AS builder
+
+WORKDIR /app
+ENV NODE_ENV=development
+# build from repository root:
+#   docker build -f cli2/docker/Dockerfile.node -t oydeu/soya-cli:node .
+COPY ./lib2 /lib2
+COPY ./cli2/package.json ./cli2/tsconfig.json ./
+COPY ./cli2/res ./res
+COPY ./cli2/src ./src
+RUN cd /lib2 && npm install && npm run build && \
+    cd /app && npm install && npm run build
+
+CMD ["bash"]

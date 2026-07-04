@@ -1,0 +1,21 @@
+meta:
+  name: StringPatternSet
+  
+content:
+  bases:
+    - name: Simple
+      attributes:
+        group: set<Group>
+    - name: Group
+      attributes:
+        val: String
+
+  overlays:
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        group:
+          attributes:
+            val:
+              pattern: "^SO[yY]A$"

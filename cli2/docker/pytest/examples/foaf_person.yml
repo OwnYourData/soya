@@ -1,0 +1,16 @@
+meta:
+  name: Foaf
+  namespace:
+    foaf: "http://xmlns.com/foaf/0.1/"
+
+content:
+  bases:
+    - name: Agent
+      subClassOf: foaf:agent
+    - name: Person
+      subClassOf: 
+        - Agent
+      attributes:
+        firstName: String
+        lastName: String
+        did: String

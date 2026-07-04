@@ -1,0 +1,1 @@
+soya init

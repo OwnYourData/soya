@@ -1,0 +1,1 @@
+curl -H 'Content-Type: application/json' -d @- -X POST $WEBCLI/api/v1/validate/jsonld

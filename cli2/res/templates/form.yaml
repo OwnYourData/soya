@@ -1,0 +1,31 @@
+meta:
+  name: Person
+
+content:
+  overlays: 
+    - type: OverlayForm
+      base: Person
+      name: PersonFormOverlay
+      # provide a language tag for multi-language support
+      language: en
+      # provide a general tag for providing different forms
+      tag: basic
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          dateOfBirth:
+            type: string
+            format: date
+        required: []
+      ui:
+        type: VerticalLayout
+        elements:
+        - type: Group
+          label: Person
+          elements:
+          - type: Control
+            scope: "#/properties/name"
+          - type: Control
+            scope: "#/properties/dateOfBirth"

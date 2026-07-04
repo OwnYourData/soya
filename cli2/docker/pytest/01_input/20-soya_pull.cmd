@@ -1,0 +1,1 @@
+soya pull Did --repo $REPO --type=yaml

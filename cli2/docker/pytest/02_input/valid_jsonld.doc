@@ -1,0 +1,10 @@
+{
+  "@context": {
+    "name": "http://schema.org/name",
+    "email": "http://schema.org/email",
+    "jobTitle": "http://schema.org/jobTitle"
+  },
+  "name": "John Smith",
+  "email": "john.smith@example.com",
+  "jobTitle": "Software Developer"
+}

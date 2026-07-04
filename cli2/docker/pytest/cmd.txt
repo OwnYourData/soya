@@ -1,0 +1,7 @@
+cat person_simple.yml | jq -Rs '{yml: ., "meta":{"schema":"person_simple"}}'  | curl -H "Content-Type: application/json" -d @- -X POST https://playground2.data-container.net/api/data
+
+cat employee.yml | jq -Rs '{yml: ., "meta":{"schema":"employee"}}'  | curl -H "Content-Type: application/json" -d @- -X POST https://playground2.data-container.net/api/data
+
+cat foaf_person.yml | jq -Rs '{yml: ., "meta":{"schema":"foaf_person"}}'  | curl -H "Content-Type: application/json" -d @- -X POST https://playground2.data-container.net/api/data
+
+cat rest_api.yml | jq -Rs '{yml: ., "meta":{"schema":"rest_api"}}'  | curl -H "Content-Type: application/json" -d @- -X POST https://playground2.data-container.net/api/data

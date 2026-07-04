@@ -1,0 +1,1 @@
+{"message":"jsonld.ValidationError: Safe mode validation error.","error":{"name":"jsonld.ValidationError","details":{"event":{"type":["JsonLdEvent"],"code":"invalid property","level":"warning","message":"Dropping property that did not expand into an absolute IRI or keyword.","details":{"property":"payload","expandedProperty":"payload"}}}}}

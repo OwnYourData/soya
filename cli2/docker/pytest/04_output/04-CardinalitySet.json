@@ -1,0 +1,28 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "id": {
+        "termType": "BlankNode",
+        "value": "df_0_1",
+        "listHead": true
+      },
+      "message": [
+        {
+          "value": "Value does not have shape Blank node df_1_5",
+          "datatype": {
+            "value": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          "language": ""
+        }
+      ],
+      "termType": "BlankNode",
+      "value": "df_1_7",
+      "listHead": true,
+      "severity": {
+        "value": "http://www.w3.org/ns/shacl#Violation"
+      }
+    }
+  ],
+  "classChecks": []
+}
