@@ -1,3 +1,9 @@
+# similarity scores for POST /api/soya/similar
+# (was present in the legacy repository/Gemfile but got lost in repo2;
+#  without it String::Similarity raises and "rescue 0" silently
+#  turns every similarity score into 0)
+gem 'string-similarity'
+
 # turtle output
 gem 'rdf'
 gem 'rdf-normalize'

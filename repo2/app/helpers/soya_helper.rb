@@ -66,8 +66,22 @@ module SoyaHelper
         return raw, dri, nil
     end
 
+    # extract attribute names (@id of properties with a domain) from a SOyA document
+    # (ported from repository/app/helpers/base_helper.rb - was missing in repo2,
+    #  which made POST /api/soya/similar fail with a NameError -> HTTP 500)
+    def getAttributes(input)
+        input["@graph"].map{|e| e["@id"] unless e["domain"].nil?}.compact
+    rescue => e
+        Rails.logger.warn "getAttributes: could not extract attributes (#{e.class}: #{e.message}) - returning []"
+        return []
+    end
+
     # compare 2 vectors by calculating similarity search on shorter vector
     def similarity(vec1, vec2)
+        # avoid NaN (0.0/0) for two empty vectors
+        if vec1.empty? && vec2.empty?
+            return 0.0
+        end
         simvec = []
         for i in 0..([vec1.length, vec2.length].min-1)
             simvec << String::Similarity.cosine(vec1[i], vec2[i])

@@ -131,21 +131,47 @@ module Api
 
             def similar
                 inputAttributes = getAttributes(params)
+                if inputAttributes.empty?
+                    Rails.logger.warn "soya#similar: no attributes extracted from input document - all scores will be 0"
+                end
                 retval = []
                 Store.all.each do |item|
-                    if item.dri.to_s != ""
+                    # only consider SOyA structures: "soya_dri" is the structure's
+                    # DRI (resolvable via GET /<dri>, see get_soya) - the column
+                    # "dri" holds the internal record DRI and can NOT be resolved
+                    if item.soya_dri.to_s != ""
                         if item.item.is_a?(Hash)
                             my_item = item.item
                         else
-                            my_item = JSON.parse(item.item.to_s) rescue nil
+                            begin
+                                my_item = JSON.parse(item.item.to_s)
+                            rescue => e
+                                Rails.logger.warn "soya#similar: skipping store item #{item.id} (#{item.soya_name}): cannot parse item - #{e.class}: #{e.message}"
+                                my_item = nil
+                            end
                         end
                         if !my_item.nil?
-                            simval = similarity(inputAttributes, getAttributes(my_item)) rescue 0
-                            retval << {:schema => item.dri.to_s, :similarity => simval}
+                            begin
+                                simval = similarity(inputAttributes, getAttributes(my_item))
+                            rescue => e
+                                Rails.logger.warn "soya#similar: similarity calculation failed for store item #{item.id} (#{item.soya_name}) - #{e.class}: #{e.message}"
+                                simval = 0
+                            end
+                            retval << {:schema => item.soya_dri.to_s, :name => item.soya_name.to_s, :similarity => simval}
                         end
                     end
                 end
-                retval = retval.sort_by { |i| i[:similarity] }.reverse.first(20) rescue []
+                # multiple store records can point to the same structure
+                # (current tag + version records) -> keep best score per structure
+                begin
+                    retval = retval
+                        .group_by { |i| i[:name] != "" ? i[:name] : i[:schema] }
+                        .map { |_, v| v.max_by { |i| i[:similarity] } }
+                    retval = retval.sort_by { |i| i[:similarity] }.reverse.first(20)
+                rescue => e
+                    Rails.logger.error "soya#similar: aggregating/sorting results failed - #{e.class}: #{e.message}"
+                    retval = []
+                end
 
                 render json: retval.to_json,
                        status: 200
