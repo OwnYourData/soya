@@ -1,6 +1,6 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
 import { URL } from "url";
-import { crypto } from "vaultifier/dist/main";
+import { crypto } from "semcon-js";
 import { logger } from "../services/logger";
 import { serializeJsonLd } from "./rdf";
 

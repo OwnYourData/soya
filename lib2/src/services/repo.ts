@@ -1,7 +1,6 @@
-import { Vaultifier, VaultMinMeta, VaultPostItem, parsePostResult } from 'vaultifier/dist/main';
+import { MaybeAuthenticated, parsePostResult, Semcon, SemconMinMeta, SemconPostItem } from 'semcon-js';
 import { Cache } from './cache';
 import { logger } from './logger';
-import { MaybeAuthenticated } from 'vaultifier/dist/module/communicator';
 
 // const DEFAULT_REPO = 'http://localhost:8080';
 export const DEFAULT_REPO = 'https://soya.ownyourdata.eu';
@@ -54,14 +53,19 @@ export interface RepoServiceConfig {
   defaultAuth?: MaybeAuthenticated;
 
   /**
-   * Optional pre-initialized vaultifier instance.
+   * Optional pre-initialized semcon instance.
    */
-  vaultifier?: Vaultifier;
+  semcon?: Semcon;
+
+  /**
+   * @deprecated use `semcon` instead
+   */
+  vaultifier?: Semcon;
 }
 
 export class RepoService {
   private _cache = new Cache();
-  private _vaultifier?: Vaultifier;
+  private _semcon?: Semcon;
   private readonly _defaultAuth: MaybeAuthenticated;
 
   constructor(
@@ -70,7 +74,7 @@ export class RepoService {
     config?: RepoServiceConfig,
   ) {
     this._defaultAuth = config?.defaultAuth ?? false;
-    this._vaultifier = config?.vaultifier;
+    this._semcon = config?.semcon ?? config?.vaultifier;
   }
 
   private static INSTANCE = new RepoService();
@@ -79,63 +83,70 @@ export class RepoService {
   static initialize = (instance: RepoService) => RepoService.INSTANCE = instance;
 
   /**
-   * Create a new RepoService from an already existing vaultifier.
+   * Create a new RepoService from an already existing semcon instance.
    *
    * For authenticated integrations this should be the preferred entry point.
    * We intentionally default to 'optional' here:
    * - public repos continue to work
    * - protected repos receive the bearer token when available
    *
-   * @param vaultifier Vaultifier to be used (needs to be initialized already!)
+   * @param semcon Semcon to be used (needs to be initialized already!)
    * @param defaultAuth auth behavior for repo requests, defaults to 'optional'
    * @returns new RepoService
    */
-  static fromVaultifier = (
-    vaultifier: Vaultifier,
+  static fromSemcon = (
+    semcon: Semcon,
     defaultAuth: MaybeAuthenticated = 'optional',
   ) => {
-    const repo =
-      (vaultifier as any)?.urls?.baseUrl ??
-      (vaultifier as any)?.baseUrl ??
-      DEFAULT_REPO;
+    const repo = semcon.urls.baseUrl ?? DEFAULT_REPO;
 
     return new RepoService(repo, {
-      vaultifier,
+      semcon,
       defaultAuth,
     });
   }
+
+  /**
+   * @deprecated use {@link RepoService.fromSemcon} instead
+   */
+  static fromVaultifier = RepoService.fromSemcon;
 
   get defaultAuth(): MaybeAuthenticated {
     return this._defaultAuth;
   }
 
-  getVaultifier = async (): Promise<Vaultifier> => {
-    let v = this._vaultifier;
+  getSemcon = async (): Promise<Semcon> => {
+    let s = this._semcon;
 
-    if (!v) {
-      logger.debug(`Initializing vaultifier: ${this.repo}`);
-      this._vaultifier = v = new Vaultifier(this.repo);
+    if (!s) {
+      logger.debug(`Initializing semcon: ${this.repo}`);
+      this._semcon = s = new Semcon(this.repo);
       try {
-        await v.initialize();
+        await s.initialize();
         // catch all errors that arise due to authentication issues
         // currently we don't care about these errors
         // as most things in soya are not authenticated
       } catch { }
     }
 
-    return v;
+    return s;
   }
+
+  /**
+   * @deprecated use {@link RepoService.getSemcon} instead
+   */
+  getVaultifier = async (): Promise<Semcon> => this.getSemcon();
 
   get = async (url: string, usesAuth: MaybeAuthenticated = this._defaultAuth): Promise<any> => {
     logger.debug(`GETting ${url}`);
-    const { data: res } = await (await this.getVaultifier()).get(url, usesAuth);
+    const { data: res } = await (await this.getSemcon()).get(url, usesAuth);
 
     return res;
   }
 
   post = async (url: string, usesAuth: MaybeAuthenticated = this._defaultAuth, data?: any): Promise<any> => {
     logger.debug(`POSTing ${url}`);
-    const { data: res } = await (await this.getVaultifier()).post(url, usesAuth, data);
+    const { data: res } = await (await this.getSemcon()).post(url, usesAuth, data);
 
     return res;
   }
@@ -144,9 +155,9 @@ export class RepoService {
     return (await this._cache.get(path, () => this.get(`/${path}`))).data;
   }
 
-  private _push = async (cb: (vaultifier: Vaultifier) => Promise<VaultMinMeta>): Promise<VaultMinMeta> => {
-    const v = await this.getVaultifier();
-    const meta = await cb(v);
+  private _push = async (cb: (semcon: Semcon) => Promise<SemconMinMeta>): Promise<SemconMinMeta> => {
+    const s = await this.getSemcon();
+    const meta = await cb(s);
 
     logger.debug(`Returned id from push: ${meta.id}`);
 
@@ -156,26 +167,26 @@ export class RepoService {
   /**
    * @deprecated
    */
-  pushValue = async (data: any): Promise<VaultMinMeta> => {
-    return this._push((v) => {
+  pushValue = async (data: any): Promise<SemconMinMeta> => {
+    return this._push((s) => {
       logger.debug('Pushing value');
       logger.debug(JSON.stringify(data));
-      return v.postData(data, this._defaultAuth);
+      return s.postData(data, this._defaultAuth);
     });
   }
 
-  // we extend the VaultPostItem type here to allow for additional properties
+  // we extend the SemconPostItem type here to allow for additional properties
   // that might be soya specific
-  pushItem = async (item: VaultPostItem & { [key: string]: any }): Promise<VaultMinMeta> => {
-    return this._push(async (v) => {
+  pushItem = async (item: SemconPostItem & { [key: string]: any }): Promise<SemconMinMeta> => {
+    return this._push(async (s) => {
       logger.debug('Pushing item');
       logger.debug(JSON.stringify(item));
-      return parsePostResult(await v.post('/api/data', this._defaultAuth, item));
+      return parsePostResult(await s.post('/api/data', this._defaultAuth, item));
     });
   }
 
   delete = async (path: string) => {
-    return (await this.getVaultifier()).delete(`/${path}`, this._defaultAuth);
+    return (await this.getSemcon()).delete(`/${path}`, this._defaultAuth);
   }
 
   similar = async (data: any): Promise<any> => {

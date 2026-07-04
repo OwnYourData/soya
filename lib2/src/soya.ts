@@ -1,5 +1,5 @@
 import DatasetExt from "rdf-ext/lib/Dataset";
-import { VaultMinMeta } from "vaultifier";
+import { SemconMinMeta } from "semcon-js";
 import { JsonParseError } from "./errors";
 import { isInstance, SoyaDocument, SoyaInstance } from "./interfaces";
 import { logger, setLogger } from "./services/logger";
@@ -17,13 +17,6 @@ import axios from 'axios';
 import { Cache } from "./services/cache";
 
 const MIME_TYPE_JSON = 'application/json';
-
-const asStringInput = (input: unknown): string => {
-  if (typeof input === 'object')
-    return JSON.stringify(input);
-  else
-    return input as string;
-};
 
 const asObjectInput = (input: unknown): any => {
   if (typeof input === 'string')
@@ -48,7 +41,7 @@ export interface SoyaConfig {
 
 export interface PushResponse {
   value: any;
-  item: VaultMinMeta;
+  item: SemconMinMeta;
 }
 
 export interface PullOptions {
@@ -78,7 +71,7 @@ export class Soya {
 
   push = async (input: unknown, additionalProperties: { [key: string]: any } = {}): Promise<PushResponse> => {
     const data = asObjectInput(input);
-    let res: VaultMinMeta;
+    let res: SemconMinMeta;
     let value: string | undefined;
 
     if (isInstance(data)) {
@@ -141,7 +134,7 @@ export class Soya {
         mimeType: MIME_TYPE_JSON,
         ...additionalProperties,
       });
-      const vaultItem = await (await this.service.getVaultifier()).getItem({
+      const vaultItem = await (await this.service.getSemcon()).getItem({
         id: res.id,
       });
 
@@ -159,7 +152,9 @@ export class Soya {
   };
 
   similar = async (input: unknown): Promise<any> => {
-    return this.service.similar(asStringInput(input));
+    // NOTE: pass an object here — semcon's post() JSON-encodes the body itself,
+    // a pre-stringified body would end up double-encoded
+    return this.service.similar(asObjectInput(input));
   };
 
   query = async (query?: SoyaQuery): Promise<SoyaQueryResult[]> => {

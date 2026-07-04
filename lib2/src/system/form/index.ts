@@ -158,7 +158,6 @@ class FormBuilder {
         if (subForm) {
           layout.elements.push(isList ? {
             type: 'Control',
-            // @ts-expect-error FIXME: scope is not recognized in conjunction with options, probably an error in official types
             scope: `#/properties/${propName}`,
             options: {
               showSortButtons: true,
@@ -308,12 +307,10 @@ class FormBuilder {
 
       const element: UISchemaElement = {
         type: 'Control',
-        // @ts-expect-error FIXME: scope is not recognized, probably an error in official types
         scope,
       };
       layout.elements.push(element);
 
-      // @ts-expect-error FIXME: label is not recognized, probably an error in official types
       element.label = await this._getTranslatedProperty(propUri);
 
       // @ts-expect-error FIXME: label is not recognized, probably an error in official types
