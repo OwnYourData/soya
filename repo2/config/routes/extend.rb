@@ -12,8 +12,10 @@ scope '/' do
     end
 
     # UI ==========================
-    match '/soya/user',     to: 'static_pages#user',     via: 'get'
-    match '/soya/register', to: 'static_pages#register', via: 'get'
+    match '/soya/user',     to: 'static_pages#user',            via: 'get'
+    match '/soya/user',     to: 'static_pages#user_update',     via: 'post'
+    match '/soya/register', to: 'static_pages#register',        via: 'get'
+    match '/soya/register', to: 'static_pages#register_create', via: 'post'
 
     # SOyA ========================
     match ':dri/info',           to: 'dri#info',           via: 'get',    constraints: {dri: /.*/}

@@ -18,9 +18,12 @@ module UsersHelper
         user_name = @oauth.name
         @user = User.where(name: user_name, organization_id: org_id).first rescue nil
         if !@user.nil?
-        	if !user.delete
-        		id = @user.id
-        	end
+            # only return users that are not soft-deleted
+            # (was `!user.delete` before, which raised a NameError
+            #  and would have destroyed the record if it hadn't)
+            if !@user.deleted
+                id = @user.id
+            end
         end
         return id
     end
