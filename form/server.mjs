@@ -13,6 +13,11 @@ const BUILD_DIR = path.join(__dirname, 'build');
 const REPO_BASE_URL = (process.env.REPO_BASE_URL || '').replace(/\/+$/, '');
 const REPO_AUTH_MODE = (process.env.REPO_AUTH_MODE || 'public').trim();
 
+// soya-web-cli instance used to GENERATE default forms for structures
+// that do not contain a form overlay (soya-js getSoyaForm via HTTP,
+// same logic as "soya form" on the command line)
+const WEBCLI_BASE_URL = (process.env.WEBCLI_BASE_URL || 'https://soya-web-cli.ownyourdata.eu').replace(/\/+$/, '');
+
 const OAUTH_TOKEN_URL = process.env.OAUTH_TOKEN_URL || '';
 const OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID || '';
 const OAUTH_CLIENT_SECRET = process.env.OAUTH_CLIENT_SECRET || '';
@@ -211,6 +216,37 @@ async function handleRepoYaml(req, res, soyaName) {
   }
 }
 
+async function handleGeneratedForm(req, res, soyaName, url) {
+  const params = new URLSearchParams();
+  const language = (url.searchParams.get('language') || '').trim();
+  const tag = (url.searchParams.get('tag') || '').trim();
+
+  if (language) params.set('language', language);
+  if (tag) params.set('tag', tag);
+
+  const qs = params.toString();
+  const upstream = `${WEBCLI_BASE_URL}/api/v1/form/${encodeURIComponent(soyaName)}${qs ? `?${qs}` : ''}`;
+
+  try {
+    const upstreamRes = await fetch(upstream, {
+      headers: { Accept: 'application/json' },
+    });
+    const body = await upstreamRes.text();
+
+    res.writeHead(upstreamRes.status, {
+      'Content-Type': upstreamRes.headers.get('content-type') || 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    });
+    res.end(body);
+  } catch (e) {
+    sendJson(res, 502, {
+      error: 'Failed to generate form via configured soya-web-cli',
+      upstream,
+      details: String(e?.message || e),
+    });
+  }
+}
+
 function safeJoin(base, target) {
   const targetPath = path.normalize(target).replace(/^(\.\.[/\\])+/, '');
   return path.join(base, targetPath);
@@ -274,6 +310,12 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && yamlMatch) {
       const soyaName = decodeURIComponent(yamlMatch[1]);
       return await handleRepoYaml(req, res, soyaName);
+    }
+
+    const formMatch = url.pathname.match(/^\/api\/form\/(.+)$/);
+    if (req.method === 'GET' && formMatch) {
+      const soyaName = decodeURIComponent(formMatch[1]);
+      return await handleGeneratedForm(req, res, soyaName, url);
     }
 
     return serveStatic(req, res, url);

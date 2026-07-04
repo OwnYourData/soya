@@ -10,25 +10,18 @@ import {
   FormHelperText,
   Checkbox,
   ListItemText,
-  Divider
-} from '@material-ui/core';
+  Divider,
+  Box,
+} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import React, { useCallback, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 
 interface SelectItem {
   value: string;
   text: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  formControl: { margin: theme.spacing(1), width: '100%' },
-  chips: { display: 'flex', flexWrap: 'wrap' },
-  chip: { margin: 2 },
-  closeItem: { justifyContent: 'center', fontWeight: 600 }
-}));
-
 const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const {
@@ -69,7 +62,7 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
 
   // onChange robust: ignoriert das Close-Item
   const handleSelectChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: SelectChangeEvent<string[]>,
     child?: React.ReactNode
   ) => {
     if ((child as any)?.props?.['data-close'] === true) {
@@ -88,7 +81,12 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
   };
 
   return (
-    <FormControl id={id} className={classes.formControl} disabled={disabled}>
+    <FormControl
+      id={id}
+      sx={{ m: 1, width: '100%' }}
+      disabled={disabled}
+      variant="standard"
+    >
       <InputLabel>{label}</InputLabel>
       <Select
         multiple
@@ -99,16 +97,14 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
         onChange={handleSelectChange}
         input={<Input id={`${id}-select-multiple-chip`} />}
         renderValue={(selected) => (
-          <div className={classes.chips}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
             {(selected as string[]).map((val) => {
               const item = items.find((x) => x.value === val);
-              const label = item ? item.text : String(val);
-              return <Chip key={String(val)} label={label} className={classes.chip} />;
+              const chipLabel = item ? item.text : String(val);
+              return <Chip key={String(val)} label={chipLabel} sx={{ m: '2px' }} />;
             })}
-          </div>
+          </Box>
         )}
-        // Hinweis: in MUI v5 getContentAnchorEl entfernen
-        MenuProps={{ getContentAnchorEl: null }}
         disabled={disabled}
         aria-disabled={disabled}
       >
@@ -129,7 +125,7 @@ const MultiSelect = (props: ControlProps & { readonly?: boolean }) => {
           data-close
           onClick={handleCloseClick}
           onMouseDown={(e) => e.preventDefault()} // verhindert Fokus-/Auswahl-Seitenwirkung
-          className={classes.closeItem}
+          sx={{ justifyContent: 'center', fontWeight: 600 }}
           dense
           role="button"
           aria-label="Close menu"

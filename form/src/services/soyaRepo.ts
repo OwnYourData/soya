@@ -76,6 +76,48 @@ export async function fetchSoyaYaml(soyaName: string): Promise<string> {
   return (await res.text()).replace(/\r\n?/g, '\n');
 }
 
+/**
+ * Fetches a GENERATED default form for a SOyA structure without form overlay.
+ *
+ * Served by server.mjs (/api/form/...), which proxies to a soya-web-cli
+ * instance running soya-js' getSoyaForm — the same logic as "soya form"
+ * on the command line.
+ */
+export async function fetchGeneratedForm(args: {
+  soyaName: string;
+  tag?: string;
+  language?: string;
+}): Promise<SoyaFormResponse> {
+  const params = new URLSearchParams();
+  if (args.language) params.set('language', args.language);
+  if (args.tag) params.set('tag', args.tag);
+  const qs = params.toString();
+
+  const url = `/api/form/${encodeURIComponent(args.soyaName)}${qs ? `?${qs}` : ''}`;
+
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to generate form (HTTP ${res.status})`);
+  }
+
+  const json = await res.json();
+
+  if (!json?.schema || !json?.ui) {
+    throw new Error('Generated form is missing schema/ui');
+  }
+
+  return {
+    schema: json.schema,
+    ui: json.ui,
+    options: Array.isArray(json.options) ? json.options : [],
+  };
+}
+
 export async function fetchFormFromRepo(args: {
   soyaName: string;
   tag?: string;
@@ -90,14 +132,20 @@ export async function fetchFormFromRepo(args: {
     throw new Error(`Failed to parse SOyA YAML: ${String(e?.message ?? e)}`);
   }
 
-  const { overlay, options } = extractOverlayForm(
-    doc,
-    args.tag,
-    args.language
-  );
+  let extracted: { overlay: any; options: SoyaFormOption[] };
+  try {
+    extracted = extractOverlayForm(doc, args.tag, args.language);
+  } catch {
+    // structure has no form overlay
+    // -> fall back to a server-side generated default form
+    return fetchGeneratedForm(args);
+  }
+
+  const { overlay, options } = extracted;
 
   if (!overlay?.schema || !overlay?.ui) {
-    throw new Error('OverlayForm is missing schema/ui');
+    // form overlay exists but is unusable -> fall back as well
+    return fetchGeneratedForm(args);
   }
 
   return {

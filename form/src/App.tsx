@@ -3,28 +3,28 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import { customRenderers } from './components';
 import { evaluteDynamicEnum } from './utils';
@@ -98,8 +98,8 @@ export default function App() {
 
   const theme = useMemo(
     () =>
-      createMuiTheme({
-        palette: { type },
+      createTheme({
+        palette: { mode: type },
       }),
     [type]
   );
@@ -369,12 +369,12 @@ export default function App() {
           <Box style={{ flexGrow: 1 }} />
 
           {runtimeConfig ? (
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="text.secondary">
               Repo: {runtimeConfig.repoBaseUrl}
             </Typography>
           ) : null}
 
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body2" color="text.secondary">
             {packageJson.version}
           </Typography>
 
@@ -437,9 +437,8 @@ export default function App() {
             >
               <List dense>
                 {schemaList.slice(0, 30).map((x) => (
-                  <ListItem
+                  <ListItemButton
                     key={`${x.dri ?? ''}-${x.name}`}
-                    button
                     onClick={() => {
                       setSchemaDri(x.name);
                       setSchemaKey((x.dri ?? x.name).trim());
@@ -458,7 +457,7 @@ export default function App() {
                       primary={x.name}
                       secondary={x.dri && x.dri !== x.name ? `DRI: ${x.dri}` : undefined}
                     />
-                  </ListItem>
+                  </ListItemButton>
                 ))}
               </List>
             </Paper>
@@ -479,7 +478,7 @@ export default function App() {
   ) : null;
 
   const Header2 = !isLoading && showDropdowns ? (
-    <Box mb={2} display="flex" gridGap={16} flexWrap="wrap">
+    <Box mb={2} display="flex" gap={2} flexWrap="wrap">
       {tagOptions?.length ? (
         <FormControl style={{ minWidth: 150 }}>
           <InputLabel>Tag</InputLabel>

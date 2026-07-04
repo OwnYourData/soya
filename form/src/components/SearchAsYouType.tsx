@@ -3,11 +3,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ControlProps } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import Autocomplete from '@mui/material/Autocomplete';
 
 type Option = { const: string; title?: string };
 
@@ -300,7 +300,7 @@ const SearchAsYouType = (props: ControlProps & { readonly?: boolean }) => {
         // IMPORTANT: do not locally filter; the server already returns filtered results
         filterOptions={(x) => x}
         getOptionLabel={(o) => (o?.title ? String(o.title) : String(o?.const ?? ''))}
-        getOptionSelected={(a, b) => a.const === b.const}
+        isOptionEqualToValue={(a, b) => a.const === b.const}
         onChange={(_, value) => {
           if (disabled) return;
           handleChange(path, value ? value.const : undefined);
@@ -375,12 +375,17 @@ const SearchAsYouType = (props: ControlProps & { readonly?: boolean }) => {
             }}
           />
         )}
-        renderOption={(o) => (
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <span>{o.title ?? o.const}</span>
-            <span style={{ opacity: 0.7, marginLeft: 12 }}>{o.const}</span>
-          </div>
-        )}
+        renderOption={(liProps, o) => {
+          const { key, ...rest } = liProps as { key?: React.Key } & React.HTMLAttributes<HTMLLIElement>;
+          return (
+            <li key={key ?? String(o.const)} {...rest}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <span>{o.title ?? o.const}</span>
+                <span style={{ opacity: 0.7, marginLeft: 12 }}>{o.const}</span>
+              </div>
+            </li>
+          );
+        }}
       />
 
       {helperText ? <FormHelperText>{helperText}</FormHelperText> : null}
