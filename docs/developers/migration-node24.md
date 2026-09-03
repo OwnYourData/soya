@@ -116,6 +116,19 @@ published version (`^0.9.0`).
   instance (`WEBCLI_BASE_URL` env, default: the deployed one), and the app
   falls back to this generated form when the structure has no usable
   `OverlayForm`.
+* **Compact rendering restored (2026-08-07):** JSON Forms 3.x selects its input
+  component from the MUI theme (`useThemeProps({ name: 'MuiTextField' })`) and
+  defaults to `outlined`, whereas 2.x on MUI v4 defaulted to `standard`
+  (underline) — which made every form, and array tables in particular,
+  considerably taller. The new `form/src/formTheme.ts` reads `options.variant`
+  (`standard` | `outlined` | `filled`) and `options.density`
+  (`compact` | `comfortable`) from the root element of a form's UI schema and
+  derives a MUI theme from them; `App.tsx` applies it via a nested
+  `ThemeProvider` around `<JsonForms/>` only. Defaults are `standard` +
+  `compact`, so existing structures render compactly without any change.
+  `compact` additionally tightens `TableCell` padding, hides the always-rendered
+  but usually empty `FormHelperText` elements of `MaterialTableControl`, and
+  shrinks the array toolbar buttons. Documented in `docs/users/forms.md`.
 
 ### soyabud (0.6, new component, 2026-07-04)
 

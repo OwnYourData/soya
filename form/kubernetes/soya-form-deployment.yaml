@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: soya-form
-        image: oydeu/soya-form:latest
+        image: oydeu/soya-forms:latest
         ports:
         - containerPort: 80
         env:

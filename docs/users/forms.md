@@ -245,6 +245,208 @@ When the form is embedded, the JSON **Data** panel is hidden, so the host applic
 
 ---
 
+## Form Appearance: `variant` and `density`
+
+JSONForms renders every input through a Material UI component, and the *look* of
+that component is not part of the UI schema itself — it comes from the theme of
+the rendering application. JSONForms v3 changed the default from the underlined
+inputs of v2 to boxed **outlined** inputs, which are noticeably taller. In a form
+that is mostly a repeating table (measurement series, time series, line items),
+this can easily triple the height of the rendered form.
+
+SOyA-Form therefore reads two optional presentation hints from the **root
+element** of the `ui` schema, so a structure can state how it wants to be
+rendered:
+
+```yaml
+      ui:
+        type: VerticalLayout
+        options:
+          variant: standard      # standard | outlined | filled
+          density: compact       # compact  | comfortable
+        elements:
+          - type: Control
+            scope: "#/properties/name"
+```
+
+`variant` selects the Material UI input style:
+
+- `standard` — underlined inputs without a surrounding box; this is the compact
+  style JSONForms v2 used and the **default** in SOyA-Form
+- `outlined` — each input framed by a box; the JSONForms v3 default, visually
+  heavier but with clearer field boundaries
+- `filled` — inputs on a shaded background
+
+`density` controls the spacing around controls and table rows:
+
+- `compact` — tight table cells, no reserved space for empty helper texts,
+  smaller toolbar buttons; the **default** in SOyA-Form
+- `comfortable` — the stock JSONForms/Material spacing with generous padding
+
+Both keys are optional. Omitting them yields `standard` + `compact`, so existing
+Form overlays automatically get the compact rendering; set
+`variant: outlined` and/or `density: comfortable` explicitly to opt back into the
+roomier JSONForms v3 defaults.
+
+> These hints apply to the whole form. They are ignored by the `soya form`
+> command (which only returns the `schema`/`ui` pair) and by any other JSONForms
+> renderer that does not know about them, so they are safe to add to any Form
+> overlay.
+
+### Arrays: table or accordion
+
+Repeating values are rendered either as a **table** — one row per entry, with the
+property titles as column headers — or as an **accordion** with one expandable
+panel per entry. Which of the two is used depends on the `detail` option of the
+array control:
+
+```yaml
+          - type: Control
+            scope: "#/properties/readings"
+            label: Readings
+            options:
+              detail: DEFAULT        # forces the compact table rendering
+              showSortButtons: false # omits the extra sort-button column
+```
+
+As soon as `detail` holds a nested UI schema (or any string other than
+`DEFAULT`), JSONForms switches to the accordion rendering. The auto-generated
+default form uses exactly that for list attributes, so if you want the compact
+table for a long series of records, author a Form overlay with
+`detail: DEFAULT`.
+
+Two further notes for table-style arrays:
+
+- `showSortButtons: true` adds a column with up/down arrows that costs roughly
+  150 px of width — leave it off unless the order of entries is meaningful.
+- Options set on individual controls do **not** reach the cells inside an array
+  table; JSONForms dispatches those cells without the surrounding UI schema
+  options. Per-column tweaks are therefore not available — use `variant` and
+  `density` on the root element to influence the table as a whole.
+
+A complete example for a quarter-hourly generation series:
+
+```yaml
+      ui:
+        type: VerticalLayout
+        options:
+          variant: standard
+          density: compact
+        elements:
+          - type: Control
+            scope: "#/properties/meteringPoint"
+          - type: Control
+            scope: "#/properties/generation"
+            label: Generation Data
+            options:
+              detail: DEFAULT
+              showSortButtons: false
+```
+
+---
+
+## Read-Only Forms
+
+A form is often used to *display* a record rather than to capture one — a
+measurement series pulled from a data container, an issued credential, an
+archived submission. JSONForms offers several ways to lock the inputs; they all
+end up in the same internal `enabled` flag, and they are evaluated in a fixed
+order of precedence.
+
+### `options.readonly` — the recommended way
+
+Setting `readonly: true` in the `options` of an element locks that element. On a
+layout it applies to everything below it, because layouts pass their enablement
+down to their children — so putting it on the root of the `ui` schema locks the
+whole form:
+
+```yaml
+      ui:
+        type: VerticalLayout
+        options:
+          variant: standard
+          density: compact
+          readonly: true          # locks every control in this form
+        elements:
+          - type: Control
+            scope: "#/properties/generation"
+```
+
+The same key works on a single control, which is the usual case for a form that
+is mostly editable but carries a few derived or system-assigned fields:
+
+```yaml
+          - type: Control
+            scope: "#/properties/meteringPoint"
+            options:
+              readonly: true
+```
+
+`readOnly` (capital O) is accepted as a synonym.
+
+### `readOnly` in the data schema
+
+A property can also declare itself immutable in the `schema`, which travels with
+the data model rather than with the presentation:
+
+```yaml
+      schema:
+        type: object
+        properties:
+          meteringPoint:
+            type: string
+            readOnly: true
+```
+
+### `rule` with `effect: DISABLE`
+
+Older Form overlays lock fields through a rule:
+
+```yaml
+          - type: Control
+            scope: "#/properties/generation"
+            rule:
+              effect: DISABLE
+              condition:
+                expectedValue: true
+```
+
+This still works: a condition that is neither a `LEAF` nor a schema-based
+condition is treated as fulfilled, so `DISABLE` always applies. Note that the
+condition here carries no `scope` — it is not testing anything, it is an
+idiom for *always disabled*. Rules take **precedence over** `options.readonly`
+on the same element, so the two should not be combined.
+
+Rules are the right tool when the lock is *conditional* — then give the
+condition a `scope` and an `expectedValue`, which is what rules are designed
+for:
+
+```yaml
+            rule:
+              effect: DISABLE
+              condition:
+                scope: "#/properties/status"
+                expectedValue: "submitted"
+```
+
+For an unconditional lock, `options.readonly: true` states the intent more
+directly and does not depend on how an incomplete condition is interpreted.
+
+### What a locked form looks like
+
+Locking is more than a visual hint — the renderer drops the editing affordances
+entirely. In an array table the **delete** column and the **add** button
+disappear, and the clear (✕) button of every text field is suppressed. A
+read-only table therefore comes out noticeably narrower and tighter than the
+editable one, which combines well with `density: compact`.
+
+> Precedence, highest first: the host application's global read-only setting →
+> a `rule` with `ENABLE`/`DISABLE` → `options.readonly` / `options.readOnly` →
+> `readOnly` in the data schema → the enablement inherited from the parent
+> layout.
+
+---
+
 ## Dynamic Form Fields
 
 Besides static `enum`/`oneOf` value lists, SOyA-Form supports two field types
@@ -413,6 +615,8 @@ When working with forms in SOyA, the key points are:
 - custom presentation is defined as an **overlay** of type `OverlayForm`, stored **alongside the base**
 - the auto-generated form reuses **annotation labels** and **validation constraints** you have already authored
 - multiple forms per base are distinguished by **`tag`** and **`language`**
+- the rendering style is stated on the root of the `ui` schema via **`options.variant`** (`standard` | `outlined` | `filled`) and **`options.density`** (`compact` | `comfortable`); the default is `standard` + `compact`
+- forms that only display data are locked with **`options.readonly: true`** — on the root element for the whole form, on a single control for individual fields; a `rule` with `effect: DISABLE` does the same and takes precedence
 - forms are rendered with **`soya form`**, optionally with `--language` and `--tag`
 - the YAML definition is converted into **JSON-LD** using `soya init`
 

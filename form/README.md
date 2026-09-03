@@ -27,11 +27,42 @@ the same logic as `soya form` on the command line. The instance is
 configured via the environment variable `WEBCLI_BASE_URL`
 (default: `https://soya-web-cli.ownyourdata.eu`).
 
+### Form appearance (`variant` / `density`)
+
+JSON Forms v3 picks its input component from the MUI theme
+(`useThemeProps({ name: 'MuiTextField' })`) and falls back to `outlined` —
+v2 ran on MUI v4, where `standard` (underline) was the default. That single
+change is what makes v3 forms considerably taller than their v2 counterparts.
+
+`src/formTheme.ts` restores the compact look and makes it declarative: it reads
+`options.variant` (`standard` | `outlined` | `filled`) and `options.density`
+(`compact` | `comfortable`) from the **root element** of the form's UI schema
+and derives a MUI theme from them. `App.tsx` applies that theme through a nested
+`ThemeProvider` around `<JsonForms/>` only, so the surrounding app chrome
+(search field, buttons) is unaffected.
+
+Defaults are `standard` + `compact`. Besides the input variant, `compact`
+tightens `TableCell` padding, hides the empty `FormHelperText` elements that
+`MaterialTableControl` renders for every cell, and shrinks the array toolbar
+buttons.
+
+See [`docs/users/forms.md`](../docs/users/forms.md) for the overlay-side
+documentation.
+
 ## Production build
 
 ```bash
 npm run build          # -> ./build (served by server.mjs / Dockerfile)
-npm run docker         # build + docker image oydeu/oyd-forms
+npm run docker         # build + docker image oydeu/soya-forms
+```
+
+The canonical way to produce and publish the image is `build.sh`, which also
+covers the arm64 variant:
+
+```bash
+sh ./build.sh                      # npm i + npm run build + oydeu/soya-forms:latest
+sh ./build.sh --clean --dockerhub  # build without cache and push
+sh ./build.sh --arm --dockerhub    # arm64v8 image (Dockerfile.arm64v8)
 ```
 
 ## About  

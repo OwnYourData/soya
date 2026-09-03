@@ -22,8 +22,7 @@
     "start": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "deploy": "sh ./scripts/deploy.sh",
-    "docker": "npm run build && docker build -t oydeu/oyd-forms ."
+    "docker": "npm run build && docker build -t oydeu/soya-forms ."
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

@@ -28,6 +28,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import { customRenderers } from './components';
 import { evaluteDynamicEnum } from './utils';
+import { buildFormTheme, readFormAppearance } from './formTheme';
 import { loadRuntimeConfig, RuntimeConfig } from './config';
 import {
   fetchFormFromRepo,
@@ -509,6 +510,17 @@ export default function App() {
     </Box>
   ) : null;
 
+  /**
+   * Darstellung (Input-Variante / Dichte) kann pro Struktur im OverlayForm
+   * über `ui.options.variant` bzw. `ui.options.density` gesetzt werden.
+   * Voreinstellung ist der kompakte v2-Look (standard/compact).
+   */
+  const formAppearance = useMemo(() => readFormAppearance(form?.ui), [form?.ui]);
+  const formTheme = useMemo(
+    () => buildFormTheme(theme, formAppearance),
+    [theme, formAppearance]
+  );
+
   const currentKey = (schemaKey || schemaDri).trim();
   const showLoadError = !!loadError && !!lastLoadErrorKey && lastLoadErrorKey === currentKey;
 
@@ -529,17 +541,19 @@ export default function App() {
       {loadError}
     </Box>
   ) : form ? (
-    <JsonForms
-      schema={form.schema}
-      uischema={form.ui}
-      data={data}
-      renderers={allRenderers}
-      cells={materialCells}
-      onChange={({ data: newData }) => {
-        setData(newData);
-        postMessageSafe({ type: 'data', data: newData });
-      }}
-    />
+    <ThemeProvider theme={formTheme}>
+      <JsonForms
+        schema={form.schema}
+        uischema={form.ui}
+        data={data}
+        renderers={allRenderers}
+        cells={materialCells}
+        onChange={({ data: newData }) => {
+          setData(newData);
+          postMessageSafe({ type: 'data', data: newData });
+        }}
+      />
+    </ThemeProvider>
   ) : (
     <Box my={2} color="text.secondary">
       No form loaded.
