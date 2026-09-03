@@ -57,6 +57,99 @@ This example shows the kinds of constraints that can be defined in a validation 
 
 Also note the reference to the base class to use HOST/Ontology/Class.
 
+---
+
+## Supported Constraints
+
+A validation overlay is **not raw SHACL**. `soya init` recognises a fixed set of
+constraint keys per attribute and translates them into SHACL; any other key is
+dropped silently, so an unrecognised constraint does not fail the conversion —
+it simply has no effect.
+
+| YAML key | Example | Generated SHACL |
+|----------|---------|-----------------|
+| `cardinality` | `"1..1"`, `"0..*"` | `sh:minCount`, `sh:maxCount` |
+| `length` | `"[0..20)"` | `sh:minLength`, `sh:maxLength` |
+| `valueRange` (numeric) | `"[0..120]"` | `sh:minInclusive`, `sh:maxInclusive` |
+| `valueRange` (date) | `"[1900-01-01..*]"` | `sh:minRange`, `sh:maxRange` (not enforced, see below) |
+| `valueOption` | list of values or labelled options | `sh:in` |
+| `pattern` | `"^[A-Za-z ,.-]+$"` | `sh:pattern` |
+| `message` | `"Please provide a valid name"` | `sh:message` |
+| `attributes` | nested block | nested `sh:property` / `sh:node` shapes |
+| `or` | list of attribute groups | `sh:or` |
+
+In range notation, square brackets include the bound and round brackets exclude
+it — `"[0..20)"` becomes `sh:minLength 0` and `sh:maxLength 19` — while `*`
+leaves the bound open. Exclusive bounds are adjusted for numbers only, not for
+dates.
+
+Enumerations can be written as plain values or as labelled options. The labelled
+form additionally supplies the option captions used by generated forms:
+
+```yaml
+        energyEfficiencyClass:
+          cardinality: "1..1"
+          valueOption:
+            - id: A
+              label:
+                en: Class A
+                de: Klasse A
+            - id: B
+              label:
+                en: Class B
+                de: Klasse B
+```
+
+### Datatypes come from the base, not from the overlay
+
+A validation overlay has **no per-attribute `datatype` key**. Writing one is not
+an error — it is ignored and no `sh:datatype` constraint is produced. The
+datatype of an attribute is declared once, in the base:
+
+```yaml
+content:
+  bases:
+    - name: Lamp
+      attributes:
+        luminousFlux: Integer
+        ratedLifetime: Decimal
+        productionDate: Date
+        datasheet: AnyURI
+```
+
+Type names are matched case-insensitively against the XSD built-in types
+(`String`, `Boolean`, `Integer`, `Decimal`, `Float`, `Double`, `Date`,
+`DateTime`, `Time`, `AnyURI`, …); any other name is treated as a reference to
+another base. The one place where `datatype` *is* evaluated is inside an `or`
+group, where it distinguishes the alternative shapes.
+
+### Attribute names are not checked against the base
+
+Constraints are emitted for whatever attribute names appear in the overlay, even
+for names the base does not define. A typo therefore yields a shape on a
+property that never occurs in the data: with `cardinality: "0..1"` it silently
+does nothing, with `"1..1"` every record fails with *Less than 1 values*. When a
+constraint behaves unexpectedly, compare its spelling with the base first.
+
+### Known limitation: date ranges are not enforced
+
+A `valueRange` given as ISO dates is converted to `sh:minRange` / `sh:maxRange`.
+These are not SHACL constraint components, so the SHACL engine ignores them and
+a date outside the range validates as conforming:
+
+```yaml
+        productionDate:
+          cardinality: "1..1"
+          valueRange: "[1900-01-01..2000-12-31]"
+```
+
+A record with `"productionDate": "1850-05-01"` passes this overlay. Numeric
+`valueRange` constraints (`sh:minInclusive` / `sh:maxInclusive`) *are* enforced.
+Until this is resolved, check date bounds in the application, or approximate
+them with a `pattern` constraint on the year.
+
+---
+
 ## How SOyA Uses SHACL
 
 When a validation overlay is converted into JSON-LD, SOyA expresses the validation rules using SHACL. In the example above, the YAML overlay is converted into a JSON-LD structure containing a `sh:NodeShape` with `sh:property` constraints.
@@ -85,6 +178,27 @@ This pipeline does three things:
 3. validates the resulting data against the SOyA structure `Person`.
 
 In other words, `soya validate` does not validate against a standalone SHACL file supplied by the user. Instead, it validates against the **SOyA structure identified by name**, provided that this structure includes a validation overlay.
+
+### Missing classes are reported separately
+
+In addition to the SHACL report, `soya validate` checks that every class
+targeted by a node shape actually occurs in the data. If it does not, the result
+is invalid even though the SHACL report itself is empty:
+
+```json
+{
+  "isValid": false,
+  "results": [],
+  "classChecks": [
+    { "message": "Missing class", "name": "https://soya.ownyourdata.eu/Lamp/Lamp" }
+  ]
+}
+```
+
+This is the typical symptom of validating a record that was not passed through
+`soya acquire`, or that was acquired against a different structure. SHACL on its
+own reports an empty data set as conforming, so this additional check is what
+catches it.
 
 ## What to Keep in Mind
 

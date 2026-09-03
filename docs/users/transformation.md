@@ -24,6 +24,35 @@ Like other overlays in SOyA, transformation overlays are authored in YAML and co
 
 ---
 
+## One Transformation per Structure
+
+`soya transform` applies the **first overlay in the graph that carries an
+`engine` field**. There is no selector comparable to the `--tag` and
+`--language` options of `soya form`, so a structure holding two transformation
+overlays is ambiguous: the second one can never be reached.
+
+When several target formats are required for the same base, publish each
+transformation as a structure of its own that references the base:
+
+```yaml
+meta:
+  name: LampToEN18223
+
+content:
+  overlays:
+    - type: OverlayTransformation
+      name: LampToEN18223Overlay
+      base: https://soya.ownyourdata.eu/Lamp/Lamp
+      engine: jq
+      value: |
+        { "elements": [ ... ] }
+```
+
+Each target format then has a name of its own (`soya transform LampToEN18223`),
+and adding another one later cannot change the behaviour of the existing ones.
+
+---
+
 ## Supported Engines
 
 SOyA currently supports three transformation engines:
