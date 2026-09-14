@@ -104,7 +104,15 @@ Yes. The default endpoint is `https://soya.ownyourdata.eu`, but you can point an
 
 ### Does SOyA support private or protected repositories?
 
-The public repository and typical self-hosted setups are openly readable, and the CLI targets this case (it has no authentication flags). Protected repositories that require authentication are supported at the integration level — through the `soya-js` library, which can attach a bearer token, or via a service configured with credentials. See the developer documentation for the library and repository service.
+Yes — a repository can require an OAuth 2.0 bearer token for its `/api/*` endpoints (check with `curl -s <repo>/api/active`; protected instances report `"auth": true`). Reading a structure by name, tag or DRI stays open, so `soya pull` keeps working; publishing and discovery do not. The CLI itself has **no** authentication support, so publishing goes through `/oauth/token` + `POST /api/data`. See [`Protected Repositories`](protected-repositories.md).
+
+### `soya init-push` fails with `POST .../api/data failed: 401` — what now?
+
+The repository is protected and soya-cli (0.18.1) cannot send credentials: it has no token flag, no environment variable and no config file. The `401` carries `www-authenticate: Bearer realm="Doorkeeper", error="invalid_token"` and the body `{"error":"Not authorized"}` — the same response for a missing, an expired and a revoked token. Publish instead by compiling locally with `soya init`, fetching a token from `/oauth/token` (`grant_type=client_credentials`), and posting the document to `/api/data` with an `Authorization: Bearer` header. Include the original YAML as `soya_yaml` in that request, otherwise `soya pull --type=yaml` stays empty for the structure. The full walkthrough is in [`Protected Repositories`](protected-repositories.md).
+
+### Where do I get credentials for a protected repository?
+
+From the repository itself: `GET /soya/register` creates an organization, a user and an OAuth application, and shows **APP_KEY and APP_SECRET exactly once**. Deployments started with `REGISTRATION=closed` disable that form — there an administrator issues the credentials. See [`User Management`](../maintainers/user-management.md).
 
 ---
 

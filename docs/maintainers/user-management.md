@@ -50,8 +50,22 @@ or invalid/expired tokens are redirected to `/`.
 
 | Environment variable | Effect |
 |----------------------|--------|
+| `AUTH` | Unset or `false`: the `/api/*` endpoints are open. Any other value enables `doorkeeper_authorize! :read, :write, :admin` on `ApiController`, i.e. the repository runs protected. The value is also reported to clients as `auth` in `GET /api/active`. |
 | `REGISTRATION=closed` | Disables the registration form and endpoint (both redirect to `/`). Use this for curated deployments where users are created by an administrator. |
 | `USER_SCOPES` | Scopes assigned to newly registered users (default: `read write`). |
+
+Enabling `AUTH` protects `POST /api/data` (push), `GET /api/soya/query`,
+`POST /api/soya/info` and `POST /api/soya/similar`. It does **not** protect
+`DriController` — `GET /<name>`, `/<name>/yaml`, `/<name>/ttl`,
+`/<name>/context.jsonld` and `/<name>/info` inherit from `ApplicationController`
+and stay readable without a token. Unauthenticated calls to the protected routes
+answer `401` with `{"error":"Not authorized"}` and
+`www-authenticate: Bearer realm="Doorkeeper", error="invalid_token"`.
+
+Note for users of such a deployment: **soya-cli cannot authenticate** (no token
+option, no environment variable, no config file), so publishing has to go
+through `/oauth/token` and a direct `POST /api/data`. Point them at
+[`Protected Repositories`](../users/protected-repositories.md).
 
 ## Administrative notes
 

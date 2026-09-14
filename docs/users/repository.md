@@ -135,11 +135,37 @@ The workflow is identical regardless of the endpoint: author → publish → con
 
 ## Public and Protected Repositories
 
-The public repository and the typical self-hosted setup are **openly readable**, and the `soya` CLI is designed for this case: it talks to the repository over its URL and does not send authentication credentials. There are no authentication flags on the CLI — the only repository-related option is `--repo`.
+The public repository and the typical self-hosted setup are **openly readable
+and writable**, and the `soya` CLI is designed for this case: it talks to the
+repository over its URL and never sends credentials. There are no
+authentication flags on the CLI — the only repository-related option is
+`--repo`.
 
-Some deployments run a **protected (private) repository** that requires authentication. Access to such repositories is supported at the **integration level** rather than through the CLI: the `soya-js` library can attach a bearer token to repository requests (its repository service supports "send authentication if available" and "require authentication" modes), and the SOyA-Form web service can be configured for a private repository. If you need to read from or publish to a protected repository, drive it through the library or a service configured with the appropriate credentials rather than the bare CLI.
+Some deployments run a **protected repository** that requires an OAuth 2.0
+bearer token for the `/api/*` endpoints. You can tell by asking the repository:
 
-For the API and library details behind authenticated access, see the developer documentation on the `soya-js` library and the repository service.
+```bash
+curl -s https://soya-did.go-data.at/api/active
+# {"active":true,"auth":true,"repos":false}
+```
+
+With `"auth": true`, `soya pull` still works (resolving a structure by name,
+tag or DRI is not protected), while `soya push`, `soya init-push`, `soya query`,
+`soya info` and `soya similar` fail with:
+
+```console
+POST https://soya-did.go-data.at/api/data failed: 401
+```
+
+soya-cli (0.18.1) **cannot** authenticate — there is no option, environment
+variable or configuration file for a token or client credentials. Until that is
+added, publish to a protected repository by fetching a token from
+`/oauth/token` (client credentials grant) and posting the compiled structure to
+`/api/data` yourself.
+
+→ [`Protected Repositories`](protected-repositories.md) describes credentials,
+tokens, the exact request, the expected error messages, and how to keep
+`soya pull --type=yaml` working on that route.
 
 ---
 
@@ -154,7 +180,7 @@ When working with the SOyA Repository, the key points are:
 - retrieve with **`soya pull`** (add `--type yaml` for the YAML form), and pin exact versions by **DRI**
 - discover and inspect with **`soya query`**, **`soya similar`**, and **`soya info`**
 - the default endpoint is `https://soya.ownyourdata.eu`; target another instance with **`--repo`**
-- the CLI targets **openly accessible** repositories; **protected repositories** are handled via the library or a configured service
+- the CLI targets **openly accessible** repositories; on a **protected repository** (`/api/active` reports `"auth": true`) `soya pull` still works while `push`/`query`/`info`/`similar` return `401` — see [`Protected Repositories`](protected-repositories.md)
 
 ---
 
@@ -164,4 +190,6 @@ With publishing, retrieval, and versioning in place, you have completed the
 core SOyA user workflow: author structures, add overlays, and share them
 through the repository.
 
-→ Continue with [`FAQ`](faq.md) or go back to the [`Overview`](../README.md)
+→ Continue with [`Protected Repositories`](protected-repositories.md) if your
+endpoint requires authentication, with [`FAQ`](faq.md), or go back to the
+[`Overview`](../README.md)

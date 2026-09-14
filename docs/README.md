@@ -42,6 +42,7 @@ or build forms and transformations, start here:
 - [**Transformation**](users/transformation.md) – jq, handlebars, and common transformation patterns
 - [**Forms**](users/forms.md) – Form concepts, rendering, and the SOyA-Form web tool
 - [**Repository Usage**](users/repository.md) – Publishing, retrieving, and versioning SOyA structures
+- [**Protected Repositories**](users/protected-repositories.md) – Tokens, credentials, and publishing to a write-protected repository
 - [**FAQ**](users/faq.md) – Common questions and pitfalls
 
 → See [`docs/users/`](users/overview.md)
@@ -56,6 +57,7 @@ services, this section explains the internal architecture and APIs:
 - [**Architecture**](developers/architecture.md) – Components and responsibilities
 - [**soya-js Library**](developers/soya-js.md) – API usage and integration
 - [**CLI**](developers/cli.md) – Commands, testing, and examples
+- [**CLI Authentication (Design)**](developers/cli-authentication.md) – Planned support for protected repositories in the CLI
 - [**Node 24 Migration**](developers/migration-node24.md) – Migration of the JS/TS stack from Node 16 to Node 24 (lib2/cli2)
 
 → See [`docs/developers/`](developers/architecture.md)
