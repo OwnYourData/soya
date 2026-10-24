@@ -44,6 +44,11 @@ spec:
               secretKeyRef:
                 name: postgres-secret
                 key: superUserPassword
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: soya-repo-skb
+                key: SECRET_KEY_BASE
 ---
 kind: Service
 apiVersion: v1
