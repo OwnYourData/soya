@@ -40,21 +40,7 @@
       "sh:targetClass": "Simple",
       "sh:property": [
         {
-          "sh:path": {
-            "@list": [
-              {
-                "@id": "group"
-              },
-              {
-                "sh:zeroOrMorePath": {
-                  "@id": "rdf:rest"
-                }
-              },
-              {
-                "@id": "rdf:first"
-              }
-            ]
-          },
+          "sh:path": "group",
           "sh:minCount": 1,
           "sh:property": [
             {

@@ -396,10 +396,6 @@ const validationProcessAttributes = (
                         "sh:node": buildNodeShapeFromAttributes(value, childBase, baseIndex),
                     };
 
-                    if (pendingCardinality) {
-                        applyCardinalityRange(listElementShape, pendingCardinality);
-                    }
-
                     constraints["sh:property"] = [listElementShape];
                 } else {
                     const childConstraints = validationProcessAttributes(value, childBase, baseIndex);
@@ -493,11 +489,22 @@ const validationProcessAttributes = (
             constraints["@type"] = "sh:PropertyShape";
         }
 
-        // Bei Set-Attributen mit verschachtelten Attributen entstehen die
-        // Verletzungen in der Shape für die Listenelemente (sh:node). Damit die
-        // eigene Meldung im Ergebnis steht, trägt auch diese Shape sh:message.
-        if (listElementShape && constraints["sh:message"] !== undefined) {
-            listElementShape["sh:message"] = constraints["sh:message"];
+        if (listElementShape) {
+            // Set-Attribut mit verschachtelten Attributen: Die äußere Shape setzt
+            // auf dem Attribut selbst (Listenkopf) an, die Anzahl der Elemente
+            // prüft die Shape für die Listenelemente. Das gilt unabhängig davon,
+            // ob "cardinality" in der YAML vor oder nach "attributes" steht.
+            if (pendingCardinality) {
+                constraints["sh:path"] = attrName;
+                applyCardinalityRange(listElementShape, pendingCardinality);
+            }
+
+            // Die Verletzungen entstehen in der Shape für die Listenelemente
+            // (sh:node, Anzahl). Damit die eigene Meldung im Ergebnis steht,
+            // trägt auch diese Shape sh:message.
+            if (constraints["sh:message"] !== undefined) {
+                listElementShape["sh:message"] = constraints["sh:message"];
+            }
         }
 
         constraintsArray.push(constraints);

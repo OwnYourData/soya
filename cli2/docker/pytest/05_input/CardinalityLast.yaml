@@ -1,0 +1,26 @@
+meta:
+  name: CardinalityLast
+
+content:
+  bases:
+    - name: Simple
+      attributes:
+        group: set<Group>
+    - name: Group
+      attributes:
+        val: String
+
+  overlays:
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        group:
+          attributes:
+            val:
+              cardinality: "1..1"
+              valueOption:
+                - "option1"
+                - "option2"
+          message: "invalid 'group'"
+          cardinality: "1..2"

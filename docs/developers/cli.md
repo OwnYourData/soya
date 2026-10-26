@@ -103,7 +103,7 @@ REPO=https://soya.ownyourdata.eu pytest
 * `test_general.py` — push/pull/validate/acquire/info round-trips (`01_*`)
 * `test_init.py` — YAML → JSON-LD conversion against expected outputs (`03_*`)
 * `test_validation.py` — acquire+validate pipelines (`04_*`)
-* `test_validation_local.py` — `soya init` + `soya validate` against a structure compiled from YAML and served by a local HTTP server (`05_*`; nothing is published)
+* `test_validation_local.py` — `soya init` + `soya validate` against structures compiled from `05_input/<Name>.yaml` and served by a local HTTP server; cases in `05_input/<Name>/*.json`, expected `isValid` and messages in `05_output/<Name>/*.json` (nothing is published)
 * `test_usecases.py` — senml transform + soya-web-cli HTTP API (`02_*`; use `WEBCLI=<url>` for a local instance)
 * `test_tutorial.py` — tutorial examples (needs access to the playground service)
 
