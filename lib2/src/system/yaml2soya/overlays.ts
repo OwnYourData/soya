@@ -331,7 +331,13 @@ const validationProcessOr = (
                     baseIndex,
                 );
 
-                constraintsArray.push(nodeShape);
+                // Eine Alternative, die nur aus "datatype" besteht, ergibt eine
+                // NodeShape ohne Bedingungen. Eine solche Shape erfüllt jeder Wert
+                // und würde das gesamte sh:or immer wahr machen; sie wird daher
+                // nicht übernommen (der Datentyp folgt als eigene Alternative).
+                if (nodeShape["sh:property"] || nodeShape["sh:or"]) {
+                    constraintsArray.push(nodeShape);
+                }
 
                 for (const val in elements[attrName][orGroup]) {
                     if (val === "datatype") {
@@ -373,6 +379,7 @@ const validationProcessAttributes = (
         let hasNestedAttributes = false;
         let hasScalarConstraints = false;
         let pendingCardinality: string | undefined;
+        let listElementShape: { [key: string]: any } | undefined;
 
         for (const constraintKey in attr) {
             const value = attr[constraintKey];
@@ -383,7 +390,7 @@ const validationProcessAttributes = (
                 const childBase = attrInfo?.elementType || currentBase;
 
                 if (attrIsSet) {
-                    const listElementShape: { [key: string]: any } = {
+                    listElementShape = {
                         "@type": "sh:PropertyShape",
                         "sh:path": buildListElementPath(),
                         "sh:node": buildNodeShapeFromAttributes(value, childBase, baseIndex),
@@ -484,6 +491,13 @@ const validationProcessAttributes = (
 
         if (attrIsSet && hasScalarConstraints && !hasNestedAttributes) {
             constraints["@type"] = "sh:PropertyShape";
+        }
+
+        // Bei Set-Attributen mit verschachtelten Attributen entstehen die
+        // Verletzungen in der Shape für die Listenelemente (sh:node). Damit die
+        // eigene Meldung im Ergebnis steht, trägt auch diese Shape sh:message.
+        if (listElementShape && constraints["sh:message"] !== undefined) {
+            listElementShape["sh:message"] = constraints["sh:message"];
         }
 
         constraintsArray.push(constraints);

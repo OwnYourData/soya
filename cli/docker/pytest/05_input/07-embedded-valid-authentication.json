@@ -1,0 +1,49 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.ownyourdata.eu/DidSetValidation/",
+    "verificationMethod": {
+      "@container": "@list"
+    },
+    "authentication": {
+      "@container": "@list"
+    },
+    "assertionMethod": {
+      "@container": "@list"
+    },
+    "keyAgreement": {
+      "@container": "@list"
+    },
+    "capabilityInvocation": {
+      "@container": "@list"
+    },
+    "capabilityDelegation": {
+      "@container": "@list"
+    },
+    "service": {
+      "@container": "@list"
+    }
+  },
+  "@graph": [
+    {
+      "@type": "Did",
+      "id": "did:example:123",
+      "verificationMethod": [
+        {
+          "id": "did:example:123#k1",
+          "type": "Multikey",
+          "controller": "did:example:123",
+          "publicKeyMultibase": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+        }
+      ],
+      "authentication": [
+        {
+          "id": "did:example:123#k2",
+          "type": "Multikey",
+          "controller": "did:example:123",
+          "publicKeyMultibase": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+        }
+      ]
+    }
+  ]
+}
