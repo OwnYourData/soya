@@ -1,0 +1,27 @@
+meta:
+  name: ScalarSet
+
+content:
+  bases:
+    - name: Simple
+      attributes:
+        tags: set<String>
+        codes: set<String>
+        scores: set<Integer>
+
+  overlays:
+    - type: OverlayValidation
+      base: Simple
+      name: ValidationOverlay
+      attributes:
+        tags:
+          cardinality: "1..2"
+          pattern: "^[a-z]+$"
+          length: "[1..5]"
+        codes:
+          valueOption:
+            - "A"
+            - "B"
+          message: "invalid 'codes'"
+        scores:
+          valueRange: "[0..10]"

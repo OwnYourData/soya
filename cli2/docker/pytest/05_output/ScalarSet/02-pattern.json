@@ -1,0 +1,9 @@
+{
+  "isValid": false,
+  "messages": [
+    "Value does not match pattern \"^[a-z]+$\""
+  ],
+  "paths": [
+    "tags"
+  ]
+}

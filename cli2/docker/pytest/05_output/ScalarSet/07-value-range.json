@@ -1,0 +1,9 @@
+{
+  "isValid": false,
+  "messages": [
+    "Value is not less than or equal to 10"
+  ],
+  "paths": [
+    "scores"
+  ]
+}

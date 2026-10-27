@@ -16,6 +16,8 @@
 #   und dessen eigener `message` gemeldet (nicht mit einem Blank Node als Pfad
 #   und "Value does not have shape ..."); Verstöße in verschachtelten Attributen
 #   der Elemente erscheinen mit Pfad und `message` des inneren Attributs.
+# - Auch bei Set-Attributen ohne verschachtelte Attribute (z.B. set<String> mit
+#   pattern) steht das Attribut als Pfad im Ergebnis, mit der konkreten Meldung.
 # - `cardinality` eines Set-Attributs mit verschachtelten Attributen wirkt
 #   gleich, egal ob es in der YAML vor oder nach `attributes` steht.
 import functools

@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.ownyourdata.eu/ScalarSet/",
+    "tags": {
+      "@container": "@list"
+    },
+    "codes": {
+      "@container": "@list"
+    },
+    "scores": {
+      "@container": "@list"
+    }
+  },
+  "@graph": [
+    {
+      "@type": "Simple",
+      "codes": [
+        "A"
+      ]
+    }
+  ]
+}

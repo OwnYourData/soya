@@ -1,9 +1,26 @@
 import { OverlayPlugin, OverlayResult } from "./interface";
 import SHACLValidator from "rdf-validate-shacl";
-import { parseJsonLd } from "../utils/rdf";
+import { factory, parseJsonLd } from "../utils/rdf";
 import { logger } from "../services/logger";
 import { SoyaDocument } from "../interfaces";
 import { SparqlQueryBuilder } from "../utils/sparql";
+
+const RDF_FIRST = factory.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#first");
+
+// Für Set-Attribute ohne verschachtelte Attribute erzeugt SOyA Sequenzpfade
+// (Attribut / rdf:rest* / rdf:first). SHACL meldet dafür den Blank Node des
+// Pfads; im Ergebnis wird stattdessen das Attribut (erstes Pfadglied) gemeldet.
+const resolveResultPath = (layerSet: any, path: any): any => {
+  if (!path || path.termType !== "BlankNode")
+    return path;
+
+  for (const quad of layerSet.match(path, RDF_FIRST)) {
+    if (quad.object.termType === "NamedNode")
+      return quad.object;
+  }
+
+  return path;
+};
 
 export class SoyaValidate implements OverlayPlugin {
 
@@ -62,7 +79,7 @@ export class SoyaValidate implements OverlayPlugin {
         results: res.results.map(x => ({
           id: x.focusNode,
           message: x.message,
-          ...x.path,
+          ...resolveResultPath(layerSet, x.path),
           severity: x.severity,
         })),
         classChecks,
