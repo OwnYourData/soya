@@ -1,6 +1,9 @@
 {
   "isValid": false,
   "messages": [
-    "invalid 'group'"
+    "invalid 'val'"
+  ],
+  "paths": [
+    "val"
   ]
 }

@@ -42,6 +42,27 @@
         {
           "sh:path": "group",
           "sh:minCount": 1,
+          "sh:node": {
+            "@type": "sh:NodeShape",
+            "sh:property": [
+              {
+                "@type": "sh:PropertyShape",
+                "sh:path": {
+                  "@list": [
+                    {
+                      "sh:zeroOrMorePath": {
+                        "@id": "rdf:rest"
+                      }
+                    },
+                    {
+                      "@id": "rdf:first"
+                    }
+                  ]
+                },
+                "sh:minCount": 1
+              }
+            ]
+          },
           "sh:property": [
             {
               "@type": "sh:PropertyShape",
@@ -57,23 +78,19 @@
                   }
                 ]
               },
-              "sh:node": {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": "val",
-                    "sh:minCount": 1,
-                    "sh:maxCount": 1,
-                    "sh:in": {
-                      "@list": [
-                        "option1",
-                        "option2"
-                      ]
-                    }
+              "sh:property": [
+                {
+                  "sh:path": "val",
+                  "sh:minCount": 1,
+                  "sh:maxCount": 1,
+                  "sh:in": {
+                    "@list": [
+                      "option1",
+                      "option2"
+                    ]
                   }
-                ]
-              },
-              "sh:minCount": 1
+                }
+              ]
             }
           ]
         }

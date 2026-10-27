@@ -56,15 +56,12 @@
                   }
                 ]
               },
-              "sh:node": {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": "val",
-                    "sh:minInclusive": 0
-                  }
-                ]
-              }
+              "sh:property": [
+                {
+                  "sh:path": "val",
+                  "sh:minInclusive": 0
+                }
+              ]
             }
           ]
         }

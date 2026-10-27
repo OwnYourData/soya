@@ -2,5 +2,8 @@
   "isValid": false,
   "messages": [
     "invalid 'authentication'"
+  ],
+  "paths": [
+    "authentication"
   ]
 }

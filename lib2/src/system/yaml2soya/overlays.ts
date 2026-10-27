@@ -379,7 +379,7 @@ const validationProcessAttributes = (
         let hasNestedAttributes = false;
         let hasScalarConstraints = false;
         let pendingCardinality: string | undefined;
-        let listElementShape: { [key: string]: any } | undefined;
+        let elementShape: { [key: string]: any } | undefined;
 
         for (const constraintKey in attr) {
             const value = attr[constraintKey];
@@ -390,13 +390,9 @@ const validationProcessAttributes = (
                 const childBase = attrInfo?.elementType || currentBase;
 
                 if (attrIsSet) {
-                    listElementShape = {
-                        "@type": "sh:PropertyShape",
-                        "sh:path": buildListElementPath(),
-                        "sh:node": buildNodeShapeFromAttributes(value, childBase, baseIndex),
-                    };
-
-                    constraints["sh:property"] = [listElementShape];
+                    // Die Shapes für die Listenelemente entstehen nach der Schleife,
+                    // wenn alle Angaben zum Attribut (z.B. cardinality) bekannt sind.
+                    elementShape = buildNodeShapeFromAttributes(value, childBase, baseIndex);
                 } else {
                     const childConstraints = validationProcessAttributes(value, childBase, baseIndex);
                     const childOrConstraints = validationProcessOr(value, childBase, baseIndex);
@@ -489,21 +485,46 @@ const validationProcessAttributes = (
             constraints["@type"] = "sh:PropertyShape";
         }
 
-        if (listElementShape) {
-            // Set-Attribut mit verschachtelten Attributen: Die äußere Shape setzt
-            // auf dem Attribut selbst (Listenkopf) an, die Anzahl der Elemente
-            // prüft die Shape für die Listenelemente. Das gilt unabhängig davon,
-            // ob "cardinality" in der YAML vor oder nach "attributes" steht.
+        if (elementShape) {
+            // Set-Attribut mit verschachtelten Attributen. Die äußere Shape setzt
+            // auf dem Attribut selbst (Listenkopf) an, unabhängig davon, ob
+            // "cardinality" in der YAML vor oder nach "attributes" steht.
+            constraints["sh:path"] = attrName;
+
+            // Anzahl der Elemente und Alternativen ("or") werden über sh:node
+            // geprüft: Eine Verletzung meldet damit die äußere Shape, also mit
+            // dem Attribut als Pfad und der eigenen "message" des Attributs.
+            const listCheck: { [key: string]: any } = {
+                "@type": "sh:PropertyShape",
+                "sh:path": buildListElementPath(),
+            };
+
             if (pendingCardinality) {
-                constraints["sh:path"] = attrName;
-                applyCardinalityRange(listElementShape, pendingCardinality);
+                applyCardinalityRange(listCheck, pendingCardinality);
             }
 
-            // Die Verletzungen entstehen in der Shape für die Listenelemente
-            // (sh:node, Anzahl). Damit die eigene Meldung im Ergebnis steht,
-            // trägt auch diese Shape sh:message.
-            if (constraints["sh:message"] !== undefined) {
-                listElementShape["sh:message"] = constraints["sh:message"];
+            if (elementShape["sh:or"]) {
+                listCheck["sh:or"] = elementShape["sh:or"];
+            }
+
+            if (pendingCardinality || elementShape["sh:or"]) {
+                constraints["sh:node"] = {
+                    "@type": "sh:NodeShape",
+                    "sh:property": [listCheck],
+                };
+            }
+
+            // Die verschachtelten Attribute werden als sh:property auf die
+            // Elemente angewendet: Ihre Verletzungen erscheinen damit direkt im
+            // Ergebnis, mit Pfad und "message" des inneren Attributs.
+            if (elementShape["sh:property"]) {
+                constraints["sh:property"] = [
+                    {
+                        "@type": "sh:PropertyShape",
+                        "sh:path": buildListElementPath(),
+                        "sh:property": elementShape["sh:property"],
+                    },
+                ];
             }
         }
 

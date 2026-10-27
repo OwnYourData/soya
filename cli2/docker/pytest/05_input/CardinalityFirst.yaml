@@ -21,6 +21,7 @@ content:
           attributes:
             val:
               cardinality: "1..1"
+              message: "invalid 'val'"
               valueOption:
                 - "option1"
                 - "option2"

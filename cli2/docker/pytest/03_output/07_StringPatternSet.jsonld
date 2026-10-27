@@ -56,15 +56,12 @@
                   }
                 ]
               },
-              "sh:node": {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": "val",
-                    "sh:pattern": "^SO[yY]A$"
-                  }
-                ]
-              }
+              "sh:property": [
+                {
+                  "sh:path": "val",
+                  "sh:pattern": "^SO[yY]A$"
+                }
+              ]
             }
           ]
         }

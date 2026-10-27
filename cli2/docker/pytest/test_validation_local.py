@@ -3,7 +3,8 @@
 # Jede Struktur 05_input/<Name>.yaml wird mit `soya init` übersetzt und über einen
 # lokalen HTTP-Server als Repository bereitgestellt; `soya validate --repo` holt
 # sie von dort. Die Fälle zu einer Struktur liegen in 05_input/<Name>/*.json, die
-# erwarteten Ergebnisse (isValid und Meldungen) in 05_output/<Name>/*.json.
+# erwarteten Ergebnisse (isValid, Meldungen und Pfade als lokale Namen) in
+# 05_output/<Name>/*.json.
 # So prüfen die Tests den Compiler (yaml2soya) und die Validierung zusammen,
 # ohne eine Struktur zu veröffentlichen.
 #
@@ -11,8 +12,10 @@
 # - Eine Alternative im `or`, die nur aus `datatype` besteht, darf keine
 #   bedingungslose sh:NodeShape erzeugen (sonst ist das sh:or immer wahr und
 #   eingebettete Verifikationsmethoden werden nie geprüft).
-# - Die eigene `message` eines Set-Attributs mit verschachtelten Attributen
-#   steht im Ergebnis (nicht "Value does not have shape ...").
+# - Verstöße in Elementen eines Set-Attributs werden mit dem Attribut als Pfad
+#   und dessen eigener `message` gemeldet (nicht mit einem Blank Node als Pfad
+#   und "Value does not have shape ..."); Verstöße in verschachtelten Attributen
+#   der Elemente erscheinen mit Pfad und `message` des inneren Attributs.
 # - `cardinality` eines Set-Attributs mit verschachtelten Attributen wirkt
 #   gleich, egal ob es in der YAML vor oder nach `attributes` steht.
 import functools
@@ -86,14 +89,14 @@ def test_or_has_no_unconstrained_alternative(local_repo):
             assert set(alternative.keys()) - {"@type"}, "sh:or contains an alternative without constraints"
 
 
-def test_set_message_on_list_element_shape(local_repo):
+def test_set_violations_reported_on_attribute(local_repo):
     overlay = validation_overlay(local_repo["structures"]["DidSetValidation"])
     shapes = {p["sh:path"]: p for p in overlay["sh:property"] if isinstance(p.get("sh:path"), str)}
     for attr in SET_ATTRIBUTES_WITH_MESSAGE:
         outer = shapes[attr]
-        inner = [s for s in outer["sh:property"] if "sh:node" in s]
-        assert len(inner) == 1
-        assert inner[0].get("sh:message") == outer["sh:message"]
+        assert "sh:message" in outer
+        element_checks = outer["sh:node"]["sh:property"]
+        assert len(element_checks) == 1 and "sh:or" in element_checks[0]
 
 
 def test_set_cardinality_independent_of_order(local_repo):
@@ -105,8 +108,8 @@ def test_set_cardinality_independent_of_order(local_repo):
     first = shapes("CardinalityFirst")
     assert first == shapes("CardinalityLast")
     assert first[0]["sh:path"] == "group"
-    inner = [s for s in first[0]["sh:property"] if "sh:node" in s][0]
-    assert (inner["sh:minCount"], inner["sh:maxCount"]) == (1, 2)
+    element_count = first[0]["sh:node"]["sh:property"][0]
+    assert (element_count["sh:minCount"], element_count["sh:maxCount"]) == (1, 2)
 
 
 @pytest.mark.parametrize('input', sorted(glob.glob(cwd + '/05_input/*/*.json')))
@@ -125,3 +128,8 @@ def test_validate(local_repo, input):
     assert result["isValid"] == expected["isValid"]
     messages = sorted(m["value"] for r in result["results"] for m in r.get("message", []))
     assert messages == sorted(expected["messages"])
+    base = local_repo["structures"][structure_name]["@context"]["@base"]
+    for r in result["results"]:
+        assert r.get("termType") == "NamedNode", "result path is not an attribute: %s" % r.get("value")
+    paths = sorted(r["value"].replace(base, "") for r in result["results"])
+    assert paths == sorted(expected["paths"])

@@ -56,16 +56,13 @@
                   }
                 ]
               },
-              "sh:node": {
-                "@type": "sh:NodeShape",
-                "sh:property": [
-                  {
-                    "sh:path": "val",
-                    "sh:minLength": 0,
-                    "sh:maxLength": 4
-                  }
-                ]
-              }
+              "sh:property": [
+                {
+                  "sh:path": "val",
+                  "sh:minLength": 0,
+                  "sh:maxLength": 4
+                }
+              ]
             }
           ]
         }

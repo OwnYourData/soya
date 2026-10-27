@@ -2,5 +2,8 @@
   "isValid": false,
   "messages": [
     "invalid 'assertionMethod'"
+  ],
+  "paths": [
+    "assertionMethod"
   ]
 }
