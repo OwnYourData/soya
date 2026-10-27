@@ -15,7 +15,7 @@
     "test": ""
   },
   "bin": {
-    "soya": "./dist/index.js"
+    "soya": "dist/index.js"
   },
   "files": [
     "dist",
