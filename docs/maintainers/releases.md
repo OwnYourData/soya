@@ -10,7 +10,7 @@ be documented in the component README and in the migration notes):
 
 | Component | Package / Image | Current line |
 |-----------|-----------------|--------------|
-| `lib2/`   | npm `soya-js` | 0.9.x (Node 24 stack) |
+| `lib2/`   | npm `soya-js` | 0.10.x (Node 24 stack) |
 | `cli2/`   | npm `soya-cli`, Docker `oydeu/soya-cli` | 0.18.x (Node 24 stack) |
 | `web-cli/`| Docker `oydeu/soya-web-cli` | 0.5.x |
 | `form/`   | Docker `oydeu/soya-forms` | 0.6.x |
