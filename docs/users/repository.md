@@ -118,7 +118,14 @@ Inspect a single structure, including the DRIs of its previous versions:
 soya info Person
 ```
 
-You can also compute the DRI of a local document without publishing it, which lets you check ahead of time how a structure would be addressed:
+In the result, `dri` is the identifier the structure was requested with (its
+name or a DRI), and `currentDri` is the DRI of the version currently tagged
+`current`; `history` lists all versions with their DRIs.
+
+`soya calculate-dri` computes a hashlink (`zQm…`) over the document's RDF
+serialization, as used for instances. It is **not** the DRI the repository
+assigns to a structure; for that, use `soya push --json` /
+`soya init-push --json` or `structureDri()` in soya-js (see above).
 
 ```bash
 cat Person.jsonld | soya calculate-dri

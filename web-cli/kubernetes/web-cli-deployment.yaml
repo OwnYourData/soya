@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: soya-web-cli
-        image: oydeu/soya-web-cli:latest
+        image: oydeu/soya-web-cli:261028@sha256:419886a655afa47c1ed7682bae2d4d5c77c496af69479e4223fe1731bc0077f1
         ports:
         - containerPort: 8080
         env:

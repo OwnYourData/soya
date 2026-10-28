@@ -56,6 +56,10 @@ if $DOCKER_UPDATE; then
     echo
     echo "pushed $IMAGE:$TAG and $IMAGE:latest"
     docker buildx imagetools inspect "$IMAGE:$TAG"
+    DIGEST=$(docker buildx imagetools inspect "$IMAGE:$TAG" --format '{{.Manifest.Digest}}')
+    echo
+    echo "for web-cli/kubernetes/web-cli-deployment.yaml:"
+    echo "        image: $IMAGE:$TAG@$DIGEST"
 else
     docker build $CACHE_OPT -f "$DOCKERFILE" -t "$IMAGE:$TAG" . || exit 1
     echo

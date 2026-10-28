@@ -210,6 +210,11 @@ class DriController < ApplicationController
             end
         end
 
+        # DRI der aktuellen Version (Eintrag mit Tag "current"); "dri" bleibt der
+        # Bezeichner, über den die Struktur abgefragt wurde (Name oder DRI)
+        current_entry = history.find { |h| h[:tag].to_s == DEFAULT_SOYA_TAG }
+        current_dri = current_entry.nil? ? nil : current_entry[:dri]
+
         bases = []
         overlays = []
         @store.each do |item|
@@ -241,7 +246,7 @@ class DriController < ApplicationController
                 end
             end unless graph == []
         end
-        render json: {"name": soya_name, "dri": soya_dri, "history": sorted_history, "bases": bases.uniq, "overlays": overlays.uniq},
+        render json: {"name": soya_name, "dri": soya_dri, "currentDri": current_dri, "history": sorted_history, "bases": bases.uniq, "overlays": overlays.uniq},
                status: 200
 
     end

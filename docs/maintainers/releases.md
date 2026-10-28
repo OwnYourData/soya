@@ -58,7 +58,9 @@ be documented in the component README and in the migration notes):
 4. web-cli depends on the published `soya-js` (pinned in `package-lock.json`).
    `web-cli/build.sh` builds a local image; `web-cli/build.sh --dockerhub`
    builds `linux/amd64` and `linux/arm64` and pushes a dated tag (`YYMMDD`,
-   override with `--tag`) plus `latest`, then prints the image digest.
+   override with `--tag`) plus `latest`, then prints the image digest and the
+   pinned `image:` line for `web-cli/kubernetes/web-cli-deployment.yaml`
+   (tag plus digest); update the manifest with it before deploying.
 
 ## Release checklist
 
