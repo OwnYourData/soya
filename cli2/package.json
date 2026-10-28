@@ -1,6 +1,6 @@
 {
   "name": "soya-cli",
-  "version": "0.18.3",
+  "version": "0.18.4",
   "description": "Command line interface for SOyA (Semantic Overlay Architecture)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,7 +38,7 @@
     "handlebars": "^4.7.8",
     "node-jq": "^6.3.1",
     "open": "^8.4.2",
-    "soya-js": "^0.10.4",
+    "soya-js": "^0.10.5",
     "winston": "^3.19.0"
   }
 }

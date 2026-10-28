@@ -1,30 +1,28 @@
-FROM node:24 AS builder
+# soya-web-cli image (multi-arch: linux/amd64, linux/arm64)
+#
+# build context is the REPOSITORY ROOT (shared .dockerignore), build with:
+#   web-cli/build.sh                 local image for the current platform
+#   web-cli/build.sh --dockerhub     multi-arch image, pushed with a dated tag and latest
+#
+# soya-js comes from the npm registry as pinned in package-lock.json.
+# Base images are pinned by the digest of their multi-arch index (CC-ADR 0015).
+
+FROM node:24@sha256:6449e19d8184d84062525b6a7524def03146c2cb04a7f08b076680d0e8e4240a AS builder
 
 WORKDIR /app
 ENV NODE_ENV=development
 
-# build context is the REPOSITORY ROOT (the image needs ../lib2),
-# build with:
-#   docker build -f web-cli/Dockerfile -t oydeu/soya-web-cli .
-# or from within web-cli/:  npm run docker
-#
-# once soya-js >= 0.10 is published to npm, the dependency in package.json
-# can be switched to the published version and this Dockerfile simplified
-# to a plain single-directory build again (see docs/maintainers/releases.md)
-COPY ./lib2 /lib2
-COPY ["web-cli/package.json", "web-cli/tsconfig.json", "./"]
-COPY ./web-cli/src ./src
+COPY ["web-cli/package.json", "web-cli/package-lock.json", "web-cli/tsconfig.json", "./"]
+RUN npm ci
 
-RUN cd /lib2 && npm install && npm run build && npm prune --omit=dev && \
-    cd /app && npm install && npm run build && npm prune --omit=dev
+COPY ./web-cli/src ./src
+RUN npm run build && npm prune --omit=dev
 
 ####################################
 
-FROM node:24-alpine
+FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 
 WORKDIR /app
-# /lib2 must keep its location, node_modules/soya-js is a symlink to it
-COPY --from=builder /lib2 /lib2
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist

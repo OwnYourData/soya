@@ -30,15 +30,15 @@
 
 ## Install and build from source
 
-`soya-cli` depends on `soya-js` via a local file reference (`file:../lib2`),
-so build the library first:
+`soya-cli` depends on the published `soya-js` (see `package.json`). To work
+against a local `lib2` instead, build the library and link it:
 
 ```bash
 # build the library
 cd ../lib2 && npm install && npm run build
 
-# install all dependencies
-cd ../cli2 && npm install
+# install all dependencies and use the local library
+cd ../cli2 && npm install && npm install --no-save ../lib2
 
 # build project sources
 npm run build

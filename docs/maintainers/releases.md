@@ -54,14 +54,16 @@ be documented in the component README and in the migration notes):
 
 1. Bump `version` in `package.json`.
 2. `npm run build` (web-cli: `tsc`; form: `tsc --noEmit && vite build`).
-3. `npm run docker` builds the respective image; push to Docker Hub.
-4. web-cli uses `soya-js` via `file:../lib2` during the transition — switch to
-   the published version for reproducible image builds (same rule as cli2).
+3. form: `npm run docker` builds the image; push to Docker Hub.
+4. web-cli depends on the published `soya-js` (pinned in `package-lock.json`).
+   `web-cli/build.sh` builds a local image; `web-cli/build.sh --dockerhub`
+   builds `linux/amd64` and `linux/arm64` and pushes a dated tag (`YYMMDD`,
+   override with `--tag`) plus `latest`, then prints the image digest.
 
 ## Release checklist
 
 - [ ] Version bumped, lockfile updated
 - [ ] pytest suite green (`cli2/docker/pytest`, incl. `WEBCLI=<local>` run for web-cli changes)
 - [ ] Breaking changes documented (README + `docs/developers/migration-node24.md`)
-- [ ] Docker images built for both architectures where applicable (`Dockerfile`, `Dockerfile.arm64v8`)
+- [ ] Docker images built for both architectures where applicable (web-cli: one multi-arch `Dockerfile`; others: `Dockerfile`, `Dockerfile.arm64v8`)
 - [ ] Git tag created (`<component>-v<version>`)

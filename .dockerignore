@@ -6,6 +6,11 @@
 # - a copied tsconfig.tsbuildinfo makes tsc skip emitting entirely
 #   ("everything up to date") -> empty dist in the image
 **/node_modules
+**/.env
+**/*.key
+**/credentials/*.key
+.git
+**/kubernetes
 **/dist
 **/build
 **/tsconfig.tsbuildinfo

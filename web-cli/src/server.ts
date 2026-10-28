@@ -6,6 +6,16 @@ import path from 'path';
 import http from 'http';
 import { getFileRoot } from './utils/fs';
 
+// Version des tatsächlich installierten soya-js (nicht die Angabe aus package.json)
+const getInstalledSoyaJsVersion = async (): Promise<string | null> => {
+  try {
+    const content = await fs.readFile(require.resolve('soya-js/package.json'), { encoding: 'utf-8' });
+    return (JSON.parse(content) as { version?: string }).version ?? null;
+  } catch {
+    return null;
+  }
+};
+
 type RepoMode = 'public' | 'private';
 
 type AppConfig = {
@@ -303,7 +313,7 @@ const createMainApp = async (config: AppConfig): Promise<Express> => {
     return res.status(200).send({
       name: packageJson.name,
       version: packageJson.version,
-      soyaJsVersion: packageJson.dependencies?.['soya-js'] ?? null,
+      soyaJsVersion: await getInstalledSoyaJsVersion(),
       repo: {
         baseUrl: config.repoBaseUrl,
         mode: config.repoMode,
