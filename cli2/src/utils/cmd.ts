@@ -14,6 +14,7 @@ export interface CmdArgs {
   verbose?: boolean[],
   help?: false,
   type?: string,
+  json?: boolean,
   version: boolean,
 }
 
@@ -196,6 +197,14 @@ const printInfoHelp = () => {
   ]));
 }
 
+const pushDefinition: cmdInterface[] = [
+  {
+    name: 'json',
+    description: 'For structures: print name and DRI as a JSON object instead of the name only',
+    type: Boolean,
+  },
+];
+
 const printPushHelp = () => {
   console.log(commandLineUsage([
     {
@@ -206,7 +215,12 @@ const printPushHelp = () => {
       header: 'Usage',
       content: [
         '$ cat document.jsonld | soya push',
+        '$ cat document.jsonld | soya push --json',
       ]
+    },
+    {
+      header: 'Options',
+      optionList: pushDefinition,
     },
     getGeneralOptions(),
   ]));
@@ -223,7 +237,12 @@ This is a shorthand for soya init and soya push with the added benefit that also
       header: 'Usage',
       content: [
         '$ cat my-doc.yaml | soya init-push',
+        '$ cat my-doc.yaml | soya init-push --json',
       ]
+    },
+    {
+      header: 'Options',
+      optionList: pushDefinition,
     },
     getGeneralOptions(),
   ]));
@@ -387,4 +406,5 @@ export const cmdArgs = commandLineArgs([
   ...globalDefinition,
   ...formDefinition,
   ...pullDefinition,
+  ...pushDefinition,
 ]) as CmdArgs;

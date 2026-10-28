@@ -56,6 +56,12 @@ More commonly you can go straight from YAML using `soya init-push`, which is a s
 cat person.yaml | soya init-push
 ```
 
+Both commands print the name of the structure. With `--json` they print the
+name together with the DRI the repository assigns to this version, e.g.
+`{"name": "Person", "dri": "z…"}`. The DRI is the SHA-256 of the canonicalized
+JSON-LD (RFC 8785) without `@base`, multibase base58btc encoded, and is
+computed locally the same way the repository does.
+
 In either case, publishing does two things:
 
 1. it stores an **immutable version** addressable by its **DRI**, and

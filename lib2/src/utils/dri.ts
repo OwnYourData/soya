@@ -57,6 +57,42 @@ const removeDRIsFromObject = (obj: any): any => {
   }
 }
 
+const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+const base58btc = (bytes: Uint8Array): string => {
+  let value = BigInt('0x' + Buffer.from(bytes).toString('hex'));
+  let encoded = '';
+
+  while (value > 0n) {
+    encoded = BASE58_ALPHABET[Number(value % 58n)] + encoded;
+    value = value / 58n;
+  }
+
+  for (const byte of bytes) {
+    if (byte !== 0)
+      break;
+    encoded = '1' + encoded;
+  }
+
+  return encoded;
+};
+
+/**
+ * DRI einer SOyA-Struktur, wie sie das SOyA-Repository beim Push vergibt:
+ * SHA-256 über das kanonisierte JSON (RFC 8785) ohne `@base` im `@context`,
+ * multibase-base58btc-kodiert ("z…").
+ */
+export const calculateStructureDri = async (doc: any): Promise<string> => {
+  const copy = JSON.parse(JSON.stringify(doc));
+
+  if (copy && typeof copy['@context'] === 'object' && copy['@context'] !== null)
+    delete copy['@context']['@base'];
+
+  const hex = await crypto.createSha256Hex(crypto.canonicalize(copy) as string);
+
+  return 'z' + base58btc(Uint8Array.from(Buffer.from(hex, 'hex')));
+};
+
 export const calculateBaseUri = async (obj: Partial<JsonLdObject>, base?: string): Promise<CalculationResult> => {
   if (obj.quads) {
     const context = { ...obj.json['@context'] };

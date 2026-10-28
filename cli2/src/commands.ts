@@ -71,20 +71,39 @@ const pull = async (params: ParamObject, soya: Soya): Promise<void> => {
     logger.error(e.toString())
   }
 }
-const push = async (_: ParamObject, soya: Soya): Promise<void> => {
+// Ausgabe nach dem Push: der Name wie bisher, mit --json für Strukturen
+// {"name": ..., "dri": ...}; der DRI wird lokal so berechnet wie im Repository.
+const printPushResult = async (params: ParamObject, soya: Soya, document: unknown, value: any): Promise<void> => {
+  const doc = typeof document === 'string' ? JSON.parse(document) : document as any;
+
+  // Instanzen tragen ein @vocab im @context, Strukturen nicht
+  const isInstance = !!doc?.['@context']?.['@vocab'];
+
+  if (params.json && !isInstance) {
+    logNiceConsole({
+      name: value,
+      dri: await soya.structureDri(doc),
+    });
+    return;
+  }
+
+  logNiceConsole(value);
+}
+
+const push = async (params: ParamObject, soya: Soya): Promise<void> => {
   const contentDocument = await Std.in();
   if (!contentDocument)
     return exitWithError('No content provided via stdin!');
 
   try {
     const res = await soya.push(contentDocument);
-    logNiceConsole(res.value);
+    await printPushResult(params, soya, contentDocument, res.value);
   } catch (e: any) {
     logger.error(e.toString());
     return exitWithError('Could not push SOyA document');
   }
 }
-const initPush = async (_: ParamObject, soya: Soya): Promise<void> => {
+const initPush = async (params: ParamObject, soya: Soya): Promise<void> => {
   const yamlContent = await Std.in();
 
   if (!yamlContent)
@@ -96,7 +115,7 @@ const initPush = async (_: ParamObject, soya: Soya): Promise<void> => {
     const res = await soya.push(contentDocument, {
       soya_yaml: yamlContent,
     });
-    logNiceConsole(res.value);
+    await printPushResult(params, soya, contentDocument, res.value);
   } catch (e: any) {
     logger.error(e.toString());
     return exitWithError('Could not push SOyA document');

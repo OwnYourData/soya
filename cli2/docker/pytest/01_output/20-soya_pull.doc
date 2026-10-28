@@ -64,7 +64,7 @@ content:
               - &id_jwk
                 id: &cardinality1_pattern
                   cardinality: "1..1"
-                  pattern: "^(did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+|#[A-Za-z0-9.:\\-_%?]+)$"
+                  pattern: &did_url "^(did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%?=#]+|#[A-Za-z0-9.:\\-_%?]+)$"
                 type:
                   cardinality: "1..1"
                   valueOption:
@@ -180,7 +180,8 @@ content:
           message: "invalid 'authentication'"
           attributes: &verification_method_attributes
             or:
-              - datatype: String
+              - datatype: String # DID Core 5.3: a reference to a verification method is a DID URL
+                pattern: *did_url
               - *id_jwk
               - *id_base58
               - *id_multibase
@@ -212,6 +213,8 @@ content:
           - capabilityInvocation: *verification_method_id
           - capabilityDelegation: *verification_method_id
         service:
+          message: "duplicate 'id' in 'service'" # DID Core 5.4: no two services with the same id
+          unique: id
           attributes:
             id: # DID Core 5.4: a URI; a reference relative to the DID document like "#linked-domain" is accepted, as for verification methods
               cardinality: "1..1"
@@ -220,9 +223,14 @@ content:
             type: # DID Core 5.4: a string or a set of strings
               cardinality: "1..n"
               message: "there must be at least one 'type' in 'service'"
-            serviceEndpoint:
+            serviceEndpoint: # DID Core 5.4: a URI, a map, or a set of URIs and/or maps
               cardinality: "1..n"
               message: "invalid 'serviceEndpoint' in 'service'"
+              attributes:
+                or:
+                  - datatype: String
+                    pattern: '^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$'
+                  - nodeKind: BlankNodeOrIRI
 
     - type: OverlayDidContextValidation
       base: Did

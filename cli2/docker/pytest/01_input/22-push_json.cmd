@@ -1,0 +1,1 @@
+soya init | soya push --json --repo $REPO

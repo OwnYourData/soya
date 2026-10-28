@@ -9,7 +9,7 @@ import { flat2ld } from "./system/flat2ld";
 import { SoyaFormOptions, getSoyaForm, SoyaFormResponse } from "./system/form";
 import { map } from "./system/map";
 import { yaml2soya } from "./system/yaml2soya";
-import { calculateBaseUri, CalculationResult } from "./utils/dri";
+import { calculateBaseUri, calculateStructureDri, CalculationResult } from "./utils/dri";
 import { parseJsonLd } from "./utils/rdf";
 import { SparqlQueryBuilder } from "./utils/sparql";
 import { canonize } from 'jsonld';
@@ -193,6 +193,13 @@ export class Soya {
     // @ts-expect-error ts does not get this although it's correct
     return await this.service.info(path);
   }
+
+  /**
+   * DRI einer SOyA-Struktur, wie sie das Repository beim Push vergibt.
+   */
+  structureDri = async (input: unknown): Promise<string> => {
+    return calculateStructureDri(asObjectInput(input));
+  };
 
   calculateDri = async (content: any): Promise<CalculationResult> => {
     let json: any;
