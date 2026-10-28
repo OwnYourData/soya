@@ -1,0 +1,53 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://soya.ownyourdata.eu/DidRules/",
+    "verificationMethod": {
+      "@container": "@list"
+    },
+    "authentication": {
+      "@container": "@list"
+    },
+    "assertionMethod": {
+      "@container": "@list"
+    },
+    "keyAgreement": {
+      "@container": "@list"
+    },
+    "capabilityInvocation": {
+      "@container": "@list"
+    },
+    "capabilityDelegation": {
+      "@container": "@list"
+    },
+    "service": {
+      "@container": "@list"
+    }
+  },
+  "@graph": [
+    {
+      "@type": "Did",
+      "id": "did:example:123",
+      "verificationMethod": [
+        {
+          "id": "did:example:123#key-1",
+          "type": "Multikey",
+          "controller": "did:example:123",
+          "publicKeyMultibase": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+        }
+      ],
+      "service": [
+        {
+          "id": "#s1",
+          "type": "LinkedDomains",
+          "serviceEndpoint": "https://a.example.com"
+        },
+        {
+          "id": "#s2",
+          "type": "LinkedDomains",
+          "serviceEndpoint": "https://b.example.com"
+        }
+      ]
+    }
+  ]
+}

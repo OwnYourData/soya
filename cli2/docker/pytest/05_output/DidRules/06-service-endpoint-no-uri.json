@@ -1,0 +1,9 @@
+{
+  "isValid": false,
+  "messages": [
+    "invalid 'serviceEndpoint' in 'service'"
+  ],
+  "paths": [
+    "serviceEndpoint"
+  ]
+}

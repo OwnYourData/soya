@@ -315,6 +315,67 @@ const buildNodeShapeFromAttributes = (
     return nodeShape;
 };
 
+// Schlüssel, die in einem or-Glied für den Wert selbst gelten (nicht für ein Attribut).
+const OR_VALUE_KEYS = ["datatype", "nodeKind", "pattern", "length", "valueRange", "valueOption"];
+
+const NODE_KINDS = ["IRI", "BlankNode", "Literal", "BlankNodeOrIRI", "BlankNodeOrLiteral", "IRIOrLiteral"];
+
+const buildValueConstraints = (group: any): { [key: string]: any } | undefined => {
+    const shape: { [key: string]: any } = {};
+
+    if (group.datatype !== undefined) {
+        shape["sh:datatype"] = {
+            "@id": tryUseXsdDataType(group.datatype).dataType,
+        };
+    }
+
+    if (group.nodeKind !== undefined) {
+        if (!NODE_KINDS.includes(group.nodeKind)) {
+            throw new Error(`Invalid nodeKind "${group.nodeKind}" (allowed: ${NODE_KINDS.join(", ")})`);
+        }
+        shape["sh:nodeKind"] = {
+            "@id": `sh:${group.nodeKind}`,
+        };
+    }
+
+    if (group.pattern !== undefined) {
+        shape["sh:pattern"] = group.pattern;
+    }
+
+    if (group.length !== undefined) {
+        const range = parseRange(group.length);
+        if (range instanceof NumberRange) {
+            if (range.min != null) shape["sh:minLength"] = range.min;
+            if (range.max != null) shape["sh:maxLength"] = range.max;
+        }
+    }
+
+    if (group.valueRange !== undefined) {
+        const range = parseRange(group.valueRange);
+        if (range instanceof NumberRange) {
+            if (range.min != null) shape["sh:minInclusive"] = range.min;
+            if (range.max != null) shape["sh:maxInclusive"] = range.max;
+        } else if (range instanceof DateRange) {
+            if (range.min) shape["sh:minInclusive"] = { "@type": "xsd:date", "@value": range.min };
+            if (range.max) shape["sh:maxInclusive"] = { "@type": "xsd:date", "@value": range.max };
+        }
+    }
+
+    if (Array.isArray(group.valueOption)) {
+        shape["sh:in"] = {
+            "@list": group.valueOption.map((x: any) => {
+                if (x && x.id) {
+                    x["@id"] = x.id;
+                    delete x.id;
+                }
+                return x;
+            }),
+        };
+    }
+
+    return Object.keys(shape).length > 0 ? shape : undefined;
+};
+
 const validationProcessOr = (
     elements: any,
     currentBase: string,
@@ -325,28 +386,35 @@ const validationProcessOr = (
     for (const attrName in elements) {
         if (attrName === "or") {
             for (const orGroup in elements[attrName]) {
+                const group = elements[attrName][orGroup] || {};
+
+                // Wertbedingungen (datatype, nodeKind, pattern, ...) gelten im
+                // or-Glied für den Wert selbst; alle übrigen Schlüssel sind
+                // Attribute des Werts.
+                const attributePart: { [key: string]: any } = {};
+                for (const key in group) {
+                    if (!OR_VALUE_KEYS.includes(key)) {
+                        attributePart[key] = group[key];
+                    }
+                }
+
                 const nodeShape = buildNodeShapeFromAttributes(
-                    elements[attrName][orGroup],
+                    attributePart,
                     currentBase,
                     baseIndex,
                 );
 
-                // Eine Alternative, die nur aus "datatype" besteht, ergibt eine
-                // NodeShape ohne Bedingungen. Eine solche Shape erfüllt jeder Wert
-                // und würde das gesamte sh:or immer wahr machen; sie wird daher
-                // nicht übernommen (der Datentyp folgt als eigene Alternative).
+                // Eine Alternative ohne Attribute ergibt eine NodeShape ohne
+                // Bedingungen. Eine solche Shape erfüllt jeder Wert und würde das
+                // gesamte sh:or immer wahr machen; sie wird daher nicht übernommen.
                 if (nodeShape["sh:property"] || nodeShape["sh:or"]) {
                     constraintsArray.push(nodeShape);
                 }
 
-                for (const val in elements[attrName][orGroup]) {
-                    if (val === "datatype") {
-                        constraintsArray.push({
-                            "sh:datatype": {
-                                "@id": tryUseXsdDataType(elements[attrName][orGroup][val]).dataType,
-                            },
-                        });
-                    }
+                // Die Wertbedingungen eines or-Glieds bilden eine eigene Alternative.
+                const valueShape = buildValueConstraints(group);
+                if (valueShape) {
+                    constraintsArray.push(valueShape);
                 }
             }
         }
@@ -408,6 +476,15 @@ const validationProcessAttributes = (
                     }
                 }
 
+                continue;
+            }
+
+            if (constraintKey === "unique") {
+                // Eindeutigkeit eines Schlüssel-Attributs unter den Elementen des
+                // Attributs; geprüft von soya-js (SoyaValidate), nicht von SHACL.
+                constraints["soya:uniqueKey"] = {
+                    "@id": value,
+                };
                 continue;
             }
 

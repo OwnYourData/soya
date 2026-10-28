@@ -76,7 +76,8 @@ it simply has no effect.
 | `pattern` | `"^[A-Za-z ,.-]+$"` | `sh:pattern` |
 | `message` | `"Please provide a valid name"` | `sh:message` |
 | `attributes` | nested block | nested `sh:property` / `sh:node` shapes |
-| `or` | list of attribute groups | `sh:or` |
+| `or` | list of alternatives (attribute groups and/or value constraints) | `sh:or` |
+| `unique` | `id` | `soya:uniqueKey` (checked by soya-js, see below) |
 
 In range notation, square brackets include the bound and round brackets exclude
 it — `"[0..20)"` becomes `sh:minLength 0` and `sh:maxLength 19` — while `*`
@@ -122,6 +123,57 @@ Type names are matched case-insensitively against the XSD built-in types
 `DateTime`, `Time`, `AnyURI`, …); any other name is treated as a reference to
 another base. The one place where `datatype` *is* evaluated is inside an `or`
 group, where it distinguishes the alternative shapes.
+
+### Alternatives (`or`) with value constraints
+
+Each entry of an `or` list is one alternative. Inside an entry the keys
+`datatype`, `nodeKind`, `pattern`, `length`, `valueRange` and `valueOption`
+apply to the **value itself** and together form one alternative; all other keys
+are attributes of the value (a nested object) and form a separate alternative.
+`nodeKind` takes `IRI`, `BlankNode`, `Literal`, `BlankNodeOrIRI`,
+`BlankNodeOrLiteral` or `IRIOrLiteral`; a JSON object in the data is a
+`BlankNode` (or an `IRI` if it carries an `@id`).
+
+```yaml
+        authentication:            # a DID URL string or an embedded verification method
+          message: "invalid 'authentication'"
+          attributes:
+            or:
+              - datatype: String
+                pattern: '^(did:[a-z0-9]+:\S+|#\S+)$'
+              - id: { cardinality: "1..1" }
+                type: { cardinality: "1..1" }
+        serviceEndpoint:           # a URI string or a map
+          message: "invalid 'serviceEndpoint'"
+          attributes:
+            or:
+              - datatype: String
+                pattern: '^[A-Za-z][A-Za-z0-9+.-]*:\S+$'
+              - nodeKind: BlankNodeOrIRI
+```
+
+An alternative is reported with the attribute as result path and the
+attribute's own `message`.
+
+### Uniqueness within a set (`unique`)
+
+`unique: <attribute>` on a `set<...>` attribute requires that no two elements
+share the same value for the named attribute:
+
+```yaml
+        service:
+          message: "invalid 'service'"
+          unique: id
+          attributes:
+            id: { cardinality: "1..1" }
+```
+
+SHACL Core cannot express this, so `soya init` writes `soya:uniqueKey` into the
+shape and `soya validate` (soya-js, also used by soya-web-cli) checks it after
+the SHACL validation. A violation is reported with the attribute as result path
+and its `message` (default: *Value '…' of '…' is not unique*). The check applies
+to attributes on the top level of a validation overlay; other SHACL engines
+ignore `soya:uniqueKey`.
 
 ### Attribute names are not checked against the base
 

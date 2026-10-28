@@ -18,6 +18,10 @@
 #   der Elemente erscheinen mit Pfad und `message` des inneren Attributs.
 # - Auch bei Set-Attributen ohne verschachtelte Attribute (z.B. set<String> mit
 #   pattern) steht das Attribut als Pfad im Ergebnis, mit der konkreten Meldung.
+# - `unique: <Attribut>` meldet zwei Elemente eines Set-Attributs mit demselben
+#   Wert für das Schlüssel-Attribut (geprüft von soya-js, nicht von SHACL).
+# - Wertbedingungen in einem or-Glied (datatype, nodeKind, pattern, ...) gelten
+#   für den Wert selbst und bilden zusammen eine Alternative.
 # - `cardinality` eines Set-Attributs mit verschachtelten Attributen wirkt
 #   gleich, egal ob es in der YAML vor oder nach `attributes` steht.
 import functools
@@ -99,6 +103,21 @@ def test_set_violations_reported_on_attribute(local_repo):
         assert "sh:message" in outer
         element_checks = outer["sh:node"]["sh:property"]
         assert len(element_checks) == 1 and "sh:or" in element_checks[0]
+
+
+def test_unique_and_or_value_constraints_compile(local_repo):
+    overlay = validation_overlay(local_repo["structures"]["DidRules"])
+    shapes = {p["sh:path"]: p for p in overlay["sh:property"] if isinstance(p.get("sh:path"), str)}
+    assert shapes["service"]["soya:uniqueKey"] == {"@id": "id"}
+    auth_alternatives = shapes["authentication"]["sh:node"]["sh:property"][0]["sh:or"]["@list"]
+    assert auth_alternatives[0] == {
+        "sh:datatype": {"@id": "xsd:string"},
+        "sh:pattern": "^(did:[a-z0-9]+:\\S+|#\\S+)$",
+    }
+    endpoint = [p for p in shapes["service"]["sh:property"][0]["sh:property"] if p["sh:path"] == "serviceEndpoint"][0]
+    assert endpoint["sh:or"]["@list"][1] == {"sh:nodeKind": {"@id": "sh:BlankNodeOrIRI"}}
+    for node in walk(local_repo["structures"]["DidRules"]):
+        assert node.get("sh:path") not in ("pattern", "nodeKind", "datatype"), "value constraint compiled as attribute"
 
 
 def test_set_cardinality_independent_of_order(local_repo):

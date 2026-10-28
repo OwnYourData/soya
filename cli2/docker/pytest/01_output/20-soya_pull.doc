@@ -45,10 +45,20 @@ content:
       attributes:
         id: 
           cardinality: "1..1"
-          pattern: "^did:[a-z0-9]+:[a-zA-Z0-9.:\\-_%]+$"
+          # DID Core 3.1: did:<method-name>:<method-specific-id>, idchar or %HH, not ending in ":"
+          pattern: &did_syntax '^did:[a-z0-9]+:(([A-Za-z0-9._-]|%[0-9A-Fa-f]{2})*:)*([A-Za-z0-9._-]|%[0-9A-Fa-f]{2})+$'
           message: "there must be one valid 'id' in a DID document"
+        controller: # DID Core 5.1.2: a DID or a set of DIDs
+          pattern: *did_syntax
+          message: "invalid 'controller'"
+        alsoKnownAs: # DID Core 5.1.3: a set of URIs
+          pattern: '^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$'
+          message: "invalid 'alsoKnownAs'"
         verificationMethod: #from: https://www.w3.org/TR/did-spec-registries/#verification-method-types
           message: "invalid 'verificationMethod'"
+          # DID Core 5.2.1: one representation of the key material per verification
+          # method, so every alternative excludes the other key representations;
+          # blockchainAccountId and ethereumAddress name an account, not the key
           attributes:
             or: 
               - &id_jwk
@@ -63,13 +73,29 @@ content:
                     - JsonWebKey2020
                     - JSONWebSignature2020
                     - RsaVerificationKey2018
-                controller: &cardinality1
+                controller: &controller_did # DID Core 5.2: a DID
                   cardinality: "1..1"
-                publicKeyJwk: *cardinality1
+                  pattern: *did_syntax
+                publicKeyJwk:
+                  cardinality: "1..1"
+                  attributes: # DID Core 5.2.1: no private key members (RFC 7517, RFC 7518)
+                    d: &absent
+                      cardinality: "0..0"
+                    p: *absent
+                    q: *absent
+                    dp: *absent
+                    dq: *absent
+                    qi: *absent
+                    oth: *absent
+                    k: *absent
+                publicKeyBase58: *absent
+                publicKeyMultibase: *absent
+                publicKeyHex: *absent
+                publicKeyPgp: *absent
               - &id_base58
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
+                  cardinality: &cardinality1_value "1..1"
                   valueOption:
                     - Bls12381G1Key2020
                     - Bls12381G2Key2020
@@ -78,50 +104,78 @@ content:
                     - Ed25519VerificationKey2018
                     - VerifiableCondition2021
                     - X25519KeyAgreementKey2019
-                controller: *cardinality1
-                publicKeyBase58: *cardinality1
+                controller: *controller_did
+                publicKeyBase58: &cardinality1
+                  cardinality: "1..1"
+                publicKeyJwk: *absent
+                publicKeyMultibase: *absent
+                publicKeyHex: *absent
+                publicKeyPgp: *absent
               - &id_multibase
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
+                  cardinality: *cardinality1_value
                   valueOption:
                     - EcdsaSecp256k1VerificationKey2019
                     - Ed25519VerificationKey2020
                     - Multikey
-                controller: *cardinality1
-                publicKeyMultibase:  *cardinality1
+                controller: *controller_did
+                publicKeyMultibase: *cardinality1
+                publicKeyJwk: *absent
+                publicKeyBase58: *absent
+                publicKeyHex: *absent
+                publicKeyPgp: *absent
               - &id_blockchain_account_id
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
-                  valueOption:
+                  cardinality: *cardinality1_value
+                  valueOption: # DID Specification Registries, blockchainAccountId
+                    - EcdsaSecp256k1RecoveryMethod2020
                     - EcdsaSecp256k1VerificationKey2019
-                controller: *cardinality1
+                controller: *controller_did
                 blockchainAccountId: *cardinality1
+                publicKeyJwk: *absent
+                publicKeyBase58: *absent
+                publicKeyMultibase: *absent
+                publicKeyHex: *absent
+                publicKeyPgp: *absent
               - &id_public_key_pgp
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
+                  cardinality: *cardinality1_value
                   valueOption:
                     - PgpVerificationKey2021
-                controller: *cardinality1
+                controller: *controller_did
                 publicKeyPgp: *cardinality1
+                publicKeyJwk: *absent
+                publicKeyBase58: *absent
+                publicKeyMultibase: *absent
+                publicKeyHex: *absent
               - &id_public_key_hex
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
+                  cardinality: *cardinality1_value
                   valueOption:
                     - EcdsaSecp256k1RecoveryMethod2020
-                controller: *cardinality1
+                controller: *controller_did
                 publicKeyHex: *cardinality1
+                publicKeyJwk: *absent
+                publicKeyBase58: *absent
+                publicKeyMultibase: *absent
+                publicKeyPgp: *absent
               - &id_ethereum_address
                 id: *cardinality1_pattern
                 type:
-                  <<: *cardinality1
+                  cardinality: *cardinality1_value
                   valueOption:
                     - EcdsaSecp256k1RecoveryMethod2020
-                controller: *cardinality1
+                controller: *controller_did
                 ethereumAddress: *cardinality1
+                publicKeyJwk: *absent
+                publicKeyBase58: *absent
+                publicKeyMultibase: *absent
+                publicKeyHex: *absent
+                publicKeyPgp: *absent
         authentication:
           message: "invalid 'authentication'"
           attributes: &verification_method_attributes
@@ -159,12 +213,13 @@ content:
           - capabilityDelegation: *verification_method_id
         service:
           attributes:
-            id:
+            id: # DID Core 5.4: a URI; a reference relative to the DID document like "#linked-domain" is accepted, as for verification methods
               cardinality: "1..1"
-              message: "there must be one 'id' in 'service'"
-            type:
-              cardinality: "1..1"
-              message: "there must be one 'type' in 'service'"
+              pattern: '^([A-Za-z][A-Za-z0-9+.-]*:[^\s]+|#[^\s]+)$'
+              message: "there must be one valid 'id' in 'service'"
+            type: # DID Core 5.4: a string or a set of strings
+              cardinality: "1..n"
+              message: "there must be at least one 'type' in 'service'"
             serviceEndpoint:
               cardinality: "1..n"
               message: "invalid 'serviceEndpoint' in 'service'"

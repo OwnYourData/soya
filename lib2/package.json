@@ -1,6 +1,6 @@
 {
   "name": "soya-js",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "SOyA (Semantic Overlay Architecture) library for JavaScript/TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
