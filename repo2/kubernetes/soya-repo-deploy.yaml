@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: soya-repo
-        image: oydeu/soya-repo:latest
+        image: oydeu/soya-repo:261028a-s09@sha256:5f2c45653b675201c7c5d9b806cca7a1d095e140d74d7da11a0b8e43fee7c785
         env:
           - name: CONTAINER_NAME
             value: "SOyA Repository"
@@ -49,6 +49,10 @@ spec:
               secretKeyRef:
                 name: soya-repo-skb
                 key: SECRET_KEY_BASE
+          - name: ALLOWED_ORIGINS
+            value: "https://soya.ownyourdata.eu,https://soya-form.ownyourdata.eu"
+          - name: AUTH
+            value: "optional"
 ---
 kind: Service
 apiVersion: v1
