@@ -1,0 +1,256 @@
+meta:
+  name: EEG_Member
+
+content:
+  bases:
+    - name: EEGmember
+      attributes:
+        member_id: String
+        market_partner_id: String
+        role: String
+        status: String
+        contact: Contact
+        location: Location
+        metering_points: set<MeteringPoint>
+    - name: MeteringPoint
+      attributes:
+        metering_point_id: String
+        reference_id: String
+        direction: String
+    - name: Contact
+      attributes:
+        person: Person
+        phone: String
+        email: String
+    - name: Person
+      attributes:
+        first_name: String
+        last_name: String
+        full_name: String
+        birth_date: Date
+    - name: Location
+      attributes:
+        street: String
+        number: String
+        zip: String
+        city: String
+        country: String
+
+  overlays:
+    - type: OverlayDataBudRendering
+      base: EEGmember
+      name: EEGmemberRendering
+      renderingLabel: '{{contact.person.first_name}} {{contact.person.last_name}}'
+
+    - type: OverlayForm
+      base: EEGmember
+      name: EEGmemberFormOverlay
+      schema:
+        type: object
+        properties:
+          member_id:
+            type: string
+            description: "Interne Nummer des Mitglieds (z.B. 1)."
+          market_partner_id:
+            type: string
+            pattern: '^(RC|GC|CC)[0-9]{6}$'
+            description: "Marktpartner-Kennung (z.B. RC107602)."
+          role:
+            type: string
+            enum: ["Einspeiser", "Verbraucher", "Prosumer"]
+            description: "Rolle innerhalb der Gemeinschaft."
+          status:
+            type: string
+            enum: ["Aktiv", "Inaktiv"]
+          metering_points:
+            type: array
+            minItems: 1
+            description: "Alle Zählpunkte des Mitglieds."
+            items:
+              type: object
+              properties:
+                metering_point_id:
+                  type: string
+                  title: "Zählpunktnummer"
+                  pattern: '^AT[A-Z0-9]{31}$'
+                  description: "33-stellige AT-Nummer des Zählpunkts."
+                reference_id:
+                  type: string
+                  title: "Beauskunftungskennzahl"
+                  pattern: '^[a-zA-Z0-9]{6}-[a-zA-Z0-9]{6}$'
+                  description: "Beauskunftungskennzahl - Beispiel: 00BA22-03982z"
+                direction:
+                  type: string
+                  title: "Stromrichtung"
+                  enum: ["Bezug", "Einspeisung"]
+                  default: "Bezug"
+                  description: "Bezug (Verbrauch) oder Einspeisung (Erzeugung)."
+              required: ["metering_point_id", "direction"]
+          location:
+            type: object
+            properties:
+              street: { type: string, minLength: 2 }
+              number: { type: string }
+              zip: { type: string, pattern: '^[0-9]{4}$', description: "4-stellige Postleitzahl." }
+              city: { type: string, minLength: 2 }
+              country: { type: string, enum: ["Österreich", "Sonstige"], default: "Österreich" }
+            required: ["street", "zip", "city", "country"]
+          contact:
+            type: object
+            properties:
+              phone: { type: string, pattern:  '^\+43[0-9\s\/\-]+$', description: "Format: +43 664 1234567" }
+              email: { type: string, format: email, description: "E-Mail für Korrespondenz." }
+              person:
+                type: object
+                properties:
+                  first_name: { type: string, minLength: 2 }
+                  last_name: { type: string, minLength: 2 }
+                  birth_date: { type: string, format: date }
+                required: ["first_name", "last_name"]
+            required: ["email", "person"]
+        required: ["member_id", "market_partner_id", "role", "status", "metering_points", "location", "contact"]
+
+      ui:
+        type: Categorization
+        elements:
+          - type: Category
+            label: "1. Person & Adresse"
+            elements:
+              - type: HorizontalLayout
+                elements:
+                  - type: Group
+                    label: "Persönliche Daten"
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "Vorname"
+                            scope: "#/properties/contact/properties/person/properties/first_name"
+                          - type: Control
+                            label: "Nachname"
+                            scope: "#/properties/contact/properties/person/properties/last_name"
+                      - type: Control
+                        label: "Geburtsdatum (JJJJ-MM-TT)"
+                        scope: "#/properties/contact/properties/person/properties/birth_date"
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "E-Mail"
+                            scope: "#/properties/contact/properties/email"
+                          - type: Control
+                            label: "Telefon"
+                            scope: "#/properties/contact/properties/phone"
+                  - type: Group
+                    label: "Standort"
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "Straße"
+                            scope: "#/properties/location/properties/street"
+                          - type: Control
+                            label: "Nr."
+                            scope: "#/properties/location/properties/number"
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "PLZ"
+                            scope: "#/properties/location/properties/zip"
+                          - type: Control
+                            label: "Ort"
+                            scope: "#/properties/location/properties/city"
+                      - type: Control
+                        label: "Land"
+                        scope: "#/properties/location/properties/country"
+
+          - type: Category
+            label: "2. Mitgliedschaft & Technik"
+            elements:
+              - type: Group
+                label: "EEG Zuordnung"
+                elements:
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Mitgliedsnummer"
+                        scope: "#/properties/member_id"
+                      - type: Control
+                        label: "Marktpartner-ID (RC...)"
+                        scope: "#/properties/market_partner_id"
+                      - type: Control
+                        label: "Rolle"
+                        scope: "#/properties/role"
+                      - type: Control
+                        label: "Status"
+                        scope: "#/properties/status"
+              - type: Group
+                label: "Zählpunkte"
+                elements:
+                  - type: Control
+                    label: "Zählpunkte"
+                    scope: "#/properties/metering_points"
+                    options:
+                      showSortButtons: true
+
+    - type: OverlayValidation
+      base: EEGmember
+      name: EEGmemberValidationOverlay
+      attributes:
+        member_id:
+          cardinality: "1..1"
+          pattern: '^[0-9]+$'
+        market_partner_id:
+          cardinality: "1..1"
+          pattern: '^(RC|GC|CC)[0-9]{6}$'
+        role:
+          cardinality: "1..1"
+          pattern: '^(Einspeiser|Verbraucher|Prosumer)$'
+        status:
+          cardinality: "1..1"
+          pattern: '^(Aktiv|Inaktiv)$'
+        metering_points:
+          attributes:
+            metering_point_id:
+              cardinality: "1..1"
+              pattern: '^AT[A-Z0-9]{31}$'
+            reference_id:
+              cardinality: "0..1"
+              pattern: '^[a-zA-Z0-9]{6}-[a-zA-Z0-9]{6}$'
+            direction:
+              cardinality: "1..1"
+              pattern: '^(Bezug|Einspeisung)$'
+          cardinality: "1..n"
+        location:
+          cardinality: "1..1"
+          attributes:
+            street:
+              cardinality: "1..1"
+              pattern: '^..+$'
+            zip:
+              cardinality: "1..1"
+              pattern: '^[0-9]{4}$'
+            city:
+              cardinality: "1..1"
+              pattern: '^..+$'
+            country:
+              cardinality: "1..1"
+              pattern: '^(Österreich|Sonstige)$'
+        contact:
+          cardinality: "1..1"
+          attributes:
+            email:
+              cardinality: "1..1"
+            phone:
+              pattern: '^\+43[0-9\s\/\-]+$'
+              cardinality: "0..1"
+            person:
+              cardinality: "1..1"
+              attributes:
+                first_name:
+                  cardinality: "1..1"
+                  pattern: '^..+$'
+                last_name:
+                  cardinality: "1..1"
+                  pattern: '^..+$'
+                birth_date:
+                  cardinality: "0..1"

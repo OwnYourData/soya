@@ -1,0 +1,86 @@
+{
+  "validate": [
+    [
+      "EEG_TimeSeries",
+      "timeseries-l1.json",
+      true
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-l0.json",
+      true
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-offset.json",
+      true
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-invalid-negative-bq.json",
+      false
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-invalid-mm.json",
+      false
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-invalid-missing-dtt.json",
+      false
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-invalid-dtf-format.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-meteringpoint.json",
+      true
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-community.json",
+      true
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-calculated.json",
+      true
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-direction.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-missing-ec_id.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-share.json",
+      false
+    ]
+  ],
+  "render": [
+    [
+      "EEG_SeriesReference",
+      "seriesreference-meteringpoint.json",
+      "ZP AT0010000000000000001000000000001 consumption grid"
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-community.json",
+      "EEG AT00100000000RC100000000000000001 generation total"
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-calculated.json",
+      "ZP AT0010000000000000001000000000001 consumption community"
+    ]
+  ]
+}

@@ -1,0 +1,1391 @@
+meta:
+  name: EEG_Infrastructure
+  
+content:
+  bases:
+    - name: Infrastructure
+      attributes:
+        market_partner_id: String
+        member_id: String
+        name: String
+        location: Location
+        usage_type: String
+        electrical_connection: set<ElectricalConnection>
+        pv_system: set<PVSystem>
+        inverters: set<Inverter>
+        battery_storage: set<BatteryStorage>
+        flexible_assets: set<FlexibleAsset>
+        notes: String
+
+    - name: Location
+      attributes:
+        street: String
+        number: String
+        zip: String
+        city: String
+        country: String
+        latitude: Number
+        longitude: Number
+
+    - name: ElectricalConnection
+      attributes:
+        grid_operator: String
+        metering_point_id: String
+        connection_type: String
+        voltage_level: String
+        phase_count: Integer
+
+    - name: PVSystem
+      attributes:
+        asset_id: String
+        asset_type: String
+        name: String
+        manufacturer: String
+        model: String
+        commissioning_date: Date
+        status: String
+        controllable: Boolean
+        control_interfaces: set<String>
+        nominal_power_kw: Number
+        annual_energy_kwh: Number
+        panel_count: Integer
+        installed_capacity_kwp: Number
+        module_type: String
+        module_peak_power_wp: Number
+        orientation: String
+        tilt_degree: Number
+        mounting_type: String
+        feed_in_limitation_kw: Number
+        remarks: String
+
+    - name: Inverter
+      attributes:
+        asset_id: String
+        asset_type: String
+        name: String
+        manufacturer: String
+        model: String
+        serial_number: String
+        commissioning_date: Date
+        status: String
+        controllable: Boolean
+        control_interfaces: set<String>
+        nominal_power_kw: Number
+        inverter_type: String
+        max_ac_power_kw: Number
+        max_dc_power_kw: Number
+        efficiency_percent: Number
+        phase_count: Integer
+        hybrid_capable: Boolean
+        emergency_power_capable: Boolean
+        remarks: String
+
+    - name: BatteryStorage
+      attributes:
+        asset_id: String
+        asset_type: String
+        name: String
+        manufacturer: String
+        model: String
+        serial_number: String
+        commissioning_date: Date
+        status: String
+        controllable: Boolean
+        control_interfaces: set<String>
+        nominal_power_kw: Number
+        annual_energy_kwh: Number
+        usable_capacity_kwh: Number
+        nominal_capacity_kwh: Number
+        depth_of_discharge_percent: Number
+        max_charge_power_kw: Number
+        max_discharge_power_kw: Number
+        roundtrip_efficiency_percent: Number
+        backup_power_capable: Boolean
+        chemistry: String
+        remarks: String
+
+    - name: FlexibleAsset
+      attributes:
+        asset_id: String
+        asset_type: String
+        name: String
+        manufacturer: String
+        model: String
+        serial_number: String
+        commissioning_date: Date
+        status: String
+        nominal_power_kw: Number
+        annual_energy_kwh: Number
+        controllable: Boolean
+        control_interfaces: set<String>
+        device_category: String
+        connector_type: String
+        max_charging_power_kw: Number
+        usual_charging_power_kw: Number
+        charging_mode: String
+        bidirectional_capable: Boolean
+        remarks: String
+
+  overlays:
+    - type: OverlayForm
+      base: Infrastructure
+      name: InfrastructureFormOverlay
+      schema:
+        type: object
+        properties:
+          market_partner_id: 
+            type: string
+            pattern: '^(RC|GC|CC)[0-9]{6}$'
+            description: "Marktpartner-Kennung (z.B. RC107602)."
+          member_id: 
+            type: string
+            pattern: '^[0-9]+$'
+            description: "Interne Nummer des Mitglieds (z.B. 1)."
+          name: 
+            type: string
+            minLength: 3
+            maxLength: 30
+            description: "Bezeichnung der Anlage"
+          usage_type: 
+            type: string
+            enum: ["Wohnen", "Gewerbe", "Landwirtschaft", "Industrie", "Sonstiges"]
+          notes: 
+            type: string
+            description: "allfällige Anmerkungen."
+          location:
+            type: object
+            properties:
+              street: { type: string, minLength: 2 }
+              number: { type: string }
+              zip: { type: string, pattern: '^[0-9]{4}$', description: "4-stellige Postleitzahl." }
+              city: { type: string, minLength: 2 }
+              country: { type: string, enum: ["Österreich", "Sonstige"], default: "Österreich" }
+              latitude: { type: number, minimum: 46, maximum: 50,  description: "Breitengrad (z.B. 48.2082)." }
+              longitude: { type: number, minimum: 9, maximum: 18, description: "Längengrad (z.B. 16.3738)." }
+            required: ["street", "zip", "city", "country"]
+          
+          electrical_connection:
+            type: array
+            minItems: 1
+            title: "Netzanschlüsse"
+            description: "Fügen Sie hier einen oder mehrere Netzanschlüsse (Zählpunkte) hinzu."
+            items:
+              type: object
+              properties:
+                grid_operator: 
+                  type: string
+                  enum: ["Netz Niederösterreich", "Netz Burgenland", "Wiener Netze", "Sonstige"]
+                  title: "Zuständiger Verteilnetzbetreiber (DSO)"
+                metering_point_id: 
+                  type: string
+                  pattern: '^AT[A-Z0-9]{31}$'
+                  title: "Zählpunktnummer (33-stellige AT-Nummer des EEG-Zählpunkts)"
+                connection_type: 
+                  type: string
+                  enum: ["Direktanschluss", "Sub-Zähler", "Virtuell"]
+                  title: "Art der Einbindung"
+                voltage_level: 
+                  type: string
+                  enum: ["Niederspannung (NE7)", "Mittelspannung"]
+                  title: "Spannungsebene"
+                phase_count: 
+                  type: integer
+                  enum: [1, 3]
+                  default: 3
+                  title: "Phasenanzahl"
+                  description: "1-phasig (Standard) oder 3-phasig (Drehstrom)."
+              required: ["grid_operator", "metering_point_id", "connection_type", "phase_count"]
+          
+          pv_system:
+            type: array
+            title: "Photovoltaikanlagen"
+            description: "Erfassen Sie hier alle PV-Anlagen des Standorts."
+            items:
+              type: object
+              properties:
+                asset_id: 
+                  type: string
+                  title: "Asset ID"
+                  description: "Eindeutige Kennung der Anlage."
+                  pattern: '^[0-9]+$'
+                asset_type: 
+                  type: string
+                  title: "Anlagentyp"
+                  const: "PV"
+                  readOnly: true
+                name:
+                  type: string
+                  title: "Anlagenname"
+                  description: "Name zur Identifikation, z.B. 'Hauptdach 1 Süd'."
+                  minLength: 3
+                manufacturer: 
+                  type: string
+                  title: "Hersteller"
+                  description: "Name des Modul-Produzenten (z.B. Fronius, SMA, etc)."
+                model: 
+                  type: string
+                  title: "Modell"
+                  description: "Genaue Typenbezeichnung laut Datenblatt."
+                commissioning_date: 
+                  type: string
+                  format: date
+                  title: "Inbetriebnahmedatum"
+                  description: "Datum der ersten Netzeinspeisung."
+                status: 
+                  type: string
+                  enum: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+                  title: "Status"
+                  description: "Aktueller Zustand der Anlage."
+                controllable: 
+                  type: boolean
+                  title: "Steuerbar"
+                  description: "Ist die Anlage technisch für Fernsteuerung/Abregelung gerüstet?"
+                  default: false
+                control_interfaces: 
+                  type: array
+                  title: "Verfügbare Schnittstellen"
+                  description: "Unterstützte Kommunikationsprotokolle." 
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum: ["Modbus TCP", "Modbus RTU", "REST-API", "EEBUS", "KNX", "MQTT", "Cloud", "Sonstige"]
+                nominal_power_kw: 
+                  type: number
+                  title: "Nennleistung (kW)"
+                  description: "Max. Wirkleistung am Übergabepunkt."
+                  minimum: 0
+                annual_energy_kwh: 
+                  type: number
+                  title: "Erwarteter Jahresertrag (kWh)"
+                  description: "Prognostizierte Strommenge pro Jahr."
+                  minimum: 0.1
+                panel_count: 
+                  type: integer
+                  title: "Anzahl der Module"
+                  description: "Gesamtzahl der installierten Paneele."
+                  minimum: 1
+                installed_capacity_kwp: 
+                  type: number
+                  title: "Installierte Leistung (kWp)"
+                  description: "Gesamtleistung der Anlage (DC-Nennleistung)."
+                  minimum: 0.1
+                module_type: 
+                  type: string
+                  title: "Modultyp"
+                  description: "Technologie, z.B. Monokristallin oder Glas-Glas."
+                module_peak_power_wp: 
+                  type: number
+                  title: "Leistung pro Modul (Wp)"
+                  description: "Nennleistung eines einzelnen Moduls."
+                  minimum: 0
+                orientation: 
+                  type: string
+                  enum: ["Nord", "Nord-Ost", "Ost", "Süd-Ost", "Süd", "Süd-West", "West", "Nord-West", "Horizontal (Flach)", "Nachgeführt (Tracker)"]                  
+                  title: "Ausrichtung"
+                  description: "Himmelsrichtung, in die die Module zeigen."
+                tilt_degree: 
+                  type: number
+                  title: "Neigungswinkel"
+                  description: "Winkel zur Horizontalen (0-90°)."
+                  minimum: 0
+                  maximum: 90
+                mounting_type: 
+                  type: string
+                  title: "Montageart"
+                  description: "Art der Befestigungskonstruktion."
+                  enum: ["Aufdach", "Indach", "Flachdach (aufgeständert)", "Freifläche", "Fassade", "Carport", "Balkon", "Sonstige"]
+                feed_in_limitation_kw: 
+                  type: number
+                  title: "Einspeiselimitierung (kW)"
+                  description: "Maximal zulässige Netzeinspeisung."
+                  minimum: 0
+                remarks: 
+                  type: string
+                  title: "Anmerkungen"
+                  description: "Zusätzliche Besonderheiten oder interne Notizen."
+              required: ["name", "installed_capacity_kwp", "status", "orientation"]
+          
+          inverters:
+            type: array
+            title: "Wechselrichter"
+            description: "Erfassen Sie hier alle am Standort verbauten Wechselrichter."
+            items:
+              type: object
+              properties:
+                asset_id: 
+                  type: string
+                  title: "Asset ID"
+                  description: "Eindeutige Kennung der Anlage."
+                  pattern: '^[0-9]+$'
+                asset_type: 
+                  type: string
+                  title: "Anlagentyp"
+                  const: "Inverter"
+                  readOnly: true
+                name:
+                  type: string
+                  title: "Anlagenname"
+                  description: "Name zur Identifikation, z.B. 'Inverter PV Hauptdach Süd'"
+                  minLength: 3
+                manufacturer: 
+                  type: string
+                  title: "Hersteller"
+                  description: "Name des Modul-Produzenten (z.B. Fronius, SMA, etc)."
+                model: 
+                  type: string
+                  title: "Modell"
+                  description: "Genaue Typenbezeichnung laut Datenblatt."
+                serial_number: 
+                  type: string
+                  title: "Seriennummer"
+                  description: "Hersteller-Seriennummer laut Typenschild."
+                commissioning_date: 
+                  type: string
+                  format: date
+                  title: "Inbetriebnahmedatum"
+                  description: "Datum der ersten Inbetriebnahme."
+                status: 
+                  type: string
+                  enum: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+                  title: "Status"
+                  description: "Aktueller Zustand des Wechselrichters."
+                controllable: 
+                  type: boolean
+                  title: "Steuerbar"
+                  description: "Ist der Wechselrichter technisch für Fernsteuerung/Abregelung gerüstet?"
+                  default: false
+                control_interfaces: 
+                  type: array
+                  title: "Verfügbare Schnittstellen"
+                  description: "Unterstützte Kommunikationsprotokolle." 
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum: ["Modbus TCP", "Modbus RTU", "REST-API", "EEBUS", "KNX", "MQTT", "Cloud", "Sonstige"]                
+                nominal_power_kw: 
+                  type: number
+                  title: "Nennleistung (kW)"
+                  description: "Max. Wirkleistung am Übergabepunkt."
+                  minimum: 0
+                inverter_type: 
+                  type: string
+                  title: "Wechselrichter-Typ"
+                  description: "Art des Geräts (z.B. String-WR)."
+                  enum: ["String-WR", "Hybrid-WR", "Mikro-WR", "Sonstige"]
+                max_ac_power_kw: 
+                  type: number
+                  title: "Max. AC-Leistung (kW)"
+                  description: "Kurzzeitige maximale Ausgangsleistung AC."
+                  minimum: 0
+                max_dc_power_kw: 
+                  type: number
+                  title: "Max. DC-Leistung (kW)"
+                  description: "Maximal zulässige Eingangsleistung der PV-Module."
+                  minimum: 0
+                efficiency_percent: 
+                  type: number
+                  title: "Wirkungsgrad (%)"
+                  description: "Maximaler Wirkungsgrad laut Hersteller."
+                  minimum: 0
+                  maximum: 100
+                phase_count: 
+                  type: integer
+                  title: "Phasenanzahl"
+                  description: "Anzahl der einspeisenden Phasen."
+                  enum: [1, 3]
+                  default: 3
+                hybrid_capable: 
+                  type: boolean
+                  title: "Hybridfähig"
+                  description: "Unterstützt das Gerät einen direkten Batterieanschluss?"
+                  default: false
+                emergency_power_capable: 
+                  type: boolean
+                  title: "Notstromfähig"
+                  description: "Ist das Gerät für Inselbetrieb bei Netzausfall geeignet?"
+                  default: false
+                remarks: 
+                  type: string
+                  title: "Anmerkungen"
+                  description: "Besonderheiten oder interne Notizen."
+              required: ["name", "status", "nominal_power_kw"]
+
+          battery_storage:
+            type: array
+            title: "Batteriespeicher"
+            description: "Erfassen Sie hier die stationären Batteriespeicher am Standort."
+            items:
+              type: object
+              properties:
+                asset_id: 
+                  type: string
+                  title: "Asset ID"
+                  description: "Eindeutige Kennung des Speichers."
+                  pattern: '^[0-9]+$'
+                asset_type: 
+                  type: string
+                  title: "Anlagentyp"
+                  const: "Battery"
+                  readOnly: true
+                name:
+                  type: string
+                  title: "Bezeichnung"
+                  description: "z.B. 'Speicher Garage' oder 'Keller-Batterie'."
+                  minLength: 3
+                manufacturer: 
+                  type: string
+                  title: "Hersteller"
+                  description: "Name des Batterie-Produzenten."
+                model: 
+                  type: string
+                  title: "Modell"
+                  description: "Genaue Typenbezeichnung laut Datenblatt."
+                serial_number: 
+                  type: string
+                  title: "Seriennummer"
+                  description: "Hersteller-Seriennummer der Batterieeinheit."
+                commissioning_date: 
+                  type: string
+                  format: date
+                  title: "Inbetriebnahmedatum"
+                  description: "Datum der ersten Inbetriebnahme."
+                status: 
+                  type: string
+                  enum: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+                  title: "Status"
+                  description: "Aktueller Zustand der Anlage."
+                controllable: 
+                  type: boolean
+                  title: "Steuerbar"
+                  description: "Ist der Speicher technisch fernsteuerbar?"
+                  default: false
+                control_interfaces: 
+                  type: array
+                  title: "Verfügbare Schnittstellen"
+                  description: "Unterstützte Kommunikationsprotokolle." 
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum: ["Modbus TCP", "Modbus RTU", "REST-API", "CAN", "KNX", "MQTT", "Cloud", "Sonstige"]                
+                nominal_power_kw: 
+                  type: number
+                  title: "Nennleistung (kW)"
+                  minimum: 0
+                  description: "Max. Wirkleistung am Übergabepunkt."
+                annual_energy_kwh: 
+                  type: number
+                  title: "Erwarteter Jahresdurchsatz (kWh)"
+                  description: "Prognostizierte Energiemenge pro Jahr."
+                  minimum: 0
+                usable_capacity_kwh: 
+                  type: number
+                  title: "Nutzbare Kapazität (kWh)"
+                  description: "Netto-Energieinhalt des Speichers."
+                  minimum: 0.1
+                nominal_capacity_kwh: 
+                  type: number
+                  title: "Nennkapazität (kWh)"
+                  description: "Brutto-Energieinhalt laut Hersteller."
+                  minimum: 0.1
+                depth_of_discharge_percent: 
+                  type: number
+                  title: "Entladetiefe (DoD %)"
+                  description: "Zulässige Entladetiefe (z.B. 90)."
+                  minimum: 0
+                  maximum: 100
+                max_charge_power_kw: 
+                  type: number
+                  title: "Max. Ladeleistung (kW)"
+                  description: "Maximale Leistung beim Laden."
+                  minimum: 0
+                max_discharge_power_kw: 
+                  type: number
+                  title: "Max. Entladeleistung (kW)"
+                  description: "Maximale Leistung beim Entladen."
+                  minimum: 0
+                roundtrip_efficiency_percent: 
+                  type: number
+                  title: "Wirkungsgrad (%)"
+                  description: "Gesamtwirkungsgrad Laden/Entladen."
+                  minimum: 0
+                  maximum: 100
+                backup_power_capable: 
+                  type: boolean
+                  title: "Notstromfähig"
+                  description: "Kann der Speicher bei Netzausfall versorgen?"
+                  default: false
+                chemistry: 
+                  type: string
+                  title: "Zellchemie"
+                  enum: ["LFP (Lithium-Eisenphosphat)", "NMC (Lithium-Ionen)", "Blei-Säure", "Salzwasser", "Sonstige"]
+                remarks: 
+                  type: string
+                  title: "Anmerkungen"
+                  description: "Besonderheiten oder interne Notizen."
+              required: ["name", "status", "usable_capacity_kwh"]
+          
+          flexible_assets:
+            type: array
+            title: "Flexible Lasten"
+            description: "Erfassen Sie hier steuerbare Verbraucher wie Wallboxen oder Wärmepumpen."          
+            items:
+              type: object
+              properties:
+                asset_id: 
+                  type: string
+                  title: "Asset ID"
+                  description: "Eindeutige Kennung des Geräts."
+                  pattern: '^[0-9]+$'
+                asset_type: 
+                  type: string
+                  title: "Anlagentyp"
+                  const: "FlexibleAsset"
+                  readOnly: true
+                name:
+                  type: string
+                  title: "Bezeichnung"
+                  description: "z.B. 'Wallbox Garage' oder 'Wärmepumpe EG'."
+                  minLength: 3
+                manufacturer: 
+                  type: string
+                  title: "Hersteller"
+                  description: "Name des Geräte-Herstellers."
+                model: 
+                  type: string
+                  title: "Modell"
+                  description: "Genaue Typenbezeichnung laut Datenblatt."
+                serial_number: 
+                  type: string
+                  title: "Seriennummer"
+                  description: "Hersteller-Seriennummer."
+                commissioning_date: 
+                  type: string
+                  format: date
+                  title: "Inbetriebnahmedatum"
+                  description: "Datum der ersten Inbetriebnahme."
+                status: 
+                  type: string
+                  enum: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+                  title: "Status"
+                  description: "Aktueller Betriebszustand."
+                controllable: 
+                  type: boolean
+                  title: "Steuerbar"
+                  description: "Ist der Speicher technisch fernsteuerbar?"
+                  default: false
+                control_interfaces: 
+                  type: array
+                  title: "Verfügbare Schnittstellen"
+                  description: "Unterstützte Kommunikationsprotokolle." 
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum: ["Modbus TCP", "Modbus RTU", "REST-API", "CAN", "KNX", "MQTT", "Cloud", "Sonstige"]                
+                nominal_power_kw: 
+                  type: number
+                  title: "Nennleistung (kW)"
+                  description: "Maximale elektrische Anschlussleistung."
+                  minimum: 0
+                annual_energy_kwh: 
+                  type: number
+                  title: "Jahresverbrauch (kWh)"
+                  description: "Erwarteter Energiebedarf pro Jahr."
+                  minimum: 0
+                device_category: 
+                  type: string
+                  title: "Kategorie"
+                  enum: ["Wallbox (EVSE)", "Wärmepumpe", "Heizstab", "Klimaanlage", "Sonstige"]
+                connector_type: 
+                  type: string
+                  title: "Anschlusstyp"
+                  enum: ["Typ 2", "Typ 1", "CCS", "Schuko", "Festanschluss", "Sonstige"]
+                max_charging_power_kw: 
+                  type: number
+                  title: "Max. Ladeleistung (kW)"
+                  description: "Maximale Leistung (nur bei Wallboxen relevant)."
+                  minimum: 0
+                usual_charging_power_kw: 
+                  type: number
+                  title: "Uebliche Leistung (kW)"
+                  description: "Standard-Betriebsleistung im Alltag."
+                  minimum: 0
+                charging_mode: 
+                  type: string
+                  title: "Lademodus"
+                  enum: ["1-phasig", "3-phasig", "Phasenumschaltung"]
+                bidirectional_capable: 
+                  type: boolean
+                  title: "Bidirektional (V2G)"
+                  description: "Unterstützt das Gerät Rückspeisung (Vehicle-to-Grid)?"
+                  default: false
+                remarks: 
+                  type: string
+                  title: "Anmerkungen"
+                  description: "Zusätzliche Besonderheiten oder Notizen."
+              required: ["name", "status", "device_category", "nominal_power_kw"]
+            
+        required: ["market_partner_id", "member_id", "name", "usage_type", "location"]
+
+
+      ui:
+        type: Categorization
+        elements:
+          - type: Category
+            label: "1. Basisdaten"
+            elements:
+              - type: Group
+                label: "Allgemeine Informationen"
+                elements:
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Marktpartner-ID (RC...)"
+                        scope: "#/properties/market_partner_id"
+                        options: { showUnfocusedDescription: true }
+                      - type: Control
+                        label: "Mitgliedsnummer"
+                        scope: "#/properties/member_id"
+                        options: { showUnfocusedDescription: true }
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Bezeichnung der Anlage"
+                        scope: "#/properties/name"
+                        options: { showUnfocusedDescription: true }
+                      - type: Control
+                        label: "Nutzungsart"
+                        scope: "#/properties/usage_type"
+                        options: { showUnfocusedDescription: true }
+                  - type: Control
+                    label: "Allgemeine Anmerkungen"
+                    scope: "#/properties/notes"
+                    options: { showUnfocusedDescription: true }
+                    
+              - type: Group
+                label: "Standort"
+                elements:
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Straße"
+                        scope: "#/properties/location/properties/street"
+                        options: { showUnfocusedDescription: true }
+                      - type: Control
+                        label: "Nr."
+                        scope: "#/properties/location/properties/number"
+                        options: { showUnfocusedDescription: true }
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "PLZ"
+                        scope: "#/properties/location/properties/zip"
+                        options: { showUnfocusedDescription: true }
+                      - type: Control
+                        label: "Ort"
+                        scope: "#/properties/location/properties/city"
+                        options: { showUnfocusedDescription: true }
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Breitengrad (Lat)"
+                        scope: "#/properties/location/properties/latitude"
+                        options: { showUnfocusedDescription: true }
+                      - type: Control
+                        label: "Längengrad (Long)"
+                        scope: "#/properties/location/properties/longitude"
+                        options: { showUnfocusedDescription: true }
+                  - type: Control
+                    label: "Land"
+                    scope: "#/properties/location/properties/country"
+                    options: { showUnfocusedDescription: true }
+
+          - type: Category
+            label: "2. Netzanschluss"
+            elements:
+              - type: Control
+                scope: "#/properties/electrical_connection"
+          - type: Category
+            label: "3. PV-Systeme"
+            elements:
+              - type: Control
+                scope: "#/properties/pv_system"
+                options:
+                  elementLabelProp: "name"
+                  detail:
+                    type: VerticalLayout
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Allgemeine Anlagendaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/name"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/status"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/asset_id"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/commissioning_date"
+                                    options: { showUnfocusedDescription: true }
+                              - type: Control
+                                scope: "#/properties/remarks"
+                                options: { multi: false, showUnfocusedDescription: true }
+                            
+                          - type: Group
+                            label: "Hardware"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/manufacturer"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/model"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/module_type"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/panel_count"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/controllable"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/control_interfaces"
+                                    options: { showUnfocusedDescription: true }
+
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Leistungsdaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/installed_capacity_kwp"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/nominal_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/module_peak_power_wp"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/annual_energy_kwh"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/feed_in_limitation_kw"
+                                    options: { showUnfocusedDescription: true }
+
+                          - type: VerticalLayout
+                            elements:
+                              - type: Group
+                                label: "Montage & Ausrichtung"
+                                elements:
+                                  - type: HorizontalLayout
+                                    elements:
+                                      - type: Control
+                                        scope: "#/properties/mounting_type"
+                                        options: { showUnfocusedDescription: true }
+                                      - type: Control
+                                        scope: "#/properties/orientation"
+                                        options: { showUnfocusedDescription: true }
+                                      - type: Control
+                                        scope: "#/properties/tilt_degree"
+                                        options: { showUnfocusedDescription: true }
+
+          - type: Category
+            label: "4. Wechselrichter"
+            elements:
+              - type: Control
+                scope: "#/properties/inverters"
+                options:
+                  elementLabelProp: "name"
+                  detail:
+                    type: VerticalLayout
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Allgemeine Anlagendaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/name"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/status"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/asset_id"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/commissioning_date"
+                                    options: { showUnfocusedDescription: true }
+                              - type: Control
+                                scope: "#/properties/remarks"
+                                options: { multi: false, showUnfocusedDescription: true }
+                          - type: Group
+                            label: "Hardware"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/manufacturer"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/model"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/serial_number"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/inverter_type"
+                                    options: { showUnfocusedDescription: true }
+                              - type: Control
+                                scope: "#/properties/control_interfaces"
+                                options: { showUnfocusedDescription: true }
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Leistungsdaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/nominal_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/efficiency_percent"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/phase_count"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/max_ac_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/max_dc_power_kw"
+                                    options: { showUnfocusedDescription: true }
+
+                          - type: VerticalLayout
+                            elements:
+                              - type: Group
+                                label: "Features"
+                                elements:
+                                  - type: HorizontalLayout
+                                    elements:
+                                      - type: Control
+                                        scope: "#/properties/controllable"
+                                        options: { showUnfocusedDescription: true }
+                                      - type: Control
+                                        scope: "#/properties/hybrid_capable"
+                                        options: { showUnfocusedDescription: true }
+                                      - type: Control
+                                        scope: "#/properties/emergency_power_capable"
+                                        options: { showUnfocusedDescription: true }
+          - type: Category
+            label: "5. Batteriespeicher"
+            elements:
+              - type: Control
+                scope: "#/properties/battery_storage"
+                options:
+                  elementLabelProp: "name"
+                  detail:
+                    type: VerticalLayout
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Allgemeine Anlagendaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/name"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/status"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/asset_id"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/commissioning_date"
+                                    options: { showUnfocusedDescription: true }
+                              - type: Control
+                                scope: "#/properties/remarks"
+                                options: { multi: false, showUnfocusedDescription: true }
+                          
+                          - type: Group
+                            label: "Hardware"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/manufacturer"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/model"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/serial_number"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/chemistry"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/controllable"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/backup_power_capable"
+                                    options: { showUnfocusedDescription: true }
+
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Kapazität- & Leistungsdaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/usable_capacity_kwh"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/nominal_capacity_kwh"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/depth_of_discharge_percent"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/max_charge_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/max_discharge_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/nominal_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/roundtrip_efficiency_percent"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/annual_energy_kwh"
+                                    options: { showUnfocusedDescription: true }
+                          
+                          - type: Group
+                            label: "Kommunikation"
+                            elements:
+                              - type: Control
+                                scope: "#/properties/control_interfaces"
+                                options: { showUnfocusedDescription: true }
+          - type: Category
+            label: "6. Flexible Lasten"
+            elements:
+              - type: Control
+                scope: "#/properties/flexible_assets"
+                options:
+                  elementLabelProp: "name"
+                  detail:
+                    type: VerticalLayout
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Allgemeine Anlagendaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/name"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/status"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/asset_id"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/commissioning_date"
+                                    options: { showUnfocusedDescription: true }
+                              - type: Control
+                                scope: "#/properties/remarks"
+                                options: { multi: false, showUnfocusedDescription: true }
+                          
+                          - type: Group
+                            label: "Hardware"
+                            elements:
+                              - type: Control
+                                scope: "#/properties/device_category"
+                                options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/manufacturer"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/model"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/serial_number"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/controllable"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/bidirectional_capable"
+                                    options: { showUnfocusedDescription: true }
+
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Group
+                            label: "Leistungsdaten"
+                            elements:
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/nominal_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/annual_energy_kwh"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/max_charging_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/usual_charging_power_kw"
+                                    options: { showUnfocusedDescription: true }
+                              - type: HorizontalLayout
+                                elements:
+                                  - type: Control
+                                    scope: "#/properties/connector_type"
+                                    options: { showUnfocusedDescription: true }
+                                  - type: Control
+                                    scope: "#/properties/charging_mode"
+                                    options: { showUnfocusedDescription: true }
+                          - type: Group
+                            label: "Kommunikation"
+                            elements:
+                              - type: Control
+                                scope: "#/properties/control_interfaces"
+                                options: { showUnfocusedDescription: true }
+
+    - type: OverlayValidation
+      base: Infrastructure
+      name: InfrastructureBaseValidation
+      attributes:
+        market_partner_id:
+          cardinality: "1..1"
+          pattern: '^(RC|GC|CC)[0-9]{6}$'
+        member_id:
+          cardinality: "1..1"
+          pattern: '^[0-9]+$'
+        name:
+          cardinality: "1..1"
+          length: "[3..31)"
+        usage_type:
+          cardinality: "1..1"
+          valueOption: ["Wohnen", "Gewerbe", "Landwirtschaft", "Industrie", "Sonstiges"]
+        notes:
+          cardinality: "0..1"
+        location:
+          cardinality: "1..1"
+          attributes:
+            street:
+              cardinality: "1..1"
+              length: "[2..*)"
+            number:
+              cardinality: "0..1"
+            zip:
+              cardinality: "1..1"
+              pattern: '^[0-9]{4}$'
+            city:
+              cardinality: "1..1"
+              length: "[2..*)"
+            country:
+              cardinality: "1..1"
+              valueOption: ["Österreich", "Sonstige"]
+            latitude:
+              cardinality: "0..1"
+              valueRange: "[46..50]"
+            longitude:
+              cardinality: "0..1"
+              valueRange: "[9..18]"
+        electrical_connection:
+          cardinality: "1..*"
+          attributes:
+            grid_operator:
+              cardinality: "1..1"
+              valueOption: ["Netz Niederösterreich", "Netz Burgenland", "Wiener Netze", "Sonstige"]
+            metering_point_id:
+              cardinality: "1..1"
+              pattern: '^AT[A-Z0-9]{31}$'
+            connection_type:
+              cardinality: "1..1"
+              valueOption: ["Direktanschluss", "Sub-Zähler", "Virtuell"]
+            voltage_level:
+              cardinality: "0..1"
+              valueOption: ["Niederspannung (NE7)", "Mittelspannung"]
+            phase_count:
+              cardinality: "1..1"
+              valueOption: [1, 3]
+        pv_system:
+          cardinality: "0..*"
+          attributes:
+            asset_id:
+              cardinality: "0..1"
+              pattern: '^[0-9]+$'
+            asset_type:
+              cardinality: "0..1"
+              valueOption: ["PV"]
+            name:
+              cardinality: "1..1"
+              length: "[3..*)"
+            status:
+              cardinality: "1..1"
+              valueOption: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+            installed_capacity_kwp:
+              cardinality: "1..1"
+              valueRange: "[0..*)"
+            orientation:
+              cardinality: "1..1"
+              valueOption: ["Nord", "Nord-Ost", "Ost", "Süd-Ost", "Süd", "Süd-West", "West", "Nord-West", "Horizontal (Flach)", "Nachgeführt (Tracker)"]
+            tilt_degree:
+              cardinality: "0..1"
+              valueRange: "[0..90]"
+            mounting_type:
+              cardinality: "0..1"
+              valueOption: ["Aufdach", "Indach", "Flachdach (aufgeständert)", "Freifläche", "Fassade", "Carport", "Balkon", "Sonstige"]
+            panel_count:
+              cardinality: "0..1"
+              valueRange: "[1..*)"
+            control_interfaces:
+              cardinality: "0..*"
+              valueOption: ["Modbus TCP", "Modbus RTU", "REST-API", "EEBUS", "KNX", "MQTT", "Cloud", "Sonstige"]
+            nominal_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            annual_energy_kwh:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            module_peak_power_wp:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            feed_in_limitation_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            remarks:
+              cardinality: "0..1"
+            manufacturer:
+              cardinality: "0..1"
+            model:
+              cardinality: "0..1"
+            module_type:
+              cardinality: "0..1"
+            commissioning_date:
+              cardinality: "0..1"
+            controllable:
+              cardinality: "0..1"
+        inverters:
+          cardinality: "0..*"
+          attributes:
+            asset_id:
+              cardinality: "0..1"
+              pattern: '^[0-9]+$'
+            asset_type:
+              cardinality: "0..1"
+              valueOption: ["Inverter"]
+            name:
+              cardinality: "1..1"
+              length: "[3..*)"
+            status:
+              cardinality: "1..1"
+              valueOption: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+            nominal_power_kw:
+              cardinality: "1..1"
+              valueRange: "[0..*)"
+            inverter_type:
+              cardinality: "0..1"
+              valueOption: ["String-WR", "Hybrid-WR", "Mikro-WR", "Sonstige"]
+            max_ac_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            max_dc_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            efficiency_percent:
+              cardinality: "0..1"
+              valueRange: "[0..100]"
+            phase_count:
+              cardinality: "0..1"
+              valueOption: [1, 3]
+            remarks:
+              cardinality: "0..1"
+            manufacturer:
+              cardinality: "0..1"
+            model:
+              cardinality: "0..1"
+            serial_number:
+              cardinality: "0..1"
+            commissioning_date:
+              cardinality: "0..1"
+            controllable:
+              cardinality: "0..1"
+            control_interfaces:
+              cardinality: "0..*"
+              valueOption: ["Modbus TCP", "Modbus RTU", "REST-API", "EEBUS", "KNX", "MQTT", "Cloud", "Sonstige"]
+            hybrid_capable:
+              cardinality: "0..1"
+            emergency_power_capable:
+              cardinality: "0..1"
+        battery_storage:
+          cardinality: "0..*"
+          attributes:
+            asset_id:
+              cardinality: "0..1"
+              pattern: '^[0-9]+$'
+            asset_type:
+              cardinality: "0..1"
+              valueOption: ["Battery"]
+            name:
+              cardinality: "1..1"
+              length: "[3..*)"
+            status:
+              cardinality: "1..1"
+              valueOption: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+            usable_capacity_kwh:
+              cardinality: "1..1"
+              valueRange: "[0..*)"
+            nominal_capacity_kwh:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            depth_of_discharge_percent:
+              cardinality: "0..1"
+              valueRange: "[0..100]"
+            max_charge_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            max_discharge_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            roundtrip_efficiency_percent:
+              cardinality: "0..1"
+              valueRange: "[0..100]"
+            chemistry:
+              cardinality: "0..1"
+              valueOption: ["LFP (Lithium-Eisenphosphat)", "NMC (Lithium-Ionen)", "Blei-Säure", "Salzwasser", "Sonstige"]
+            remarks:
+              cardinality: "0..1"
+            manufacturer:
+              cardinality: "0..1"
+            model:
+              cardinality: "0..1"
+            serial_number:
+              cardinality: "0..1"
+            commissioning_date:
+              cardinality: "0..1"
+            controllable:
+              cardinality: "0..1"
+            control_interfaces:
+              cardinality: "0..*"
+              valueOption: ["Modbus TCP", "Modbus RTU", "REST-API", "CAN", "KNX", "MQTT", "Cloud", "Sonstige"]
+            nominal_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            annual_energy_kwh:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            backup_power_capable:
+              cardinality: "0..1"
+        flexible_assets:
+          cardinality: "0..*"
+          attributes:
+            asset_id:
+              cardinality: "0..1"
+              pattern: '^[0-9]+$'
+            asset_type:
+              cardinality: "0..1"
+              valueOption: ["FlexibleAsset"]
+            name:
+              cardinality: "1..1"
+              length: "[3..*)"
+            status:
+              cardinality: "1..1"
+              valueOption: ["Geplant", "In Bau", "In Betrieb", "Außer Betrieb"]
+            nominal_power_kw:
+              cardinality: "1..1"
+              valueRange: "[0..*)"
+            device_category:
+              cardinality: "1..1"
+              valueOption: ["Wallbox (EVSE)", "Wärmepumpe", "Heizstab", "Klimaanlage", "Sonstige"]
+            connector_type:
+              cardinality: "0..1"
+              valueOption: ["Typ 2", "Typ 1", "CCS", "Schuko", "Festanschluss", "Sonstige"]
+            charging_mode:
+              cardinality: "0..1"
+              valueOption: ["1-phasig", "3-phasig", "Phasenumschaltung"]
+            remarks:
+              cardinality: "0..1"
+            manufacturer:
+              cardinality: "0..1"
+            model:
+              cardinality: "0..1"
+            serial_number:
+              cardinality: "0..1"
+            commissioning_date:
+              cardinality: "0..1"
+            annual_energy_kwh:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            controllable:
+              cardinality: "0..1"
+            control_interfaces:
+              cardinality: "0..*"
+              valueOption: ["Modbus TCP", "Modbus RTU", "REST-API", "CAN", "KNX", "MQTT", "Cloud", "Sonstige"]
+            max_charging_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            usual_charging_power_kw:
+              cardinality: "0..1"
+              valueRange: "[0..*)"
+            bidirectional_capable:
+              cardinality: "0..1"
+

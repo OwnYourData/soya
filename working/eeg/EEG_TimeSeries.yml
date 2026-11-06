@@ -1,0 +1,96 @@
+meta:
+  name: EEG_TimeSeries
+
+content:
+  bases:
+    - name: TimeSeriesOverall
+      attributes:
+        data: set<TimeSeriesValue>
+
+    - name: TimeSeriesValue
+      attributes:
+        BQ: Float
+        MM: String
+        DTF: DateTime
+        DTT: DateTime
+
+  overlays:
+    - type: OverlayAnnotation
+      base: TimeSeriesValue
+      name: TimeSeriesValueAnnotationOverlay
+      attributes:
+        BQ:
+          comment:
+            en: Block Quantity
+        MM:
+          comment:
+            en: Metering Mode
+        DTF:
+          comment:
+            en: Date Time from
+        DTT:
+          comment:
+            en: Date Time To
+
+    - type: OverlayForm
+      base: TimeSeriesOverall
+      name: TimeSeriesFormOverlay
+      schema:
+        type: object
+        properties:
+          data:
+            type: array
+            title: "Zeitreihe"
+            items:
+              type: object
+              properties:
+                DTF:
+                  type: string
+                  title: "Von"
+                DTT:
+                  type: string
+                  title: "Bis"
+                BQ:
+                  type: number
+                  minimum: 0
+                  title: "Wert [kWh]"
+                MM:
+                  type: string
+                  title: "Messmodus"
+                  enum: ["L0", "L1", "L2", "L3", "L4", "E1", "Sonstige"]
+              required: ["DTF", "DTT", "BQ", "MM"]
+        required: ["data"]
+
+      ui:
+        type: VerticalLayout
+        options:
+          variant: standard
+          density: compact
+          readonly: true
+        elements:
+          - type: Control
+            scope: "#/properties/data"
+            label: Zeitreihe
+            options:
+              detail: DEFAULT
+              showSortButtons: false
+
+    - type: OverlayValidation
+      base: TimeSeriesOverall
+      name: TimeSeriesOverallValidation
+      attributes:
+        data:
+          attributes:
+            BQ:
+              cardinality: "1..1"
+              valueRange: "[0..*)"
+            MM:
+              cardinality: "1..1"
+              valueOption: ["L0", "L1", "L2", "L3", "L4", "E1", "Sonstige"]
+            DTF:
+              cardinality: "1..1"
+              pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([+-][0-9]{2}:[0-9]{2}|)$'
+            DTT:
+              cardinality: "1..1"
+              pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([+-][0-9]{2}:[0-9]{2}|)$'
+          cardinality: "1..*"

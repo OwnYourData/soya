@@ -1,0 +1,9 @@
+{
+  "name": "Erzeugung EEG gesamt",
+  "collection_id": 351753,
+  "schema": "EEG_TimeSeries",
+  "ec_id": "AT00100000000RC100000000000000001",
+  "direction": "generation",
+  "share": "total",
+  "obis": "1-1:1.9.0 G.01"
+}

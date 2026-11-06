@@ -1,0 +1,268 @@
+meta:
+  name: EEG_MasterData
+
+content:
+  bases: 
+    - name: EEGstammdaten
+      attributes:
+        market_partner_id: String
+        community_id: String
+        eeg_type: String
+        distribution_type: String
+        legal_type: String
+        fn_zvr: String
+        name: String
+        location: Location
+        contact: Contact
+        dso: String
+        reference_id: String
+    - name: Location
+      attributes:
+        street: String
+        number: String
+        zip: String
+        city: String
+        country: String
+    - name: Contact
+      attributes:
+        person: Person
+        phone: String
+        email: String
+    - name: Person
+      attributes:
+        first_name: String
+        last_name: String
+        full_name: String
+        birth_date: Date
+
+  overlays:
+    - type: OverlayDataBudRendering
+      base: EEGstammdaten
+      name: EEGstammdatenRendering
+      renderingLabel: '{{name}}'
+
+    - type: OverlayForm
+      base: EEGstammdaten
+      name: EEGstammdatenFormOverlay
+      
+      schema:
+        type: object
+        properties:
+          name: 
+            type: string
+            minLength: 3
+            description: "Offizieller Name der Rechtsperson."
+          market_partner_id: 
+            type: string
+            pattern: '^(RC|GC|CC)[0-9]{6}$'
+            description: "Marktpartner-Kennung beginnend mit RC, GC oder CC gefolgt von 6 Ziffern (z.B. RC107602)."
+          community_id: 
+            type: string
+            pattern: '^AT[A-Z0-9]{31}$'
+            description: "Technische Community-ID (z.B. AT001000...)."
+          eeg_type: 
+            type: string
+            enum: ["GEA", "L-EEG", "R-EEG", "BEG"]
+            description: "Gemeinschaftstyp gemäß EAG."
+          distribution_type: 
+            type: string
+            enum: ["statisch", "dynamisch"]
+            description: "Modell der Stromaufteilung."
+          legal_type: 
+            type: string
+            enum: ["Verein", "Genossenschaft", "GmbH", "AG", "OG", "KG", "WEG", "Sonstige"]
+          fn_zvr: 
+            type: string
+            pattern: '^([0-9]{9,10}|[0-9]{1,6}[a-zA-Z])$'
+            description: "10-stellige ZVR-Zahl oder max. 6-stellige Firmenbuchnummer mit Prüfbuchstabe."
+          dso: 
+            type: string
+            enum: ["Netz Niederösterreich", "Netz Burgenland", "Wiener Netze", "Sonstige"]
+            description: "Zuständiger Verteilnetzbetreiber (DSO)."
+          reference_id: 
+            type: string
+            pattern: '^[a-zA-Z0-9]{6}-[a-zA-Z0-9]{6}$'
+            description: "Beauskunftungskennzahl - Beispiel: 00BA22-03982z"
+          location:
+            type: object
+            properties:
+              street: { type: string, minLength: 2 }
+              number: { type: string }
+              zip: { type: string, pattern: '^[0-9]{4}$', description: "4-stellige Postleitzahl." }
+              city: { type: string, minLength: 2 }
+              country: { type: string, enum: ["Österreich", "Sonstige"], default: "Österreich" }
+            required: ["street", "zip", "city", "country"]
+          contact:
+            type: object
+            properties:
+              phone: { type: string, pattern: '^\+43[0-9\s\/\-]+$', description: "Format: +43 664 1234567" }
+              email: { type: string, format: email, description: "E-Mail für Korrespondenz." }
+              person:
+                type: object
+                properties:
+                  first_name: { type: string, minLength: 2 }
+                  last_name: { type: string, minLength: 2 }
+                  birth_date: { type: string, format: date }
+                required: ["first_name", "last_name"]
+            required: ["email", "person"]
+        required: ["name", "community_id", "market_partner_id", "eeg_type", "distribution_type", "legal_type", "dso", "location", "contact"]
+
+      ui:
+        type: Categorization
+        elements:
+          - type: Category
+            label: "1. Basisdaten"
+            elements:
+              - type: Group
+                label: "Allgemeine Informationen"
+                elements:
+                  - type: Control
+                    label: "Name der EEG"
+                    scope: "#/properties/name"
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "EEG Typ"
+                        scope: "#/properties/eeg_type"
+                      - type: Control
+                        label: "Aufteilungsmodell"
+                        scope: "#/properties/distribution_type"
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Rechtsform"
+                        scope: "#/properties/legal_type"
+                      - type: Control
+                        label: "Firmenbuch / ZVR"
+                        scope: "#/properties/fn_zvr"
+
+          - type: Category
+            label: "2. Standort & Kontakt"
+            elements:
+              - type: HorizontalLayout
+                elements:
+                  - type: Group
+                    label: "Sitz der Energiegemeinschaft"
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "Straße"
+                            scope: "#/properties/location/properties/street"
+                          - type: Control
+                            label: "Nr."
+                            scope: "#/properties/location/properties/number"
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "PLZ"
+                            scope: "#/properties/location/properties/zip"
+                          - type: Control
+                            label: "Ort"
+                            scope: "#/properties/location/properties/city"
+                      - type: Control
+                        label: "Land"
+                        scope: "#/properties/location/properties/country"
+                  - type: Group
+                    label: "Vertretungsbefugte Person"
+                    elements:
+                      - type: HorizontalLayout
+                        elements:
+                          - type: Control
+                            label: "Vorname"
+                            scope: "#/properties/contact/properties/person/properties/first_name"
+                          - type: Control
+                            label: "Nachname"
+                            scope: "#/properties/contact/properties/person/properties/last_name"
+                      - type: Control
+                        label: "E-Mail"
+                        scope: "#/properties/contact/properties/email"
+                      - type: Control
+                        label: "Telefon"
+                        scope: "#/properties/contact/properties/phone"
+
+          - type: Category
+            label: "3. Technische Daten"
+            elements:
+              - type: Group
+                label: "Netz- & Projektdaten"
+                elements:
+                  - type: Control
+                    label: "Zuständiger Netzbetreiber (DSO)"
+                    scope: "#/properties/dso"
+                  - type: HorizontalLayout
+                    elements:
+                      - type: Control
+                        label: "Marktpartner-ID (RC...)"
+                        scope: "#/properties/market_partner_id"
+                      - type: Control
+                        label: "Community-ID (AT...)"
+                        scope: "#/properties/community_id"
+                  - type: Control
+                    label: "Referenz-ID"
+                    scope: "#/properties/reference_id"
+    
+    - type: OverlayValidation
+      base: EEGstammdaten
+      name: EEGstammdatenValidationOverlay
+      attributes:
+        name:
+          cardinality: "1..1"
+          pattern: '^...+$'
+        eeg_type:
+          cardinality: "1..1"
+          pattern: '^(GEA|L-EEG|R-EEG|BEG)$'
+        distribution_type:
+          cardinality: "1..1"
+          pattern: '^(statisch|dynamisch)$'
+        legal_type:
+          cardinality: "1..1"
+          pattern: '^(Verein|Genossenschaft|GmbH|AG|OG|KG|WEG|Sonstige)$'
+        fn_zvr:
+          cardinality: "0..1"
+          pattern: '^([0-9]{9,10}|[0-9]{1,6}[a-zA-Z])$'
+        dso:
+          cardinality: "1..1"
+          pattern: '^(Netz Niederösterreich|Netz Burgenland|Wiener Netze|Sonstige)$'
+        market_partner_id:
+          cardinality: "1..1"
+          pattern: '^(RC|GC|CC)[0-9]{6}$'
+        community_id:
+          cardinality: "1..1"
+          pattern: '^AT[A-Z0-9]{31}$'
+        reference_id:
+          cardinality: "0..1"
+          pattern: '^[a-zA-Z0-9]{6}-[a-zA-Z0-9]{6}$'
+        location:
+          cardinality: "1..1"
+          attributes:
+            street:
+              cardinality: "1..1"
+              pattern: '^..+$'
+            zip:
+              cardinality: "1..1"
+              pattern: '^[0-9]{4}$'
+            city:
+              cardinality: "1..1"
+              pattern: '^..+$'
+            country:
+              cardinality: "1..1"
+              pattern: '^(Österreich|Sonstige)$'
+        contact:
+          cardinality: "1..1"
+          attributes:
+            email:
+              cardinality: "1..1"
+            phone:
+              pattern: '^\+43[0-9\s\/\-]+$'
+            person:
+              cardinality: "1..1"
+              attributes:
+                first_name:
+                  cardinality: "1..1"
+                  pattern: '^..+$'
+                last_name:
+                  cardinality: "1..1"
+                  pattern: '^..+$'
+                birth_date:
+                  cardinality: "0..1"

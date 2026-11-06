@@ -1,0 +1,149 @@
+meta:
+  name: EEG_SeriesReference
+
+content:
+  bases:
+    - name: SeriesReference
+      attributes:
+        name: String
+        collection_id: Integer
+        schema: String
+        ec_id: String
+        metering_point_id: String
+        direction: String
+        share: String
+        obis: String
+        obis_subtrahend: String
+
+  overlays:
+    - type: OverlayAnnotation
+      base: SeriesReference
+      name: SeriesReferenceAnnotationOverlay
+      attributes:
+        name:
+          comment:
+            en: Display name of the series
+        collection_id:
+          comment:
+            en: Data collection holding the series
+        schema:
+          comment:
+            en: Structure of the data collection (EEG_TimeSeries)
+        ec_id:
+          comment:
+            en: Energy community ID
+        metering_point_id:
+          comment:
+            en: Metering point; if missing, the series covers the whole energy community
+        direction:
+          comment:
+            en: consumption or generation
+        share:
+          comment:
+            en: total, community or grid
+        obis:
+          comment:
+            en: Source series (OBIS code); for calculated series the minuend
+        obis_subtrahend:
+          comment:
+            en: Subtrahend for calculated series (BQ = obis - obis_subtrahend)
+
+    - type: OverlayDataBudRendering
+      base: SeriesReference
+      name: SeriesReferenceRendering
+      renderingLabel: '{{#if metering_point_id}}ZP {{metering_point_id}}{{else}}EEG {{ec_id}}{{/if}} {{direction}} {{share}}'
+
+    - type: OverlayForm
+      base: SeriesReference
+      name: SeriesReferenceFormOverlay
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            title: "Name"
+          collection_id:
+            type: integer
+            title: "Collection-ID"
+          schema:
+            type: string
+            title: "Struktur"
+          ec_id:
+            type: string
+            title: "Energiegemeinschaft"
+          metering_point_id:
+            type: string
+            title: "Zählpunkt"
+          direction:
+            type: string
+            title: "Richtung"
+            enum: ["consumption", "generation"]
+          share:
+            type: string
+            title: "Anteil"
+            enum: ["total", "community", "grid"]
+          obis:
+            type: string
+            title: "OBIS"
+          obis_subtrahend:
+            type: string
+            title: "OBIS-Subtrahend"
+        required: ["name", "collection_id", "schema", "ec_id", "direction", "share", "obis"]
+
+      ui:
+        type: VerticalLayout
+        options:
+          variant: standard
+          density: compact
+        elements:
+          - type: Control
+            scope: "#/properties/name"
+          - type: HorizontalLayout
+            elements:
+              - type: Control
+                scope: "#/properties/collection_id"
+              - type: Control
+                scope: "#/properties/schema"
+          - type: HorizontalLayout
+            elements:
+              - type: Control
+                scope: "#/properties/ec_id"
+              - type: Control
+                scope: "#/properties/metering_point_id"
+          - type: HorizontalLayout
+            elements:
+              - type: Control
+                scope: "#/properties/direction"
+              - type: Control
+                scope: "#/properties/share"
+          - type: HorizontalLayout
+            elements:
+              - type: Control
+                scope: "#/properties/obis"
+              - type: Control
+                scope: "#/properties/obis_subtrahend"
+
+    - type: OverlayValidation
+      base: SeriesReference
+      name: SeriesReferenceValidation
+      attributes:
+        name:
+          cardinality: "1..1"
+        collection_id:
+          cardinality: "1..1"
+        schema:
+          cardinality: "1..1"
+        ec_id:
+          cardinality: "1..1"
+        metering_point_id:
+          cardinality: "0..1"
+        direction:
+          cardinality: "1..1"
+          valueOption: ["consumption", "generation"]
+        share:
+          cardinality: "1..1"
+          valueOption: ["total", "community", "grid"]
+        obis:
+          cardinality: "1..1"
+        obis_subtrahend:
+          cardinality: "0..1"
