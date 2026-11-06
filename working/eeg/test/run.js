@@ -65,6 +65,23 @@ const renderingLabel = (doc) => {
     console.log(`${ok ? 'PASS' : 'FAIL'} render ${name} ${file} -> "${out}"${ok ? '' : ` (erwartet "${expected}")`}`);
   }
 
+  // Gleichwertigkeit: dieselben Daten gegen die veröffentlichte TIDE_-Fassung (per DRI aus dem Repo)
+  // und gegen die lokale EEG_-Fassung; isValid muss übereinstimmen.
+  const repoSoya = new Soya({ logger: quiet });
+  for (const [name, tideDri, files] of cases.compare || []) {
+    const doc = await load(name);
+    const tideKey = `repo:${tideDri}`;
+    docs[tideKey] = await repoSoya.pull(tideDri);
+    for (const file of files) {
+      const flat = JSON.parse(fs.readFileSync(path.join(exampleDir, file), 'utf8'));
+      const tide = await validator.run(docs[tideKey], await soya.acquire(tideKey, flat));
+      const eeg = await validator.run(doc, await soya.acquire(name, flat));
+      const ok = tide.data.isValid === eeg.data.isValid;
+      if (!ok) failed++;
+      console.log(`${ok ? 'PASS' : 'FAIL'} compare ${name} gegen ${tideDri.slice(0, 8)}… ${file} TIDE isValid=${tide.data.isValid} EEG isValid=${eeg.data.isValid}`);
+    }
+  }
+
   console.log(failed === 0 ? 'Alle Fälle bestanden.' : `${failed} Fall/Fälle fehlgeschlagen.`);
   process.exit(failed === 0 ? 0 : 1);
 })().catch((e) => { console.error(e); process.exit(2); });

@@ -1,6 +1,7 @@
 #!/bin/bash
 # Prüfsummen von JSON-LD, /yaml und /info der TIDE_-Strukturen, die eine
-# EEG_-Fassung bekommen (je per Name und per heutiger DRI).
+# EEG_-Fassung bekommen, und der bereits veröffentlichten EEG_-Strukturen,
+# die nicht neu veröffentlicht werden (je per Name und per DRI).
 # Vor und nach dem Veröffentlichen ausführen und die Ausgaben vergleichen.
 # Aufruf: bash test/tide-snapshot.sh > datei.txt
 set -euo pipefail
@@ -10,7 +11,10 @@ for id in \
   TIDE_EEGmember zAaGpXFWn9MvZQ3pskZ3EwZHQx8XYsGzYmKfLg4wwu1Mo \
   TIDE_Infrastructure z3LGgFNdzJAXzvBj5Sy75QYKQZ4jVUFCUr2R2za2k1L7N \
   TIDE_ConsumptionCommunity zCkZPfdksQT4UBvNCijMoUXNXGDg1c4FcxSs8suu7QUbA \
-  TIDE_Timeseries z2nRmcZgrpUrki2ZNYcz1zCsHaRJxpGa1aNDth6gdMpPw; do
+  TIDE_Timeseries z2nRmcZgrpUrki2ZNYcz1zCsHaRJxpGa1aNDth6gdMpPw \
+  EEG_Member z9hSFcD18hLrgcz8Kbdo6kuumvMouhW85RHbtZQeHcnkY \
+  EEG_Infrastructure z9BcHX3LvFiMftbwj9VkabKrpUW3VeZohc7y1egviB5wR \
+  EEG_TimeSeries z9J7fAyF6oo7fRXo1ZLnmEN8FTUzgyKV9duK65yx2zX6R; do
   for sub in "" /yaml /info; do
     sum="$(curl -sS "$REPO/$id$sub" | shasum -a 256 | cut -d' ' -f1)"
     echo "$id$sub $sum"

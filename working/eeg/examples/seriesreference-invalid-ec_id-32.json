@@ -1,0 +1,10 @@
+{
+  "name": "Bezug Gemeinschaft",
+  "collection_id": 28808,
+  "schema": "EEG_TimeSeries",
+  "ec_id": "AT00100000000RC10000000000000000",
+  "metering_point_id": "AT0010000000000000001000000000001",
+  "direction": "consumption",
+  "share": "grid",
+  "obis": "1-1:2.9.0 G.03"
+}

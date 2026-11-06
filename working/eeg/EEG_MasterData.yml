@@ -3,7 +3,7 @@ meta:
 
 content:
   bases: 
-    - name: EEGstammdaten
+    - name: MasterData
       attributes:
         market_partner_id: String
         community_id: String
@@ -37,13 +37,13 @@ content:
 
   overlays:
     - type: OverlayDataBudRendering
-      base: EEGstammdaten
-      name: EEGstammdatenRendering
+      base: MasterData
+      name: MasterDataRendering
       renderingLabel: '{{name}}'
 
     - type: OverlayForm
-      base: EEGstammdaten
-      name: EEGstammdatenFormOverlay
+      base: MasterData
+      name: MasterDataFormOverlay
       
       schema:
         type: object
@@ -203,8 +203,8 @@ content:
                     scope: "#/properties/reference_id"
     
     - type: OverlayValidation
-      base: EEGstammdaten
-      name: EEGstammdatenValidationOverlay
+      base: MasterData
+      name: MasterDataValidationOverlay
       attributes:
         name:
           cardinality: "1..1"

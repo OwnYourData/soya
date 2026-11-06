@@ -64,6 +64,46 @@
       "EEG_SeriesReference",
       "seriesreference-invalid-share.json",
       false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-obis-suffix.json",
+      true
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-ec_id-32.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-metering_point_id-letters.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-obis.json",
+      false
+    ],
+    [
+      "EEG_SeriesReference",
+      "seriesreference-invalid-obis_subtrahend.json",
+      false
+    ],
+    [
+      "EEG_MasterData",
+      "masterdata-pod.json",
+      false
+    ],
+    [
+      "EEG_MasterData",
+      "masterdata-with-contact.json",
+      true
+    ],
+    [
+      "EEG_MasterData",
+      "masterdata-invalid-eeg_type.json",
+      false
     ]
   ],
   "render": [
@@ -81,6 +121,17 @@
       "EEG_SeriesReference",
       "seriesreference-calculated.json",
       "ZP AT0010000000000000001000000000001 consumption community"
+    ]
+  ],
+  "compare": [
+    [
+      "EEG_MasterData",
+      "z9eAqTCWatBBmttEfB8Q3SbbnHP7J2GfGXxcy77QEirhu",
+      [
+        "masterdata-pod.json",
+        "masterdata-with-contact.json",
+        "masterdata-invalid-eeg_type.json"
+      ]
     ]
   ]
 }

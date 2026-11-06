@@ -135,8 +135,10 @@ content:
           cardinality: "1..1"
         ec_id:
           cardinality: "1..1"
+          pattern: '^AT[0-9A-Z]{31}$'
         metering_point_id:
           cardinality: "0..1"
+          pattern: '^AT[0-9]{31}$'
         direction:
           cardinality: "1..1"
           valueOption: ["consumption", "generation"]
@@ -145,5 +147,7 @@ content:
           valueOption: ["total", "community", "grid"]
         obis:
           cardinality: "1..1"
+          pattern: '^[0-9]+-[0-9]+:[0-9]+\.[0-9]+\.[0-9]+( [A-Z]\.[0-9]+[A-Z]?)?$'
         obis_subtrahend:
           cardinality: "0..1"
+          pattern: '^[0-9]+-[0-9]+:[0-9]+\.[0-9]+\.[0-9]+( [A-Z]\.[0-9]+[A-Z]?)?$'

@@ -1,0 +1,23 @@
+{
+  "dso": "Netz Niederösterreich",
+  "name": "EEG Beispiel",
+  "eeg_type": "EEG",
+  "location": {
+    "zip": "2500",
+    "city": "Musterort",
+    "number": "1",
+    "street": "Musterstraße",
+    "country": "Österreich"
+  },
+  "legal_type": "Verein",
+  "community_id": "AT00100000000RC100000000000000001",
+  "distribution_type": "dynamisch",
+  "market_partner_id": "RC100000",
+  "contact": {
+    "email": "kontakt@example.org",
+    "person": {
+      "first_name": "Max",
+      "last_name": "Muster"
+    }
+  }
+}
