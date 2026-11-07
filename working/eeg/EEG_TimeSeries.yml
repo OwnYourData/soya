@@ -54,11 +54,7 @@ content:
                   type: number
                   minimum: 0
                   title: "Wert [kWh]"
-                MM:
-                  type: string
-                  title: "Messmodus"
-                  enum: ["L0", "L1", "L2", "L3", "L4", "E1", "Sonstige"]
-              required: ["DTF", "DTT", "BQ", "MM"]
+              required: ["DTF", "DTT", "BQ"]
         required: ["data"]
 
       ui:

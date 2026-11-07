@@ -36,6 +36,11 @@
       false
     ],
     [
+      "EEG_TimeSeries",
+      "timeseries-invalid-missing-mm.json",
+      false
+    ],
+    [
       "EEG_SeriesReference",
       "seriesreference-meteringpoint.json",
       true
@@ -132,6 +137,23 @@
         "masterdata-with-contact.json",
         "masterdata-invalid-eeg_type.json"
       ]
+    ]
+  ],
+  "form": [
+    [
+      "EEG_TimeSeries",
+      "timeseries-raw2.json",
+      true
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-l1.json",
+      true
+    ],
+    [
+      "EEG_TimeSeries",
+      "timeseries-invalid-negative-bq.json",
+      false
     ]
   ]
 }

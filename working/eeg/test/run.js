@@ -1,7 +1,8 @@
 // Lokale Prüfung der EEG_-Strukturen vor dem Veröffentlichen.
 // Ablauf je Fall wie `soya acquire <Name> | soya validate <Name>`, nur dass
 // die Struktur aus der lokalen YAML-Quelle erzeugt wird statt aus dem Repo.
-// Aufruf: node test/run.js [cases.json]   (soya-js und handlebars über NODE_PATH)
+// Aufruf: node test/run.js [cases.json]   (soya-js und handlebars über NODE_PATH,
+// ajv für die Formularprüfung aus form/node_modules)
 const fs = require('fs');
 const path = require('path');
 const { Soya, RepoService, Overlays } = require('soya-js');
@@ -63,6 +64,23 @@ const renderingLabel = (doc) => {
     const ok = out === expected;
     if (!ok) failed++;
     console.log(`${ok ? 'PASS' : 'FAIL'} render ${name} ${file} -> "${out}"${ok ? '' : ` (erwartet "${expected}")`}`);
+  }
+
+  // Formular: Daten gegen das JSON-Schema des OverlayForm, wie JSON Forms (ajv) es prüft.
+  // Ein Formular-Fehler zeigt der EEG-Editor als roten Hinweis je Zeile.
+  if ((cases.form || []).length > 0) {
+    const Ajv = require('ajv');
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    for (const [name, file, expected] of cases.form) {
+      const doc = await load(name);
+      const overlay = doc['@graph'].find((x) => x['@type'] === 'OverlayForm');
+      const data = JSON.parse(fs.readFileSync(path.join(exampleDir, file), 'utf8'));
+      const valid = ajv.validate(overlay.schema, data);
+      const ok = valid === expected;
+      if (!ok) failed++;
+      const errors = valid ? '' : ' | ' + ajv.errors.map((e) => `${e.instancePath} ${e.message}`).join(' | ');
+      console.log(`${ok ? 'PASS' : 'FAIL'} form ${name} ${file} valid=${valid} (erwartet ${expected})${errors}`);
+    }
   }
 
   // Gleichwertigkeit: dieselben Daten gegen die veröffentlichte TIDE_-Fassung (per DRI aus dem Repo)
